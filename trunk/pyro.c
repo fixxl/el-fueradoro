@@ -197,6 +197,7 @@ int main(void) {
 	wdt_disable();
 
 	// Variablendefinitionen
+	uint16_t scheme = 0;
 	uint8_t i, nr, inp, tmp;
 	uint8_t tx_length = 2, rx_length = 0;
 	uint8_t temp_sreg;
@@ -209,9 +210,6 @@ int main(void) {
 	uint8_t tempsenstype = 0;
 	uint8_t rssi = 0;
 	int8_t temperature = -128;
-
-	const uint32_t channelscheme[18] = { 0, 1, 2, 4, 8, 16, 32, 64, 1 << 7, 1 << 8, 1 << 9, 1 << 10, 1 << 11,
-			1 << 12, 1 << 13, 1 << 14, 1 << 15, '\0' };
 
 	bitfeld_t flags;
 	flags.complete = 0;
@@ -492,7 +490,12 @@ int main(void) {
 
 			if (rx_field[2] > 0 && rx_field[2] < 17 && armed) {
 				tmp = rx_field[2];
-				sr_shiftout(channelscheme[tmp]);
+				scheme = 0;
+				for(uint8_t i=16; i>0; i--) {
+					scheme <<= 1;
+					if(i == tmp) scheme |= 1;
+				}
+				sr_shiftout(scheme);
 
 				/* Um im Falle einen Kurzschlusses nach der Zündung den MOSFET nicht zu beschädigen/zerstören
 				 * wird der Kanal nach 11ms automatisch wieder gesperrt. Gemäß Spezifikation müssen die Zünder
