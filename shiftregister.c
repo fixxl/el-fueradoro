@@ -46,6 +46,7 @@ void sr_shiftout(uint16_t scheme) {
 	uint8_t i;
 	uint16_t mask = 1<<(SR_CHANNELS-1);
 
+	SER_IN_PORT &= ~(1<<SER_IN);
 	RCLOCK_PORT &= ~(1<<RCLOCK);
 
 	for(i=SR_CHANNELS; i>0; i--) {
