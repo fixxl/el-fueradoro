@@ -32,15 +32,17 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 	spibyte = SPDR;
 #else
 	for (uint8_t i = 8; i; i--) {
-		if (spibyte & 0x80)
-		RFM_PORT |= (1 << SDI);
-		else
-		RFM_PORT &= ~(1 << SDI);
+		if (spibyte & 0x80) {
+			RFM_PORT |= (1 << SDI);
+		} else {
+			RFM_PORT &= ~(1 << SDI);
+		}
 		spibyte <<= 1;
-		RFM_PIN |= (1 << SCK);
+		RFM_PIN = (1 << SCK);
 		__asm__ __volatile__( "rjmp 1f\n 1:" );
 		if (RFM_PIN & (1 << SDO)) spibyte |= 1;
-		RFM_PIN |= (1 << SCK);
+		else spibyte |= 0;
+		RFM_PIN = (1 << SCK);
 	}
 #endif
 	return spibyte;
