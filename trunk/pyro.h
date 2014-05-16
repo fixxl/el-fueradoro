@@ -12,6 +12,8 @@
 #define KEY_PORT			C
 #define KEY_NUM				4
 
+#define FIREREPEATS			5
+
 #define DEL_THRES			250
 #define MAX_ARRAYSIZE 		30
 
@@ -28,6 +30,11 @@
 #define KEYINT 				PCINT2_vect
 #endif
 
+
+#define ANFANG_ID_SPEICHER	24
+#define STEP_ID_SPEICHER	36
+#define CRC_ID_SPEICHER		16
+#define ID_MESS				!(eeread(ANFANG_ID_SPEICHER)==eeread(ANFANG_ID_SPEICHER+STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER)==eeread(ANFANG_ID_SPEICHER+2*STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER+1)==eeread(ANFANG_ID_SPEICHER+1+STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER+1)==eeread(ANFANG_ID_SPEICHER+1+2*STEP_ID_SPEICHER))
 
 #define DS18B20				'o'
 #define DHT22				'd'

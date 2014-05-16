@@ -27,12 +27,12 @@ void sr_init(void) {
 	// Alle Schieberegisterpositionen 0 setzen...
 	for(uint8_t j=0; j<3; j++) {
 		for(uint8_t i=0; i<(SR_CHANNELS+4); i++) {
-			SCLOCK_PIN 	|=  (1<<SCLOCK);			// Pin durch Toggling high
-			SCLOCK_PIN 	|=  (1<<SCLOCK);			// Pin durch Toggling low
+			SCLOCK_PIN 	=  (1<<SCLOCK);			// Pin durch Toggling high
+			SCLOCK_PIN 	=  (1<<SCLOCK);			// Pin durch Toggling low
 		}
 		// ... und ins Ausgaberegister übernehmen.
-		RCLOCK_PIN 	|=  (1<<RCLOCK);				// Pin durch Toggling high
-		RCLOCK_PIN 	|=  (1<<RCLOCK);				// Pin durch Toggling low
+		RCLOCK_PIN 	=  (1<<RCLOCK);				// Pin durch Toggling high
+		RCLOCK_PIN 	=  (1<<RCLOCK);				// Pin durch Toggling low
 	}
 	_delay_ms(50);
 
@@ -54,12 +54,12 @@ void sr_shiftout(uint16_t scheme) {
 		if (scheme & mask)	{
 			SER_IN_PORT |=   1<<SER_IN;
 		}
-		SCLOCK_PIN  |=  (1<<SCLOCK);				// Pin durch Toggling high
-		SCLOCK_PIN  |=  (1<<SCLOCK);				// Pin durch Toggling low
+		SCLOCK_PIN  =  (1<<SCLOCK);				// Pin durch Toggling high
+		SCLOCK_PIN  =  (1<<SCLOCK);				// Pin durch Toggling low
 		SER_IN_PORT &= ~(1<<SER_IN);
 		mask >>= 1;
 	}
-	RCLOCK_PIN	|=  (1<<RCLOCK);					// Pin durch Toggling high
-	RCLOCK_PIN	|=  (1<<RCLOCK);					// Pin durch Toggling low
+	RCLOCK_PIN	=  (1<<RCLOCK);					// Pin durch Toggling high
+	RCLOCK_PIN	=  (1<<RCLOCK);					// Pin durch Toggling low
 }
 
