@@ -19,11 +19,10 @@
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
 #include <avr/pgmspace.h>
+#include "portmakros.h"
 #include "pyro.h"
 #include "crcchk.h"
 #include "eeprom.h"
-#include "portmakros.h"
-#include "functionprotos.h"
 #include "leds.h"
 #include "timer.h"
 #include "addresses.h"
