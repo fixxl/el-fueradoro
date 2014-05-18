@@ -12,10 +12,14 @@
 #define KEY_PORT			C
 #define KEY_NUM				4
 
+// Wie oft sollen Zündkommandos gesendet werden?
 #define FIREREPEATS			5
 
-#define DEL_THRES			250
+// Maximale Größe von Arrays
 #define MAX_ARRAYSIZE 		30
+
+// Schwellwert zum Löschen des LCD
+#define DEL_THRES			250
 
 // Definitionen der Sende- und Empfangszustände
 #define 	FIRE			'f'
@@ -66,16 +70,20 @@ typedef union{
 #endif
 
 
+// Speicher-Einstellungen zu IDs im EEPROM
 #define ANFANG_ID_SPEICHER	24
 #define STEP_ID_SPEICHER	36
 #define CRC_ID_SPEICHER		16
 #define ID_MESS				!(eeread(ANFANG_ID_SPEICHER)==eeread(ANFANG_ID_SPEICHER+STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER)==eeread(ANFANG_ID_SPEICHER+2*STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER+1)==eeread(ANFANG_ID_SPEICHER+1+STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER+1)==eeread(ANFANG_ID_SPEICHER+1+2*STEP_ID_SPEICHER))
 
+
+// Temperatursensoren
 #define DS18B20				'o'
 #define DHT22				'd'
 
-void wdt_init(void) __attribute__((naked)) __attribute__((section(".init1")));
 
+// Funktionsprototypen
+void wdt_init(void) __attribute__((naked)) __attribute__((section(".init1")));
 void create_symbols(void);
 void key_init(void);
 void key_deinit(void);
