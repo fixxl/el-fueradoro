@@ -9,8 +9,9 @@
 
 #ifdef RFM12_H_
 
+// Is TX ready for next byte or has RX received?
 static inline uint8_t rfm_ready(void) {
-	uint8_t status = 1;
+	uint8_t status = 0;
 	ACTIVATE_RFM
 	;
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
@@ -24,6 +25,8 @@ static inline uint8_t rfm_ready(void) {
 	return status;
 }
 
+
+
 static inline uint8_t rfm_spi(uint8_t spibyte) {
 #if(USE_HARDWARE_SPI)
 	SPDR = spibyte;
@@ -34,7 +37,8 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 	for (uint8_t i = 8; i; i--) {
 		if (spibyte & 0x80) {
 			RFM_PORT |= (1 << SDI);
-		} else {
+		}
+		else {
 			RFM_PORT &= ~(1 << SDI);
 		}
 		spibyte <<= 1;
@@ -69,6 +73,7 @@ void rfm_reset(void) {
 	_delay_ms(1000);
 }
 
+
 // Transmitter ein- und ausschalten
 void rfm_txon(void) {
 	rfm_cmd(0x8239); // TX on (set bit ET in Power Management)
@@ -80,6 +85,7 @@ void rfm_txoff(void) {
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 }
 
+
 // Receiver ein- und ausschalten
 void rfm_rxon(void) {
 	rfm_cmd(0x82D9); // RX on (set bit ER in Power Management)
@@ -89,10 +95,18 @@ void rfm_rxon(void) {
 	rfm_cmd(0xCA83);// enable FIFO: sync word search
 }
 
+
 void rfm_rxoff(void) {
 	rfm_cmd(0x8209); // RX off (clear bit ER in Power Management)
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 }
+
+
+// Byte received? (available for access in main)
+uint8_t rfm_receiving(void) {
+	return rfm_ready();
+}
+
 
 // Byte empfangen
 static inline uint8_t rfm_rxbyte(void) {
@@ -107,6 +121,7 @@ static inline uint8_t rfm_rxbyte(void) {
 	return value;
 }
 
+
 // Byte senden
 static inline void rfm_txbyte(uint8_t value) {
 	uint32_t utimer;
@@ -116,22 +131,13 @@ static inline void rfm_txbyte(uint8_t value) {
 	rfm_cmd(0xB800 + value);
 }
 
+
+// Status auslesen
 uint16_t rfm_status(void) {
 	uint16_t status = rfm_cmd(0x0000);
 	return status;
 }
 
-uint8_t rfm_receiving(void) {
-	uint8_t status;
-	ACTIVATE_RFM
-	;
-	__asm__ __volatile__( "rjmp 1f\n 1:" );
-	__asm__ __volatile__( "rjmp 1f\n 1:" );
-	status = ((RFM_PIN & (1 << SDO)) && 1);
-	DEACTIVATE_RFM
-	;
-	return status;
-}
 
 // Bitrate einstellen
 static void rfm_setbit(uint32_t bitrate) {
@@ -162,6 +168,7 @@ static void rfm_setbit(uint32_t bitrate) {
 	//Transmitter Control Command
 	rfm_cmd(0x9800 | freqdev);
 }
+
 
 // RFM initialisieren
 void rfm_init(void) {
@@ -212,6 +219,7 @@ void rfm_init(void) {
 	rfm_rxon();
 }
 
+// Alle Interruptquellen löschen
 void rfm_nirq_clear(void) {
 #if (USE_NIRQ)
 	// Alles aus
@@ -227,6 +235,8 @@ void rfm_nirq_clear(void) {
 #endif
 }
 
+
+// Wake-Up-Timer initialisieren
 void rfm_wake_up_init(void) {
 	// Wake Up Timer
 	rfm_cmd(0xEB01);// 2,048 Sekunden
@@ -235,12 +245,14 @@ void rfm_wake_up_init(void) {
 	rfm_status();
 }
 
+// Wake-Up-Timer deaktivieren
 void rfm_wake_up_clear(void) {
 	rfm_cmd(0x8201);
 	rfm_cmd(0x80C7 | ((FR_CONST_1 - (FREQUENCY < 400000000L)) << 4));
 	rfm_status();
 }
 
+// Wake-Up-Timer aktivieren und Prozessor schlafen legen
 void rfm_set_timer_and_sleep(uint8_t mantissa, uint8_t exponent) {
 	uint16_t value = (((exponent & 0x1F) << 8) | mantissa);
 	rfm_cmd(0xE000 | value); // Wake-Up-Timer setzen
@@ -252,40 +264,42 @@ void rfm_set_timer_and_sleep(uint8_t mantissa, uint8_t exponent) {
 
 // Datenstrom senden
 uint8_t rfm_transmit(char *data, uint8_t length) {
-	uint16_t crc = 0x1D0F;
+	uint16_t crc = CRC16_SEED;				// CRC-Seed einstellen
 
-	rfm_rxoff(); // Empfänger ausschalten
-	rfm_status();// Status abfragen, um evtl. Fehler zu löschen
+	rfm_rxoff(); 							// Empfänger ausschalten
+	rfm_status();							// Status abfragen, um evtl. Fehler zu löschen
 
-	rfm_txon();// Sender einschalten
+	rfm_txon();								// Sender einschalten
 
-	rfm_txbyte(0xAA);// 10101010-Serien ins 16-Bit-Senderegister schreiben
+	rfm_txbyte(0xAA);						// 10101010-Serien ins 16-Bit-Senderegister schreiben
 	rfm_txbyte(0xAA);
 	rfm_txbyte(0xAA);
 
-	rfm_txbyte(0x2D);// Schlüsselwort zur FIFO-Freigabe senden
+	rfm_txbyte(0x2D);						// Schlüsselwort zur FIFO-Freigabe senden
 	rfm_txbyte(0xD4);
 
-	rfm_txbyte(length);// Anzahl zu übertragender Datenbytes senden
-	crc = crc16(crc, length);
+	rfm_txbyte(length);						// Anzahl zu übertragender Datenbytes senden
+	crc = crc16(crc, length);				// CRC-Update
 
 	if (length > MAX_ARRAYSIZE) length = MAX_ARRAYSIZE;
 
 	for (uint8_t bytenum = 0; bytenum < length; bytenum++) {
-		rfm_txbyte(data[bytenum]);
-		crc = crc16(crc, data[bytenum]);
+		rfm_txbyte(data[bytenum]);			// Datenbyte senden
+		crc = crc16(crc, data[bytenum]);	// CRC-Update
 	}
-	crc ^= 0xFFFF;
-	rfm_txbyte((crc >> 8) & 0xFF);
-	rfm_txbyte(crc & 0xFF);
 
-	rfm_txbyte(0xAA); // Dummybyte, um FIFO voll zu halten
-	rfm_txbyte(0xAA);// Dummybyte, um FIFO voll zu halten
-	rfm_txbyte(0xAA);// Dummybyte, um FIFO voll zu halten
+	crc ^= 0xFFFF;							// Finales XOR für CRC
+	rfm_txbyte((crc >> 8) & 0xFF);			// CRC-Highbyte senden
+	rfm_txbyte(crc & 0xFF);					// CRC-Lowbyte senden
+
+	rfm_txbyte(0xAA);						// Dummybyte, um FIFO voll zu halten
+	rfm_txbyte(0xAA);						// Dummybyte, um FIFO voll zu halten
+	rfm_txbyte(0xAA);						// Dummybyte, um FIFO voll zu halten
 
 	rfm_txoff();// TX off
 
 	rfm_status();
+
 	rfm_rxon();
 
 	return 0;
@@ -294,11 +308,11 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 // Datenstrom empfangen
 uint8_t rfm_receive(char *data, uint8_t *length) {
 	uint8_t bytenum, length_local;
-	uint16_t crc_rec, crc_calc = 0x1D0F;
+	uint16_t crc_rec, crc_calc = CRC16_SEED;
 
-	rfm_status(); // Status abfragen, um evtl. Fehler zu löschen
+	rfm_status(); 							// Status abfragen, um evtl. Fehler zu löschen
 
-	length_local = rfm_rxbyte();// Datenlänge empfangen (ohne Längenbyte und CRC-Bytes)
+	length_local = rfm_rxbyte();			// Datenlänge empfangen (ohne Längenbyte und CRC-Bytes)
 	crc_calc = crc16(crc_calc, length_local);
 
 	if (length_local > MAX_ARRAYSIZE) length_local = MAX_ARRAYSIZE;
@@ -308,16 +322,15 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 		crc_calc = crc16(crc_calc, data[bytenum]);
 	}
 	data[length_local] = '\0';
-	crc_calc ^= 0xFFFF;
 
+	crc_calc ^= 0xFFFF;
 	crc_rec = (rfm_rxbyte() << 8);
 	crc_rec |= rfm_rxbyte();
 
 	rfm_cmd(0xCA81); // empty FIFO
-	for (uint8_t i = 0; i < 5; i++) {
-		__asm__ __volatile__( "rjmp 1f\n 1:" );
-	}
+	__asm__ __volatile__( "rjmp 1f\n 1:" );
 	rfm_cmd(0xCA83); // enable FIFO: sync word search
+
 	*length = length_local;
 	return (crc_rec == crc_calc);
 }

@@ -20,11 +20,11 @@
 #include <avr/wdt.h>
 #include <avr/pgmspace.h>
 #include "portmakros.h"
-#include "pyro.h"
-#include "crcchk.h"
-#include "eeprom.h"
-#include "leds.h"
 #include "timer.h"
+#include "eeprom.h"
+#include "crcchk.h"
+#include "pyro.h"
+#include "leds.h"
 #include "addresses.h"
 #include "uart.h"
 #include "terminal.h"
