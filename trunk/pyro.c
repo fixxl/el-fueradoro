@@ -267,7 +267,7 @@ int main(void) {
 	led_init();
 
 	// Felder initialisieren
-	for (uint16_t warten = 0; warten < 30; warten++) {
+	for (uint16_t warten = 0; warten < MAX_ARRAYSIZE; warten++) {
 		led_green_toggle();
 		uart_field[warten] = 1;
 		tx_field[warten] = 0;

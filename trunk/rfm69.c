@@ -102,32 +102,32 @@ static inline void rfm_fifo_clear(void) {
 // Transmitter ein- und ausschalten
 void rfm_txon(void) {
 	uint32_t utimer;
-	utimer = (F_CPU << 2);
+	utimer = F_CPU;
 	rfm_cmd(0x010C, 1); // TX on (set to transmitter mode in RegOpMode)
-	while (!(rfm_cmd(0x27FF, 0) & 1 << 7) && utimer--)
+	while (!(rfm_cmd(0x27FF, 0) & 1 << 7) && --utimer)
 		; // Wait for Mode-Ready-Flag
-	utimer = (F_CPU << 2);
-	while (!(rfm_cmd(0x27FF, 0) & 1 << 5) && utimer--)
+	utimer = TIMEOUTVAL;
+	while (!(rfm_cmd(0x27FF, 0) & 1 << 5) && --utimer)
 		; // Wait for TX-Ready-Flag
 }
 
 void rfm_txoff(void) {
 	uint32_t utimer;
-	utimer = (F_CPU << 2);
+	utimer = TIMEOUTVAL;
 	rfm_cmd(0x0104, 1); // TX off (set to standby mode in RegOpMode)
-	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && utimer--)
+	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
 		; // Wait for Mode-Ready-Flag
 }
 
 // Receiver ein- und ausschalten
 void rfm_rxon(void) {
 	uint32_t utimer;
-	utimer = (F_CPU << 2);
+	utimer = TIMEOUTVAL;
 	rfm_cmd(0x0110, 1); // RX on (set to receiver mode in RegOpMode)
-	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && utimer--)
+	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
 		; // Wait for Mode-Ready-Flag
-	utimer = (F_CPU << 2);
-	while (!(rfm_cmd(0x27FF, 0) & (1 << 6)) && utimer--)
+	utimer = F_CPU;
+	while (!(rfm_cmd(0x27FF, 0) & (1 << 6)) && --utimer)
 		; // Wait for RX-Ready-Flag
 }
 
@@ -140,10 +140,10 @@ void rfm_rxoff(void) {
 // RSSI-Wert auslesen
 uint8_t rfm_get_rssi_dbm(void) {
 	uint32_t utimer;
-	utimer = (F_CPU << 2);
+	utimer = TIMEOUTVAL;
 	if (!rfm_cmd(0x6FFF, 0)) {
 		rfm_cmd(0x2301, 1);
-		while (!(rfm_cmd(0x23FF, 0) & (1 << 0)) && utimer--)
+		while (!(rfm_cmd(0x23FF, 0) & (1 << 0)) && --utimer)
 			;
 	}
 	return (rfm_cmd(0x24FF, 0) >> 1);
@@ -253,7 +253,7 @@ void rfm_init(void) {
 // Datenstrom senden
 uint8_t rfm_transmit(char *data, uint8_t length) {
 	uint32_t utimer;
-	utimer = (F_CPU << 2);
+	utimer = F_CPU;
 	char fifoarray[MAX_ARRAYSIZE + 1];
 
 	rfm_rxoff(); // Empfänger ausschalten
@@ -266,7 +266,7 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 	}
 	fifoarray[length + 1] = '\0';
 
-	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && utimer--)
+	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
 		;
 
 	rfm_fifo_wnr(fifoarray, 1); // Daten in FIFO schreiben
