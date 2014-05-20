@@ -57,8 +57,8 @@ void uart_init(uint32_t baud) { /* here a simple int will not suffice*/
 uint8_t uart_getc(void) {
 	uint8_t udrcontent;
 	uint32_t utimer;
-	utimer = (F_CPU << 2);
-	while (!(UCSR0A & (1 << RXC0)) && utimer--); // warten bis Zeichen verfuegbar
+	utimer = TIMEOUTVAL;
+	while (!(UCSR0A & (1 << RXC0)) && --utimer); // warten bis Zeichen verfuegbar
 	if (!utimer) return '\0';
 	block_uart_sending();
 	udrcontent = UDR0;
@@ -70,14 +70,14 @@ void uart_gets(char *s) {
 	uint8_t zeichen = 0;
 	char buchstabe = 0xFE;
 	uint32_t utimer;
-	utimer = (F_CPU << 2);
-	while (buchstabe && utimer-- && (zeichen < MAX_ARRAYSIZE)) {
+	utimer = TIMEOUTVAL;
+	while (buchstabe && --utimer && (zeichen < MAX_ARRAYSIZE)) {
 		buchstabe = uart_getc();
 		if ((buchstabe == 13 || buchstabe == 10) && zeichen && (s[0] != 0xFF)) buchstabe = '\0';
 		s[zeichen] = buchstabe;
 		if (s[0] != 0xFF) uart_putc(s[zeichen]);
 		zeichen++;
-		utimer = (F_CPU << 2);
+		utimer = TIMEOUTVAL;
 		if ((zeichen == 4) && (s[0] == 0xFF)) break;	// Bei Zündbefehl nach 4 Zeichen abbrechen
 	}
 	s[zeichen] = '\0';
@@ -85,12 +85,12 @@ void uart_gets(char *s) {
 
 uint8_t uart_putc(uint8_t c) {
 	uint32_t utimer;
-	utimer = (F_CPU << 2);
-	while ((UART_PIN & (1 << CTS)) && utimer--);
+	utimer = TIMEOUTVAL;
+	while ((UART_PIN & (1 << CTS)) && --utimer); /* wait till sending is allowed */
+
 	if (utimer) {
-		utimer = (F_CPU << 2);
-		while (!(UCSR0A & (1 << UDRE0)) && utimer--)
-			; /* warten bis Senden moeglich */
+		utimer = TIMEOUTVAL;
+		while (!(UCSR0A & (1 << UDRE0)) && --utimer);
 		switch (c) {
 		case 'ä':
 			c = 228;

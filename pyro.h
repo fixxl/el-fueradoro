@@ -21,6 +21,9 @@
 // Schwellwert zum Löschen des LCD
 #define DEL_THRES			250
 
+// Value for input timeout
+#define TIMEOUTVAL			(F_CPU>>2)
+
 // Definitionen der Sende- und Empfangszustände
 #define 	FIRE			'f'
 #define 	IDENT			'i'
