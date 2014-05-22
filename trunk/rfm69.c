@@ -20,7 +20,8 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 	for (uint8_t i = 8; i; i--) {
 		if (spibyte & 0x80) {
 			RFM_PORT |= (1 << SDI);
-		} else {
+		}
+		else {
 			RFM_PORT &= ~(1 << SDI);
 		}
 		spibyte <<= 1;
@@ -164,19 +165,19 @@ static inline void rfm_setbit(uint32_t bitrate) {
 	uint16_t freqdev;
 
 	switch (bitrate) {
-	case 38400:
-	case 57600:
-		bw = 1;
-		freqdev = 1475;
-		break;
-	case 115200:
-		bw = 8;
-		freqdev = 1966;
-		break;
-	default:
-		bw = 2;
-		freqdev = 737;
-		break;
+		case 38400:
+		case 57600:
+			bw = 1;
+			freqdev = 1475;
+			break;
+		case 115200:
+			bw = 8;
+			freqdev = 1966;
+			break;
+		default:
+			bw = 2;
+			freqdev = 737;
+			break;
 	}
 	//Frequency Deviation
 	rfm_cmd(0x0500 + (freqdev >> 8), 1);

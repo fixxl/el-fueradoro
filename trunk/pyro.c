@@ -422,7 +422,7 @@ int main(void) {
 			}
 
 			// Beschreiben des Senderegisters, wenn gültiger Zündbefehl empfangen wurde
-			if (uart_valid(uart_field) && (uart_field[0] == 0xFF)) {
+			if (uart_valid(uart_field)) {
 				tx_field[0] = FIRE;
 				tx_field[1] = uart_field[1];
 				tx_field[2] = uart_field[2];
