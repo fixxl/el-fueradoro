@@ -80,7 +80,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 
 			// Evtl. restlichen High-Pegel abwarten
 			timeoutcounter = 50;
-			while ( (TEMPHUMPIN & (1 << TEMPHUM)) && timeoutcounter--) {
+			while ((TEMPHUMPIN & (1 << TEMPHUM)) && timeoutcounter--) {
 				_delay_us(5);
 			}
 		}
@@ -107,7 +107,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 			break;
 		}
 	}
-	if(humid<0 || humid>1000 || temperat < -400 || temperat > 850) return errorcounter;
+	if (humid < 0 || humid > 1000 || temperat < -400 || temperat > 850) return errorcounter;
 
 	*temperatur_mal_zehn = temperat;
 	*feuchtigkeit_mal_zehn = humid;
@@ -138,13 +138,13 @@ void temphumprint(char* tempfield, char* humfield, int16_t temp_l, int16_t hum_l
 	}
 	else tempfield[0] = '+';
 
-	if(digit) ganz = temp_l / 10;
+	if (digit) ganz = temp_l / 10;
 	else {
-		ganz = (temp_l + 5) /10;
-		if(!ganz) tempfield[0] = ' ';
+		ganz = (temp_l + 5) / 10;
+		if (!ganz) tempfield[0] = ' ';
 	}
 
-	if(ganz>99) ganz = 99;
+	if (ganz > 99) ganz = 99;
 
 	if (ganz < 10) {
 		tempfield[1] = ' ';
@@ -163,10 +163,10 @@ void temphumprint(char* tempfield, char* humfield, int16_t temp_l, int16_t hum_l
 	}
 	else tempfield[3] = '\0';
 
-	if(digit) ganz = hum_l / 10;
+	if (digit) ganz = hum_l / 10;
 	else ganz = (hum_l + 5) / 10;
 
-	if(ganz>99) ganz = 99;
+	if (ganz > 99) ganz = 99;
 
 	if (ganz < 10) {
 		humfield[0] = ' ';
@@ -184,6 +184,5 @@ void temphumprint(char* tempfield, char* humfield, int16_t temp_l, int16_t hum_l
 	}
 	else humfield[2] = '\0';
 }
-
 
 #endif
