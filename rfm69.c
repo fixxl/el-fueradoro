@@ -35,19 +35,24 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 }
 
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
+	// Split command in two bytes, merge with write-/read-flag
 	uint8_t highbyte = ((command >> 8) | (wnr ? 128 : 0));
 	uint8_t lowbyte = (wnr ? (command & 0x00FF) : 0xFF);
 
+	// Ensure correct idle levels, then enable module
 	RFM_PORT &= ~(1 << SCK);
-	RFM_PORT |= (1 << SDI);
+	RFM_PORT &= ~(1 << SDI);
 	ACTIVATE_RFM;
 
+	// SPI-Transfer
 	rfm_spi(highbyte);
 	lowbyte = rfm_spi(lowbyte);
 
-	DEACTIVATE_RFM;
-	RFM_PORT |= (1 << SDI);
+	// Disable module
+	RFM_PORT &= ~(1 << SDI);
 	RFM_PORT &= ~(1 << SCK);
+	DEACTIVATE_RFM;
+
 	return lowbyte;
 }
 
@@ -75,14 +80,17 @@ static uint8_t rfm_fifo_wnr(char *data, uint8_t wnr) {
 	uint8_t temp;
 
 	ACTIVATE_RFM;
-	// Address FIFO-Register
+	// Address FIFO-Register in write- or read-mode
 	rfm_spi(wnr ? 128 : 0);
+
+	// Write data length or read data length depending on mode
 	temp = rfm_spi(wnr ? data[0] : 0xFF);
 	if (!wnr) data[0] = temp;
 
+	// Make sure there's no array-overflow
 	if (data[0] > MAX_ARRAYSIZE) data[0] = MAX_ARRAYSIZE;
 
-	// Data bytes
+	// Write/read data bytes
 	for (uint8_t i = 1; i <= data[0]; i++) {
 		temp = rfm_spi(wnr ? data[i] : 0xFF);
 		if (!wnr) data[i] = temp;
@@ -244,8 +252,9 @@ void rfm_init(void) {
 		rfm_cmd(0x1180 + P_OUT, 1); // Set Output Power
 	}
 	rfm_cmd(0x0A80, 1); // Start RC-Oscillator
-	while (!(rfm_cmd(0x0A00, 0) & (1 << 6)));
-		// Wait for RC-Oscillator
+	while (!(rfm_cmd(0x0A00, 0) & (1 << 6)))
+		;
+	// Wait for RC-Oscillator
 
 	rfm_rxon();
 }
