@@ -5,7 +5,7 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="de.innot.avreclipse.configuration.app.release.377596160" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<macros>
 					<stringMacro name="ProjName" type="VALUE_TEXT" value="Pyro_${AVRTARGETMCU}_RFM${RFMTYPE}"/>
-					<stringMacro name="RFMTYPE" type="VALUE_TEXT" value="12"/>
+					<stringMacro name="RFMTYPE" type="VALUE_TEXT" value="69"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
