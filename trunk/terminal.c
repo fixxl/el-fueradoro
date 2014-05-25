@@ -76,6 +76,8 @@ uint8_t configprog(void) {
 	uint8_t choice;								// Tastatureingabe
 	uint8_t slaveid;							// Slave-
 	uint8_t uniqueid;							// und Unique-ID
+	uint8_t slaveid_old;
+	uint8_t uniqueid_old;
 
 	terminal_reset();
 
@@ -121,28 +123,32 @@ uint8_t configprog(void) {
 			case 'S': {
 				uart_puts_P(PSTR("Neue Slave-ID (01-30):  "));
 				uart_puts_P(PSTR(TERM_COL_RED));
+				slaveid_old = slaveid;
 				slaveid = changenumber();
 				uart_puts_P(PSTR(TERM_COL_WHITE));
 				choice = 'u';
-				changes = 1;
+				if(slaveid != slaveid_old) changes = 1;
 				break;
 			}
 			case 'u':
 			case 'U': {
 				uart_puts_P(PSTR("Neue Unique-ID (01-30): "));
 				uart_puts_P(PSTR(TERM_COL_RED));
+				uniqueid_old = uniqueid;
 				uniqueid = changenumber();
 				uart_puts_P(PSTR(TERM_COL_WHITE));
 				choice = 's';
-				changes = 1;
+				if(uniqueid != uniqueid_old) changes = 1;
 				break;
 			}
 			case 't':
 			case 'T': {
 				uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
+				slaveid_old = slaveid;
+				uniqueid_old = uniqueid;
 				slaveid = 0;
 				uniqueid = 0;
-				changes = 1;
+				if(uniqueid_old || slaveid_old) changes = 1;
 				break;
 			}
 			default:
