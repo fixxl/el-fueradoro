@@ -142,7 +142,7 @@ void uart_puts_P(const char *s) {
 	}
 }
 
-uint8_t uart_strings_equal(char* string1, char* string2) {
+uint8_t uart_strings_equal(const char* string1, const char* string2) {
 	while (*string2) {
 		if (*string1++ != *string2++) return 0;
 	}
@@ -150,7 +150,7 @@ uint8_t uart_strings_equal(char* string1, char* string2) {
 	return 1;
 }
 
-uint8_t uart_valid(char *field) {
+uint8_t uart_valid(const char *field) {
 	return ((field[0] == 0xFF) && (field[1] > 0) && (field[1] < 31) && (field[2] > 0) && (field[2] < 17)
 			&& (field[3] == crc8(crc8(0, field[1]), field[2])));
 }
