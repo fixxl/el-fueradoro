@@ -1,5 +1,5 @@
 /*
- * Steuerprogramm Funkzündanlage
+ *           Firmware
  *         EL FUERADORO
  *
  *         Felix Pflaum
@@ -8,7 +8,7 @@
 
 #include "global.h"
 
-// Globale Variablen
+// Global Variables
 volatile uint8_t transmit_flag = 0, key_flag = 0;
 volatile uint16_t clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0, hist_del_flag = 0;
 
@@ -18,12 +18,12 @@ void wdt_init(void) {
 	return;
 }
 
-// Schlüsselschalter initialisieren
+// Initialise Key-Switch
 void key_init(void) {
 	KEYPORT |= (1 << KEY);
 	KEYDDR &= ~(1 << KEY);
 
-	// Pin-Change Interrupt aktivieren
+	// Activate Pin-Change Interrupt
 	if (KEYPORT == PORTB) {
 		PCICR |= (1 << PCIE0);
 		PCMSK0 |= (1 << KEY);
@@ -39,12 +39,12 @@ void key_init(void) {
 	}
 }
 
-// Schlüsselschalter de-initialisieren
+// Un-initialise Key-Switch (needed only if a device configured as ignition device gets configured as transmitter while on)
 void key_deinit(void) {
 	KEYPORT &= ~(1 << KEY);
 	KEYDDR &= ~(1 << KEY);
 
-	// Pin-Change Interrupt deaktivieren
+	// Deactivate Pin-Change Interrupt
 	if (KEYPORT == PORTB) {
 		PCICR &= ~(1 << PCIE0);
 		PCMSK0 &= ~(1 << KEY);
@@ -70,29 +70,28 @@ uint8_t debounce(volatile uint8_t *port, uint8_t pin) {
 	TCNT0 = 160;
 	TCCR0B = (1 << CS02 | 1 << CS00);
 
-	// Schalterzustand solange abfragen, bis er 8-mal hintereinander gleich ist
-	// Abfrage erfolgt alle 10 ms
+	// Query switch state every 10 ms until 8 identical states in a row are received
 	while (((keystate != 0x00) && (keystate != 0xFF)) || (ctr < 8)) {
-		keystate <<= 1;
-		keystate |= ((*port & (1 << pin)) > 0);
-		while (!(TIFR0 & (1 << TOV0)))
+		keystate <<= 1;								// Shift left
+		keystate |= ((*port & (1 << pin)) > 0);		// Write 0 or 1 to LSB
+		while (!(TIFR0 & (1 << TOV0)))				// Wait for timer overflow
 			;
-		TIFR0 = (1 << TOV0);
-		TCNT0 = 160;
-		ctr++;
+		TIFR0 = (1 << TOV0);						// Clear interrupt flag
+		TCNT0 = 160;								// Preload timer
+		if(ctr<8) ctr++;							// Make sure at least 8 queries are executed
 	}
 	TCCR0B = timer0_regb;
 
-	// 1 zurückgeben wenn Schalter geschlossen, 0 wenn nicht
+	// return 1 for active switch, 0 for inactive
 	return (keystate == 0);
 }
 
-// Symbole erzeugen
+// Create special symbols for LCD
 void create_symbols(void) {
-	// Auf CGRAM wechseln
+	// Switch to CGRAM
 	lcd_send(1 << 6, 0);
 
-	// Feuersymbol erzeugen
+	// Symbol "fire"
 	lcd_cgwrite(4);
 	lcd_cgwrite(4);
 	lcd_cgwrite(10);
@@ -102,7 +101,7 @@ void create_symbols(void) {
 	lcd_cgwrite(10);
 	lcd_cgwrite(4);
 
-	// ° erzeugen
+	// Symbol "°"
 	lcd_cgwrite(8);
 	lcd_cgwrite(20);
 	lcd_cgwrite(8);
@@ -118,7 +117,7 @@ void create_symbols(void) {
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-// Temperaturmessung
+// Temperature sensor detection
 uint8_t tempident(void) {
 	int16_t var1 = 0, var2 = 0;
 	uint8_t checkup = dht_read(&var1, &var2);
@@ -140,6 +139,7 @@ uint8_t tempident(void) {
 	return 0;
 }
 
+// Temperature measurement
 int8_t tempmeas(uint8_t type) {
 	int16_t temperature = -128;
 	uint16_t temp_hex;
@@ -177,6 +177,7 @@ int8_t tempmeas(uint8_t type) {
 
 // ------------------------------------------------------------------------------------------------------------------------
 
+// Check if received uart-data are a valid ignition command
 uint8_t uart_valid(const char *field) {
 	return ((field[0] == 0xFF) && (field[1] > 0) && (field[1] < 31) && (field[2] > 0) && (field[2] < 17)
 			&& (field[3] == crc8(crc8(0, field[1]), field[2])));
@@ -184,6 +185,8 @@ uint8_t uart_valid(const char *field) {
 
 // ------------------------------------------------------------------------------------------------------------------------
 
+
+// Shift LCD-cursor (line 3 and 4)
 void cursor_x_shift(uint8_t* last_zeile, uint8_t* last_spalte, uint8_t* anz_zeile, uint8_t* anz_spalte) {
 	uint8_t lastzeile = *last_zeile, lastspalte = *last_spalte, anzzeile = *anz_zeile,
 			anzspalte = *anz_spalte;
@@ -198,7 +201,7 @@ void cursor_x_shift(uint8_t* last_zeile, uint8_t* last_spalte, uint8_t* anz_zeil
 	*last_zeile = lastzeile, *last_spalte = lastspalte, *anz_zeile = anzzeile, *anz_spalte = anzspalte;
 }
 
-// Hauptprogramm
+// Main programme
 int main(void) {
 
 	wdt_disable();
@@ -233,47 +236,41 @@ int main(void) {
 	char channel_fired[MAX_ARRAYSIZE + 1] = { 0 };
 	char lcd_array[MAX_ARRAYSIZE + 1] = { 0 };
 
-	/* Initialisierung der Schieberegister. Erfolgt aus Sicherheitsgründen ganz am Anfang, um in jedem Fall
-	 * als Anfangszustand am Gate der MOSFETs "low" zu erhalten und ein Auslösen beim Einschalten zu verhindern.
-	 * Die verwendeten SIPO-Schieberegister 74HC595, welche die 16 Ausgänge zur Verfügung stellen, besitzen intern ein
-	 * Schieberegister (gesteuert durch SCLOCK) sowie ein Ausgangsregister, in welches die Schieberegisterdaten durch eine
-	 * steigende Flanke an RCLOCK übernommen werden. Anders gesagt: Veränderungen im Schieberegister werden erst durch
-	 * eine steigende Flanke an RCLOCK an den Ausgängen sichtbar.
+	/* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
+	 * gate pins of the MOSFETs and beware them from conducting directly after turning on the device.
 	 *
-	 * Sobald der Pin /OE (Inverted output enable) auf "low"-Level liegt, sind die Ausgänge der Schieberegister aktiv und
-	 * nehmen beim Einschalten nach Belieben low- oder high-Pegel an, ohne dass dies vom Anwender kontrolliert werden kann!
-	 * Zwar existiert ein "Master Reset"-Pin, dieser wirkt aber lediglich auf das Schieberegister und beeinflusst die
-	 * Ausgänge und deren Einschaltzustand nicht.
+	 * The SIPO-registers 74HC595 providing the 16 channels for ignition internally possess a shift register and
+	 * an output register. Into the latter data from the shift register are transferred by a rising edge at the RCLOCK-pin.
+	 * This leads to the situation that changes within the shift register are only visible at the outputs after a rising
+	 * edge at the RCLOCK-pin.
 	 *
-	 * Einzige Möglichkeit einen definierten Einschaltzustand zu gewährleisten ist daher, den /OE-Pin so lange
-	 * auf "high"-Pegel zu halten, bis die gewünschten Werte für alle 16 Kanäle ins Schieberegister geschrieben und per RCLOCK
-	 * an die Ausgänge übergeben wurden.
+	 * As soon as the PIN /OE (Inverted output enable) is pulled low, the outputs are enabled. The problem is that the initial
+	 * output states are random and cannot be predicted nor controlled. The available "Master Reset" does only affect the internal
+	 * shift register but has no influence on the outputs unless a rising edge at RCLOCK happens.
 	 *
-	 * Durch externe Beschaltung (Pullup an /OE-Pin) sind die Ausgänge zu Beginn inaktiv (Tri-State) und werden
-	 * durch Widerstandsarrays auf "low"-Pegel gehalten. Es müssen, um Zündungen beim Einschalten zu vermeiden, UNBEDINGT
-	 * zunächst nacheinander 16 Nullen in die beiden Schieberegister geschrieben und deren Inhalt durch steigende Flanke
-	 * an RCLOCK in die Ausgänge übernommen werden (Prozedur gerne nach Belieben wiederholen), damit alle MOSFETs bei
-	 * Aktivierung der Ausgänge sperren. Erst dann können die Ausgänge durch das Setzen von /OE auf "low" gefahrlos
-	 * aktiviert werden!
+	 * To guarantee a defined power-on-state the /OE-pin needs to be pulled high until all 16 channels are set to low and
+	 * written into the output register. Therefore an external pullup-resistor is connected to /OE which makes the outputs tri-state.
+	 * Additional pulldown-resistor-arrays pull the shift register outputs to "low". Only after 16 zeros have been clocked into the
+	 * shift register and its values have been written to the output registers /OE may be set to "low".
 	 *
-	 * Es ist daher empfohlen, keine Änderungen an der Routine sr_init() vorzunehmen und sie im Hauptprogramm  als erste
-	 * Tätigkeit direkt nach der Deklaration der Variablen aufzurufen! Hierfür muss noch keine Unterscheidung
-	 * Transmitter/Zündbox getroffen sein. Zwar ist die Routine beim Transmitter wirkungslos, richtet aber auch keinen
-	 * Schaden an.
+	 * Therefore it is strcitly recommended not to change sr_init() and to call sr_init() immediately as the first function right at
+	 * the beginning of the main-programme. sr_init() takes care of a safe start for the ignition devices and doesn't do any harm to
+	 * the transmitter.
+	 *
 	 */
 	sr_init();
 
-	// Nicht verwendete Funktionen abschalten (2-wire-Interface, Timer 2, Analoger Komparator)
+	// Disable unused controller parts (2-wire-Interface, Timer 2, Analogue Comparator)
 	PRR |= (1 << PRTWI) | (1 << PRTIM2);
 	ACSR |= 1 << ACD;
 
-	// Timer initialisieren, um Timeouts zu erkennen
+	// Initialise Timer
 	timer_on();
 
-	// Aktions-LEDs initialisieren
+	// Initialise LEDs
 	led_init();
 
-	// Felder initialisieren
+	// Initialise arrays
 	for (uint16_t warten = 0; warten < MAX_ARRAYSIZE; warten++) {
 		led_green_toggle();
 		uart_field[warten] = 1;
@@ -288,18 +285,18 @@ int main(void) {
 		_delay_ms(50);
 	}
 
-	// Slave- und Unique-ID aus EEPROM holen
+	// Get Slave- und Unique-ID from EEPROM, initialise device accordingly
 	update_addresses(&unique_id, &slave_id);
 
-	// UART initialisieren und empfangsbereit schalten
+	// Initialise UART and tell the PC we're ready
 	uart_init(BAUD);
 	allow_uart_sending();
 
-	// Temperatur messen
+	// Detect temperature sensor and measure temperature if possible
 	tempsenstype = tempident();
 	temperature = tempmeas(tempsenstype);
 
-	// Funkmodul initialisieren
+	// Initialise radio
 	rfm_init();
 
 	if (SENDERBOX) {
@@ -323,26 +320,27 @@ int main(void) {
 	}
 	flags.b.transmit = 1;
 
-	// Interrupts erlauben
+	// Enable Interrupts
 	sei();
 
-	// Programm-Hauptschleife
+	// Main loop
 	/*
-	 * In der Hauptschleife wird permanent der Zustand der einzelnen Flags überprüft und dann die entspechende
-	 * Routine ausgeführt. Zu Beginn der Routinen wird das Statusregister zwischengespeichert, Interrupts deaktiviert
-	 * und das entspechende Flag gelöscht, am Ende das Statusregister wieder zurückgeschrieben
+	 * Within the main loop the status of all the flags is continuously monitored and upon detection of a set flag
+	 * the corresponding routine is executed. Before the execution of the routine the status register is written to a local
+	 * variable, interrupts are disabled and the flag gets cleared, after the routine interrupts are re-enabled
+	 *
 	 */
 	while (1) {
 
 // -------------------------------------------------------------------------------------------------------
 
-// Schlüsselschalter überprüfen (key_flag wird durch Interrupt bei Erkennen eines Pegelwechsels gesetzt)
+// Control key switch (key_flag gets set via pin-change-interrupt)
 		if (key_flag) {
 			temp_sreg = SREG;
 			cli();
 			key_flag = 0;
 
-			// Box scharf: armed = 1, Box nicht scharf: armed = 0
+			// Box armed: armed = 1, Box not armed: armed = 0
 
 			armed = debounce(&KEYPIN, KEY);
 			if (armed) led_yellow_on();
@@ -365,48 +363,51 @@ int main(void) {
 			uart_char = uart_getc();
 
 			// React according to first char (ignition command or not?)
+			// Ignition command is always 4 chars long
 			if (uart_char == 0xFF) {
-				uart_field[0] = uart_char;
+				uart_field[0] = 0xFF;
 				uart_field[1] = uart_getc();
 				uart_field[2] = uart_getc();
 				uart_field[3] = uart_getc();
-			} else {
-				uart_gets(uart_field);
-				tmp = 0;
-				while (uart_field[tmp] && (tmp < MAX_ARRAYSIZE - 1)) {
-					tmp++;
-				}
-				for (uint8_t i = tmp; i; i--) {
-					uart_field[i] = uart_field[i - 1];
-				}
-				uart_field[0] = uart_char;
+				uart_field[4] = '\0';
 			}
 
-			// Verschiedene Eingaben auswerten
-			// "conf" für Konfigurationsprogramm
+			// Any other command is received and the first char prefixed afterwards
+			else {
+				uart_putc(uart_char);						// Show first char so everything looks as it should
+				tmp = uart_gets(uart_field);				// Get number of received chars
+				uart_field[tmp + 1] = '\0';					// Extend length by 1 char
+				for (uint8_t i = tmp; i; i--) {
+					uart_field[i] = uart_field[i - 1];		// Right-shift every member
+				}
+				uart_field[0] = uart_char;					// Replace 0th element by first char
+			}
+
+			// Evaluate inputs
+			// "conf" starts ID configuration
 			if (uart_strings_equal(uart_field, "conf")) {
 				flags.b.uart_config = 1;
 				flags.b.transmit = 0;
 			}
 
-			// "clearlist" um Boxenliste zu leeren
+			// "clearlist" empties list of boxes
 			if (uart_strings_equal(uart_field, "clearlist") && SENDERBOX) {
 				flags.b.clear_list = 1;
 			}
 
-			// "send" für manuelles Senden
+			// "send" allows to manually send a command
 			if (uart_strings_equal(uart_field, "send") && SENDERBOX) {
 				flags.b.send = 1;
 				flags.b.transmit = 0;
 			}
 
-			// "list" für Auflistung der Zündboxen
+			// "list" gives a overview over connected boxes
 			if (uart_strings_equal(uart_field, "list") && SENDERBOX) {
 				flags.b.list = 1;
 				flags.b.transmit = 0;
 			}
 
-			// "orders", um letzte gesendete und empfangene Pattern auf LCD auszugeben
+			// "orders" shows last transmitted and received command on the LCD
 			if (uart_strings_equal(uart_field, "orders") && SENDERBOX) {
 				flags.b.rx_post = 1;
 				flags.b.tx_post = 1;
@@ -414,40 +415,40 @@ int main(void) {
 				flags.b.lcd_update = 1;
 			}
 
-			// "zero", um alle Kanäle als nicht abgefeuert zu kennzeichnen
+			// "zero" deletes all "already fired channel"-flags
 			if (uart_strings_equal(uart_field, "zero") && !SENDERBOX) {
 				flags.b.reset_fired = 1;
 			}
 
-			// "cls", um Terminalausgabe zu löschen
+			// "cls" clears terminal screen
 			if (uart_strings_equal(uart_field, "cls")) {
 				terminal_reset();
 			}
 
-			// "kill", um den Controller zu resetten
+			// "kill" resets the controller
 			if (uart_strings_equal(uart_field, "kill")) {
 				flags.b.reset_device = 1;
 			}
 
-			// "temp", um Temperatur zu messen
+			// "temp" triggers a temperature measurement
 			if (uart_strings_equal(uart_field, "temp")) {
 				flags.b.temp = 1;
 			}
 
-			// "int1" führt zu periodischem Senden des letzten gesendeten Befehls
+			// "int1" last transmitted command gets re-transmitted periodically
 			if (uart_strings_equal(uart_field, "int1") && SENDERBOX) {
 				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls EIN\n\r"));
 				TIMSK1 |= (1 << TOIE1);
 			}
 
-			// "int0" schaltet periodisches Senden des letzten Befehls ab
+			// "int0" periodic retransmission gets stopped
 			if (uart_strings_equal(uart_field, "int0") && SENDERBOX) {
 				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls AUS\n\r"));
 				transmit_flag = 0;
 				TIMSK1 &= ~(1 << TOIE1);
 			}
 
-			// Beschreiben des Senderegisters, wenn gültiger Zündbefehl empfangen wurde
+			// Write to transmission array if valid ignition command was received
 			if (uart_valid(uart_field)) {
 				tx_field[0] = FIRE;
 				tx_field[1] = uart_field[1];
@@ -754,7 +755,7 @@ int main(void) {
 						if (rx_field[2] == 'E' || !rx_field[2]) {
 							iderrors++;
 						} else {
-							tmp = rx_field[2] - 1; // Index = unique_id-1 (nullbasiertes Indexing)
+							tmp = rx_field[2] - 1; // Index = unique_id-1 (zero-based indexing)
 							boxes[tmp] = rx_field[1];
 							batteries[tmp] = rx_field[3];
 							sharpness[tmp] = (rx_field[4] ? 'j' : 'n');
@@ -786,7 +787,7 @@ int main(void) {
 
 // -------------------------------------------------------------------------------------------------------
 
-// LCD löschen, falls Timeoutzeiten überschritten
+// Clear LCD in case of timeouts
 		if ((clear_lcd_tx_flag > DEL_THRES || clear_lcd_tx_flag > DEL_THRES) && SENDERBOX) {
 			temp_sreg = SREG; // Speichere Statusregister
 			cli();
@@ -820,7 +821,7 @@ int main(void) {
 
 // Anzeige aktualisieren
 		if (SENDERBOX && flags.b.lcd_update) {
-			temp_sreg = SREG; // Speichere Statusregister
+			temp_sreg = SREG;
 			cli();
 
 			flags.b.lcd_update = 0;
@@ -887,13 +888,13 @@ int main(void) {
 					lcd_arrize(tx_field[2], lcd_array, 2, 0);
 					lcd_puts(lcd_array);
 					lcd_puts(" ");
-					lcd_arrize(tx_field[3] / 10, lcd_array, 1, 0);	// Batteriespannung
+					lcd_arrize(tx_field[3] / 10, lcd_array, 1, 0);	// Battery voltage
 					lcd_puts(lcd_array);
 					lcd_puts(".");
 					lcd_arrize(tx_field[3] % 10, lcd_array, 1, 0);
 					lcd_puts(lcd_array);
 					lcd_puts("V ");
-					lcd_send(tx_field[4] ? 'j' : 'n', 1);			// Scharf geschaltet?
+					lcd_send(tx_field[4] ? 'j' : 'n', 1);			// Armed?
 
 					flags.b.tx_post = 0;
 					break;
@@ -909,7 +910,7 @@ int main(void) {
 				clear_lcd_tx_flag = 0;
 			}
 
-			// EMPFÄNGER (2. Zeile)
+			// RECEIVER (2. Line)
 			lcd_cursorset(2, 1);
 			lcd_puts("Rx: ");
 			if (flags.b.rx_post) {
@@ -979,7 +980,7 @@ int main(void) {
 	return 0;
 }
 
-// Interruptroutinen
+// Interrupt vectors
 ISR(TIMER1_OVF_vect) {
 	transmit_flag++;
 }
