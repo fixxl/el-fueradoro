@@ -1,17 +1,17 @@
 /*
- * uartstuff.h
+ * uart.h
  *
- * Einstellungen und Definitionen zur seriellen Kommunikation zwischen Controller und PC
+ * Settings and definitions concerning the serial communication between controller and PC
  */
 
 #ifndef UART_H_
 #define UART_H_
 
 // Definitionen vom Controller aus gesehen!
-#define RXD 		PD0 // Eingang: Empfänger
-#define TXD 		PD1	// Ausgang: Sender
-#define RTS 		PD2 // Ausgang: Darf die Gegenstelle Daten schicken? (HIGH=nein, LOW=ja)
-#define CTS 		PD3 // Eingang: Darf man Daten an Gegenstelle senden? (HIGH=nein, LOW=ja)
+#define RXD 		PD0 // Receiver input
+#define TXD 		PD1	// Transmitter output
+#define RTS 		PD2 // Output: Controller ready to receive data? (HIGH=no, LOW=yes)
+#define CTS 		PD3 // Input: May controller transmit data, other side ready? (HIGH=no, LOW=yes)
 #define UART_PORT 	PORTD
 #define UART_DDR	DDRD
 #define UART_PIN	PIND
