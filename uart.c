@@ -65,20 +65,17 @@ uint8_t uart_getc(void) {
 	return udrcontent;
 }
 
-void uart_gets(char *s) {
+uint8_t uart_gets(char *s) {
 	uint8_t zeichen = 0;
 	char buchstabe = 0xFE;
-	uint32_t utimer;
-	utimer = TIMEOUTVAL;
-	while (buchstabe && --utimer && (zeichen < MAX_ARRAYSIZE - 1)) {
+	while (buchstabe && (zeichen < MAX_ARRAYSIZE - 1)) {
 		buchstabe = uart_getc();
 		if (buchstabe == 13 || buchstabe == 10) buchstabe = '\0';
 		s[zeichen] = buchstabe;
-		if (s[0] != 0xFF) uart_putc(s[zeichen]);
-		zeichen++;
-		utimer = TIMEOUTVAL;
+		if(buchstabe) zeichen++;
 	}
 	s[zeichen] = '\0';
+	return zeichen; 									// Return the number of chars received - which equals the index of terminating '\0'
 }
 
 uint8_t uart_putc(uint8_t c) {
@@ -92,34 +89,33 @@ uint8_t uart_putc(uint8_t c) {
 		while (!(UCSR0A & (1 << UDRE0)) && --utimer)
 			;
 		switch (c) {
-			case 'ä':
-				c = 228;
-				break;
-			case 'Ä':
-				c = 196;
-				break;
-			case 'ö':
-				c = 246;
-				break;
-			case 'Ö':
-				c = 214;
-				break;
-			case 'ü':
-				c = 252;
-				break;
-			case 'Ü':
-				c = 220;
-				break;
-			case 'ß':
-				c = 223;
-				break;
-			default:
-				break;
+		case 'ä':
+			c = 228;
+			break;
+		case 'Ä':
+			c = 196;
+			break;
+		case 'ö':
+			c = 246;
+			break;
+		case 'Ö':
+			c = 214;
+			break;
+		case 'ü':
+			c = 252;
+			break;
+		case 'Ü':
+			c = 220;
+			break;
+		case 'ß':
+			c = 223;
+			break;
+		default:
+			break;
 		}
 		UDR0 = c;
 		return 0;
-	}
-	else {
+	} else {
 		return 1;
 	}
 }
@@ -149,7 +145,6 @@ uint8_t uart_strings_equal(const char* string1, const char* string2) {
 	return 1;
 }
 
-
 void uart_shownum(int32_t zahl, uint8_t type) {
 	uint8_t i = 0, lauf = 1;
 	uint32_t bits = 1;
@@ -157,60 +152,60 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 	char zwischenspeicher[33] = { 0 };
 
 	switch (type) {
-		// Binary
-		case 'b':
-		case 'B': {
-			while (bits < zahl) {
-				bits <<= 1;
-			}
-			if (bits < 128) bits = 128;
-			else if (bits < 32768) bits = 32768;
-			else bits = 2147483648;
+	// Binary
+	case 'b':
+	case 'B': {
+		while (bits < zahl) {
+			bits <<= 1;
+		}
+		if (bits < 128) bits = 128;
+		else if (bits < 32768) bits = 32768;
+		else bits = 2147483648;
 
-			while (bits) {
-				uart_putc((zahl & bits) ? '1' : '0');
-				bits >>= 1;
-			}
-			break;
+		while (bits) {
+			uart_putc((zahl & bits) ? '1' : '0');
+			bits >>= 1;
+		}
+		break;
+	}
+
+		// Hex
+	case 'h':
+	case 'H': {
+		while (temp || !i) {
+			zwischenspeicher[i] = temp & 0x0F;
+			temp >>= 4;
+			i++;
+		}
+		if (i % 2) i++;
+		temp = zahl;
+		for (lauf = i; lauf > 0; lauf--) {
+			if (zwischenspeicher[lauf - 1] > 9) uart_putc((zwischenspeicher[lauf - 1] % 10) + 'A');
+			else uart_putc(zwischenspeicher[lauf - 1] + '0');
+		}
+		break;
+	}
+
+		// Decimal
+	default: {
+		while (temp /= 10) {
+			lauf++;
 		}
 
-			// Hex
-		case 'h':
-		case 'H': {
-			while (temp || !i) {
-				zwischenspeicher[i] = temp & 0x0F;
-				temp >>= 4;
-				i++;
-			}
-			if (i % 2) i++;
-			temp = zahl;
-			for (lauf = i; lauf > 0; lauf--) {
-				if (zwischenspeicher[lauf - 1] > 9) uart_putc((zwischenspeicher[lauf - 1] % 10) + 'A');
-				else uart_putc(zwischenspeicher[lauf - 1] + '0');
-			}
-			break;
+		if (zahl < 0) {
+			uart_puts_P(PSTR("-"));
+			zahl = -zahl;
 		}
 
-			// Decimal
-		default: {
-			while (temp /= 10) {
-				lauf++;
-			}
-
-			if (zahl < 0) {
-				uart_puts_P(PSTR("-"));
-				zahl = -zahl;
-			}
-
-			for (uint8_t j = lauf; j > 0; j--) {
-				zwischenspeicher[j - 1] = ((zahl % 10) + 0x30);
-				zahl /= 10;
-			}
-
-			for (uint8_t j = 0; j < lauf; j++) {
-				uart_putc(zwischenspeicher[j]);
-			}
-			break;
+		for (uint8_t j = lauf; j > 0; j--) {
+			zwischenspeicher[j - 1] = ((zahl % 10) + 0x30);
+			zahl /= 10;
 		}
+
+		for (uint8_t j = 0; j < lauf; j++) {
+			uart_putc(zwischenspeicher[j]);
+		}
+		break;
+	}
 	}
 }

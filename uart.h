@@ -23,7 +23,7 @@ void allow_uart_sending(void);
 void uart_cleanup(uint8_t rxtxboth);
 void uart_init(uint32_t baud);
 uint8_t uart_getc(void);
-void uart_gets(char *s);
+uint8_t uart_gets(char *s);
 uint8_t uart_putc(uint8_t c);
 void uart_puts (char *s);
 void uart_puts_P (const char *s);
