@@ -8,8 +8,8 @@
 #ifndef RFM12_H_
 #define RFM12_H_
 
-#define FREQUENCY			867595000L 	// Angabe in Hz
-#define BITRATE				9600L		// Angabe in baud
+#define FREQUENCY			867595000L 	// Value in Hz
+#define BITRATE				9600L		// Value in baud
 #define RFM_P				B
 #define NSEL				2
 #define SDI					3
@@ -21,7 +21,7 @@
 
 #define USE_HARDWARE_SPI	0
 
-// Ab hier nichts mehr anpassen
+// Don't change anything from here
 #define RFM_PORT			PORT(RFM_P)
 #define RFM_DDR				DDR(RFM_P)
 #define RFM_PIN				PIN(RFM_P)
@@ -36,25 +36,25 @@
 #define MAX_ARRAYSIZE 30
 #endif
 
-uint16_t rfm_cmd(uint16_t command);									// Direktes Schreib-/Lesekommando
-uint8_t rfm_receiving(void);										// Byte im FIFO?
-uint16_t rfm_status(void);											// 16 Statusbits abfragen
+uint16_t rfm_cmd(uint16_t command);									// Immediate access to register
+uint8_t rfm_receiving(void);										// FIFO not empty?
+uint16_t rfm_status(void);											// Query the 16 status bits
 
-void rfm_rxon(void);												// Empfänger einschalten
-void rfm_rxoff(void);												// Empfänger ausschalten
-void rfm_txon(void);												// Sender einschalten
-void rfm_txoff(void);												// Sender ausschalten
+void rfm_rxon(void);												// Turn on Receiver
+void rfm_rxoff(void);												// Turn off Receiver
+void rfm_txon(void);												// Turn on Transmitter
+void rfm_txoff(void);												// Turn off Transmitter
 
-void rfm_nirq_clear(void);											// NIRQ-Interrupts löschen
-void rfm_wake_up_init(void);										// Wake-Up-Timer initialisieren
-void rfm_wake_up_clear(void);										// Wake-Up-Timer abschalten
-void rfm_set_timer_and_sleep(uint8_t mantissa, uint8_t exponent);	// Wake-Up-Timer aktivieren
+void rfm_nirq_clear(void);											// Clear NIRQ-Interrupts
+void rfm_wake_up_init(void);										// Initialise Wake-Up-Timer
+void rfm_wake_up_clear(void);										// Turn off Wake-Up-Timer
+void rfm_set_timer_and_sleep(uint8_t mantissa, uint8_t exponent);	// Activate Wake-Up-Timer
 
-void rfm_init(void);												// Modul initialisieren
-uint8_t rfm_transmit(char *data, uint8_t length);					// Daten senden
-uint8_t rfm_receive(char *data, uint8_t *length);					// Daten empfangen
+void rfm_init(void);												// Initialise module
+uint8_t rfm_transmit(char *data, uint8_t length);					// Send data
+uint8_t rfm_receive(char *data, uint8_t *length);					// Receive data
 
-// Einfache 16-bit zu 2*8-bit Wandlung
+// Convert 16-bit to 2*8-bit
 typedef union {
 	uint16_t zahl;
 	uint8_t bytes[2];
