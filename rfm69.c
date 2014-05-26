@@ -111,7 +111,7 @@ static inline void rfm_fifo_clear(void) {
 // Transmitter ein- und ausschalten
 void rfm_txon(void) {
 	uint32_t utimer;
-	utimer = F_CPU;
+	utimer = TIMEOUTVAL;
 	rfm_cmd(0x010C, 1); // TX on (set to transmitter mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & 1 << 7) && --utimer)
 		; // Wait for Mode-Ready-Flag
@@ -135,7 +135,7 @@ void rfm_rxon(void) {
 	rfm_cmd(0x0110, 1); // RX on (set to receiver mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
 		; // Wait for Mode-Ready-Flag
-	utimer = F_CPU;
+	utimer = TIMEOUTVAL;
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 6)) && --utimer)
 		; // Wait for RX-Ready-Flag
 }
@@ -263,7 +263,7 @@ void rfm_init(void) {
 // Datenstrom senden
 uint8_t rfm_transmit(char *data, uint8_t length) {
 	uint32_t utimer;
-	utimer = F_CPU;
+	utimer = TIMEOUTVAL;
 	char fifoarray[MAX_ARRAYSIZE + 1];
 
 	rfm_rxoff(); // Empfänger ausschalten
