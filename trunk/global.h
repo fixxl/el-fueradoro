@@ -9,7 +9,7 @@
 #define GLOBAL_H_
 
 #ifndef RFM
-#define RFM 12
+#define RFM 69
 #endif
 
 // Includes und Definitionen

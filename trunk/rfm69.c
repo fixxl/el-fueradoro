@@ -108,45 +108,47 @@ static inline void rfm_fifo_clear(void) {
 
 //------------------------------------------------------------------------------------------------------------------------
 
-// Transmitter ein- und ausschalten
+// Turn Transmitter on and off
 void rfm_txon(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
-	rfm_cmd(0x010C, 1); // TX on (set to transmitter mode in RegOpMode)
+	rfm_cmd(0x010C, 1); 									// TX on (set to transmitter mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & 1 << 7) && --utimer)
-		; // Wait for Mode-Ready-Flag
+		; 													// Wait for Mode-Ready-Flag
 	utimer = TIMEOUTVAL;
 	while (!(rfm_cmd(0x27FF, 0) & 1 << 5) && --utimer)
-		; // Wait for TX-Ready-Flag
+		; 													// Wait for TX-Ready-Flag
 }
 
 void rfm_txoff(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
-	rfm_cmd(0x0104, 1); // TX off (set to standby mode in RegOpMode)
+	rfm_cmd(0x0104, 1); 									// TX off (set to standby mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
-		; // Wait for Mode-Ready-Flag
+		; 													// Wait for Mode-Ready-Flag
 }
 
-// Receiver ein- und ausschalten
+// Turn Receiver on and off
 void rfm_rxon(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
-	rfm_cmd(0x0110, 1); // RX on (set to receiver mode in RegOpMode)
+	rfm_cmd(0x0110, 1); 									// RX on (set to receiver mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
-		; // Wait for Mode-Ready-Flag
+		; 													// Wait for Mode-Ready-Flag
 	utimer = TIMEOUTVAL;
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 6)) && --utimer)
-		; // Wait for RX-Ready-Flag
+		; 													// Wait for RX-Ready-Flag
 }
 
 void rfm_rxoff(void) {
-	rfm_cmd(0x0104, 1); // RX off (set to standby mode in RegOpMode)
-	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)))
-		; // Wait for Mode-Ready-Flag
+	uint32_t utimer;
+	utimer = TIMEOUTVAL;
+	rfm_cmd(0x0104, 1); 									// RX off (set to standby mode in RegOpMode)
+	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
+		;													// Wait for Mode-Ready-Flag
 }
 
-// RSSI-Wert auslesen
+// Get RSSI-Value
 uint8_t rfm_get_rssi_dbm(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
@@ -159,25 +161,25 @@ uint8_t rfm_get_rssi_dbm(void) {
 }
 //------------------------------------------------------------------------------------------------------------------------
 
-// Bitrate einstellen
+// Bitrate config according to RFM12-recommendations
 static inline void rfm_setbit(uint32_t bitrate) {
 	uint8_t bw;
 	uint16_t freqdev;
 
 	switch (bitrate) {
-		case 38400:
-		case 57600:
-			bw = 1;
-			freqdev = 1475;
-			break;
-		case 115200:
-			bw = 8;
-			freqdev = 1966;
-			break;
-		default:
-			bw = 2;
-			freqdev = 737;
-			break;
+	case 38400:
+	case 57600:
+		bw = 1;
+		freqdev = 1475;
+		break;
+	case 115200:
+		bw = 8;
+		freqdev = 1966;
+		break;
+	default:
+		bw = 2;
+		freqdev = 737;
+		break;
 	}
 	//Frequency Deviation
 	rfm_cmd(0x0500 + (freqdev >> 8), 1);
@@ -194,17 +196,20 @@ static inline void rfm_setbit(uint32_t bitrate) {
 	// rfm_cmd(0x1A80 | bw, 1);
 }
 
-// RFM initialisieren
+// Initialise RFM
 void rfm_init(void) {
-	// Ein-/Ausgänge der SPI-Schnittstelle konfigurieren
+	uint32_t utimer;
+	utimer = TIMEOUTVAL;
+
+	// Configure SPI inputs and outputs
 	RFM_PORT |= (1 << NSEL);
 	RFM_DDR &= ~(1 << SDO);
 	RFM_DDR |= (1 << SDI) | (1 << SCK) | (1 << NSEL);
 
 #ifdef SPCR
 #if HARDWARE_SPI
-	// SPI aktivieren und konfigurieren
-	SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR1 | 1 << SPR0);
+	// Activate and configure hardware SPI at F_CPU/4
+	SPCR |= (1 << SPE | 1 << MSTR);
 #endif
 #endif
 
@@ -212,108 +217,121 @@ void rfm_init(void) {
 		_delay_ms(5);
 		rfm_cmd(0x0200, 1); // FSK, Packet mode, No shaping
 
-		//Bitrate + zugehörige Einstellungen (Empfängerbandbreite, Frequenzhub)
+		//Bitrate + corresponding settings (Receiver bandwidth, frequency deviation)
 		rfm_setbit(BITRATE);
 
-		rfm_cmd(0x131B, 1); // OCP enabled, 100mA
+		rfm_cmd(0x131B, 1); 					// OCP enabled, 100mA
 
 		// DIO-Mapping
-		rfm_cmd(0x2500, 1); // Clkout, FifoFull, FifoNotEmpty, FifoLevel, PacketSent/CrcOk
-		rfm_cmd(0x2607, 1); // Clock-Out off
+		rfm_cmd(0x2500, 1); 					// Clkout, FifoFull, FifoNotEmpty, FifoLevel, PacketSent/CrcOk
+		rfm_cmd(0x2607, 1); 					// Clock-Out off
 
-		// Frequenzeinstellung
+		// Carrier frequency
 		rfm_cmd(0x0700 + FRF_MSB, 1);
 		rfm_cmd(0x0800 + FRF_MID, 1);
 		rfm_cmd(0x0900 + FRF_LSB, 1);
 
-		// Paketkonfiguration
-		rfm_cmd(0x3790, 1); // Variable length, No DC-free encoding/decoding, CRC-Check, No Address filter
-		rfm_cmd(0x3800 + MAX_ARRAYSIZE, 1); // Max. Payload-Length
-		rfm_cmd(0x3C80, 1); // Tx-Start-Condition festlegen
-		rfm_cmd(0x3D12, 1); // Packet-Config2
+		// Packet config
+		rfm_cmd(0x3790, 1); 					// Variable length, No DC-free encoding/decoding, CRC-Check, No Address filter
+		rfm_cmd(0x3800 + MAX_ARRAYSIZE, 1); 	// Max. Payload-Length
+		rfm_cmd(0x3C80, 1); 					// Tx-Start-Condition: FIFO not empty
+		rfm_cmd(0x3D12, 1); 					// Packet-Config2
 
-		// Präambel auf 3 Bytes stellen
+		// Präambel length 3 bytes
 		rfm_cmd(0x2C00, 1);
 		rfm_cmd(0x2D03, 1);
 
 		// Sync-Mode
-		rfm_cmd(0x2E88, 1); // set FIFO mode
-		rfm_cmd(0x2F2D, 1); // sync word MSB
-		rfm_cmd(0x30D4, 1); // sync word LSB
+		rfm_cmd(0x2E88, 1); 					// set FIFO mode
+		rfm_cmd(0x2F2D, 1); 					// sync word MSB
+		rfm_cmd(0x30D4, 1); 					// sync word LSB
 
 		// Receiver config
-		rfm_cmd(0x1800, 1); // LNA: 50 Ohm Input Impedance, Automatic Gain Control
-		rfm_cmd(0x582D, 1); // High sensitivity
-		rfm_cmd(0x6F30, 1); // Improved DAGC
-		rfm_cmd(0x29DC, 1); // RSSI mind. -110 dBm
-		rfm_cmd(0x1E2D, 1); // AFC starten, Auto-On
+		rfm_cmd(0x1800, 1); 					// LNA: 50 Ohm Input Impedance, Automatic Gain Control
+		rfm_cmd(0x582D, 1); 					// High sensitivity mode
+		rfm_cmd(0x6F30, 1); 					// Improved DAGC
+		rfm_cmd(0x29DC, 1); 					// RSSI mind. -110 dBm
+		rfm_cmd(0x1E2D, 1); 					// Start AFC, Auto-On
 		while (!(rfm_cmd(0x1EFF, 0) & (1 << 4)))
 			;
 
-		rfm_cmd(0x1180 + P_OUT, 1); // Set Output Power
+		rfm_cmd(0x1180 + P_OUT, 1); 			// Set Output Power
 	}
-	rfm_cmd(0x0A80, 1); // Start RC-Oscillator
-	while (!(rfm_cmd(0x0A00, 0) & (1 << 6)))
-		;
-	// Wait for RC-Oscillator
+	rfm_cmd(0x0A80, 1); 						// Start RC-Oscillator
+	while (!(rfm_cmd(0x0A00, 0) & (1 << 6)) && --utimer)
+		; 										// Wait for RC-Oscillator
 
 	rfm_rxon();
 }
 
-// Datenstrom senden
+// Transmit data stream
 uint8_t rfm_transmit(char *data, uint8_t length) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	char fifoarray[MAX_ARRAYSIZE + 1];
 
-	rfm_rxoff(); // Empfänger ausschalten
+	// Turn off receiver, switch to Standby
+	rfm_rxoff();
+
+	// Clear FIFO
 	rfm_fifo_clear();
 
-	fifoarray[0] = length; // Anzahl zu übertragender Bits senden
+	// Limit length
+	if (length > MAX_ARRAYSIZE - 1) length = MAX_ARRAYSIZE - 1;
 
-	for (uint8_t i = 0; i < length; i++) {
+	// Write data to FIFO-array
+	fifoarray[0] = length; 														// Number of data bytes
+	for (uint8_t i = 0; i < length; i++) {										// Data bytes
 		fifoarray[1 + i] = data[i];
 	}
-	fifoarray[length + 1] = '\0';
+	fifoarray[length + 1] = '\0';												// Terminate string
 
-	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
+	// Write data to FIFO
+	rfm_fifo_wnr(fifoarray, 1);
+
+	// Turn on transmitter (Transmitting starts automatically if FIFO not empty)
+	rfm_txon();
+
+	// Wait for Package Sent
+	utimer = TIMEOUTVAL;
+	while (!(rfm_cmd(0x28FF, 0) & (1 << 3)) && --utimer)
 		;
 
-	rfm_fifo_wnr(fifoarray, 1); // Daten in FIFO schreiben
-
-	rfm_txon(); // Sender einschalten
-
-	while (!(rfm_cmd(0x28FF, 0) & (1 << 3)))
-		; // Auf PackageSent warten
 	rfm_rxon();
 
 	return 0;
 }
 
-// Datenstrom empfangen
+// Receive data stream
 uint8_t rfm_receive(char *data, uint8_t *length) {
-
-	rfm_rxoff();
-
 	char fifoarray[MAX_ARRAYSIZE + 1];
 	uint8_t length_local;
 
-	rfm_fifo_wnr(fifoarray, 0); // Daten aus FIFO lesen
+	// Turn off receiver, switch to Standby
+	rfm_rxoff();
 
-	length_local = fifoarray[0];
+	// Read FIFO-data into FIFO-array
+	rfm_fifo_wnr(fifoarray, 0);
 
-	if (length_local > MAX_ARRAYSIZE - 1) length_local = MAX_ARRAYSIZE - 1;
-
+	// Read data from FIFO-array
+	length_local = fifoarray[0];												// Number of data bytes
+	if (length_local > MAX_ARRAYSIZE - 1) length_local = MAX_ARRAYSIZE - 1; 	// Limit length
 	for (uint8_t i = 0; i < length_local; i++) {
-		data[i] = fifoarray[i + 1];
+		data[i] = fifoarray[i + 1];												// Data bytes
 	}
-	data[length_local] = '\0';
+	data[length_local] = '\0';													// Terminate string
+
+	// Clear FIFO after readout
 	rfm_fifo_clear();
 
+	// Turn receiver back on
 	rfm_rxon();
 
+	// Write local variable to pointer
 	*length = length_local;
 
+	// Return value is for compatibility reasons with RFM12
+	// It's always 1 because PayloadReady only occurs after successful hardware CRC
 	return 1;
 }
 

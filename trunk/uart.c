@@ -15,14 +15,14 @@ void allow_uart_sending(void) {
 	UART_PORT &= ~(1 << RTS);
 }
 
-void uart_cleanup(uint8_t rxtxboth) {	// 1:Rx, 2:Tx, 3: komplett
+void uart_cleanup(uint8_t rxtxboth) {	// 1:Rx, 2:Tx, 3: both
 	uint8_t __attribute__((unused)) ttt = 0xAA;
 
 	if (rxtxboth & (1 << 0)) {
-		// Flush Receive-Buffer (entfernen evtl. vorhandener ungültiger Werte)
+		// Flush Receive-Buffer (read until rx-buffer empty)
 		while (UCSR0A & (1 << RXC0))
 			ttt = UDR0;
-		// Rücksetzen von Receive und Transmit Complete-Flags
+		// Reset Receive und Transmit Complete-Flags
 		UCSR0A = (1 << RXC0);
 	}
 
@@ -31,7 +31,7 @@ void uart_cleanup(uint8_t rxtxboth) {	// 1:Rx, 2:Tx, 3: komplett
 	}
 }
 
-void uart_init(uint32_t baud) { /* here a simple int will not suffice*/
+void uart_init(uint32_t baud) {
 	uint8_t sreg = SREG;
 	cli();
 
@@ -39,7 +39,7 @@ void uart_init(uint32_t baud) { /* here a simple int will not suffice*/
 	UART_PORT |= (1 << CTS);
 	UART_DDR |= (1 << RTS);
 
-	uint32_t baudrate = ((F_CPU + baud * 8) / (baud * 16) - 1); /* as per pg. 133 of the user manual */
+	uint32_t baudrate = ((F_CPU + baud * 8) / (baud * 16) - 1);
 	/* Set baud rate */
 	UBRR0H = (baudrate >> 8);
 	UBRR0L = baudrate;
@@ -51,18 +51,18 @@ void uart_init(uint32_t baud) { /* here a simple int will not suffice*/
 	SREG = sreg;
 }
 
-/* Zeichen empfangen */
+/* Receive char */
 uint8_t uart_getc(void) {
 	uint8_t udrcontent;
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	while (!(UCSR0A & (1 << RXC0)) && --utimer)
-		; // warten bis Zeichen verfuegbar
+		; 												// wait until char available or timeout
 	if (!utimer) return '\0';
 	block_uart_sending();
 	udrcontent = UDR0;
 	allow_uart_sending();
-	return udrcontent;             // Zeichen aus UDR an Aufrufer zurueckgeben
+	return udrcontent;
 }
 
 void uart_gets(char *s) {
@@ -70,14 +70,13 @@ void uart_gets(char *s) {
 	char buchstabe = 0xFE;
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
-	while (buchstabe && --utimer && (zeichen < MAX_ARRAYSIZE)) {
+	while (buchstabe && --utimer && (zeichen < MAX_ARRAYSIZE - 1)) {
 		buchstabe = uart_getc();
-		if ((buchstabe == 13 || buchstabe == 10) && zeichen && (s[0] != 0xFF)) buchstabe = '\0';
+		if (buchstabe == 13 || buchstabe == 10) buchstabe = '\0';
 		s[zeichen] = buchstabe;
 		if (s[0] != 0xFF) uart_putc(s[zeichen]);
 		zeichen++;
 		utimer = TIMEOUTVAL;
-		if ((zeichen == 4) && (s[0] == 0xFF)) break;	// Bei Zündbefehl nach 4 Zeichen abbrechen
 	}
 	s[zeichen] = '\0';
 }
@@ -117,7 +116,7 @@ uint8_t uart_putc(uint8_t c) {
 			default:
 				break;
 		}
-		UDR0 = c; /* sende Zeichen */
+		UDR0 = c;
 		return 0;
 	}
 	else {
@@ -127,7 +126,7 @@ uint8_t uart_putc(uint8_t c) {
 
 void uart_puts(char *s) {
 	uint8_t overflow = 0;
-	while (*s && !overflow) { /* so lange *s != '\0' also ungleich dem "String-Endezeichen(Terminator)" */
+	while (*s && !overflow) {
 		overflow = uart_putc(*s++);
 	}
 }
@@ -150,10 +149,6 @@ uint8_t uart_strings_equal(const char* string1, const char* string2) {
 	return 1;
 }
 
-uint8_t uart_valid(const char *field) {
-	return ((field[0] == 0xFF) && (field[1] > 0) && (field[1] < 31) && (field[2] > 0) && (field[2] < 17)
-			&& (field[3] == crc8(crc8(0, field[1]), field[2])));
-}
 
 void uart_shownum(int32_t zahl, uint8_t type) {
 	uint8_t i = 0, lauf = 1;
@@ -162,7 +157,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 	char zwischenspeicher[33] = { 0 };
 
 	switch (type) {
-		// Binärdarstellung
+		// Binary
 		case 'b':
 		case 'B': {
 			while (bits < zahl) {
@@ -179,7 +174,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 			break;
 		}
 
-			// Hexadezimaldarstellung
+			// Hex
 		case 'h':
 		case 'H': {
 			while (temp || !i) {
@@ -196,7 +191,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 			break;
 		}
 
-			// Standarddarstellung (=dezimal)
+			// Decimal
 		default: {
 			while (temp /= 10) {
 				lauf++;

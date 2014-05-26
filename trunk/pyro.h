@@ -91,6 +91,7 @@ void create_symbols(void);
 void key_init(void);
 void key_deinit(void);
 uint8_t debounce (volatile uint8_t *port, uint8_t pin);
+uint8_t uart_valid(const char *field);
 
 
 #endif /* PYRO_H_ */
