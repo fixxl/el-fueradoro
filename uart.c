@@ -72,7 +72,10 @@ uint8_t uart_gets(char *s) {
 		buchstabe = uart_getc();
 		if (buchstabe == 13 || buchstabe == 10) buchstabe = '\0';
 		s[zeichen] = buchstabe;
-		if(buchstabe) zeichen++;
+		if(buchstabe) {
+			uart_putc(buchstabe);
+			zeichen++;
+		}
 	}
 	s[zeichen] = '\0';
 	return zeichen; 									// Return the number of chars received - which equals the index of terminating '\0'
