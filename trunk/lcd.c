@@ -257,9 +257,8 @@ void lcd_puts(char *strin) {
 		lcd_send(*strin++, 1);
 }
 
-void lcd_arrize(int32_t zahl, char *feld, uint8_t digits, int8_t vorzeichen) {
+void lcd_arrize(int32_t zahl, char *feld, uint8_t digits, uint8_t vorzeichen) {
 	uint8_t neededlength = 1;
-	int8_t i;
 
 	if (vorzeichen || (zahl < 0)) {
 		vorzeichen = 1;
@@ -271,15 +270,13 @@ void lcd_arrize(int32_t zahl, char *feld, uint8_t digits, int8_t vorzeichen) {
 
 	int32_t zahlkopie = zahl;
 
-	while (zahl /= 10) {
+	while (zahlkopie /= 10) {
 		neededlength++;
 	}
 	if (neededlength < digits) neededlength = digits;
 
-	zahl = zahlkopie;
-
-	for (i = neededlength - 1 + vorzeichen; i >= 0 + vorzeichen; i--) {
-		feld[i] = zahl % 10 + 0x30;
+	for (uint8_t i = neededlength + vorzeichen; (i - vorzeichen); i--) {
+		feld[i-1] = (zahl % 10) + 0x30;
 		zahl /= 10;
 	}
 	feld[neededlength + vorzeichen] = '\0';
