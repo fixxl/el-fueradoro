@@ -120,7 +120,7 @@ void lcd_send(uint8_t data, uint8_t dat);
 void lcd_puts(char *strin);
 void lcd_clear(void);
 void lcd_cursorhome(void);
-void lcd_arrize(int32_t zahl, char *feld, uint8_t digits, int8_t vorzeichen);
+void lcd_arrize(int32_t zahl, char *feld, uint8_t digits, uint8_t vorzeichen);
 uint8_t lcd_getaddr(void);
 uint8_t lcd_cursorread(void);
 void lcd_cursorset(uint8_t zeile, uint8_t spalte);

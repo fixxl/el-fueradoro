@@ -905,10 +905,10 @@ int main(void) {
 					lcd_arrize(tx_field[2], lcd_array, 2, 0);
 					lcd_puts(lcd_array);
 					lcd_puts(" ");
-					lcd_arrize(tx_field[3] / 10, lcd_array, 1, 0);	// Battery voltage
+					lcd_arrize((tx_field[3] / 10), lcd_array, 1, 0);	// Battery voltage
 					lcd_puts(lcd_array);
 					lcd_puts(".");
-					lcd_arrize(tx_field[3] % 10, lcd_array, 1, 0);
+					lcd_arrize((tx_field[3] % 10), lcd_array, 1, 0);
 					lcd_puts(lcd_array);
 					lcd_puts("V ");
 					lcd_send(tx_field[4] ? 'j' : 'n', 1);			// Armed?
@@ -971,7 +971,7 @@ int main(void) {
 					lcd_arrize(rx_field[2], lcd_array, 2, 0);
 					lcd_puts(lcd_array);
 					lcd_puts(" ");
-					if (rx_field[2] < 100) lcd_puts(" ");
+					if (rx_field[3] < 100) lcd_puts(" ");
 					lcd_arrize(rx_field[3] / 10, lcd_array, 1, 0);
 					lcd_puts(lcd_array);
 					lcd_puts(".");
