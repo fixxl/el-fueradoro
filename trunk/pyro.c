@@ -102,9 +102,9 @@ void create_symbols(void) {
 	lcd_cgwrite(4);
 
 	// Symbol "°"
-	lcd_cgwrite(8);
-	lcd_cgwrite(20);
-	lcd_cgwrite(8);
+	lcd_cgwrite(2);
+	lcd_cgwrite(5);
+	lcd_cgwrite(2);
 	lcd_cgwrite(0);
 	lcd_cgwrite(0);
 	lcd_cgwrite(0);
@@ -482,6 +482,20 @@ int main(void) {
 				uart_puts_P(PSTR("°C"));
 			}
 			uart_puts_P(PSTR("\n\r\n\r"));
+
+			if(SENDERBOX) {
+				lcd_cursorset(3, 1);
+				lcd_puts("Temperatur:    ");
+				if (temperature == -128) {
+					lcd_puts("n.a. ");
+				}
+				else {
+					lcd_arrize(temperature, lcd_array, 2, 1);
+					lcd_puts(lcd_array);
+					lcd_send(1, 1);
+					lcd_send('C', 1);
+				}
+			}
 
 			SREG = temp_sreg;
 		}
