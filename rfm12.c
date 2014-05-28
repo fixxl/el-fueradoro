@@ -162,9 +162,6 @@ static void rfm_setbit(uint32_t bitrate) {
 
 // RFM initialisieren
 void rfm_init(void) {
-	uint32_t utimer;
-	utimer = TIMEOUTVAL;
-
 	// Configure SPI inputs and outputs
 	NSEL_PORT|= (1 << NSEL);
 	SDO_PORT|= (1<<SDO);
