@@ -73,7 +73,7 @@ void savenumber(uint8_t uniqueid, uint8_t slaveid) {
 // Konfigurationsprogramm
 uint8_t configprog(void) {
 	uint8_t changes = 0;						// Merker, ob Änderungen vorgenommen wurden
-	uint8_t choice;								// Tastatureingabe
+	uint8_t choice = 0;							// Tastatureingabe
 	uint8_t slaveid;							// Slave-
 	uint8_t uniqueid;							// und Unique-ID
 	uint8_t slaveid_old;
@@ -112,7 +112,9 @@ uint8_t configprog(void) {
 					"(U)nique-ID ändern, (S)lave-ID ändern, \n\rzu (T)ransmitter machen, Abbruch mit beliebiger anderer Taste! "));
 
 	// Benutzereingabe auswerten
-	choice = uart_getc();
+	while(!choice) {
+		choice = uart_getc();
+	}
 	uart_putc(choice);
 	uart_puts_P(PSTR("\n\r"));
 
@@ -143,7 +145,7 @@ uint8_t configprog(void) {
 			}
 			case 't':
 			case 'T': {
-				uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
+				if(slaveid && uniqueid) uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
 				slaveid_old = slaveid;
 				uniqueid_old = uniqueid;
 				slaveid = 0;
@@ -246,8 +248,10 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 		i++;
 	}
 	uart_puts_P(PSTR("\n\r\n\r"));
+	if(wrongids) uart_puts_P(PSTR(TERM_COL_RED));
 	uart_puts_P(PSTR("Fehlerhafte IDs: "));
 	uart_shownum(wrongids, 'd');
+	if(wrongids) uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(PSTR("\n\r"));
 }
 
