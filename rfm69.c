@@ -19,17 +19,17 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 #else
 	for (uint8_t i = 8; i; i--) {
 		if (spibyte & 0x80) {
-			RFM_PORT |= (1 << SDI);
+			SDI_PORT |= (1 << SDI);
 		}
 		else {
-			RFM_PORT &= ~(1 << SDI);
+			SDI_PORT &= ~(1 << SDI);
 		}
 		spibyte <<= 1;
-		RFM_PIN = (1 << SCK);
+		SCK_PIN = (1 << SCK);
 		__asm__ __volatile__( "rjmp 1f\n 1:" );
-		if (RFM_PIN & (1 << SDO)) spibyte |= 1;
+		if (SDO_PIN & (1 << SDO)) spibyte |= 1;
 		else spibyte |= 0;
-		RFM_PIN = (1 << SCK);
+		SCK_PIN = (1 << SCK);
 	}
 #endif
 	return spibyte;
@@ -41,8 +41,8 @@ uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 	uint8_t lowbyte = (wnr ? (command & 0x00FF) : 0xFF);
 
 	// Ensure correct idle levels, then enable module
-	RFM_PORT &= ~(1 << SCK);
-	RFM_PORT &= ~(1 << SDI);
+	SCK_PORT &= ~(1 << SCK);
+	SDI_PORT &= ~(1 << SDI);
 	ACTIVATE_RFM;
 
 	// SPI-Transfer
@@ -50,8 +50,8 @@ uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 	lowbyte = rfm_spi(lowbyte);
 
 	// Disable module
-	RFM_PORT &= ~(1 << SDI);
-	RFM_PORT &= ~(1 << SCK);
+	SDI_PORT &= ~(1 << SDI);
+	SCK_PORT &= ~(1 << SCK);
 	DEACTIVATE_RFM;
 
 	return lowbyte;
@@ -202,9 +202,12 @@ void rfm_init(void) {
 	utimer = TIMEOUTVAL;
 
 	// Configure SPI inputs and outputs
-	RFM_PORT |= (1 << NSEL);
-	RFM_DDR &= ~(1 << SDO);
-	RFM_DDR |= (1 << SDI) | (1 << SCK) | (1 << NSEL);
+	NSEL_PORT|= (1 << NSEL);
+	SDO_PORT|= (1<<SDO);
+	SDO_DDR &= ~(1 << SDO);
+	SDI_DDR |= (1 << SDI);
+	SCK_DDR |= (1 << SCK);
+	NSEL_DDR|= (1 << NSEL);
 
 #ifdef SPCR
 #if HARDWARE_SPI

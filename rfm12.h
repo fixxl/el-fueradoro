@@ -10,23 +10,45 @@
 
 #define FREQUENCY			867595000L 	// Value in Hz
 #define BITRATE				9600L		// Value in baud
-#define RFM_P				B
+#define NSELPORT			B
 #define NSEL				2
+#define SDIPORT				B
 #define SDI					3
+#define SDOPORT				B
 #define SDO					4
+#define SCKPORT				B
 #define SCK					5
 
 #define USE_NIRQ			0
+#define NIRQPORT			B
 #define NIRQ				9
 
-#define USE_HARDWARE_SPI	0
+#define USE_HARDWARE_SPI	1
 
 // Don't change anything from here
-#define RFM_PORT			PORT(RFM_P)
-#define RFM_DDR				DDR(RFM_P)
-#define RFM_PIN				PIN(RFM_P)
-#define ACTIVATE_RFM		RFM_PORT	&=	~(1<<NSEL)
-#define DEACTIVATE_RFM		RFM_PORT	|=	 (1<<NSEL)
+#define NSEL_PORT			PORT(NSELPORT)
+#define NSEL_DDR			DDR(NSELPORT)
+#define NSEL_PIN			PIN(NSELPORT)
+
+#define SDI_PORT			PORT(SDIPORT)
+#define SDI_DDR				DDR(SDIPORT)
+#define SDI_PIN				PIN(SDIPORT)
+
+#define SDO_PORT			PORT(SDOPORT)
+#define SDO_DDR				DDR(SDOPORT)
+#define SDO_PIN				PIN(SDOPORT)
+
+#define SCK_PORT			PORT(SCKPORT)
+#define SCK_DDR				DDR(SCKPORT)
+#define SCK_PIN				PIN(SCKPORT)
+
+#define NIRQ_PORT			PORT(NIRQPORT)
+#define NIRQ_DDR			DDR(NIRQPORT)
+#define NIRQ_PIN			PIN(NIRQPORT)
+
+#define ACTIVATE_RFM		NSEL_PORT	&=	~(1<<NSEL)
+#define DEACTIVATE_RFM		NSEL_PORT	|=	 (1<<NSEL)
+
 #define DATARATE			((((( 344828L - (BITRATE<2694L)*301725L ) + (BITRATE/2))/BITRATE) - 1) | ( (BITRATE<2694) * 0x80 ))
 #define FR_CONST_1			( 1 + (FREQUENCY>860000000L) + (FREQUENCY>900000000L) )
 #define FR_CONST_2			( 43 - 12*(FREQUENCY<400000000L) - 13*(FREQUENCY>900000000L) )
@@ -35,6 +57,14 @@
 #ifndef MAX_ARRAYSIZE
 #define MAX_ARRAYSIZE 30
 #endif
+
+#ifdef SPDR
+#define HASHARDSPI	1
+#else
+#define HASHARDSPI 0
+#endif
+
+#define HARDWARE_SPI	(USE_HARDWARE_SPI && HASHARDSPI && (NSELPORT==SDOPORT) && (NSELPORT==SDIPORT) && (NSELPORT==SCKPORT) && (NSELPORT==B) && (SDI==3) && (SDO==4) && (SCK==5))
 
 uint16_t rfm_cmd(uint16_t command);									// Immediate access to register
 uint8_t rfm_receiving(void);										// FIFO not empty?
