@@ -156,11 +156,13 @@ uint8_t configprog(void) {
 		}
 	} while ((slaveid != 0) ^ (uniqueid != 0));
 
-	if (changes) savenumber(uniqueid, slaveid);
-
-	uart_puts_P(
-			PSTR(
-					"\n\rProgramm beendet. Verbindung kann getrennt oder das Programm mit 'conf' erneut gestartet werden!\n\n\r"));
+	if (changes) {
+		savenumber(uniqueid, slaveid);
+		uart_puts_P(PSTR("\n\rNeustart...\n\n\r"));
+	}
+	else {
+		uart_puts_P(PSTR("\n\rKeine Änderungen vorgenommen\n\n\r"));
+	}
 	return changes;
 }
 
