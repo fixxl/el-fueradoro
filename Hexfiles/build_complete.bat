@@ -3,6 +3,8 @@
 rmdir temp 2>NUL
 md temp
 
+echo.|set /p =Compiling sources for ATMega328p and RFM69...
+
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"crcchk.d" -MT"crcchk.d" -c -o "crcchk.o" "../crcchk.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"adc.d" -MT"adc.d" -c -o "adc.o" "../adc.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"1wire.d" -MT"1wire.d" -c -o "1wire.o" "../1wire.c"
@@ -25,6 +27,9 @@ avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega328p_R
 
 copy "Pyro_atmega328p_RFM69.hex" .\temp > NUL
 for %%a in (*) do if not %%~xa==.bat del /q %%a
+echo. Done
+echo.
+echo.|set /p =Compiling sources for ATMega328p and RFM12...
 
 
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"crcchk.d" -MT"crcchk.d" -c -o "crcchk.o" "../crcchk.c"
@@ -49,6 +54,9 @@ avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega328p_R
 
 copy "Pyro_atmega328p_RFM12.hex" .\temp > NUL
 for %%a in (*) do if not %%~xa==.bat del /q %%a
+echo. Done
+echo.
+echo.|set /p =Compiling sources for ATMega168p and RFM69...
 
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"crcchk.d" -MT"crcchk.d" -c -o "crcchk.o" "../crcchk.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"adc.d" -MT"adc.d" -c -o "adc.o" "../adc.c"
@@ -72,6 +80,9 @@ avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_R
 
 copy "Pyro_atmega168p_RFM69.hex" .\temp > NUL
 for %%a in (*) do if not %%~xa==.bat del /q %%a
+echo. Done
+echo.
+echo.|set /p =Compiling sources for ATMega168p and RFM12...
 
 
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"crcchk.d" -MT"crcchk.d" -c -o "crcchk.o" "../crcchk.c"
@@ -96,6 +107,7 @@ avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_R
 
 copy "Pyro_atmega168p_RFM12.hex" .\temp > NUL
 for %%a in (*) do if not %%~xa==.bat del /q %%a
+echo. Done
 
 cd temp
 move /Y *.hex ..  > NUL
