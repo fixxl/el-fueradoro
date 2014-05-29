@@ -105,7 +105,7 @@ uint8_t rfm_receiving(void) {
 // Byte empfangen
 static inline uint8_t rfm_rxbyte(void) {
 	uint32_t utimer;
-	utimer = (TIMEOUTVAL>>2);
+	utimer = (F_CPU/256);
 	uint8_t value = 0xAA;
 
 	while (!rfm_ready() && utimer--)
@@ -118,7 +118,7 @@ static inline uint8_t rfm_rxbyte(void) {
 // Byte senden
 static inline void rfm_txbyte(uint8_t value) {
 	uint32_t utimer;
-	utimer = (TIMEOUTVAL>>2);
+	utimer = (F_CPU/256);
 	while (!rfm_ready() && utimer--)
 		;
 	rfm_cmd(0xB800 + value);
