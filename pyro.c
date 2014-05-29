@@ -574,6 +574,7 @@ int main(void) {
 
 			nr = 0;
 			tmp = 0;
+			inp = 0;
 
 			tx_length = 3;
 			tx_field[0] = IDENT;
@@ -584,7 +585,7 @@ int main(void) {
 			timer_off();
 
 			uart_puts_P(PSTR("\n\n\rModus(f/i): "));
-			inp = uart_getc();
+			while(!inp) inp = uart_getc();
 			uart_putc(inp);
 			tx_field[0] = inp;
 
@@ -593,7 +594,8 @@ int main(void) {
 			if (tx_field[0] == FIRE) {
 				uart_puts_P(PSTR("\n\rSlave-ID:   "));
 				for (i = 0; i < 2; i++) {
-					inp = uart_getc();
+					inp = 0;
+					while(!inp) inp = uart_getc();
 					uart_putc(inp);
 					nr += (inp - '0');
 					if (!i) nr *= 10;
@@ -609,7 +611,8 @@ int main(void) {
 				nr = 0;
 				uart_puts_P(PSTR("\n\rKanal:      "));
 				for (i = 0; i < 2; i++) {
-					inp = uart_getc();
+					inp = 0;
+					while(!inp) inp = uart_getc();
 					uart_putc(inp);
 					nr += (inp - '0');
 					if (!i) nr *= 10;
@@ -905,6 +908,7 @@ int main(void) {
 					lcd_arrize(tx_field[2], lcd_array, 2, 0);
 					lcd_puts(lcd_array);
 					lcd_puts(" ");
+					if (tx_field[3] < 100) lcd_puts(" ");
 					lcd_arrize((tx_field[3] / 10), lcd_array, 1, 0);	// Battery voltage
 					lcd_puts(lcd_array);
 					lcd_puts(".");
