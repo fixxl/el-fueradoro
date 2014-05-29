@@ -351,7 +351,7 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // UART-Routine
-		flags.b.uart_active = ((UCSR0A & (1 << RXC0)) ? 1 : 0);
+		flags.b.uart_active = ((UCSR0A & (1 << RXC0)) && 1);
 		if (flags.b.uart_active) {
 			temp_sreg = SREG;
 			cli();
@@ -808,7 +808,7 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Clear LCD in case of timeouts
-		if ((clear_lcd_tx_flag > DEL_THRES || clear_lcd_tx_flag > DEL_THRES) && SENDERBOX) {
+		if ((clear_lcd_tx_flag > DEL_THRES || clear_lcd_tx_flag > DEL_THRES) && SENDERBOX && !flags.b.lcd_update) {
 			temp_sreg = SREG; // Speichere Statusregister
 			cli();
 
@@ -859,7 +859,6 @@ int main(void) {
 					lcd_puts(" CH");
 					lcd_arrize(tx_field[2], lcd_array, 2, 0);
 					lcd_puts(lcd_array);
-					flags.b.tx_post = 0;
 
 					if (!flags.b.show_only) {
 						lcd_cursorset(lastzeile, lastspalte);
@@ -880,7 +879,6 @@ int main(void) {
 				}
 				case IDENT: {
 					lcd_puts("Identify  ");
-					flags.b.tx_post = 0;
 
 					if (!flags.b.show_only) {
 						lcd_cursorset(lastzeile, lastspalte);
@@ -897,7 +895,6 @@ int main(void) {
 				}
 				case ACKNOWLEDGED: {
 					lcd_puts("OK");
-					flags.b.tx_post = 0;
 					break;
 				}
 				case PARAMETERS: {
@@ -916,18 +913,16 @@ int main(void) {
 					lcd_puts(lcd_array);
 					lcd_puts("V ");
 					lcd_send(tx_field[4] ? 'j' : 'n', 1);			// Armed?
-
-					flags.b.tx_post = 0;
 					break;
 				}
 				case REPEAT: {
 					lcd_puts("REPEAT");
-					flags.b.tx_post = 0;
 					break;
 				}
 				default:
 					break;
 				}
+				flags.b.tx_post = 0;
 				clear_lcd_tx_flag = 0;
 			}
 
@@ -938,7 +933,6 @@ int main(void) {
 				switch (rx_field[0]) {
 				case ACKNOWLEDGED: {
 					lcd_puts("OK ");
-					flags.b.rx_post = 0;
 					break;
 				}
 				case FIRE: {
@@ -949,22 +943,18 @@ int main(void) {
 					lcd_puts(" CH");
 					lcd_arrize(rx_field[2], lcd_array, 2, 0);
 					lcd_puts(lcd_array);
-					flags.b.rx_post = 0;
 					break;
 				}
 				case IDENT: {
 					lcd_puts("Identify");
-					flags.b.rx_post = 0;
 					break;
 				}
 				case ERROR: {
 					lcd_puts("ERR");
-					flags.b.rx_post = 0;
 					break;
 				}
 				case REPEAT: {
 					lcd_puts("REP");
-					flags.b.rx_post = 0;
 					break;
 				}
 				case PARAMETERS: {
@@ -983,13 +973,12 @@ int main(void) {
 					lcd_puts(lcd_array);
 					lcd_puts("V ");
 					lcd_send(rx_field[4] ? 'j' : 'n', 1);
-
-					flags.b.rx_post = 0;
 					break;
 				}
 				default:
 					break;
 				}
+				flags.b.rx_post = 0;
 				clear_lcd_rx_flag = 0;
 			}
 			SREG = temp_sreg;
