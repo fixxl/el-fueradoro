@@ -489,7 +489,7 @@ int main(void) {
 			uart_puts_P(PSTR("\n\r\n\r"));
 
 			if (SENDERBOX) {
-				hist_del_flag = 0;
+				hist_del_flag = 1;
 				lcd_cursorset(3, 1);
 				lcd_puts("Temperatur:    ");
 				if (temperature == -128) {
@@ -591,7 +591,7 @@ int main(void) {
 			timer_reset();
 			timer_off();
 
-			uart_puts_P(PSTR("\n\n\rModus(f/i): "));
+			uart_puts_P(PSTR("\n\rModus(f/i): "));
 			while (!inp)
 				inp = uart_getc();
 			uart_putc(inp);
@@ -822,12 +822,12 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Clear LCD in case of timeouts
-		if ((clear_lcd_tx_flag > DEL_THRES || clear_lcd_tx_flag > DEL_THRES) && SENDERBOX
-				&& !flags.b.lcd_update) {
+		if ((clear_lcd_tx_flag > DEL_THRES || clear_lcd_rx_flag > DEL_THRES || hist_del_flag > (3 * DEL_THRES))
+				&& SENDERBOX && !flags.b.lcd_update) {
 			temp_sreg = SREG; // Speichere Statusregister
 			cli();
 
-			if (lcd_cursorread() && (clear_lcd_tx_flag > DEL_THRES)) {
+			if (clear_lcd_tx_flag > DEL_THRES) {
 				clear_lcd_tx_flag = 0;
 				lcd_cursorset(1, 1);
 				for (i = 0; i < 20; i++) {
@@ -835,7 +835,7 @@ int main(void) {
 				}
 			}
 
-			if (lcd_cursorread() && (clear_lcd_rx_flag > DEL_THRES)) {
+			if (clear_lcd_rx_flag > DEL_THRES) {
 				clear_lcd_rx_flag = 0;
 				lcd_cursorset(2, 1);
 				for (i = 0; i < 20; i++) {
@@ -844,7 +844,11 @@ int main(void) {
 			}
 
 			if (hist_del_flag > (DEL_THRES * 3)) {
-				lcd_clear();
+				hist_del_flag = 0;
+				lcd_cursorset(3, 1);
+				for (i = 0; i < 20; i++) {
+					lcd_puts("  ");
+				}
 				anzzeile = 3;
 				anzspalte = 1;
 			}
@@ -887,7 +891,7 @@ int main(void) {
 							lcd_puts(lcd_array);
 
 							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
-							hist_del_flag = 0;
+							hist_del_flag = 1;
 						}
 						flags.b.show_only = 0;
 						break;
@@ -903,7 +907,7 @@ int main(void) {
 							lcd_puts("IDENT");
 
 							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
-							hist_del_flag = 0;
+							hist_del_flag = 1;
 						}
 						flags.b.show_only = 0;
 						break;
@@ -938,7 +942,7 @@ int main(void) {
 						break;
 				}
 				flags.b.tx_post = 0;
-				clear_lcd_tx_flag = 0;
+				clear_lcd_tx_flag = 1;
 			}
 
 			// RECEIVER (2. Line)
@@ -994,7 +998,7 @@ int main(void) {
 						break;
 				}
 				flags.b.rx_post = 0;
-				clear_lcd_rx_flag = 0;
+				clear_lcd_rx_flag = 1;
 			}
 			SREG = temp_sreg;
 		}
@@ -1011,9 +1015,9 @@ ISR(TIMER1_OVF_vect) {
 }
 
 ISR(TIMER0_OVF_vect) {
-	clear_lcd_tx_flag++;
-	clear_lcd_rx_flag++;
-	hist_del_flag++;
+	if (clear_lcd_tx_flag) clear_lcd_tx_flag++;
+	if (clear_lcd_rx_flag) clear_lcd_rx_flag++;
+	if (hist_del_flag) hist_del_flag++;
 	if (clear_lcd_tx_flag > 1000) clear_lcd_tx_flag = 0;
 	if (clear_lcd_rx_flag > 1000) clear_lcd_rx_flag = 0;
 	if (hist_del_flag > 10000) hist_del_flag = 0;

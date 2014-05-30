@@ -19,7 +19,7 @@
 #define MAX_ARRAYSIZE 		30
 
 // Schwellwert zum Löschen des LCD
-#define DEL_THRES			250
+#define DEL_THRES			251
 
 // Value for input timeout
 #define TIMEOUTVAL			(F_CPU>>2)
