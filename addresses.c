@@ -36,8 +36,6 @@ void update_addresses(uint8_t *uniqueid, uint8_t *slaveid) {
 		lcd_cursorhome();
 		TCCR0B |= (1 << CS02 | 1 << CS00);
 		TIMSK0 |= (1 << TOIE0);
-		_delay_ms(2500);
-		lcd_clear();
 	}
 
 	// Empfängerspezifische Initialisierung

@@ -13,7 +13,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 	uint8_t ergebnisfeld[6] = { 0, 0, 0, 0, 0x80, '\0' };
 	uint8_t cycles = (DHT_TYPE > 15) ? 1 : 10, temperature_sign;
 	uint8_t chksm;
-	uint8_t timeoutcounter = 0, errorcounter = 1;
+	uint8_t timeoutcounter = 0, errorcounter = 1;						// Errorcounter = 1
 	int16_t humid;
 	int16_t temperat;
 
@@ -21,7 +21,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 	TEMPHUMPORT &= ~(1 << TEMPHUM);
 	_delay_us(50);
 	if (!(TEMPHUMPIN & (1 << TEMPHUM))) return errorcounter;
-	errorcounter++;
+	errorcounter++;														// Errorcounter = 2
 	timeoutcounter = 0;
 
 	// DATAPORT low setzen und bauteilspezifisch warten
@@ -40,7 +40,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 		timeoutcounter++;
 	}
 	if (timeoutcounter > 24) return errorcounter;
-	errorcounter++;
+	errorcounter++;														// Errorcounter = 3
 	timeoutcounter = 0;
 
 	// Low-Pegel abwarten (80us lt. Datenblatt)
@@ -49,7 +49,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 		timeoutcounter++;
 	}
 	if (timeoutcounter > 24) return errorcounter;
-	errorcounter++;
+	errorcounter++;														// Errorcounter = 4
 	timeoutcounter = 0;
 
 	// High-Pegel abwarten (80us lt. Datenblatt)
@@ -58,7 +58,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 		timeoutcounter++;
 	}
 	if (timeoutcounter > 24) return errorcounter;
-	errorcounter = 100;
+	errorcounter = 100;													// Errorcounter = 100
 	timeoutcounter = 0;
 
 	// 40 Datenbits (0...39) auswerten
@@ -70,19 +70,19 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 			while ((!(TEMPHUMPIN & (1 << TEMPHUM))) && timeoutcounter--) {
 				_delay_us(5);
 			}
+			if(!timeoutcounter) return errorcounter;
 			ergebnisfeld[byte] <<= 1;
 
 			// Nach 30us den Pinzustand abfragen (High = 1, Low = 0)
 			_delay_us(30);
 			if ((TEMPHUMPIN & (1 << TEMPHUM))) ergebnisfeld[byte] |= 1;
 
-			led_blue_toggle();
-
 			// Evtl. restlichen High-Pegel abwarten
 			timeoutcounter = 50;
 			while ((TEMPHUMPIN & (1 << TEMPHUM)) && timeoutcounter--) {
 				_delay_us(5);
 			}
+			if(!timeoutcounter) return errorcounter++;
 		}
 	}
 
