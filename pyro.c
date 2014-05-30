@@ -866,9 +866,9 @@ int main(void) {
 			flags.b.lcd_update = 0;
 
 			// TRANSMITTER (1. Line + 3./4. Line)
-			lcd_cursorset(1, 1);
-			lcd_puts("Tx: ");
 			if (flags.b.tx_post) {
+				lcd_cursorset(1, 1);
+				lcd_puts("Tx: ");
 				switch (tx_field[0]) {
 					case FIRE: {
 						lcd_send(0, 1);
@@ -946,9 +946,9 @@ int main(void) {
 			}
 
 			// RECEIVER (2. Line)
-			lcd_cursorset(2, 1);
-			lcd_puts("Rx: ");
 			if (flags.b.rx_post) {
+				lcd_cursorset(2, 1);
+				lcd_puts("Rx: ");
 				switch (rx_field[0]) {
 					case ACKNOWLEDGED: {
 						lcd_puts("OK ");
