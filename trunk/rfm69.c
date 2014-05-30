@@ -191,9 +191,6 @@ static inline void rfm_setbit(uint32_t bitrate) {
 
 	//Receiver Bandwidth
 	rfm_cmd(0x1980 | bw, 1);
-
-	// AFC
-	rfm_cmd(0x1A93, 1);
 }
 
 // Initialise RFM
