@@ -21,12 +21,12 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"timer.d" -MT"timer.d" -c -o "timer.o" "../timer.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../uart.c"
 
-avr-gcc -Wl,-Map,Pyro_atmega328p_RFM69.map -flto -Os -mmcu=atmega328p -o "Pyro_atmega328p_RFM69.elf"  ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o   
- 
-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega328p_RFM69.elf  "Pyro_atmega328p_RFM69.hex"
+avr-gcc -Wl,-Map,Pyro_atmega328p_RFM69.map -flto -Os -mmcu=atmega328p -o "Pyro_atmega328p_RFM69.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
+
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega328p_RFM69.elf "Pyro_atmega328p_RFM69.hex"
 
 copy "Pyro_atmega328p_RFM69.hex" .\temp > NUL
-for %%a in (*) do if not %%~xa==.bat del /q %%a
+for %%a in (*) do if /I not %%~na==build_complete del /q %%a
 echo. Done
 echo.
 echo.|set /p =Compiling sources for ATMega328p and RFM12...
@@ -48,14 +48,15 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"timer.d" -MT"timer.d" -c -o "timer.o" "../timer.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../uart.c"
 
-avr-gcc -Wl,-Map,Pyro_atmega328p_RFM12.map -flto -Os -mmcu=atmega328p -o "Pyro_atmega328p_RFM12.elf"  ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o   
- 
-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega328p_RFM12.elf  "Pyro_atmega328p_RFM12.hex"
+avr-gcc -Wl,-Map,Pyro_atmega328p_RFM12.map -flto -Os -mmcu=atmega328p -o "Pyro_atmega328p_RFM12.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
+
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega328p_RFM12.elf "Pyro_atmega328p_RFM12.hex"
 
 copy "Pyro_atmega328p_RFM12.hex" .\temp > NUL
-for %%a in (*) do if not %%~xa==.bat del /q %%a
+for %%a in (*) do if /I not %%~na==build_complete del /q %%a
 echo. Done
 echo.
+
 echo.|set /p =Compiling sources for ATMega168p and RFM69...
 
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"crcchk.d" -MT"crcchk.d" -c -o "crcchk.o" "../crcchk.c"
@@ -74,14 +75,15 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"timer.d" -MT"timer.d" -c -o "timer.o" "../timer.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../uart.c"
 
-avr-gcc -Wl,-Map,Pyro_atmega168p_RFM69.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM69.elf"  ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o   
- 
-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_RFM69.elf  "Pyro_atmega168p_RFM69.hex"
+avr-gcc -Wl,-Map,Pyro_atmega168p_RFM69.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM69.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
+
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_RFM69.elf "Pyro_atmega168p_RFM69.hex"
 
 copy "Pyro_atmega168p_RFM69.hex" .\temp > NUL
-for %%a in (*) do if not %%~xa==.bat del /q %%a
+for %%a in (*) do if /I not %%~na==build_complete del /q %%a
 echo. Done
 echo.
+
 echo.|set /p =Compiling sources for ATMega168p and RFM12...
 
 
@@ -101,16 +103,16 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"timer.d" -MT"timer.d" -c -o "timer.o" "../timer.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../uart.c"
 
-avr-gcc -Wl,-Map,Pyro_atmega168p_RFM12.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM12.elf"  ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o   
- 
-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_RFM12.elf  "Pyro_atmega168p_RFM12.hex"
+avr-gcc -Wl,-Map,Pyro_atmega168p_RFM12.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM12.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
+
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_RFM12.elf "Pyro_atmega168p_RFM12.hex"
 
 copy "Pyro_atmega168p_RFM12.hex" .\temp > NUL
-for %%a in (*) do if not %%~xa==.bat del /q %%a
+for %%a in (*) do if /I not %%~na==build_complete del /q %%a
 echo. Done
 
 cd temp
-move /Y *.hex ..  > NUL
+move /Y *.hex .. > NUL
 cd..
 rmdir temp
 del /Y *.elf > NUL
