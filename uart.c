@@ -8,14 +8,18 @@
 #include "global.h"
 
 void block_uart_sending(void) {
+#if RTSCTSFLOW
 	RTS_PORT |= (1 << RTS);
+#endif
 }
 
 void allow_uart_sending(void) {
+#if RTSCTSFLOW
 	RTS_PORT &= ~(1 << RTS);
+#endif
 }
 
-void uart_cleanup(uint8_t rxtxboth) {	// 1:Rx, 2:Tx, 3: both
+void uart_cleanup(uint8_t rxtxboth) { // 1:Rx, 2:Tx, 3: both
 	uint8_t __attribute__((unused)) ttt = 0xAA;
 
 	if (rxtxboth & (1 << 0)) {
@@ -35,9 +39,11 @@ void uart_init(uint32_t baud) {
 	uint8_t sreg = SREG;
 	cli();
 
-	CTS_PORT 	|=  (1 << CTS);
-	CTS_DDR 	&= ~(1 << CTS);
-	RTS_DDR 	|=  (1 << RTS);
+#if RTSCTSFLOW
+	CTS_PORT |= (1 << CTS);
+	CTS_DDR &= ~(1 << CTS);
+	RTS_DDR |= (1 << RTS);
+#endif
 
 	uint32_t baudrate = ((F_CPU + baud * 8) / (baud * 16) - 1);
 	/* Set baud rate */
@@ -57,7 +63,7 @@ uint8_t uart_getc(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	while (!(UCSR0A & (1 << RXC0)) && --utimer)
-		; 												// wait until char available or timeout
+		; // wait until char available or timeout
 	if (!utimer) return '\0';
 	block_uart_sending();
 	udrcontent = UDR0;
@@ -77,16 +83,18 @@ uint8_t uart_gets(char *s) {
 			zeichen++;
 		}
 	}
-	s[zeichen] = '\0';
-	return zeichen; 	// Return the number of chars received - which equals the index of terminating '\0'
+	if(zeichen) uart_puts_P(PSTR("\n\r"));
+	return zeichen; // Return the number of chars received - which equals the index of terminating '\0'
 }
 
 uint8_t uart_putc(uint8_t c) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
+#if RTSCTSFLOW
 	while ((CTS_PIN & (1 << CTS)) && --utimer)
-		; /* wait till sending is allowed */
+	; /* wait till sending is allowed */
 
+#endif
 	if (utimer) {
 		utimer = TIMEOUTVAL;
 		while (!(UCSR0A & (1 << UDRE0)) && --utimer)

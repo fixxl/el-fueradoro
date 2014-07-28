@@ -18,6 +18,7 @@
 #define CTS 		3 // Input: May controller transmit data, other side ready? (HIGH=no, LOW=yes)
 
 #define BAUD 9600
+#define RTSCTSFLOW 1
 
 #define RXD_PORT	PORT(RXDPORT)
 #define RXD_DDR		DDR(RXDPORT)
