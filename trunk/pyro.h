@@ -32,6 +32,7 @@
 #define 	PARAMETERS		'p'
 #define 	ACKNOWLEDGED	'a'
 #define 	SETUP			's'
+#define		TEMPERATURE		't'
 #define 	IDLE			0
 
 

@@ -501,6 +501,14 @@ int main(void) {
 					lcd_send(1, 1);
 					lcd_send('C', 1);
 				}
+
+				// Request other devices to refresh temperature as well
+				tx_length = 4;
+				tx_field[0] = TEMPERATURE;
+				tx_field[1] = 'e';
+				tx_field[2] = 'm';
+				tx_field[2] = 'p';
+				flags.b.transmit = 1;
 			}
 
 			SREG = temp_sreg;
@@ -764,6 +772,13 @@ int main(void) {
 						break;
 					}
 
+						// Received temperature-measurement-trigger
+					case TEMPERATURE: {
+						tempsenstype = tempident();
+						temperature = tempmeas(tempsenstype);
+						break;
+					}
+
 						// Received identification-demand
 					case IDENT: {
 						rfm_rxoff();
@@ -936,6 +951,10 @@ int main(void) {
 					}
 					case REPEAT: {
 						lcd_puts("REPEAT");
+						break;
+					}
+					case TEMPERATURE: {
+						lcd_puts("Temp. refresh");
 						break;
 					}
 					default:

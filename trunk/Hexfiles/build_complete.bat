@@ -115,4 +115,3 @@ cd temp
 move /Y *.hex .. > NUL
 cd..
 rmdir temp
-del /Y *.elf > NUL
