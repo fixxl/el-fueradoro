@@ -8,9 +8,16 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
+#ifndef MCU
+#define MCU "atmega328p"
+#endif
+
 #ifndef RFM
 #define RFM 69
 #endif
+
+#define STRINGIZE(x) #x
+#define STRINGIZE_VALUE_OF(x) STRINGIZE(x)
 
 // Includes und Definitionen
 #include <avr/io.h>
