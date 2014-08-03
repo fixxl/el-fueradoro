@@ -439,6 +439,11 @@ int main(void) {
 				flags.b.temp = 1;
 			}
 
+			// "hardware" or "hw" outputs for uC- and rfm-type
+			if (uart_strings_equal(uart_field, "hw") || uart_strings_equal(uart_field, "hardware")) {
+				flags.b.hw = 1;
+			}
+
 			// "int1" last transmitted command gets re-transmitted periodically
 			if (uart_strings_equal(uart_field, "int1") && SENDERBOX) {
 				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls EIN\n\r"));
@@ -515,6 +520,24 @@ int main(void) {
 		}
 
 // -------------------------------------------------------------------------------------------------------
+
+// Hardware
+		if (flags.b.hw) {
+			temp_sreg = SREG;
+			cli();
+			flags.b.hw = 0;
+
+			uart_puts_P(PSTR("\n\rController:   "));
+			uart_puts_P(PSTR(STRINGIZE_VALUE_OF(MCU)));
+			uart_puts_P(PSTR("\n\rRadio module: RFM"));
+			uart_shownum(RFM, 'd');
+			uart_puts_P(PSTR("\n\n\r"));
+
+			SREG = temp_sreg;
+		}
+
+// -------------------------------------------------------------------------------------------------------
+
 
 // Slave- and Unique-ID settings
 		if (flags.b.uart_config) {

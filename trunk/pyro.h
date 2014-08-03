@@ -54,7 +54,7 @@ typedef union{
 	unsigned reset_device:1;
 	unsigned clear_list:1;
 	unsigned temp:1;
-	unsigned : 1;
+	unsigned hw: 1;
 	} b;
 	uint16_t complete;
 } bitfeld_t;
