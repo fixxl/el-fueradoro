@@ -9,14 +9,16 @@
 #define RFM69_H_
 
 /* Carrierfrequenz in Hz */
-#define FREQUENCY			867595000LL
+#define FREQUENCY			868000000LL
 
-/* Bitrate in bps (1200 ... 300000) and shall it be set according to RFM12? */
+/* Bitrate in bps (1200 ... 300000) and shall it be calculated as for RFM12
+ * in order to get equal bitrate for RFM12 and RFM69 if used together? */
 #define BITRATE				9600L
 #define RFM12COMP			1
 
 /* Output power in dBm (-18...13) */
 #define P_OUT_DBM			0			// Output power in dBm
+
 /* Pin assignment */
 #define NSELPORT			B
 #define NSEL				2
@@ -28,7 +30,7 @@
 #define SCK					5
 
 /* Use Hardware-SPI if available? */
-#define USE_HARDWARE_SPI	1
+#define USE_HARDWARE_SPI	0
 
 // Don't change anything from here
 #define XTALFREQ			32000000UL
@@ -77,6 +79,11 @@
 
 #ifndef MAX_ARRAYSIZE
 #define MAX_ARRAYSIZE 30
+#endif
+
+// Value for input timeout
+#ifndef TIMEOUTVAL
+#define TIMEOUTVAL			(F_CPU>>2)
 #endif
 
 #ifdef SPDR
