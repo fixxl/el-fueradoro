@@ -96,16 +96,17 @@
 
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr); 	// Immediate access to register
 uint8_t rfm_receiving(void);						// Valid data received?
-uint8_t rfm_get_rssi_dbm(void);						// Return RSSI-Value. Real RSSI = -1dBm * returned value
 uint16_t rfm_status(void);							// Contents of status registers 0x27 (15:8) and 0x28 (7:0)
 
-void rfm_rxon(void);								// Turn on Receiver
-void rfm_rxoff(void);								// Turn off Receiver
-void rfm_txon(void);								// Turn on Transmitter
-void rfm_txoff(void);								// Turn off Transmitter
+uint8_t rfm_rxon(void);								// Turn on Receiver
+uint8_t rfm_rxoff(void);							// Turn off Receiver
+uint8_t rfm_txon(void);								// Turn on Transmitter
+uint8_t rfm_txoff(void);							// Turn off Transmitter
 
 void rfm_init(void);								// Initialisation
 uint8_t rfm_transmit(char *data, uint8_t length);   // Transmit data
 uint8_t rfm_receive(char *data, uint8_t *length);	// Get received data
+
+uint8_t rfm_get_rssi_dbm(void);						// Return RSSI-Value. Real RSSI = -1dBm * returned value
 
 #endif

@@ -13,7 +13,7 @@
 #endif
 
 #ifndef RFM
-#define RFM 69
+#define RFM 12
 #endif
 
 #define STRINGIZE(x) #x
