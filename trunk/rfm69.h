@@ -9,7 +9,7 @@
 #define RFM69_H_
 
 /* Carrierfrequenz in Hz */
-#define FREQUENCY			868000000LL
+#define FREQUENCY			867595000LL
 
 /* Bitrate in bps (1200 ... 300000) and shall it be calculated as for RFM12
  * in order to get equal bitrate for RFM12 and RFM69 if used together? */
