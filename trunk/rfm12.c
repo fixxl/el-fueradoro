@@ -25,7 +25,7 @@ static inline uint8_t rfm_ready(void) {
 }
 
 static inline uint8_t rfm_spi(uint8_t spibyte) {
-#if(USE_HARDWARE_SPI)
+#if(HARDWARE_SPI)
 	SPDR = spibyte;
 	while (!(SPSR & (1 << SPIF)))
 		;
