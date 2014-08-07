@@ -122,43 +122,49 @@ static inline void rfm_fifo_clear(void) {
 //------------------------------------------------------------------------------------------------------------------------
 
 // Turn Transmitter on and off
-void rfm_txon(void) {
+uint8_t rfm_txon(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	rfm_cmd(0x010C, 1); 									// TX on (set to transmitter mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & 1 << 7) && --utimer)
 		; 													// Wait for Mode-Ready-Flag
+	if (!utimer) return 1;
 	utimer = TIMEOUTVAL;
 	while (!(rfm_cmd(0x27FF, 0) & 1 << 5) && --utimer)
 		; 													// Wait for TX-Ready-Flag
+	return (utimer? 0 : 1);
 }
 
-void rfm_txoff(void) {
+uint8_t rfm_txoff(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	rfm_cmd(0x0104, 1); 									// TX off (set to standby mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
 		; 													// Wait for Mode-Ready-Flag
+	return (utimer? 0 : 1);
 }
 
 // Turn Receiver on and off
-void rfm_rxon(void) {
+uint8_t rfm_rxon(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	rfm_cmd(0x0110, 1); 									// RX on (set to receiver mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
 		; 													// Wait for Mode-Ready-Flag
+	if (!utimer) return 1;
 	utimer = TIMEOUTVAL;
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 6)) && --utimer)
 		; 													// Wait for RX-Ready-Flag
+	return (utimer? 0 : 1);
 }
 
-void rfm_rxoff(void) {
+uint8_t rfm_rxoff(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	rfm_cmd(0x0104, 1); 									// RX off (set to standby mode in RegOpMode)
 	while (!(rfm_cmd(0x27FF, 0) & (1 << 7)) && --utimer)
 		;													// Wait for Mode-Ready-Flag
+	return (utimer? 0 : 1);
 }
 
 // Get RSSI-Value
@@ -250,14 +256,14 @@ void rfm_init(void) {
 		rfm_cmd(0x3C80, 1); 					// Tx-Start-Condition: FIFO not empty
 		rfm_cmd(0x3D12, 1); 					// Packet-Config2
 
-		// Präambel length 3 bytes
+		// Preamble length 3 bytes
 		rfm_cmd(0x2C00, 1);
 		rfm_cmd(0x2D03, 1);
 
 		// Sync-Mode
 		rfm_cmd(0x2E88, 1); 					// set FIFO mode
-		rfm_cmd(0x2F2D, 1); 					// sync word MSB
-		rfm_cmd(0x30D4, 1); 					// sync word LSB
+		rfm_cmd(0x2F2D, 1); 					// sync word MSB to 0x2D
+		rfm_cmd(0x30D4, 1); 					// sync word LSB to 0xD4
 
 		// Receiver config
 		rfm_cmd(0x1800, 1); 					// LNA: 50 Ohm Input Impedance, Automatic Gain Control
@@ -312,7 +318,7 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 
 	rfm_rxon();
 
-	return 0;
+	return (utimer ? 0 : 1); // 0 : successful, 1 : error
 }
 
 // Receive data stream
@@ -344,8 +350,8 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 	*length = length_local;
 
 	// Return value is for compatibility reasons with RFM12
-	// It's always 1 because PayloadReady only occurs after successful hardware CRC
-	return 1;
+	// It's always 0 because PayloadReady only occurs after successful hardware CRC
+	return 0; // 0 : successful, 1 : error
 }
 
 #endif

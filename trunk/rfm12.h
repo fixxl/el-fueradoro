@@ -70,19 +70,19 @@ uint16_t rfm_cmd(uint16_t command);									// Immediate access to register
 uint8_t rfm_receiving(void);										// FIFO not empty?
 uint16_t rfm_status(void);											// Query the 16 status bits
 
-void rfm_rxon(void);												// Turn on Receiver
-void rfm_rxoff(void);												// Turn off Receiver
-void rfm_txon(void);												// Turn on Transmitter
-void rfm_txoff(void);												// Turn off Transmitter
+uint8_t rfm_rxon(void);												// Turn on Receiver
+uint8_t rfm_rxoff(void);											// Turn off Receiver
+uint8_t rfm_txon(void);												// Turn on Transmitter
+uint8_t rfm_txoff(void);											// Turn off Transmitter
+
+void rfm_init(void);												// Initialise module
+uint8_t rfm_transmit(char *data, uint8_t length);					// Send data
+uint8_t rfm_receive(char *data, uint8_t *length);					// Receive data
 
 void rfm_nirq_clear(void);											// Clear NIRQ-Interrupts
 void rfm_wake_up_init(void);										// Initialise Wake-Up-Timer
 void rfm_wake_up_clear(void);										// Turn off Wake-Up-Timer
 void rfm_set_timer_and_sleep(uint8_t mantissa, uint8_t exponent);	// Activate Wake-Up-Timer
-
-void rfm_init(void);												// Initialise module
-uint8_t rfm_transmit(char *data, uint8_t length);					// Send data
-uint8_t rfm_receive(char *data, uint8_t *length);					// Receive data
 
 // Convert 16-bit to 2*8-bit
 typedef union {

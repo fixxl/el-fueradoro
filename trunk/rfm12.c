@@ -73,28 +73,32 @@ void rfm_reset(void) {
 }
 
 // Transmitter ein- und ausschalten
-void rfm_txon(void) {
+uint8_t rfm_txon(void) {
 	rfm_cmd(0x8239); // TX on (set bit ET in Power Management)
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
+	return 0;
 }
 
-void rfm_txoff(void) {
+uint8_t rfm_txoff(void) {
 	rfm_cmd(0x8209); // TX off (clear bit ET in Power Management)
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
+	return 0;
 }
 
 // Turn Receiver on and off
-void rfm_rxon(void) {
+uint8_t rfm_rxon(void) {
 	rfm_cmd(0x82D9); // RX on (set bit ER in Power Management)
 	rfm_cmd(0xCA81); // set FIFO mode
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 	rfm_cmd(0xCA83); // enable FIFO: sync word search
+	return 0;
 }
 
-void rfm_rxoff(void) {
+uint8_t rfm_rxoff(void) {
 	rfm_cmd(0x8209); // RX off (clear bit ER in Power Management)
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
+	return 0;
 }
 
 // Byte received? (available for access in main)
@@ -103,25 +107,27 @@ uint8_t rfm_receiving(void) {
 }
 
 // Receive byte
-static inline uint8_t rfm_rxbyte(void) {
+static inline uint8_t rfm_rxbyte(uint8_t *errflg) {
 	uint32_t utimer;
 	utimer = (F_CPU/256);
 	uint8_t value = 0xAA;
 
 	while (!rfm_ready() && utimer--)
 		;
-	if (utimer) value = rfm_cmd(0xB000);
+	if (!utimer) (*errflg)++;
+	value = rfm_cmd(0xB000);
 
 	return value;
 }
 
 // Transmit byte
-static inline void rfm_txbyte(uint8_t value) {
+static inline uint8_t rfm_txbyte(uint8_t value) {
 	uint32_t utimer;
 	utimer = (F_CPU/256);
 	while (!rfm_ready() && utimer--)
 		;
 	rfm_cmd(0xB800 + value);
+	return (utimer ? 0 : 1); // 0 : successful, 1 : error
 }
 
 // Get status
@@ -253,6 +259,7 @@ void rfm_set_timer_and_sleep(uint8_t mantissa, uint8_t exponent) {
 
 // Transmit data
 uint8_t rfm_transmit(char *data, uint8_t length) {
+	uint8_t error = 0;
 	uint16_t crc = CRC16_SEED;						// Set CRC-Seed
 
 	rfm_rxoff();									// Turn off receiver
@@ -260,30 +267,30 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 
 	rfm_txon();										// Turn on transmitter
 
-	rfm_txbyte(0xAA);								// Send preamble of three 10101010-Bytes
-	rfm_txbyte(0xAA);
-	rfm_txbyte(0xAA);
+	error += rfm_txbyte(0xAA);						// Send preamble of three 10101010-Bytes
+	error += rfm_txbyte(0xAA);
+	error += rfm_txbyte(0xAA);
 
-	rfm_txbyte(0x2D);								// Send FIFO-keyword
-	rfm_txbyte(0xD4);
+	error += rfm_txbyte(0x2D);						// Send FIFO-keyword
+	error += rfm_txbyte(0xD4);
 
-	rfm_txbyte(length);								// Transmit number of databytes
+	error += rfm_txbyte(length);					// Transmit number of databytes
 	crc = crc16(crc, length);						// CRC-Update
 
 	if (length > MAX_ARRAYSIZE) length = MAX_ARRAYSIZE;
 
 	for (uint8_t bytenum = 0; bytenum < length; bytenum++) {
-		rfm_txbyte(data[bytenum]);					// Transmit databyte
+		error += rfm_txbyte(data[bytenum]);			// Transmit databyte
 		crc = crc16(crc, data[bytenum]);			// CRC-Update
 	}
 
 	crc ^= 0xFFFF;									// Final XOR for CRC
-	rfm_txbyte((crc >> 8) & 0xFF);					// Transmit CRC-Highbyte
-	rfm_txbyte(crc & 0xFF);							// Transmit CRC-Lowbyte
+	error += rfm_txbyte((crc >> 8) & 0xFF);			// Transmit CRC-Highbyte
+	error += rfm_txbyte(crc & 0xFF);				// Transmit CRC-Lowbyte
 
-	rfm_txbyte(0xAA);								// Dummybyte
-	rfm_txbyte(0xAA);								// Dummybyte
-	rfm_txbyte(0xAA);								// Dummybyte
+	error += rfm_txbyte(0xAA);						// Dummybyte
+	error += rfm_txbyte(0xAA);						// Dummybyte
+	error += rfm_txbyte(0xAA);						// Dummybyte
 
 	rfm_txoff();									// TX off
 
@@ -291,30 +298,30 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 
 	rfm_rxon();										// Turn receiver back on
 
-	return 0;
+	return (error? 1:0); // 0 : successful, 1 : error
 }
 
 // Receive data
 uint8_t rfm_receive(char *data, uint8_t *length) {
-	uint8_t bytenum, length_local;
+	uint8_t bytenum, length_local, error = 0;
 	uint16_t crc_rec, crc_calc = CRC16_SEED;
 
 	rfm_status(); 									// Query status to clear potential error flags
 
-	length_local = rfm_rxbyte(); 					// Receive data length
+	length_local = rfm_rxbyte(&error); 				// Receive data length
 	crc_calc = crc16(crc_calc, length_local);		// CRC-Update
 
 	if (length_local > MAX_ARRAYSIZE) length_local = MAX_ARRAYSIZE;
 
 	for (bytenum = 0; bytenum < length_local; bytenum++) {
-		data[bytenum] = rfm_rxbyte();				// Receive databyte
+		data[bytenum] = rfm_rxbyte(&error);			// Receive databyte
 		crc_calc = crc16(crc_calc, data[bytenum]);	// CRC-Update
 	}
 	data[length_local] = '\0';
 
 	crc_calc ^= 0xFFFF;								// Final XOR for CRC
-	crc_rec = (rfm_rxbyte() << 8);					// Receive CRC-Highbyte
-	crc_rec |= rfm_rxbyte();						// Receive CRC-Lowbyte
+	crc_rec = (rfm_rxbyte(&error) << 8);			// Receive CRC-Highbyte
+	crc_rec |= rfm_rxbyte(&error);					// Receive CRC-Lowbyte
 
 	rfm_cmd(0xCA81); // empty FIFO					// Reset FIFO
 	rfm_status(); 									// Status abfragen, um evtl. Fehler zu löschen
@@ -322,7 +329,8 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 	rfm_cmd(0xCA83); 								// Restart FIFO: enable sync word search
 
 	*length = length_local;
-	return (crc_rec == crc_calc);
+
+	return (!(crc_rec == crc_calc) || error); 		// 0 : successful, 1 : error
 }
 
 #endif

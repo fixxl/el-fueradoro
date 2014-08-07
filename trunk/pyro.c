@@ -207,7 +207,7 @@ int main(void) {
 	uint8_t tx_length = 2, rx_length = 0;
 	uint8_t temp_sreg;
 	uint8_t slave_id = 30, unique_id = 30;
-	uint8_t success = 0, loopcount = 5;
+	uint8_t rfm_rx_error = 1, loopcount = 5;
 	uint8_t anzspalte = 1, anzzeile = 3, lastspalte = 15, lastzeile = 4;
 	uint8_t armed = 0;
 	uint8_t changes = 0;
@@ -775,10 +775,10 @@ int main(void) {
 #ifdef RFM69_H_
 			rssi = rfm_get_rssi_dbm(); // Measure signal strength (RFM69 only)
 #endif
-			success = rfm_receive(rx_field, &rx_length); // Get Message
+			rfm_rx_error = rfm_receive(rx_field, &rx_length); // Get Message
 			led_blue_off();
 
-			if (!success) rx_field[0] = ERROR;
+			if (rfm_rx_error) rx_field[0] = ERROR;
 			else {
 				switch (rx_field[0]) { 	// Act according to type of message received
 
