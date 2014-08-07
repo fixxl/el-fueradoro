@@ -78,23 +78,36 @@ uint16_t rfm_status(void) {
 //------------------------------------------------------------------------------------------------------------------------
 
 static uint8_t rfm_fifo_wnr(char *data, uint8_t wnr) {
-	uint8_t temp;
 
 	ACTIVATE_RFM;
+
 	// Address FIFO-Register in write- or read-mode
-	rfm_spi(wnr ? 128 : 0);
 
-	// Write data length or read data length depending on mode
-	temp = rfm_spi(wnr ? data[0] : 0xFF);
-	if (!wnr) data[0] = temp;
+	// Write data bytes
+	if(wnr) {
+		rfm_spi(0x80);
 
-	// Make sure there's no array-overflow
-	if (data[0] > MAX_ARRAYSIZE) data[0] = MAX_ARRAYSIZE;
+		rfm_spi(data[0]);
 
-	// Write/read data bytes
-	for (uint8_t i = 1; i <= data[0]; i++) {
-		temp = rfm_spi(wnr ? data[i] : 0xFF);
-		if (!wnr) data[i] = temp;
+		// Make sure there's no array-overflow
+		if (data[0] > MAX_ARRAYSIZE) data[0] = MAX_ARRAYSIZE;
+
+		for (uint8_t i = 1; i <= data[0]; i++) {
+			rfm_spi(data[i]);
+		}
+	}
+
+	// Read data bytes
+	else {
+		rfm_spi(0);
+		data[0] = rfm_spi(0xFF);
+
+		// Make sure there's no array-overflow
+		if (data[0] > MAX_ARRAYSIZE) data[0] = MAX_ARRAYSIZE;
+
+		for (uint8_t i = 1; i <= data[0]; i++) {
+			data[i] = rfm_spi(0xFF);
+		}
 	}
 
 	DEACTIVATE_RFM;
