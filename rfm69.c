@@ -77,16 +77,13 @@ uint16_t rfm_status(void) {
 
 //------------------------------------------------------------------------------------------------------------------------
 
-static uint8_t rfm_fifo_wnr(char *data, uint8_t wnr) {
+static uint8_t rfm_fifo_wnr(char *data, uint8_t wnr) { // Address FIFO-Register in write- or read-mode
 
 	ACTIVATE_RFM;
-
-	// Address FIFO-Register in write- or read-mode
 
 	// Write data bytes
 	if(wnr) {
 		rfm_spi(0x80);
-
 		rfm_spi(data[0]);
 
 		// Make sure there's no array-overflow
