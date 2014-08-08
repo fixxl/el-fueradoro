@@ -110,13 +110,12 @@ uint8_t rfm_receiving(void) {
 static inline uint8_t rfm_rxbyte(uint8_t *errflg) {
 	uint32_t utimer;
 	utimer = (F_CPU/256);
-	uint8_t value, error = *errflg;
+	uint8_t value;
 
 	while (!rfm_ready() && utimer--)
 		;
-	if (!utimer) error++;
+	if (!utimer) (*errflg)++;
 	value = rfm_cmd(0xB000);
-	*errflg = error;
 
 	return value;
 }
