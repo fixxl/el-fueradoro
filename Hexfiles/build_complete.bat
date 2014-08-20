@@ -1,8 +1,5 @@
 @echo off
 
-rmdir temp 2>NUL
-md temp
-
 echo.|set /p =Compiling sources for ATMega328p and RFM69...
 
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"crcchk.d" -MT"crcchk.d" -c -o "crcchk.o" "../crcchk.c"
@@ -25,7 +22,7 @@ avr-gcc -Wl,-Map,Pyro_atmega328p_RFM69.map -flto -Os -mmcu=atmega328p -o "Pyro_a
 
 avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega328p_RFM69.elf "Pyro_atmega328p_RFM69.hex"
 
-copy "Pyro_atmega328p_RFM69.hex" .\temp > NUL
+copy "Pyro_atmega328p_RFM69.hex" .\Updater > NUL
 for %%a in (*) do if /I not %%~na==build_complete del /q %%a
 echo. Done
 echo.
@@ -52,7 +49,7 @@ avr-gcc -Wl,-Map,Pyro_atmega328p_RFM12.map -flto -Os -mmcu=atmega328p -o "Pyro_a
 
 avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega328p_RFM12.elf "Pyro_atmega328p_RFM12.hex"
 
-copy "Pyro_atmega328p_RFM12.hex" .\temp > NUL
+copy "Pyro_atmega328p_RFM12.hex" .\Updater > NUL
 for %%a in (*) do if /I not %%~na==build_complete del /q %%a
 echo. Done
 echo.
@@ -79,7 +76,7 @@ avr-gcc -Wl,-Map,Pyro_atmega168p_RFM69.map -flto -Os -mmcu=atmega168p -o "Pyro_a
 
 avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_RFM69.elf "Pyro_atmega168p_RFM69.hex"
 
-copy "Pyro_atmega168p_RFM69.hex" .\temp > NUL
+copy "Pyro_atmega168p_RFM69.hex" .\Updater > NUL
 for %%a in (*) do if /I not %%~na==build_complete del /q %%a
 echo. Done
 echo.
@@ -107,11 +104,8 @@ avr-gcc -Wl,-Map,Pyro_atmega168p_RFM12.map -flto -Os -mmcu=atmega168p -o "Pyro_a
 
 avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_RFM12.elf "Pyro_atmega168p_RFM12.hex"
 
-copy "Pyro_atmega168p_RFM12.hex" .\temp > NUL
+copy "Pyro_atmega168p_RFM12.hex" .\Updater > NUL
 for %%a in (*) do if /I not %%~na==build_complete del /q %%a
 echo. Done
 
-cd temp
-move /Y *.hex .. > NUL
-cd..
-rmdir temp
+
