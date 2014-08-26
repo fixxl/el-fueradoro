@@ -203,7 +203,7 @@ int main(void) {
 
 	// Variablendefinitionen
 	uint16_t scheme = 0;
-	uint8_t i, nr, inp, tmp, uart_char;
+	uint8_t i, nr, inp, tmp;
 	uint8_t tx_length = 2, rx_length = 0;
 	uint8_t temp_sreg;
 	uint8_t slave_id = 30, unique_id = 30;
@@ -219,7 +219,7 @@ int main(void) {
 	bitfeld_t flags;
 	flags.complete = 0;
 
-	char uart_field[MAX_ARRAYSIZE + 1] = { 0 };
+	char uart_field[MAX_ARRAYSIZE + 2] = { 0 };
 	char rx_field[MAX_ARRAYSIZE + 1] = { 0 };
 	char tx_field[MAX_ARRAYSIZE + 1] = { 0 };
 	char boxes[MAX_ARRAYSIZE + 1] = { 0 };
@@ -364,12 +364,11 @@ int main(void) {
 			led_yellow_on();
 
 			// Receive first char
-			uart_char = uart_getc();
+			uart_field[0] = uart_getc();
 
 			// React according to first char (ignition command or not?)
 			// Ignition command is always 4 chars long
-			if (uart_char == 0xFF) {
-				uart_field[0] = 0xFF;
+			if (uart_field[0] == 0xFF) {
 				uart_field[1] = uart_getc();
 				uart_field[2] = uart_getc();
 				uart_field[3] = uart_getc();
@@ -378,13 +377,8 @@ int main(void) {
 
 			// Any other command is received and the first char prefixed afterwards
 			else {
-				uart_putc(uart_char);					// Show first char so everything looks as it should
-				tmp = uart_gets(uart_field);				// Get number of received chars
-				uart_field[tmp + 1] = '\0';					// Extend length by 1 char
-				for (uint8_t i = tmp; i; i--) {
-					uart_field[i] = uart_field[i - 1];		// Right-shift every member
-				}
-				uart_field[0] = uart_char;					// Replace 0th element by first char
+				uart_putc(uart_field[0]);					// Show first char so everything looks as it should
+				uart_gets(uart_field+1);					// Get number of received chars
 			}
 
 			// Evaluate inputs
