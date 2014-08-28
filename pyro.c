@@ -506,7 +506,7 @@ int main(void) {
 				tx_field[0] = TEMPERATURE;
 				tx_field[1] = 'e';
 				tx_field[2] = 'm';
-				tx_field[2] = 'p';
+				tx_field[3] = 'p';
 				flags.b.transmit = 1;
 			}
 
