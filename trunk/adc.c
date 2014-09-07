@@ -14,8 +14,8 @@ void adc_init(void) {
 	// Komparator aus
 	ACSR |= 1 << ACD;
 
-	// Vcc als Referenz, Kanal 5 auswählen
-	ADMUX |= (1 << REFS0 | 1 << MUX2 | 1 << MUX0);
+	// 1.1V als Referenz, Kanal 5 auswählen
+	ADMUX |= (1 << REFS1 | 1 << REFS0 | 1 << MUX2 | 1 << MUX0);
 
 	// ADC-Vorteiler = 64 (9.8304MHz / 64 = 153kHz)
 	ADCSRA |= (1 << ADPS2 | 1 << ADPS1);
@@ -47,10 +47,10 @@ uint8_t adc_read(uint8_t channel) {
 	}
 	// Mittelwertbildung durch Division durch 8 mit Rundung
 	// Umrechnung des Mittelwerts in Spannungswert (in Dezivolt) durch:
-	// U =    320/100     *   10     *    MW      * 5 / 1024
+	// U =    160/10     *   10     *    MW      * 1.1 / 1024
 	//    Spannungsteiler   Volt ->       ADC-      Umrechnung: Wert 1024
-	//      100k + 220k     Dezivolt   Mittelwert   entspricht 5 Volt
-	// Kürzen U = 160*MW/1024 = 5*MW/32 und runden
-	result = (((result + 4) >> 3) * 5 + 16) >> 5;
+	//      100k + 1500k     Dezivolt   Mittelwert   entspricht 1.1 Volt
+	// Kürzen U = 16*11*MW/1024 = 11*MW/64 und runden
+	result = ((result + ((result + 2) >> 2) + ((result + 4) >> 3)) + 32) >> 6;
 	return (uint8_t) result;
 }
