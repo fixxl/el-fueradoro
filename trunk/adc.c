@@ -30,7 +30,7 @@ void adc_init(void) {
 	nosense = ADCW;
 }
 
-// Ausführen von 8 Messungen, Mittelwertbildung,
+// Ausführen von 11 Messungen, Mittelwertbildung,
 // Rückrechnung auf Spannungswert des Versorgers
 uint8_t adc_read(uint8_t channel) {
 	uint32_t result = 0;
@@ -38,8 +38,8 @@ uint8_t adc_read(uint8_t channel) {
 	ADMUX &= ~(0x07);
 	ADMUX |= channel;
 
-	// 8 Messungen, Summenbildung
-	for (uint8_t i = 0; i < 8; i++) {
+	// 11 Messungen, Summenbildung
+	for (uint8_t i = 0; i < 11; i++) {
 		ADCSRA |= 1 << ADSC;
 		while (ADCSRA & (1 << ADSC))
 			;
@@ -51,6 +51,6 @@ uint8_t adc_read(uint8_t channel) {
 	//    Spannungsteiler   Volt ->       ADC-      Umrechnung: Wert 1024
 	//      100k + 1500k     Dezivolt   Mittelwert   entspricht 1.1 Volt
 	// Kürzen U = 16*11*MW/1024 = 11*MW/64 und runden
-	result = ((result + ((result + 2) >> 2) + ((result + 4) >> 3)) + 32) >> 6;
+	result = (result + 32) >> 6;
 	return (uint8_t) result;
 }
