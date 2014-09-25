@@ -73,12 +73,23 @@ uint8_t uart_getc(void) {
 
 uint8_t uart_gets(char *s) {
 	uint8_t zeichen = 0;
+	uart_puts_P(PSTR("\033]0;EL FUERADORO\007"));
 	char buchstabe = 0xFE;
 	while (buchstabe && (zeichen < MAX_ARRAYSIZE - 1)) {
 		buchstabe = uart_getc();
-		if (buchstabe == 13 || buchstabe == 10) buchstabe = '\0';
+		if ((buchstabe == 13) || (buchstabe == 10)) buchstabe = '\0';
 		s[zeichen] = buchstabe;
-		if (buchstabe) {
+		if (buchstabe == 0x08) {
+			if(!zeichen) {
+				s[0] = '\0';
+				return 0;
+			}
+			zeichen--;
+			uart_puts_P(PSTR("\033[1D"));
+			uart_puts_P(PSTR(" "));
+			uart_puts_P(PSTR("\033[1D"));
+		}
+		else {
 			uart_putc(buchstabe);
 			zeichen++;
 		}
