@@ -73,28 +73,29 @@ uint8_t uart_getc(void) {
 
 uint8_t uart_gets(char *s) {
 	uint8_t zeichen = 0;
-	uart_puts_P(PSTR("\033]0;EL FUERADORO\007"));
 	char buchstabe = 0xFE;
 	while (buchstabe && (zeichen < MAX_ARRAYSIZE - 1)) {
 		buchstabe = uart_getc();
-		if ((buchstabe == 13) || (buchstabe == 10)) buchstabe = '\0';
-		s[zeichen] = buchstabe;
-		if (buchstabe == 0x08) {
-			if(!zeichen) {
+		if ((buchstabe == 13) || (buchstabe == 10)) buchstabe = '\0'; // ENTER means "end of string"
+		if ((buchstabe == 8) || (buchstabe == 127)) { // In case of backspace
+			if (!zeichen) {
 				s[0] = '\0';
 				return 0;
 			}
-			zeichen--;
-			uart_puts_P(PSTR("\033[1D"));
-			uart_puts_P(PSTR(" "));
-			uart_puts_P(PSTR("\033[1D"));
+			else {
+				zeichen--;
+				uart_puts_P(PSTR("\033[1D"));
+				uart_puts_P(PSTR(" "));
+				uart_puts_P(PSTR("\033[1D"));
+			}
 		}
 		else {
+			s[zeichen] = buchstabe; // Write char to array
 			uart_putc(buchstabe);
-			zeichen++;
+			if(buchstabe) zeichen++;
 		}
 	}
-	if(zeichen) uart_puts_P(PSTR("\n\r"));
+	if (zeichen) uart_puts_P(PSTR("\n\r"));
 	return zeichen; // Return the number of chars received - which equals the index of terminating '\0'
 }
 
@@ -103,7 +104,7 @@ uint8_t uart_putc(uint8_t c) {
 	utimer = TIMEOUTVAL;
 #if RTSCTSFLOW
 	while ((CTS_PIN & (1 << CTS)) && --utimer)
-	; /* wait till sending is allowed */
+		; /* wait till sending is allowed */
 
 #endif
 	if (utimer) {
