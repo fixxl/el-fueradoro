@@ -11,6 +11,7 @@ void terminal_reset(void) {
 	uart_puts_P(PSTR("\033[2J"));
 	uart_puts_P(PSTR("\033[0;0H"));
 	uart_puts_P(PSTR("\033[3J"));
+	uart_puts_P(PSTR("\033]0;EL FUERADORO\007"));
 }
 
 void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
