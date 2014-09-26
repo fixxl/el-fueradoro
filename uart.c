@@ -84,9 +84,7 @@ uint8_t uart_gets(char *s) {
 			}
 			else {
 				zeichen--;
-				uart_puts_P(PSTR("\033[1D"));
-				uart_puts_P(PSTR(" "));
-				uart_puts_P(PSTR("\033[1D"));
+				uart_puts_P(PSTR("\033[1D \033[1D"));
 			}
 		}
 		else {

@@ -532,7 +532,6 @@ int main(void) {
 			tx_field[3] = 'p';
 			flags.b.transmit = 1;
 
-
 			SREG = temp_sreg;
 		}
 
@@ -717,13 +716,13 @@ int main(void) {
 			}
 
 			// Ignition devices have to write themselves in the list
-			if(!SENDERBOX) {
-				boxes[unique_id-1] = slave_id;
-				quantity[slave_id-1] = 1;
-				batteries[unique_id-1] = adc_read(5);
-				sharpness[unique_id-1] = armed;
-				temps[unique_id-1] = temperature;
-				rssis[unique_id-1] = 0;
+			if (!SENDERBOX) {
+				boxes[unique_id - 1] = slave_id;
+				quantity[slave_id - 1] = 1;
+				batteries[unique_id - 1] = adc_read(5);
+				sharpness[unique_id - 1] = armed;
+				temps[unique_id - 1] = temperature;
+				rssis[unique_id - 1] = 0;
 			}
 
 			SREG = temp_sreg;
@@ -789,7 +788,6 @@ int main(void) {
 
 // -------------------------------------------------------------------------------------------------------
 
-
 // Receive
 		flags.b.receive = (rfm_receiving() ? 1 : 0);
 		if (flags.b.receive) {
@@ -847,17 +845,17 @@ int main(void) {
 
 						// Received Parameters
 					case PARAMETERS: {
-							if ((rx_field[2] == 'E') || (!rx_field[2]) || (rx_field[2] == unique_id)) {
-								iderrors++;
-							}
-							else {
-								tmp = rx_field[2] - 1; // Index = unique_id-1 (zero-based indexing)
-								boxes[tmp] = rx_field[1];
-								batteries[tmp] = rx_field[3];
-								sharpness[tmp] = (rx_field[4] ? 'j' : 'n');
-								temps[tmp] = rx_field[5];
-								rssis[tmp] = rssi;
-							}
+						if ((rx_field[2] == 'E') || (!rx_field[2]) || (rx_field[2] == unique_id)) {
+							iderrors++;
+						}
+						else {
+							tmp = rx_field[2] - 1; // Index = unique_id-1 (zero-based indexing)
+							boxes[tmp] = rx_field[1];
+							batteries[tmp] = rx_field[3];
+							sharpness[tmp] = (rx_field[4] ? 'j' : 'n');
+							temps[tmp] = rx_field[5];
+							rssis[tmp] = rssi;
+						}
 						break;
 					}
 
