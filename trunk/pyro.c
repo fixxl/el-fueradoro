@@ -400,18 +400,18 @@ int main(void) {
 			}
 
 			// "clearlist" empties list of boxes
-			if (uart_strings_equal(uart_field, "clearlist") && SENDERBOX) {
+			if (uart_strings_equal(uart_field, "clearlist")) {
 				flags.b.clear_list = 1;
 			}
 
 			// "send" allows to manually send a command
-			if (uart_strings_equal(uart_field, "send") && SENDERBOX) {
+			if (uart_strings_equal(uart_field, "send")) {
 				flags.b.send = 1;
 				flags.b.transmit = 0;
 			}
 
 			// "list" gives a overview over connected boxes
-			if (uart_strings_equal(uart_field, "list") && SENDERBOX) {
+			if (uart_strings_equal(uart_field, "list")) {
 				flags.b.list = 1;
 				flags.b.transmit = 0;
 			}
@@ -450,13 +450,13 @@ int main(void) {
 			}
 
 			// "int1" last transmitted command gets re-transmitted periodically
-			if (uart_strings_equal(uart_field, "int1") && SENDERBOX) {
+			if (uart_strings_equal(uart_field, "int1")) {
 				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls EIN\n\r"));
 				TIMSK1 |= (1 << TOIE1);
 			}
 
 			// "int0" periodic retransmission gets stopped
-			if (uart_strings_equal(uart_field, "int0") && SENDERBOX) {
+			if (uart_strings_equal(uart_field, "int0")) {
 				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls AUS\n\r"));
 				transmit_flag = 0;
 				TIMSK1 &= ~(1 << TOIE1);
@@ -464,25 +464,21 @@ int main(void) {
 
 			// If valid ignition command was received
 			if (uart_valid(uart_field)) {
-				// Transmitter shall transmit to everybody
-				if (SENDERBOX) {
-					tx_field[0] = FIRE;
-					tx_field[1] = uart_field[1];
-					tx_field[2] = uart_field[2];
-					tx_field[3] = FIREREPEATS;
-					tx_length = 4;
-					flags.b.transmit = 1;
-				}
+				// Transmit to everybody
+				tx_field[0] = FIRE;
+				tx_field[1] = uart_field[1];
+				tx_field[2] = uart_field[2];
+				tx_field[3] = FIREREPEATS;
+				tx_length = 4;
+				flags.b.transmit = 1;
 
 				// Check if ignition was triggered on device that received the serial command
-				else {
-					if ((slave_id == uart_field[1]) && !SENDERBOX) {
-						tmp = uart_field[2] - 1;
-						if (!(channel_fired[tmp]) && !flags.b.fire) {
-							rx_field[2] = uart_field[2];
-							flags.b.fire = 1;
-							loopcount = FIREREPEATS;
-						}
+				if ((slave_id == uart_field[1]) && !SENDERBOX) {
+					tmp = uart_field[2] - 1;
+					if (!(channel_fired[tmp]) && !flags.b.fire) {
+						rx_field[2] = uart_field[2];
+						flags.b.fire = 1;
+						loopcount = 1;
 					}
 				}
 			}
@@ -526,15 +522,16 @@ int main(void) {
 					lcd_send(1, 1);
 					lcd_send('C', 1);
 				}
-
-				// Request other devices to refresh temperature as well
-				tx_length = 4;
-				tx_field[0] = TEMPERATURE;
-				tx_field[1] = 'e';
-				tx_field[2] = 'm';
-				tx_field[3] = 'p';
-				flags.b.transmit = 1;
 			}
+
+			// Request other devices to refresh temperature as well
+			tx_length = 4;
+			tx_field[0] = TEMPERATURE;
+			tx_field[1] = 'e';
+			tx_field[2] = 'm';
+			tx_field[3] = 'p';
+			flags.b.transmit = 1;
+
 
 			SREG = temp_sreg;
 		}
@@ -569,39 +566,6 @@ int main(void) {
 
 			changes = configprog();
 			if (changes) flags.b.reset_device = 1;
-			SREG = temp_sreg;
-		}
-
-// -------------------------------------------------------------------------------------------------------
-
-// Fire
-		if (flags.b.fire) {
-			temp_sreg = SREG;
-			cli();
-			flags.b.fire = 0;
-
-			for (i = loopcount - 1; i > 0; i--) {
-				_delay_ms(11);
-			}
-
-			if (rx_field[2] > 0 && rx_field[2] < 17 && armed) {
-				tmp = rx_field[2];
-				scheme = 0;
-				for (uint8_t i = 16; i; i--) {
-					scheme <<= 1;
-					if (i == tmp) scheme |= 1;
-				}
-				sr_shiftout(scheme);
-
-				/*
-				 * To avoid demage to the MOSFET in case of a short circuit after ignition, the MOSFET is set to
-				 * blocking state again after 11ms. According to specification the detonator must have exploded by then.
-				 */
-				_delay_ms(11);
-				sr_shiftout(0);
-				channel_fired[rx_field[2] - 1] = 1;
-			}
-			rfm_rxon();
 			SREG = temp_sreg;
 		}
 
@@ -782,6 +746,40 @@ int main(void) {
 
 // -------------------------------------------------------------------------------------------------------
 
+// Fire
+		if (flags.b.fire) {
+			temp_sreg = SREG;
+			cli();
+			flags.b.fire = 0;
+
+			for (i = loopcount - 1; i > 0; i--) {
+				_delay_ms(11);
+			}
+
+			if (rx_field[2] > 0 && rx_field[2] < 17 && armed) {
+				tmp = rx_field[2];
+				scheme = 0;
+				for (uint8_t i = 16; i; i--) {
+					scheme <<= 1;
+					if (i == tmp) scheme |= 1;
+				}
+				sr_shiftout(scheme);
+
+				/*
+				 * To avoid demage to the MOSFET in case of a short circuit after ignition, the MOSFET is set to
+				 * blocking state again after 11ms. According to specification the detonator must have exploded by then.
+				 */
+				_delay_ms(11);
+				sr_shiftout(0);
+				channel_fired[rx_field[2] - 1] = 1;
+			}
+			rfm_rxon();
+			SREG = temp_sreg;
+		}
+
+// -------------------------------------------------------------------------------------------------------
+
+
 // Receive
 		flags.b.receive = (rfm_receiving() ? 1 : 0);
 		if (flags.b.receive) {
@@ -839,7 +837,6 @@ int main(void) {
 
 						// Received Parameters (only relevant for transmitter)
 					case PARAMETERS: {
-						if (SENDERBOX) {
 							if (rx_field[2] == 'E' || !rx_field[2]) {
 								iderrors++;
 							}
@@ -851,7 +848,6 @@ int main(void) {
 								temps[tmp] = rx_field[5];
 								rssis[tmp] = rssi;
 							}
-						}
 						break;
 					}
 
