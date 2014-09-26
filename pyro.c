@@ -835,7 +835,7 @@ int main(void) {
 						break;
 					}
 
-						// Received Parameters (only relevant for transmitter)
+						// Received Parameters
 					case PARAMETERS: {
 							if (rx_field[2] == 'E' || !rx_field[2]) {
 								iderrors++;
