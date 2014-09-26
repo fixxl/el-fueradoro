@@ -105,7 +105,6 @@ uint8_t uart_putc(uint8_t c) {
 #if RTSCTSFLOW
 	while ((CTS_PIN & (1 << CTS)) && --utimer)
 		; /* wait till sending is allowed */
-
 #endif
 	if (utimer) {
 		utimer = TIMEOUTVAL;
