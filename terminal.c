@@ -250,7 +250,7 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 	}
 	uart_puts_P(PSTR("\n\r\n\r"));
 	if(wrongids) uart_puts_P(PSTR(TERM_COL_RED));
-	uart_puts_P(PSTR("Fehlerhafte IDs: "));
+	uart_puts_P(PSTR("Fehlerhafte/doppelte IDs: "));
 	uart_shownum(wrongids, 'd');
 	if(wrongids) uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(PSTR("\n\r"));
