@@ -49,10 +49,10 @@ uint8_t changenumber(void) {
 }
 
 void savenumber(uint8_t uniqueid, uint8_t slaveid) {
-	uint8_t sum = uniqueid + slaveid;		// Summe der beiden IDs
-	uint8_t ucrc = crc8(CRC_ID_SPEICHER, uniqueid);		// CRC8-Wert der Unique-ID mit Startwert 16
-	uint8_t scrc = crc8(CRC_ID_SPEICHER, slaveid);		// CRC8-Wert der Slave-ID mit Startwert 16
-	uint8_t bothcrc = crc8(ucrc, slaveid);	// CRC8-Wert aus Unique-ID und Slave-ID mit Startwert 16
+	uint8_t sum = uniqueid + slaveid; // Summe der beiden IDs
+	uint8_t ucrc = crc8(CRC_ID_SPEICHER, uniqueid); // CRC8-Wert of Unique-ID with seed 16
+	uint8_t scrc = crc8(CRC_ID_SPEICHER, slaveid); // CRC8-Wert of Slave-ID with seed 16
+	uint8_t bothcrc = crc8(ucrc, slaveid); // CRC8-Wert of Unique-ID and Slave-ID with seed 16
 
 	for (uint8_t i = ANFANG_ID_SPEICHER; i < (ANFANG_ID_SPEICHER + 3 * STEP_ID_SPEICHER); i +=
 	STEP_ID_SPEICHER) {
@@ -71,12 +71,12 @@ void savenumber(uint8_t uniqueid, uint8_t slaveid) {
 	}
 }
 
-// Konfigurationsprogramm
+// Configuration programme
 uint8_t configprog(void) {
-	uint8_t changes = 0;						// Merker, ob Änderungen vorgenommen wurden
-	uint8_t choice = 0;							// Tastatureingabe
-	uint8_t slaveid;							// Slave-
-	uint8_t uniqueid;							// und Unique-ID
+	uint8_t changes = 0; // Merker, ob Änderungen vorgenommen wurden
+	uint8_t choice = 0; // Tastatureingabe
+	uint8_t slaveid; // Slave-
+	uint8_t uniqueid; // und Unique-ID
 	uint8_t slaveid_old;
 	uint8_t uniqueid_old;
 
@@ -85,13 +85,13 @@ uint8_t configprog(void) {
 	uart_puts_P(PSTR(TERM_COL_YELLOW));
 	uart_puts_P(PSTR("\n\nKonfigurationsprogramm\n\r======================\n\r"));
 
-	if (!addresses_load(&uniqueid, &slaveid)) {	// Bisherige Adressen aus dem Speicher holen und prüfen
+	if (!addresses_load(&uniqueid, &slaveid)) { // Bisherige Adressen aus dem Speicher holen und prüfen
 		uart_puts_P(PSTR(TERM_COL_RED));
 		uart_puts_P(PSTR("\n\rFehler beim Laden der IDs\n\r"));
 		uart_puts_P(PSTR(TERM_COL_WHITE));
 	}
 
-	// Anzeige der bisherigen Einstellungen
+	// Show current settings
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(PSTR("Aktuelle Unique-ID: "));
 	uart_puts_P(PSTR(TERM_COL_RED));
@@ -112,8 +112,8 @@ uint8_t configprog(void) {
 			PSTR(
 					"(U)nique-ID ändern, (S)lave-ID ändern, \n\rzu (T)ransmitter machen, Abbruch mit beliebiger anderer Taste! "));
 
-	// Benutzereingabe auswerten
-	while(!choice) {
+	// Evaluate input
+	while (!choice) {
 		choice = uart_getc();
 	}
 	uart_putc(choice);
@@ -130,7 +130,7 @@ uint8_t configprog(void) {
 				slaveid = changenumber();
 				uart_puts_P(PSTR(TERM_COL_WHITE));
 				choice = 'u';
-				if(slaveid != slaveid_old) changes = 1;
+				if (slaveid != slaveid_old) changes = 1;
 				break;
 			}
 			case 'u':
@@ -141,17 +141,17 @@ uint8_t configprog(void) {
 				uniqueid = changenumber();
 				uart_puts_P(PSTR(TERM_COL_WHITE));
 				choice = 's';
-				if(uniqueid != uniqueid_old) changes = 1;
+				if (uniqueid != uniqueid_old) changes = 1;
 				break;
 			}
 			case 't':
 			case 'T': {
-				if(slaveid && uniqueid) uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
+				if (slaveid && uniqueid) uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
 				slaveid_old = slaveid;
 				uniqueid_old = uniqueid;
 				slaveid = 0;
 				uniqueid = 0;
-				if(uniqueid_old || slaveid_old) changes = 1;
+				if (uniqueid_old || slaveid_old) changes = 1;
 				break;
 			}
 			default:
@@ -169,7 +169,7 @@ uint8_t configprog(void) {
 	return changes;
 }
 
-// Auflisten der Zündboxen
+// List ignition devices
 void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* rssis, uint8_t wrongids) {
 	uint8_t i = 0, ganz, zehntel;
 
@@ -183,12 +183,12 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 			PSTR(
 					"\n\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r"));
 	while (i < 30) {
-		// Unique-ID darstellen
+		// Show Unique-ID
 		if (i < 9) uart_putc('0');
 		uart_shownum(i + 1, 'd');
 		uart_puts_P(PSTR(": "));
 
-		// Slave-ID ausgeben
+		// Show Slave-ID
 		switch (boxe[i]) {
 			case 0:
 				uart_puts_P(PSTR("---"));
@@ -203,7 +203,7 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 
 		uart_puts_P(PSTR(", "));
 
-		// Batteriespannung ausgeben
+		// Show Battery Voltages
 		ganz = batt[i] / 10;
 		zehntel = batt[i] % 10;
 		switch (ganz) {
@@ -220,13 +220,13 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 
 		uart_puts_P(PSTR(", "));
 
-		// Ausgeben, ob Box scharf oder nicht
+		// Show if armed or not
 		if (boxe[i]) uart_putc(sharpn[i]);
 		else uart_puts_P(PSTR("-"));
 
 		uart_puts_P(PSTR(", "));
 
-		// Temperatur ausgeben
+		// Show Temperature
 		if (temps[i] != -128) {
 			fixedspace(temps[i], 'd', 4);
 		}
@@ -236,7 +236,7 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 
 		uart_puts_P(PSTR(", "));
 
-		// RSSI ausgeben
+		// Show RSSI-values
 		if (rssis[i]) {
 			if (rssis[i] < 100) uart_puts_P(PSTR(" -"));
 			else uart_puts_P(PSTR("-"));
@@ -249,14 +249,14 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 		i++;
 	}
 	uart_puts_P(PSTR("\n\r\n\r"));
-	if(wrongids) uart_puts_P(PSTR(TERM_COL_RED));
+	if (wrongids) uart_puts_P(PSTR(TERM_COL_RED));
 	uart_puts_P(PSTR("Fehlerhafte/doppelte IDs: "));
 	uart_shownum(wrongids, 'd');
-	if(wrongids) uart_puts_P(PSTR(TERM_COL_WHITE));
+	if (wrongids) uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(PSTR("\n\r"));
 }
 
-// Anzahl der Boxen mit bestimmter Slave-ID darstellen
+// Show number of boxes for every Slave-ID
 void list_array(char *arr) {
 	uint8_t i = 0;
 	uart_puts_P(PSTR("\n\n\rSlave-ID: Anzahl Boxen\n\r"));
@@ -287,7 +287,7 @@ void list_array(char *arr) {
 	uart_puts_P(PSTR("\n\r"));
 }
 
-// Anzahl der Boxen mit bestimmter Slave-ID ermitteln
+// Calculate number of boxes with certain Slave-ID
 void evaluate_boxes(char *boxes, char *quantity) {
 	uint8_t i, j, n;
 
@@ -296,6 +296,6 @@ void evaluate_boxes(char *boxes, char *quantity) {
 		for (j = 0; j < 30; j++) {
 			if (boxes[j] == i) n++;
 		}
-		quantity[i - 1] = n;
+		quantity[i - 1] += n;
 	}
 }

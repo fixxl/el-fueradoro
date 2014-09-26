@@ -10,9 +10,9 @@
 #define LED_YELLOW_P		B
 #define LED_YELLOW_NUM		0
 #define LED_RED_P			D
-#define LED_RED_NUM			7
+#define LED_RED_NUM			6
 #define LED_GREEN_P			D
-#define LED_GREEN_NUM		6
+#define LED_GREEN_NUM		7
 #define LED_BLUE_P			D
 #define LED_BLUE_NUM		5
 
