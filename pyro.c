@@ -852,6 +852,7 @@ int main(void) {
 						timer1_reset();
 						transmit_flag = 0;
 						TIMSK1 |= (1 << TOIE1);			// Enable timer interrupt
+						timer1_on();
 						flags.b.transmit = 1;
 						flags.b.reset_fired = 1;
 						break;
