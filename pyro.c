@@ -207,7 +207,7 @@ int main(void) {
 	uint8_t tx_length = 2, rx_length = 0;
 	uint8_t temp_sreg;
 	uint8_t slave_id = 30, unique_id = 30;
-	uint8_t rfm_rx_error = 1, loopcount = 5;
+	uint8_t rfm_rx_error = 1, loopcount = 5, transmission_allowed = 1;
 	uint8_t anzspalte = 1, anzzeile = 3, lastspalte = 15, lastzeile = 4;
 	uint8_t armed = 0;
 	uint8_t changes = 0;
@@ -260,7 +260,7 @@ int main(void) {
 	ACSR |= 1 << ACD;
 
 // Initialise Timer
-	timer_on();
+	timer1_on();
 
 // Initialise LEDs
 	led_init();
@@ -560,8 +560,8 @@ int main(void) {
 			cli();
 			flags.b.uart_config = 0;
 
-			timer_reset();
-			timer_off();
+			timer1_reset();
+			timer1_off();
 
 			changes = configprog();
 			if (changes) flags.b.reset_device = 1;
@@ -601,8 +601,8 @@ int main(void) {
 			tx_field[1] = 'd';
 			tx_field[2] = '0';
 
-			timer_reset();
-			timer_off();
+			timer1_reset();
+			timer1_off();
 
 			uart_puts_P(PSTR("\n\rModus(f/i): "));
 			while (!inp)
@@ -661,7 +661,7 @@ int main(void) {
 			while (UCSR0A & (1 << RXC0))
 				inp = UDR0;
 
-			timer_on();
+			timer1_on();
 			SREG = temp_sreg;
 		}
 
@@ -731,12 +731,16 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Transmit
-		if (flags.b.transmit || transmit_flag > 3) {
+		// Check if device has waited long enough (according to unique-id to be allowed to transmit)
+		if (!transmission_allowed) {
+			if (transmit_flag >= unique_id) transmission_allowed = 1;
+		}
+		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 37))) {
 			temp_sreg = SREG;
 			cli();
 
 			flags.b.transmit = 0;
-			transmit_flag = 0;
+
 
 			led_green_on();
 			rfm_transmit(tx_field, tx_length); // Transmit message
@@ -747,6 +751,14 @@ int main(void) {
 			}
 			led_green_off();
 
+			// If transmission was not a cyclical one but a triggered one
+			if(transmit_flag<37) {
+				timer1_off();
+				timer1_reset();
+				TIMSK1 &= ~(1 << TOIE1);
+			}
+
+			transmit_flag = 0;
 			flags.b.lcd_update = 1;
 			flags.b.tx_post = 1;
 
@@ -813,7 +825,6 @@ int main(void) {
 							tmp = rx_field[2] - 1;
 							if (!(channel_fired[tmp]) && !flags.b.fire) {
 								flags.b.fire = 1;
-								rfm_rxoff();
 								loopcount = rx_field[3];
 							}
 						}
@@ -829,7 +840,6 @@ int main(void) {
 
 						// Received identification-demand
 					case IDENT: {
-						rfm_rxoff();
 						tx_field[0] = PARAMETERS;
 						tx_field[1] = slave_id;
 						tx_field[2] = unique_id;
@@ -838,6 +848,10 @@ int main(void) {
 						tx_field[5] = temperature;
 						tx_length = 6;
 
+						transmission_allowed = 0;
+						timer1_reset();
+						transmit_flag = 0;
+						TIMSK1 |= (1 << TOIE1);			// Enable timer interrupt
 						flags.b.transmit = 1;
 						flags.b.reset_fired = 1;
 						break;
@@ -865,15 +879,6 @@ int main(void) {
 					}
 				}
 
-				// Make sure all devices answer one after the other
-				if (flags.b.transmit) {
-					for (i = 0; i < unique_id; i++) {
-						_delay_ms(33);
-					}
-				}
-				else {
-					rfm_rxon();
-				}
 				flags.b.lcd_update = 1;
 				flags.b.rx_post = 1;
 			}
