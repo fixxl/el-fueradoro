@@ -7,18 +7,18 @@
 
 #include "global.h"
 
-// Timer aktivieren (Vorteiler 256) => Overflow nach 1,7 Sekunden
-void timer_on(void) {
-	TCCR1B |= (1 << CS12);
+// Activate Timer 1 (Prescaler 8) => Overflow after 53ms
+void timer1_on(void) {
+	TCCR1B |= (1 << CS11);
 }
 
 // Timer ausschalten
-void timer_off(void) {
+void timer1_off(void) {
 	TCCR1B &= ~(1 << CS12 | 1 << CS11 | 1 << CS10);
 }
 
 // Timer zurücksetzen (Zählerstand auf 0, Überlauf-Flag löschen)
-inline void timer_reset(void) {
+inline void timer1_reset(void) {
 	TIFR1 = 1 << TOV1;
 	TCNT1 = 0;
 }
