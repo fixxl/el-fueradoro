@@ -731,16 +731,15 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Transmit
-		// Check if device has waited long enough (according to unique-id to be allowed to transmit)
-		if (!transmission_allowed) {
-			if (transmit_flag >= unique_id) transmission_allowed = 1;
-		}
+		// Check if device has waited long enough (according to unique-id) to be allowed to transmit
+		if (!transmission_allowed && (transmit_flag > unique_id)) transmission_allowed = 1;
+
+		// Transmission process
 		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 37))) {
 			temp_sreg = SREG;
 			cli();
 
 			flags.b.transmit = 0;
-
 
 			led_green_on();
 			rfm_transmit(tx_field, tx_length); // Transmit message
@@ -751,14 +750,14 @@ int main(void) {
 			}
 			led_green_off();
 
-			// If transmission was not a cyclical one but a triggered one
-			if(transmit_flag<37) {
+			// If transmission was not a cyclical one but a triggered one, turn of timer and its interrupts
+			if(transmit_flag<38) {
 				timer1_off();
 				timer1_reset();
 				TIMSK1 &= ~(1 << TOIE1);
 			}
-
 			transmit_flag = 0;
+
 			flags.b.lcd_update = 1;
 			flags.b.tx_post = 1;
 
