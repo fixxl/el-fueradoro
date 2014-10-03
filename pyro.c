@@ -382,6 +382,9 @@ int main(void) {
 			}
 
 			else {
+#if !CASE_SENSITIVE
+				uart_field[0] = uart_lower_case(uart_field[0]);
+#endif
 				uart_putc(uart_field[0]); // Show first char so everything looks as it should
 				if (!uart_gets(uart_field + 1)) {
 					uart_puts_P(PSTR("\033[1D"));
@@ -452,6 +455,8 @@ int main(void) {
 			// "int1" last transmitted command gets re-transmitted periodically
 			if (uart_strings_equal(uart_field, "int1")) {
 				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls EIN\n\r"));
+				timer1_reset();
+				timer1_on();
 				TIMSK1 |= (1 << TOIE1);
 			}
 
@@ -459,7 +464,9 @@ int main(void) {
 			if (uart_strings_equal(uart_field, "int0")) {
 				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls AUS\n\r"));
 				transmit_flag = 0;
+				timer1_off();
 				TIMSK1 &= ~(1 << TOIE1);
+				timer1_reset();
 			}
 
 			// If valid ignition command was received
@@ -888,8 +895,8 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Clear LCD in case of timeouts
-		if ((clear_lcd_tx_flag > DEL_THRES || clear_lcd_rx_flag > DEL_THRES || hist_del_flag > (3 * DEL_THRES))
-				&& SENDERBOX && !flags.b.lcd_update) {
+		if (SENDERBOX && (clear_lcd_tx_flag > DEL_THRES || clear_lcd_rx_flag > DEL_THRES || hist_del_flag > (3 * DEL_THRES))
+				&& !flags.b.lcd_update) {
 			temp_sreg = SREG; // Speichere Statusregister
 			cli();
 

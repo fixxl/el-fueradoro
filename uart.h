@@ -19,6 +19,7 @@
 
 #define BAUD 9600
 #define RTSCTSFLOW 1
+#define CASE_SENSITIVE 0
 
 #define RXD_PORT	PORT(RXDPORT)
 #define RXD_DDR		DDR(RXDPORT)
@@ -47,6 +48,7 @@ void uart_puts (char *s);
 void uart_puts_P (const char *s);
 uint8_t uart_strings_equal(const char* string1, const char* string2);
 void uart_shownum(int32_t zahl, uint8_t type);
+uint8_t uart_lower_case(char letter);
 
 
 #endif
