@@ -76,6 +76,9 @@ uint8_t uart_gets(char *s) {
 	char buchstabe = 0xFE;
 	while (buchstabe && (zeichen < MAX_ARRAYSIZE - 1)) {
 		buchstabe = uart_getc();
+#if !CASE_SENSITIVE
+		buchstabe = uart_lower_case(buchstabe);
+#endif
 		if ((buchstabe == 13) || (buchstabe == 10)) buchstabe = '\0'; // ENTER means "end of string"
 		if ((buchstabe == 8) || (buchstabe == 127)) { // In case of backspace
 			if (!zeichen) {
@@ -90,7 +93,7 @@ uint8_t uart_gets(char *s) {
 		else {
 			s[zeichen] = buchstabe; // Write char to array
 			uart_putc(buchstabe);
-			if(buchstabe) zeichen++;
+			if (buchstabe) zeichen++;
 		}
 	}
 	if (zeichen) uart_puts_P(PSTR("\n\r"));
@@ -229,4 +232,9 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 			break;
 		}
 	}
+}
+
+uint8_t uart_lower_case(char letter) {
+	if ((letter >= 'A' && letter <= 'Z') || (letter == 'Ä') || (letter == 'Ö') || (letter == 'Ü')) letter |= 0x20;
+	return letter;
 }
