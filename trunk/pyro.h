@@ -22,7 +22,7 @@
 #define DEL_THRES			251
 
 // Value for input timeout
-#define TIMEOUTVAL			(F_CPU>>2)
+#define TIMEOUTVAL			(F_CPU>>3)
 
 // Definitionen der Sende- und Empfangszustände
 #define 	FIRE			'f'
