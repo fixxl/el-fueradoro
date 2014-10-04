@@ -662,7 +662,14 @@ int main(void) {
 			}
 
 			uart_puts_P(PSTR("\n\n\r"));
-			if (tmp) flags.b.transmit = 1;
+			if (tmp) {
+				flags.b.transmit = 1;
+				if(slave_id == tx_field[1]) {
+					rx_field[2] = tx_field[2];
+					loopcount = 1;
+					flags.b.fire = 1;
+				}
+			}
 			else flags.b.transmit = 0;
 
 			while (UCSR0A & (1 << RXC0))
@@ -739,10 +746,10 @@ int main(void) {
 
 // Transmit
 		// Check if device has waited long enough (according to unique-id) to be allowed to transmit
-		if (!transmission_allowed && (transmit_flag > unique_id)) transmission_allowed = 1;
+		if (!transmission_allowed && (transmit_flag > (unique_id<<1))) transmission_allowed = 1;
 
 		// Transmission process
-		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 37))) {
+		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 75))) {
 			temp_sreg = SREG;
 			cli();
 
@@ -758,7 +765,7 @@ int main(void) {
 			led_green_off();
 
 			// If transmission was not a cyclical one but a triggered one, turn of timer and its interrupts
-			if(transmit_flag<38) {
+			if(transmit_flag<75) {
 				timer1_off();
 				timer1_reset();
 				TIMSK1 &= ~(1 << TOIE1);
@@ -885,7 +892,6 @@ int main(void) {
 						break;
 					}
 				}
-
 				flags.b.lcd_update = 1;
 				flags.b.rx_post = 1;
 			}

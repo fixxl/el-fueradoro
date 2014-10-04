@@ -30,7 +30,7 @@
 #define SCK					5
 
 /* Use Hardware-SPI if available? */
-#define USE_HARDWARE_SPI	0
+#define USE_HARDWARE_SPI	1
 
 // Don't change anything from here
 #define XTALFREQ			32000000UL
