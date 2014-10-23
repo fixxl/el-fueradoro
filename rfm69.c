@@ -60,9 +60,10 @@ uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 uint8_t rfm_receiving(void) {
 	uint8_t status;
 	ACTIVATE_RFM;
-	status = ((rfm_cmd(0x28FF, 0) & (1 << 2)) && 1); // PayloadReady?
+	status = rfm_cmd(0x28FF, 0);
 	DEACTIVATE_RFM;
-	return status;
+	// Check if PayloadReady is set AND unused bit is not set (if bit 0 is set, module is not plugged in)
+	return ((status & (1<<2)) && !(status & (1<<0)));
 }
 
 uint16_t rfm_status(void) {
