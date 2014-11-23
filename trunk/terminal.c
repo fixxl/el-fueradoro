@@ -296,6 +296,6 @@ void evaluate_boxes(char *boxes, char *quantity) {
 		for (j = 0; j < 30; j++) {
 			if (boxes[j] == i) n++;
 		}
-		quantity[i - 1] += n;
+		quantity[i - 1] = n;
 	}
 }

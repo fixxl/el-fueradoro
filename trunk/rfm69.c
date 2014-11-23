@@ -84,12 +84,16 @@ static uint8_t rfm_fifo_wnr(char *data, uint8_t wnr) { // Address FIFO-Register 
 
 	// Write data bytes
 	if (wnr) {
-		rfm_spi(0x80);
-		rfm_spi(data[0]);
-
 		// Make sure there's no array-overflow
 		if (data[0] > MAX_ARRAYSIZE) data[0] = MAX_ARRAYSIZE;
 
+		// Write-access register 0
+		rfm_spi(0x80);
+
+		// Transfer length
+		rfm_spi(data[0]);
+
+		// Transfer data
 		for (uint8_t i = 1; i <= data[0]; i++) {
 			rfm_spi(data[i]);
 		}
@@ -97,12 +101,16 @@ static uint8_t rfm_fifo_wnr(char *data, uint8_t wnr) { // Address FIFO-Register 
 
 	// Read data bytes
 	else {
+		// Read-access register 0
 		rfm_spi(0);
+
+		// Get length
 		data[0] = rfm_spi(0xFF);
 
 		// Make sure there's no array-overflow
 		if (data[0] > MAX_ARRAYSIZE) data[0] = MAX_ARRAYSIZE;
 
+		// Get data
 		for (uint8_t i = 1; i <= data[0]; i++) {
 			data[i] = rfm_spi(0xFF);
 		}
@@ -124,7 +132,7 @@ uint8_t rfm_txon(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	rfm_cmd(0x010C, 1); // TX on (set to transmitter mode in RegOpMode)
-	while (--utimer && (!(rfm_cmd(0x27FF, 0) & (1 << 7)) || !(rfm_cmd(0x27FF, 0) & (1 << 5))))
+	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready- and TX-Ready-Flag
 	return (utimer ? 0 : 1);
 }
@@ -143,8 +151,8 @@ uint8_t rfm_rxon(void) {
 	uint32_t utimer;
 	utimer = TIMEOUTVAL;
 	rfm_cmd(0x0110, 1); // RX on (set to receiver mode in RegOpMode)
-	while (--utimer && (!(rfm_cmd(0x27FF, 0) & (1 << 7)) || !(rfm_cmd(0x27FF, 0) & (1 << 6))))
-		; // Wait for Mode-Ready- and RX-Ready-Flag
+	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
+		; // Wait for Mode-Ready--Flag
 	return (utimer ? 0 : 1);
 }
 
@@ -260,10 +268,10 @@ void rfm_init(void) {
 
 		// Receiver config
 		rfm_cmd(0x1800, 1); // LNA: 50 Ohm Input Impedance, Automatic Gain Control
-		rfm_cmd(0x582D, 1); // High sensitivity mode
+		// rfm_cmd(0x582D, 1); // High sensitivity mode
 		rfm_cmd(0x6F30, 1); // Improved DAGC
 		rfm_cmd(0x29DC, 1); // RSSI mind. -110 dBm
-		rfm_cmd(0x1E2D, 1); // Start AFC, Auto-On
+		rfm_cmd(0x1E0D, 1); // Start AFC, Auto-On
 		while (!(rfm_cmd(0x1EFF, 0) & (1 << 4)))
 			;
 
@@ -338,6 +346,8 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 
 	// Turn receiver back on
 	rfm_rxon();
+
+
 
 	// Write local variable to pointer
 	*length = length_local;

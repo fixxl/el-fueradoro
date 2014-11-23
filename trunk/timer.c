@@ -19,7 +19,7 @@ void timer1_off(void) {
 
 // Timer zurücksetzen (Zählerstand auf 0, Überlauf-Flag löschen)
 inline void timer1_reset(void) {
-	TIFR1 = 1 << TOV1;
+	TIFR1 = (1 << TOV1);
 	TCNT1 = 0;
 }
 

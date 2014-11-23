@@ -516,21 +516,6 @@ int main(void) {
 			}
 			uart_puts_P(PSTR("\n\r\n\r"));
 
-			if (SENDERBOX) {
-				hist_del_flag = 1;
-				lcd_cursorset(3, 1);
-				lcd_puts("Temperatur:    ");
-				if (temperature == -128) {
-					lcd_puts("n.a. ");
-				}
-				else {
-					lcd_arrize(temperature, lcd_array, 2, 1);
-					lcd_puts(lcd_array);
-					lcd_send(1, 1);
-					lcd_send('C', 1);
-				}
-			}
-
 			// Request other devices to refresh temperature as well
 			tx_length = 4;
 			tx_field[0] = TEMPERATURE;
@@ -734,7 +719,7 @@ int main(void) {
 				boxes[unique_id - 1] = slave_id;
 				quantity[slave_id - 1] = 1;
 				batteries[unique_id - 1] = adc_read(5);
-				sharpness[unique_id - 1] = armed;
+				sharpness[unique_id - 1] = (armed ? 'j' : 'n');
 				temps[unique_id - 1] = temperature;
 				rssis[unique_id - 1] = 0;
 			}
@@ -746,10 +731,10 @@ int main(void) {
 
 // Transmit
 		// Check if device has waited long enough (according to unique-id) to be allowed to transmit
-		if (!transmission_allowed && (transmit_flag > (unique_id<<1))) transmission_allowed = 1;
+		if (!transmission_allowed && (transmit_flag > (unique_id<<2))) transmission_allowed = 1;
 
 		// Transmission process
-		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 75))) {
+		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 125))) {
 			temp_sreg = SREG;
 			cli();
 
@@ -765,7 +750,7 @@ int main(void) {
 			led_green_off();
 
 			// If transmission was not a cyclical one but a triggered one, turn of timer and its interrupts
-			if(transmit_flag<75) {
+			if(transmit_flag<125) {
 				timer1_off();
 				timer1_reset();
 				TIMSK1 &= ~(1 << TOIE1);
@@ -957,6 +942,7 @@ int main(void) {
 						lcd_puts(" CH");
 						lcd_arrize(tx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
+						lcd_puts("   ");
 
 						if (!flags.b.show_only) {
 							lcd_cursorset(lastzeile, lastspalte);
@@ -976,7 +962,7 @@ int main(void) {
 						break;
 					}
 					case IDENT: {
-						lcd_puts("Identify  ");
+						lcd_puts("Identify     ");
 
 						if (!flags.b.show_only) {
 							lcd_cursorset(lastzeile, lastspalte);
