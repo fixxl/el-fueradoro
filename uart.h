@@ -37,6 +37,8 @@
 #define CTS_DDR		DDR(CTSPORT)
 #define CTS_PIN		PIN(CTSPORT)
 
+#define UARTTIMEOUTVAL	(F_CPU>>3)
+
 void block_uart_sending(void);
 void allow_uart_sending(void);
 void uart_cleanup(uint8_t rxtxboth);
