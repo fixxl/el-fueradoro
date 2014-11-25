@@ -255,7 +255,7 @@ void rfm_init(void) {
 		rfm_cmd(0x3790, 1); // Variable length, No DC-free encoding/decoding, CRC-Check, No Address filter
 		rfm_cmd(0x3800 + MAX_ARRAYSIZE, 1); // Max. Payload-Length
 		rfm_cmd(0x3C80, 1); // Tx-Start-Condition: FIFO not empty
-		rfm_cmd(0x3D32, 1); // Packet-Config2
+		rfm_cmd(0x3D30, 1); // Packet-Config2
 
 		// Preamble length 3 bytes
 		rfm_cmd(0x2C00, 1);
@@ -268,7 +268,7 @@ void rfm_init(void) {
 
 		// Receiver config
 		rfm_cmd(0x1800, 1); // LNA: 50 Ohm Input Impedance, Automatic Gain Control
-		// rfm_cmd(0x582D, 1); // High sensitivity mode (turned off due to problems during Rx-restart)
+		rfm_cmd(0x582D, 1); // High sensitivity mode (turn off if Rx-restart doesn't work!)
 		rfm_cmd(0x6F30, 1); // Improved DAGC
 		rfm_cmd(0x29DC, 1); // RSSI mind. -110 dBm
 		rfm_cmd(0x1E0D, 1); // Start AFC, Auto-On
