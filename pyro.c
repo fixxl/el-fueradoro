@@ -214,6 +214,7 @@ int main(void) {
 	uint8_t iderrors = 0;
 	uint8_t tempsenstype = 0;
 	uint8_t rssi = 0;
+	uint8_t ledstatus = 0;
 	int8_t temperature = -128;
 
 	bitfeld_t flags;
@@ -316,8 +317,8 @@ int main(void) {
 		tx_field[2] = unique_id;
 		tx_field[3] = adc_read(5);
 		armed = debounce(&KEYPIN, KEY);
-		if (armed) led_yellow_on();
-		else led_yellow_off();
+		if (armed) led_red_on();
+		else led_red_off();
 		tx_field[4] = armed;
 		tx_field[5] = temperature;
 		tx_length = 6;
@@ -347,8 +348,8 @@ int main(void) {
 			// Box armed: armed = 1, Box not armed: armed = 0
 
 			armed = debounce(&KEYPIN, KEY);
-			if (armed) led_yellow_on();
-			else led_yellow_off();
+			if (armed) led_red_on();
+			else led_red_off();
 			SREG = temp_sreg;
 		}
 
@@ -775,7 +776,10 @@ int main(void) {
 				_delay_ms(11);
 			}
 
-			if (rx_field[2] > 0 && rx_field[2] < 17 && armed) {
+			ledstatus = leds_status();
+			leds_on();
+
+			if (armed && (rx_field[2] > 0) && (rx_field[2] < 17)) {
 				tmp = rx_field[2];
 				scheme = 0;
 				for (uint8_t i = 16; i; i--) {
@@ -792,6 +796,14 @@ int main(void) {
 				sr_shiftout(0);
 				channel_fired[rx_field[2] - 1] = 1;
 			}
+
+			leds_off();
+			if(ledstatus & 1) led_yellow_on();
+			if(ledstatus & 2) led_green_on();
+			if(ledstatus & 4) led_blue_on();
+			if(ledstatus & 8) led_red_on();
+			ledstatus = 0;
+
 			rfm_rxon();
 			SREG = temp_sreg;
 		}

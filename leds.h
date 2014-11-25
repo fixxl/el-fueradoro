@@ -30,6 +30,8 @@ void led_blue_off(void);
 void led_blue_toggle(void);
 void led_init(void);
 void leds_off(void);
+void leds_on(void);
+uint8_t leds_status(void);
 
 #define LED_YELLOW_PORT		PORT(LED_YELLOW_P)
 #define LED_YELLOW_PIN		PIN(LED_YELLOW_P)
