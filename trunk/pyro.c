@@ -853,6 +853,17 @@ int main(void) {
 						timer1_on();
 						flags.b.transmit = 1;
 						flags.b.reset_fired = 1;
+
+						// Ignition devices have to write themselves in the list
+						if (!SENDERBOX) {
+							boxes[unique_id - 1] = slave_id;
+							quantity[slave_id - 1] = 1;
+							batteries[unique_id - 1] = adc_read(5);
+							sharpness[unique_id - 1] = (armed ? 'j' : 'n');
+							temps[unique_id - 1] = temperature;
+							rssis[unique_id - 1] = 0;
+						}
+
 						break;
 					}
 
