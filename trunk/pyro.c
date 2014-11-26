@@ -493,7 +493,6 @@ int main(void) {
 			SREG = temp_sreg;
 		}
 
-
 // -------------------------------------------------------------------------------------------------------
 
 // Hardware
@@ -629,7 +628,6 @@ int main(void) {
 					fixedspace(temperature, 'd', 4);
 					uart_puts_P(PSTR("°C"));
 				}
-				uart_puts_P(PSTR("\n\r\n\r"));
 
 				// Request other devices to refresh temperature as well
 				tx_length = 4;
@@ -640,9 +638,11 @@ int main(void) {
 			}
 
 			uart_puts_P(PSTR("\n\n\r"));
+
+			// Take action after proper command
 			if (tmp) {
 				flags.b.transmit = 1;
-				if (slave_id == tx_field[1]) {
+				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1])) {
 					rx_field[2] = tx_field[2];
 					loopcount = 1;
 					flags.b.fire = 1;
@@ -853,7 +853,7 @@ int main(void) {
 						transmission_allowed = 0;
 						timer1_reset();
 						transmit_flag = 0;
-						TIMSK1 |= (1 << TOIE1);			// Enable timer interrupt
+						TIMSK1 |= (1 << TOIE1); // Enable timer interrupt
 						timer1_on();
 						flags.b.transmit = 1;
 						flags.b.reset_fired = 1;
@@ -984,8 +984,7 @@ int main(void) {
 							lcd_cursorset(lastzeile, lastspalte);
 							lcd_puts(" ");
 							lcd_cursorset(anzzeile, anzspalte);
-							lcd_puts("x");
-							lcd_puts("IDENT");
+							lcd_puts("xIDENT");
 
 							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
 							hist_del_flag = 1;
@@ -1016,11 +1015,23 @@ int main(void) {
 						break;
 					}
 					case REPEAT: {
-						lcd_puts("REPEAT");
+						lcd_puts("Repeat       ");
 						break;
 					}
 					case TEMPERATURE: {
-						lcd_puts("Temp. refresh");
+						lcd_puts("Temperature  ");
+
+						if (!flags.b.show_only) {
+							lcd_cursorset(lastzeile, lastspalte);
+							lcd_puts(" ");
+							lcd_cursorset(anzzeile, anzspalte);
+							lcd_puts("xTEMP ");
+
+							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
+							hist_del_flag = 1;
+						}
+						flags.b.show_only = 0;
+
 						break;
 					}
 					default:
