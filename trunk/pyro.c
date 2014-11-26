@@ -310,7 +310,8 @@ int main(void) {
 			_delay_ms(1000);
 		}
 		lcd_clear();
-	} else {
+	}
+	else {
 		tx_field[0] = PARAMETERS;
 		tx_field[1] = slave_id;
 		tx_field[2] = unique_id;
@@ -409,7 +410,7 @@ int main(void) {
 
 			// "send" allows to manually send a command
 			if (uart_strings_equal(uart_field, "send") || uart_strings_equal(uart_field, "fire")
-					|| uart_strings_equal(uart_field, "ident")) {
+					|| uart_strings_equal(uart_field, "ident") || uart_strings_equal(uart_field, "temp")) {
 				flags.b.send = 1;
 				flags.b.transmit = 0;
 			}
@@ -441,11 +442,6 @@ int main(void) {
 			// "kill" resets the controller
 			if (uart_strings_equal(uart_field, "kill")) {
 				flags.b.reset_device = 1;
-			}
-
-			// "temp" triggers a temperature measurement
-			if (uart_strings_equal(uart_field, "temp")) {
-				flags.b.temp = 1;
 			}
 
 			// "hardware" or "hw" outputs for uC- and rfm-type
@@ -497,35 +493,6 @@ int main(void) {
 			SREG = temp_sreg;
 		}
 
-// -------------------------------------------------------------------------------------------------------
-
-// Temperature Measurement
-		if (flags.b.temp) {
-			temp_sreg = SREG;
-			cli();
-			flags.b.temp = 0;
-
-			temperature = tempmeas(tempsenstype);
-
-			uart_puts_P(PSTR("Temperatur: "));
-			if (temperature == -128) {
-				uart_puts_P(PSTR("n.a."));
-			} else {
-				fixedspace(temperature, 'd', 4);
-				uart_puts_P(PSTR("°C"));
-			}
-			uart_puts_P(PSTR("\n\r\n\r"));
-
-			// Request other devices to refresh temperature as well
-			tx_length = 4;
-			tx_field[0] = TEMPERATURE;
-			tx_field[1] = 'e';
-			tx_field[2] = 'm';
-			tx_field[3] = 'p';
-			flags.b.transmit = 1;
-
-			SREG = temp_sreg;
-		}
 
 // -------------------------------------------------------------------------------------------------------
 
@@ -596,17 +563,18 @@ int main(void) {
 			timer1_reset();
 			timer1_off();
 
-			if ((uart_field[0] != FIRE) && (uart_field[0] != IDENT)) {
-				uart_puts_P(PSTR("\n\rModus(f/i): "));
+			if ((uart_field[0] != FIRE) && (uart_field[0] != IDENT) && (uart_field[0] != TEMPERATURE)) {
+				uart_puts_P(PSTR("\n\rModus(f/i/t): "));
 				while (!inp)
 					inp = uart_getc();
 				uart_putc(inp);
-			} else {
+			}
+			else {
 				inp = uart_field[0];
 			}
 			tx_field[0] = inp;
 
-			if (tx_field[0] == FIRE || tx_field[0] == IDENT) tmp = 1;
+			if (tx_field[0] == FIRE || tx_field[0] == IDENT || tx_field[0] == TEMPERATURE) tmp = 1;
 
 			if (tx_field[0] == FIRE) {
 				uart_puts_P(PSTR("\n\rSlave-ID:   "));
@@ -622,7 +590,8 @@ int main(void) {
 				if (nr > 0 && nr < 31) {
 					uart_shownum(nr, 'd');
 					tx_field[1] = nr;
-				} else {
+				}
+				else {
 					uart_puts_P(PSTR("Ungültige Eingabe"));
 					tmp = 0;
 				}
@@ -642,10 +611,32 @@ int main(void) {
 					tx_field[2] = nr;
 					tx_field[3] = FIREREPEATS;
 					tx_length = 4;
-				} else {
+				}
+				else {
 					uart_puts_P(PSTR("Ungültige Eingabe"));
 					tmp = 0;
 				}
+			}
+
+			if (tx_field[0] == TEMPERATURE) {
+				temperature = tempmeas(tempsenstype);
+
+				uart_puts_P(PSTR("Temperatur: "));
+				if (temperature == -128) {
+					uart_puts_P(PSTR("n.a."));
+				}
+				else {
+					fixedspace(temperature, 'd', 4);
+					uart_puts_P(PSTR("°C"));
+				}
+				uart_puts_P(PSTR("\n\r\n\r"));
+
+				// Request other devices to refresh temperature as well
+				tx_length = 4;
+				tx_field[0] = TEMPERATURE;
+				tx_field[1] = 'e';
+				tx_field[2] = 'm';
+				tx_field[3] = 'p';
 			}
 
 			uart_puts_P(PSTR("\n\n\r"));
@@ -656,7 +647,8 @@ int main(void) {
 					loopcount = 1;
 					flags.b.fire = 1;
 				}
-			} else flags.b.transmit = 0;
+			}
+			else flags.b.transmit = 0;
 
 			while (UCSR0A & (1 << RXC0))
 				inp = UDR0;
@@ -883,7 +875,8 @@ int main(void) {
 					case PARAMETERS: {
 						if ((rx_field[2] == 'E') || (!rx_field[2]) || (rx_field[2] == unique_id)) {
 							iderrors++;
-						} else {
+						}
+						else {
 							tmp = rx_field[2] - 1; // Index = unique_id-1 (zero-based indexing)
 							boxes[tmp] = rx_field[1];
 							batteries[tmp] = rx_field[3];
