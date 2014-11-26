@@ -310,8 +310,7 @@ int main(void) {
 			_delay_ms(1000);
 		}
 		lcd_clear();
-	}
-	else {
+	} else {
 		tx_field[0] = PARAMETERS;
 		tx_field[1] = slave_id;
 		tx_field[2] = unique_id;
@@ -409,7 +408,8 @@ int main(void) {
 			}
 
 			// "send" allows to manually send a command
-			if (uart_strings_equal(uart_field, "send")) {
+			if (uart_strings_equal(uart_field, "send") || uart_strings_equal(uart_field, "fire")
+					|| uart_strings_equal(uart_field, "ident")) {
 				flags.b.send = 1;
 				flags.b.transmit = 0;
 			}
@@ -510,8 +510,7 @@ int main(void) {
 			uart_puts_P(PSTR("Temperatur: "));
 			if (temperature == -128) {
 				uart_puts_P(PSTR("n.a."));
-			}
-			else {
+			} else {
 				fixedspace(temperature, 'd', 4);
 				uart_puts_P(PSTR("°C"));
 			}
@@ -597,10 +596,14 @@ int main(void) {
 			timer1_reset();
 			timer1_off();
 
-			uart_puts_P(PSTR("\n\rModus(f/i): "));
-			while (!inp)
-				inp = uart_getc();
-			uart_putc(inp);
+			if ((uart_field[0] != FIRE) && (uart_field[0] != IDENT)) {
+				uart_puts_P(PSTR("\n\rModus(f/i): "));
+				while (!inp)
+					inp = uart_getc();
+				uart_putc(inp);
+			} else {
+				inp = uart_field[0];
+			}
 			tx_field[0] = inp;
 
 			if (tx_field[0] == FIRE || tx_field[0] == IDENT) tmp = 1;
@@ -619,8 +622,7 @@ int main(void) {
 				if (nr > 0 && nr < 31) {
 					uart_shownum(nr, 'd');
 					tx_field[1] = nr;
-				}
-				else {
+				} else {
 					uart_puts_P(PSTR("Ungültige Eingabe"));
 					tmp = 0;
 				}
@@ -640,8 +642,7 @@ int main(void) {
 					tx_field[2] = nr;
 					tx_field[3] = FIREREPEATS;
 					tx_length = 4;
-				}
-				else {
+				} else {
 					uart_puts_P(PSTR("Ungültige Eingabe"));
 					tmp = 0;
 				}
@@ -650,13 +651,12 @@ int main(void) {
 			uart_puts_P(PSTR("\n\n\r"));
 			if (tmp) {
 				flags.b.transmit = 1;
-				if(slave_id == tx_field[1]) {
+				if (slave_id == tx_field[1]) {
 					rx_field[2] = tx_field[2];
 					loopcount = 1;
 					flags.b.fire = 1;
 				}
-			}
-			else flags.b.transmit = 0;
+			} else flags.b.transmit = 0;
 
 			while (UCSR0A & (1 << RXC0))
 				inp = UDR0;
@@ -732,7 +732,7 @@ int main(void) {
 
 // Transmit
 		// Check if device has waited long enough (according to unique-id) to be allowed to transmit
-		if (!transmission_allowed && (transmit_flag > (unique_id<<2))) transmission_allowed = 1;
+		if (!transmission_allowed && (transmit_flag > (unique_id << 2))) transmission_allowed = 1;
 
 		// Transmission process
 		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 125))) {
@@ -751,7 +751,7 @@ int main(void) {
 			led_green_off();
 
 			// If transmission was not a cyclical one but a triggered one, turn of timer and its interrupts
-			if(transmit_flag<125) {
+			if (transmit_flag < 125) {
 				timer1_off();
 				timer1_reset();
 				TIMSK1 &= ~(1 << TOIE1);
@@ -798,10 +798,10 @@ int main(void) {
 			}
 
 			leds_off();
-			if(ledstatus & 1) led_yellow_on();
-			if(ledstatus & 2) led_green_on();
-			if(ledstatus & 4) led_blue_on();
-			if(ledstatus & 8) led_red_on();
+			if (ledstatus & 1) led_yellow_on();
+			if (ledstatus & 2) led_green_on();
+			if (ledstatus & 4) led_blue_on();
+			if (ledstatus & 8) led_red_on();
 			ledstatus = 0;
 
 			rfm_rxon();
@@ -883,8 +883,7 @@ int main(void) {
 					case PARAMETERS: {
 						if ((rx_field[2] == 'E') || (!rx_field[2]) || (rx_field[2] == unique_id)) {
 							iderrors++;
-						}
-						else {
+						} else {
 							tmp = rx_field[2] - 1; // Index = unique_id-1 (zero-based indexing)
 							boxes[tmp] = rx_field[1];
 							batteries[tmp] = rx_field[3];
@@ -909,8 +908,9 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Clear LCD in case of timeouts
-		if (SENDERBOX && (clear_lcd_tx_flag > DEL_THRES || clear_lcd_rx_flag > DEL_THRES || hist_del_flag > (3 * DEL_THRES))
-				&& !flags.b.lcd_update) {
+		if (SENDERBOX
+				&& (clear_lcd_tx_flag > DEL_THRES || clear_lcd_rx_flag > DEL_THRES
+						|| hist_del_flag > (3 * DEL_THRES)) && !flags.b.lcd_update) {
 			temp_sreg = SREG; // Speichere Statusregister
 			cli();
 
