@@ -550,91 +550,96 @@ int main(void) {
 
 			flags.b.send = 0;
 
+			timer1_reset();
+			timer1_off();
+
 			nr = 0;
 			tmp = 0;
 			inp = 0;
 
-			tx_length = 3;
-			tx_field[0] = IDENT;
-			tx_field[1] = 'd';
-			tx_field[2] = '0';
-
-			timer1_reset();
-			timer1_off();
-
-			if ((uart_field[0] != FIRE) && (uart_field[0] != IDENT) && (uart_field[0] != TEMPERATURE)) {
-				uart_puts_P(PSTR("\n\rModus(f/i/t): "));
-				while (!inp)
-					inp = uart_getc();
-				uart_putc(inp);
-			}
-			else {
-				inp = uart_field[0];
+			switch (uart_field[0]) {
+				case FIRE:
+				case IDENT:
+				case TEMPERATURE: {
+					inp = uart_field[0];
+					break;
+				}
+				default: {
+					uart_puts_P(PSTR("\n\rModus(f/i/t): "));
+					while (!inp) {
+						inp = uart_getc() | 0x20;
+					}
+					uart_putc(inp);
+					break;
+				}
 			}
 			tx_field[0] = inp;
 
-			if (tx_field[0] == FIRE || tx_field[0] == IDENT || tx_field[0] == TEMPERATURE) tmp = 1;
+			if (tx_field[0] == FIRE || tx_field[0] == IDENT || tx_field[0] == TEMPERATURE) {
+				// Assume, that a transmission shall take place
+				tmp = 1;
 
-			if (tx_field[0] == FIRE) {
-				uart_puts_P(PSTR("\n\rSlave-ID:   "));
-				for (i = 0; i < 2; i++) {
-					inp = 0;
-					while (!inp)
-						inp = uart_getc();
-					uart_putc(inp);
-					nr += (inp - '0');
-					if (!i) nr *= 10;
-				}
-				uart_puts_P(PSTR(" = "));
-				if (nr > 0 && nr < 31) {
-					uart_shownum(nr, 'd');
-					tx_field[1] = nr;
-				}
-				else {
-					uart_puts_P(PSTR("Ungültige Eingabe"));
-					tmp = 0;
-				}
-				nr = 0;
-				uart_puts_P(PSTR("\n\rKanal:      "));
-				for (i = 0; i < 2; i++) {
-					inp = 0;
-					while (!inp)
-						inp = uart_getc();
-					uart_putc(inp);
-					nr += (inp - '0');
-					if (!i) nr *= 10;
-				}
-				uart_puts_P(PSTR(" = "));
-				if (nr > 0 && nr < 31) {
-					uart_shownum(nr, 'd');
-					tx_field[2] = nr;
-					tx_field[3] = FIREREPEATS;
-					tx_length = 4;
-				}
-				else {
-					uart_puts_P(PSTR("Ungültige Eingabe"));
-					tmp = 0;
-				}
-			}
+				// Handle slave-id and channel input
+				switch (tx_field[0]) {
+					case FIRE: {
+						for (uint8_t round = 1; round < 3; round++) { 										// Loop twice
+							nr = 0;
+							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:   ") : PSTR("\n\rKanal:      "));	// First for slave-id, then for channel
+							for (i = 0; i < 2; i++) {														// Get the user to assign the numbers with 2 digits
+								inp = 0;
+								while (!inp) {
+									inp = uart_getc();
+								}
+								uart_putc(inp);
+								nr *= 10;
+								nr += (inp - '0');
+							}
+							uart_puts_P(PSTR(" = "));
+							if (nr > 0 && nr < ((round < 2) ? 31 : 17)) {									// Slave-ID has to be 1-30, Channel 1-16
+								uart_shownum(nr, 'd');
+								tx_field[round] = nr;
+							}
+							else {																			// Otherwise the input's invalid
+								uart_puts_P(PSTR("Ungültige Eingabe"));
+								tmp = 0;																	// Sending gets disallowed
+								round = 3;
+							}
+						}
+						tx_field[3] = FIREREPEATS;
+						tx_length = 4;
+						break;
+					}
+					case IDENT: {
+						tx_field[0] = IDENT;
+						tx_field[1] = 'd';
+						tx_field[2] = '0';
+						tx_length = 3;
+						break;
+					}
+					case TEMPERATURE: {
+						temperature = tempmeas(tempsenstype);
 
-			if (tx_field[0] == TEMPERATURE) {
-				temperature = tempmeas(tempsenstype);
+						uart_puts_P(PSTR("Temperatur: "));
+						if (temperature == -128) {
+							uart_puts_P(PSTR("n.a."));
+						}
+						else {
+							fixedspace(temperature, 'd', 4);
+							uart_puts_P(PSTR("°C"));
+						}
 
-				uart_puts_P(PSTR("Temperatur: "));
-				if (temperature == -128) {
-					uart_puts_P(PSTR("n.a."));
+						// Request other devices to refresh temperature as well
+						tx_field[0] = TEMPERATURE;
+						tx_field[1] = 'e';
+						tx_field[2] = 'm';
+						tx_field[3] = 'p';
+						tx_length = 4;
+						break;
+					}
+					default: {
+						break;
+					}
 				}
-				else {
-					fixedspace(temperature, 'd', 4);
-					uart_puts_P(PSTR("°C"));
-				}
-
-				// Request other devices to refresh temperature as well
-				tx_length = 4;
-				tx_field[0] = TEMPERATURE;
-				tx_field[1] = 'e';
-				tx_field[2] = 'm';
-				tx_field[3] = 'p';
 			}
 
 			uart_puts_P(PSTR("\n\n\r"));
@@ -642,16 +647,19 @@ int main(void) {
 			// Take action after proper command
 			if (tmp) {
 				flags.b.transmit = 1;
-				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1])) {
+				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1]) && !channel_fired[tx_field[2]-1]) {
 					rx_field[2] = tx_field[2];
 					loopcount = 1;
 					flags.b.fire = 1;
 				}
 			}
-			else flags.b.transmit = 0;
+			else {
+				flags.b.transmit = 0;
+			}
 
-			while (UCSR0A & (1 << RXC0))
+			while (UCSR0A & (1 << RXC0)) {
 				inp = UDR0;
+			}
 
 			timer1_on();
 			SREG = temp_sreg;
