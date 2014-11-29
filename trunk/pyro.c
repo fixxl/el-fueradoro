@@ -112,7 +112,7 @@ void create_symbols(void) {
 	lcd_cgwrite(0);
 	lcd_cgwrite(0);
 
-	// Auf DDRAM zurückschalten
+	// Switch back to DDRAM
 	lcd_send(1 << 7, 0);
 }
 
@@ -123,6 +123,7 @@ uint8_t tempident(void) {
 	int16_t var1 = 0, var2 = 0;
 	uint8_t checkup = dht_read(&var1, &var2);
 
+	// Type of temp. sensor is detected by return value
 	switch (checkup) {
 		case 0: {
 			return DHT22;
@@ -553,9 +554,7 @@ int main(void) {
 			timer1_reset();
 			timer1_off();
 
-			nr = 0;
-			tmp = 0;
-			inp = 0;
+			nr = 0, tmp = 0, inp = 0;
 
 			switch (uart_field[0]) {
 				case FIRE:
@@ -582,10 +581,10 @@ int main(void) {
 				// Handle slave-id and channel input
 				switch (tx_field[0]) {
 					case FIRE: {
-						for (uint8_t round = 1; round < 3; round++) { 										// Loop twice
+						for (uint8_t round = 1; round < 3; round++) { // Loop twice
 							nr = 0;
-							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:   ") : PSTR("\n\rKanal:      "));	// First for slave-id, then for channel
-							for (i = 0; i < 2; i++) {														// Get the user to assign the numbers with 2 digits
+							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:   ") : PSTR("\n\rKanal:      ")); // First for slave-id, then for channel
+							for (i = 0; i < 2; i++) { // Get the user to assign the numbers with 2 digits
 								inp = 0;
 								while (!inp) {
 									inp = uart_getc();
@@ -595,13 +594,13 @@ int main(void) {
 								nr += (inp - '0');
 							}
 							uart_puts_P(PSTR(" = "));
-							if (nr > 0 && nr < ((round < 2) ? 31 : 17)) {									// Slave-ID has to be 1-30, Channel 1-16
+							if (nr > 0 && nr < ((round < 2) ? 31 : 17)) { // Slave-ID has to be 1-30, Channel 1-16
 								uart_shownum(nr, 'd');
 								tx_field[round] = nr;
 							}
-							else {																			// Otherwise the input's invalid
+							else { // Otherwise the input's invalid
 								uart_puts_P(PSTR("Ungültige Eingabe"));
-								tmp = 0;																	// Sending gets disallowed
+								tmp = 0; // Sending gets disallowed
 								round = 3;
 							}
 						}
@@ -647,7 +646,7 @@ int main(void) {
 			// Take action after proper command
 			if (tmp) {
 				flags.b.transmit = 1;
-				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1]) && !channel_fired[tx_field[2]-1]) {
+				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1]) && !channel_fired[tx_field[2] - 1]) {
 					rx_field[2] = tx_field[2];
 					loopcount = 1;
 					flags.b.fire = 1;
@@ -772,39 +771,52 @@ int main(void) {
 			cli();
 			flags.b.fire = 0;
 
+			// Wait depending on number of transmission received
 			for (i = loopcount - 1; i > 0; i--) {
 				_delay_ms(11);
 			}
 
+			// Backup LED status
 			ledstatus = leds_status();
+
+			// Turn all leds on
 			leds_on();
 
-			if (armed && (rx_field[2] > 0) && (rx_field[2] < 17)) {
-				tmp = rx_field[2];
-				scheme = 0;
+			if (armed && (rx_field[2] > 0) && (rx_field[2] < 17)) { // If channel number is valid
+				tmp = rx_field[2]; // Save channel number to variable
+				scheme = 0; // Set mask-variable to zero
 				for (uint8_t i = 16; i; i--) {
-					scheme <<= 1;
-					if (i == tmp) scheme |= 1;
+					scheme <<= 1; // Left-shift mask-variable
+					if (i == tmp) scheme |= 1; // Set LSB if loop variable equals channel number
 				}
-				sr_shiftout(scheme);
+				sr_shiftout(scheme); // Write pattern to shift-register
 
 				/*
 				 * To avoid demage to the MOSFET in case of a short circuit after ignition, the MOSFET is set to
 				 * blocking state again after 11ms. According to specification the detonator must have exploded by then.
 				 */
 				_delay_ms(11);
+
+				// Lock all MOSFETs
 				sr_shiftout(0);
+
+				// Mark fired channel as fired
 				channel_fired[rx_field[2] - 1] = 1;
 			}
 
+			// Turn all LEDs off
 			leds_off();
+
+			// Restore former state
 			if (ledstatus & 1) led_yellow_on();
 			if (ledstatus & 2) led_green_on();
 			if (ledstatus & 4) led_blue_on();
 			if (ledstatus & 8) led_red_on();
 			ledstatus = 0;
 
+			// Turn receiver back on
 			rfm_rxon();
+
 			SREG = temp_sreg;
 		}
 
@@ -820,14 +832,14 @@ int main(void) {
 
 			led_blue_on();
 #ifdef RFM69_H_
-			rssi = rfm_get_rssi_dbm(); // Measure signal strength (RFM69 only)
+			rssi = rfm_get_rssi_dbm(); 							// Measure signal strength (RFM69 only)
 #endif
-			rfm_rx_error = rfm_receive(rx_field, &rx_length); // Get Message
+			rfm_rx_error = rfm_receive(rx_field, &rx_length); 	// Get Message
 			led_blue_off();
 
 			if (rfm_rx_error) rx_field[0] = ERROR;
 			else {
-				switch (rx_field[0]) { // Act according to type of message received
+				switch (rx_field[0]) { 							// Act according to type of message received
 
 					// Received ignition command (only relevant for ignition devices)
 					case FIRE: {
@@ -861,7 +873,7 @@ int main(void) {
 						transmission_allowed = 0;
 						timer1_reset();
 						transmit_flag = 0;
-						TIMSK1 |= (1 << TOIE1); // Enable timer interrupt
+						TIMSK1 |= (1 << TOIE1); 					// Enable timer interrupt
 						timer1_on();
 						flags.b.transmit = 1;
 						flags.b.reset_fired = 1;
@@ -885,7 +897,7 @@ int main(void) {
 							iderrors++;
 						}
 						else {
-							tmp = rx_field[2] - 1; // Index = unique_id-1 (zero-based indexing)
+							tmp = rx_field[2] - 1; 				// Index = unique_id-1 (zero-based indexing)
 							boxes[tmp] = rx_field[1];
 							batteries[tmp] = rx_field[3];
 							sharpness[tmp] = (rx_field[4] ? 'j' : 'n');
@@ -1013,7 +1025,7 @@ int main(void) {
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
 						if (tx_field[3] < 100) lcd_puts(" ");
-						lcd_arrize((tx_field[3] / 10), lcd_array, 1, 0); // Battery voltage
+						lcd_arrize((tx_field[3] / 10), lcd_array, 1, 0); 		// Battery voltage
 						lcd_puts(lcd_array);
 						lcd_puts(".");
 						lcd_arrize((tx_field[3] % 10), lcd_array, 1, 0);
