@@ -823,7 +823,7 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Receive
-		flags.b.receive = (rfm_receiving() ? 1 : 0);
+		flags.b.receive = rfm_receiving();
 		if (flags.b.receive) {
 			temp_sreg = SREG;
 			cli();
