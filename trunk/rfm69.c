@@ -130,7 +130,7 @@ static inline void rfm_fifo_clear(void) {
 // Turn Transmitter on and off
 uint8_t rfm_txon(void) {
 	uint32_t utimer;
-	utimer = TIMEOUTVAL;
+	utimer = RFM_TIMEOUTVAL;
 	rfm_cmd(0x010C, 1); // TX on (set to transmitter mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready- and TX-Ready-Flag
@@ -139,7 +139,7 @@ uint8_t rfm_txon(void) {
 
 uint8_t rfm_txoff(void) {
 	uint32_t utimer;
-	utimer = TIMEOUTVAL;
+	utimer = RFM_TIMEOUTVAL;
 	rfm_cmd(0x0104, 1); // TX off (set to standby mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready-Flag
@@ -149,7 +149,7 @@ uint8_t rfm_txoff(void) {
 // Turn Receiver on and off
 uint8_t rfm_rxon(void) {
 	uint32_t utimer;
-	utimer = TIMEOUTVAL;
+	utimer = RFM_TIMEOUTVAL;
 	rfm_cmd(0x0110, 1); // RX on (set to receiver mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready--Flag
@@ -158,7 +158,7 @@ uint8_t rfm_rxon(void) {
 
 uint8_t rfm_rxoff(void) {
 	uint32_t utimer;
-	utimer = TIMEOUTVAL;
+	utimer = RFM_TIMEOUTVAL;
 	rfm_cmd(0x0104, 1); // RX off (set to standby mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready-Flag
@@ -168,7 +168,7 @@ uint8_t rfm_rxoff(void) {
 // Get RSSI-Value
 uint8_t rfm_get_rssi_dbm(void) {
 	uint32_t utimer;
-	utimer = TIMEOUTVAL;
+	utimer = RFM_TIMEOUTVAL;
 	if (!rfm_cmd(0x6FFF, 0)) {
 		rfm_cmd(0x2301, 1);
 		while (!(rfm_cmd(0x23FF, 0) & (1 << 1)) && --utimer)
@@ -216,7 +216,7 @@ static inline void rfm_setbit(uint32_t bitrate) {
 // Initialise RFM
 void rfm_init(void) {
 	uint32_t utimer;
-	utimer = TIMEOUTVAL;
+	utimer = RFM_TIMEOUTVAL;
 
 	// Configure SPI inputs and outputs
 	NSEL_PORT |= (1 << NSEL);
@@ -287,7 +287,7 @@ void rfm_init(void) {
 // Transmit data stream
 uint8_t rfm_transmit(char *data, uint8_t length) {
 	uint32_t utimer;
-	utimer = TIMEOUTVAL;
+	utimer = RFM_TIMEOUTVAL;
 	char fifoarray[MAX_ARRAYSIZE + 1];
 
 	// Turn off receiver, switch to Standby
@@ -313,7 +313,7 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 	rfm_txon();
 
 	// Wait for Package Sent
-	utimer = TIMEOUTVAL;
+	utimer = RFM_TIMEOUTVAL;
 	while (!(rfm_cmd(0x28FF, 0) & (1 << 3)) && --utimer)
 		;
 
@@ -346,7 +346,6 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 
 	// Turn receiver back on
 	rfm_rxon();
-
 
 
 	// Write local variable to pointer

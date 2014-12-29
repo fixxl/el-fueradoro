@@ -58,6 +58,11 @@
 #define MAX_ARRAYSIZE 30
 #endif
 
+// Value for input timeout
+#ifndef RFM_TIMEOUTVAL
+#define RFM_TIMEOUTVAL		(F_CPU/256)
+#endif
+
 #ifdef SPDR
 #define HASHARDSPI	1
 #else
