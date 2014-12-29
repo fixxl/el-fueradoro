@@ -87,12 +87,13 @@
 #endif
 
 #ifdef SPDR
-#define HASHARDSPI	1
+#define HASHARDSPI69 1
 #else
-#define HASHARDSPI 0
+#define HASHARDSPI69 0
 #endif
 
-#define HARDWARE_SPI	(USE_HARDWARE_SPI && HASHARDSPI && (NSELPORT==SDOPORT) && (NSELPORT==SDIPORT) && (NSELPORT==SCKPORT) && (NSELPORT==B) && (SDI==3) && (SDO==4) && (SCK==5))
+
+#define HARDWARE_SPI_69	(USE_HARDWARE_SPI && HASHARDSPI69 && (NSELPORT==SDOPORT) && (NSELPORT==SDIPORT) && (NSELPORT==SCKPORT) && (NSELPORT==B) && (SDI==3) && (SDO==4) && (SCK==5))
 
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr); 	// Immediate access to register
 uint8_t rfm_receiving(void);						// Valid data received?

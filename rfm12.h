@@ -60,16 +60,17 @@
 
 // Value for input timeout
 #ifndef RFM_TIMEOUTVAL
-#define RFM_TIMEOUTVAL		(F_CPU/256)
+#define RFM_TIMEOUTVAL		(F_CPU/32)
 #endif
 
 #ifdef SPDR
-#define HASHARDSPI	1
+#define HASHARDSPI12 1
 #else
-#define HASHARDSPI 0
+#define HASHARDSPI12 0
 #endif
 
-#define HARDWARE_SPI	(USE_HARDWARE_SPI && HASHARDSPI && (NSELPORT==SDOPORT) && (NSELPORT==SDIPORT) && (NSELPORT==SCKPORT) && (NSELPORT==B) && (SDI==3) && (SDO==4) && (SCK==5))
+
+#define HARDWARE_SPI_12	(USE_HARDWARE_SPI && HASHARDSPI12 && (NSELPORT==SDOPORT) && (NSELPORT==SDIPORT) && (NSELPORT==SCKPORT) && (NSELPORT==B) && (SDI==3) && (SDO==4) && (SCK==5))
 
 uint16_t rfm_cmd(uint16_t command);									// Immediate access to register
 uint8_t rfm_receiving(void);										// FIFO not empty?
