@@ -82,8 +82,8 @@
 #endif
 
 // Value for input timeout
-#ifndef TIMEOUTVAL
-#define TIMEOUTVAL			(F_CPU>>2)
+#ifndef RFM_TIMEOUTVAL
+#define RFM_TIMEOUTVAL		(F_CPU>>1)
 #endif
 
 #ifdef SPDR
