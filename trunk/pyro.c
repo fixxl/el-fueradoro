@@ -6,6 +6,7 @@
  *
  */
 
+// Everything to be included is in global.h
 #include "global.h"
 
 // Global Variables
