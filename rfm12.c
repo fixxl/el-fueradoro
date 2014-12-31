@@ -177,9 +177,9 @@ void rfm_init(void) {
 	NSEL_DDR |= (1 << NSEL);
 
 #ifdef SPCR
-#if HARDWARE_SPI
-	// Activate and configure hardware SPI at F_CPU/4
-	SPCR |= (1 << SPE | 1 << MSTR);
+#if HARDWARE_SPI_12
+	// Activate and configure hardware SPI at F_CPU/16
+	SPCR |= (1 << SPE | 1 << MSTR | 1<<SPR0);
 #endif
 #endif
 
