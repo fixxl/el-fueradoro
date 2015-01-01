@@ -553,7 +553,7 @@ int main(void) {
 				uart_puts_P(PSTR("\n\rTransmitting remote config command!\n\r"));
 
 				// If the numbers are those of the connected device
-				if(tx_field[1] == unique_id && tx_field[2] == slave_id) {
+				if(!armed && tx_field[1] == unique_id && tx_field[2] == slave_id) {
 					savenumber(tx_field[3], tx_field[4]);
 					flags.b.reset_device = 1;
 				}
