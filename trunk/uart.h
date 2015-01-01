@@ -37,7 +37,7 @@
 #define CTS_DDR		DDR(CTSPORT)
 #define CTS_PIN		PIN(CTSPORT)
 
-#define UARTTIMEOUTVAL	(F_CPU>>3)
+#define UART_TIMEOUTVAL	(F_CPU<<2)
 
 void block_uart_sending(void);
 void allow_uart_sending(void);

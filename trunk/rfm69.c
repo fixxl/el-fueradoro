@@ -13,9 +13,8 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 #if(HARDWARE_SPI_69)
 	SPDR = spibyte;
 	while (!(SPSR & (1 << SPIF)))
-	;
+		;
 	spibyte = SPDR;
-
 #else
 	for (uint8_t i = 8; i; i--) {
 		if (spibyte & 0x80) {
@@ -35,6 +34,7 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 	return spibyte;
 }
 
+// Send 16-bit-command to RFM69 (8 bits register-number, 8 bits command)
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 	// Split command in two bytes, merge with write-/read-flag
 	uint8_t highbyte = ((command >> 8) | (wnr ? 128 : 0));
@@ -63,7 +63,7 @@ uint8_t rfm_receiving(void) {
 	status = rfm_cmd(0x28FF, 0);
 	DEACTIVATE_RFM;
 	// Check if PayloadReady is set AND unused bit is not set (if bit 0 is set, module is not plugged in)
-	return ((status & (1<<2)) && !(status & (1<<0)));
+	return ((status & (1 << 2)) && !(status & (1 << 0)));
 }
 
 uint16_t rfm_status(void) {
@@ -229,7 +229,7 @@ void rfm_init(void) {
 #ifdef SPCR
 #if HARDWARE_SPI_69
 	// Activate and configure hardware SPI at F_CPU/16
-	SPCR |= (1 << SPE | 1 << MSTR | 1<<SPR0);
+	SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
 #endif
 #endif
 
@@ -346,7 +346,6 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 
 	// Turn receiver back on
 	rfm_rxon();
-
 
 	// Write local variable to pointer
 	*length = length_local;
