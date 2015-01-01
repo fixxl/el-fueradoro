@@ -61,7 +61,7 @@ void uart_init(uint32_t baud) {
 uint8_t uart_getc(void) {
 	uint8_t udrcontent;
 	uint32_t utimer;
-	utimer = UARTTIMEOUTVAL;
+	utimer = UART_TIMEOUTVAL;
 	while (!(UCSR0A & (1 << RXC0)) && --utimer)
 		; // wait until char available or timeout
 	if (!utimer) return '\0';
@@ -102,13 +102,13 @@ uint8_t uart_gets(char *s) {
 
 uint8_t uart_putc(uint8_t c) {
 	uint32_t utimer;
-	utimer = UARTTIMEOUTVAL;
+	utimer = UART_TIMEOUTVAL;
 #if RTSCTSFLOW
 	while ((CTS_PIN & (1 << CTS)) && --utimer)
 		; /* wait till sending is allowed */
 #endif
 	if (utimer) {
-		utimer = UARTTIMEOUTVAL;
+		utimer = UART_TIMEOUTVAL;
 		while (!(UCSR0A & (1 << UDRE0)) && --utimer)
 			;
 		switch (c) {

@@ -208,7 +208,7 @@ int main(void) {
 	uint8_t i, nr, inp, tmp;
 	uint8_t tx_length = 2, rx_length = 0;
 	uint8_t temp_sreg;
-	uint8_t slave_id = 30, unique_id = 30;
+	uint8_t slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
 	uint8_t rfm_rx_error = 1, loopcount = 5, transmission_allowed = 1;
 	uint8_t anzspalte = 1, anzzeile = 3, lastspalte = 15, lastzeile = 4;
 	uint8_t armed = 0;
@@ -405,6 +405,12 @@ int main(void) {
 				flags.b.transmit = 0;
 			}
 
+			// "remote" starts remote ID configuration
+			if (uart_strings_equal(uart_field, "remote")) {
+				flags.b.remote = 1;
+				flags.b.transmit = 0;
+			}
+
 			// "clearlist" empties list of boxes
 			if (uart_strings_equal(uart_field, "clearlist")) {
 				flags.b.clear_list = 1;
@@ -525,6 +531,40 @@ int main(void) {
 
 			changes = configprog();
 			if (changes) flags.b.reset_device = 1;
+			changes = 0;
+			SREG = temp_sreg;
+		}
+
+// -------------------------------------------------------------------------------------------------------
+
+// Remote Slave- and Unique-ID settings
+		if (flags.b.remote) {
+			temp_sreg = SREG;
+			cli();
+			flags.b.remote = 0;
+
+			timer1_reset();
+			timer1_off();
+
+			changes = 0;
+			changes = remote_config(tx_field);
+			if (changes) {
+				tx_length = 5;
+				uart_puts_P(PSTR("\n\rTransmitting remote config command!\n\r"));
+
+				// If the numbers are those of the connected device
+				if(tx_field[1] == unique_id && tx_field[2] == slave_id) {
+					savenumber(tx_field[3], tx_field[4]);
+					flags.b.reset_device = 1;
+				}
+				// If not...
+				else {
+					flags.b.transmit = 1;
+				}
+
+				uart_puts_P(PSTR("\n\n\r"));
+			}
+
 			SREG = temp_sreg;
 		}
 
@@ -908,6 +948,20 @@ int main(void) {
 						break;
 					}
 
+						// Received change command
+					case CHANGE: {
+						if ((unique_id == rx_field[1]) && (slave_id == rx_field[2])) {
+							rem_uid = rx_field[3];
+							rem_sid = rx_field[4];
+							if (((rem_uid > 0) && (rem_uid < 31)) && ((rem_sid > 0) && (rem_sid < 31))
+									&& ((rem_uid != unique_id) || (rem_sid != slave_id))) {
+								savenumber(rem_uid, rem_sid);
+								flags.b.reset_device = 1;
+							}
+						}
+						break;
+					}
+
 						// Default action (do nothing)
 					default: {
 						break;
@@ -1053,6 +1107,21 @@ int main(void) {
 						}
 						flags.b.show_only = 0;
 
+						break;
+					}
+					case CHANGE: {
+						lcd_puts("S"); // Slave-ID
+						lcd_arrize(tx_field[1], lcd_array, 2, 0);
+						lcd_puts(lcd_array);
+						lcd_puts(" U"); // Unique-ID
+						lcd_arrize(tx_field[2], lcd_array, 2, 0);
+						lcd_puts(lcd_array);
+						lcd_puts("->S");
+						lcd_arrize(tx_field[3], lcd_array, 2, 0);
+						lcd_puts(lcd_array);
+						lcd_puts(" U"); // Unique-ID
+						lcd_arrize(tx_field[4], lcd_array, 2, 0);
+						lcd_puts(lcd_array);
 						break;
 					}
 					default:

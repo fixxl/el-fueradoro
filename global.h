@@ -9,7 +9,7 @@
 #define GLOBAL_H_
 
 #ifndef MCU
-#define MCU "atmega328p"
+#define MCU "atmega168p"
 #endif
 
 #ifndef RFM

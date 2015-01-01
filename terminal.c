@@ -34,15 +34,25 @@ void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
 
 uint8_t changenumber(void) {
 	uint8_t zehner = 'c', einer = 'c', number;
-	while (!(zehner >= '0' && zehner <= '3'))
+	while (!(zehner >= '0' && zehner <= '3')) {
 		zehner = uart_getc();
+	}
 	uart_putc(zehner);
-	if (zehner == '0') while (!(einer >= '1' && einer <= '9'))
-		einer = uart_getc();
-	if (zehner == '1' || zehner == '2') while (!(einer >= '0' && einer <= '9'))
-		einer = uart_getc();
-	if (zehner == '3') while (einer != '0')
-		einer = uart_getc();
+	if (zehner == '0') {
+		while (!(einer >= '1' && einer <= '9')) {
+			einer = uart_getc();
+		}
+	}
+	if (zehner == '1' || zehner == '2') {
+		while (!(einer >= '0' && einer <= '9')) {
+			einer = uart_getc();
+		}
+	}
+	if (zehner == '3') {
+		while (einer != '0') {
+			einer = uart_getc();
+		}
+	}
 	uart_putc(einer);
 	number = (zehner - '0') * 10 + (einer - '0');
 	return number;
@@ -63,20 +73,52 @@ void savenumber(uint8_t uniqueid, uint8_t slaveid) {
 		eewrite(scrc, i + 4);
 		eewrite(bothcrc, i + 5);
 	}
-	if (address_valid(uniqueid, slaveid)) {
-		uart_puts_P(PSTR("\n\n\rÄnderung erfolgreich übernommen!\n\r"));
+}
+
+// Remote configuration
+uint8_t remote_config(char* txf) {
+	uint8_t valid = 0;
+	char temporary[5];
+
+	terminal_reset();
+
+	uart_puts_P(PSTR(TERM_COL_YELLOW));
+	uart_puts_P(PSTR("\n\nRemote-Konfigurationsprogramm\n\r=============================\n\r"));
+
+	uart_puts_P(PSTR(TERM_COL_WHITE));
+	uart_puts_P(PSTR("Bisherige Unique-ID: "));
+	temporary[0] = changenumber();
+	uart_puts_P(PSTR("\n\r"));
+
+	uart_puts_P(PSTR("Bisherige Slave-ID:  "));
+	temporary[1] = changenumber();
+	uart_puts_P(PSTR("\n\r"));
+	uart_puts_P(PSTR("\n\r"));
+
+	uart_puts_P(PSTR("Neue Unique-ID:      "));
+	temporary[2] = changenumber();
+	uart_puts_P(PSTR("\n\r"));
+
+	uart_puts_P(PSTR("Neue Slave-ID:       "));
+	temporary[3] = changenumber();
+	uart_puts_P(PSTR("\n\r"));
+
+	if ((temporary[0] != temporary[2]) && (temporary[1] != temporary[3])) {
+		txf[0] = CHANGE;
+		for (uint8_t i = 0; i < 4; i++) {
+			txf[i + 1] = temporary[i];
+		}
+		valid = 1;
 	}
-	else {
-		uart_puts_P(PSTR("Ein Fehler ist aufgetreten. Bitte erneut versuchen!\n\r"));
-	}
+	return valid;
 }
 
 // Configuration programme
 uint8_t configprog(void) {
-	uint8_t changes = 0; // Merker, ob Änderungen vorgenommen wurden
-	uint8_t choice = 0; // Tastatureingabe
-	uint8_t slaveid; // Slave-
-	uint8_t uniqueid; // und Unique-ID
+	uint8_t changes = 0; 	// Merker, ob Änderungen vorgenommen wurden
+	uint8_t choice = 0; 	// Tastatureingabe
+	uint8_t slaveid; 		// Slave-
+	uint8_t uniqueid; 		// und Unique-ID
 	uint8_t slaveid_old;
 	uint8_t uniqueid_old;
 
@@ -161,6 +203,12 @@ uint8_t configprog(void) {
 
 	if (changes) {
 		savenumber(uniqueid, slaveid);
+		if (address_valid(uniqueid, slaveid)) {
+			uart_puts_P(PSTR("\n\n\rÄnderung erfolgreich übernommen!\n\r"));
+		}
+		else {
+			uart_puts_P(PSTR("Ein Fehler ist aufgetreten. Bitte erneut versuchen!\n\r"));
+		}
 		uart_puts_P(PSTR("\n\rNeustart...\n\n\r"));
 	}
 	else {
