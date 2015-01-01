@@ -553,7 +553,7 @@ int main(void) {
 				uart_puts_P(PSTR("\n\rTransmitting remote config command!\n\r"));
 
 				// If the numbers are those of the connected device
-				if(!armed && tx_field[1] == unique_id && tx_field[2] == slave_id) {
+				if (!armed && tx_field[1] == unique_id && tx_field[2] == slave_id) {
 					savenumber(tx_field[3], tx_field[4]);
 					flags.b.reset_device = 1;
 				}
@@ -1033,7 +1033,7 @@ int main(void) {
 						lcd_puts(" CH");
 						lcd_arrize(tx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts("   ");
+						lcd_puts("      ");
 
 						if (!flags.b.show_only) {
 							lcd_cursorset(lastzeile, lastspalte);
@@ -1053,7 +1053,7 @@ int main(void) {
 						break;
 					}
 					case IDENT: {
-						lcd_puts("Identify     ");
+						lcd_puts("Identify        ");
 
 						if (!flags.b.show_only) {
 							lcd_cursorset(lastzeile, lastspalte);
@@ -1068,33 +1068,34 @@ int main(void) {
 						break;
 					}
 					case ACKNOWLEDGED: {
-						lcd_puts("OK");
+						lcd_puts("OK              ");
 						break;
 					}
 					case PARAMETERS: {
-						lcd_puts("U"); // Slave-ID
+						lcd_puts("U"); 										// Unique-ID
 						lcd_arrize(tx_field[1], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" S"); // Unique-ID
+						lcd_puts(" S"); 									// Salve-ID
 						lcd_arrize(tx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
 						if (tx_field[3] < 100) lcd_puts(" ");
-						lcd_arrize((tx_field[3] / 10), lcd_array, 1, 0); 		// Battery voltage
+						lcd_arrize((tx_field[3] / 10), lcd_array, 1, 0); 	// Battery voltage
 						lcd_puts(lcd_array);
 						lcd_puts(".");
 						lcd_arrize((tx_field[3] % 10), lcd_array, 1, 0);
 						lcd_puts(lcd_array);
 						lcd_puts("V ");
 						lcd_send(tx_field[4] ? 'j' : 'n', 1); // Armed?
+						lcd_puts("  ");
 						break;
 					}
 					case REPEAT: {
-						lcd_puts("Repeat       ");
+						lcd_puts("Repeat          ");
 						break;
 					}
 					case TEMPERATURE: {
-						lcd_puts("Temperature  ");
+						lcd_puts("Temperature     ");
 
 						if (!flags.b.show_only) {
 							lcd_cursorset(lastzeile, lastspalte);
@@ -1110,16 +1111,16 @@ int main(void) {
 						break;
 					}
 					case CHANGE: {
-						lcd_puts("U"); // Slave-ID
+						lcd_puts("U"); 								// Old Unique-ID
 						lcd_arrize(tx_field[1], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" S"); // Unique-ID
+						lcd_puts(" S"); 							// Old Slave-ID
 						lcd_arrize(tx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts("->U");
+						lcd_puts("->U");							// New Unique-ID
 						lcd_arrize(tx_field[3], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" S"); // Unique-ID
+						lcd_puts(" S"); 							// New Slave-ID
 						lcd_arrize(tx_field[4], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						break;
@@ -1148,18 +1149,19 @@ int main(void) {
 						lcd_puts(" CH");
 						lcd_arrize(rx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
+						lcd_puts("      ");
 						break;
 					}
 					case IDENT: {
-						lcd_puts("Identify");
+						lcd_puts("Identify        ");
 						break;
 					}
 					case ERROR: {
-						lcd_puts("ERR");
+						lcd_puts("ERR             ");
 						break;
 					}
 					case REPEAT: {
-						lcd_puts("REP");
+						lcd_puts("REP             ");
 						break;
 					}
 					case PARAMETERS: {
@@ -1178,19 +1180,21 @@ int main(void) {
 						lcd_puts(lcd_array);
 						lcd_puts("V ");
 						lcd_send(rx_field[4] ? 'j' : 'n', 1);
+						lcd_puts("  ");
 						break;
 					}
+
 					case CHANGE: {
-						lcd_puts("U"); // Slave-ID
+						lcd_puts("U"); 								// Old Unique-ID
 						lcd_arrize(rx_field[1], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" S"); // Unique-ID
+						lcd_puts(" S"); 							// Old Slave-ID
 						lcd_arrize(rx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts("->U");
+						lcd_puts("->U");							// New Unique-ID
 						lcd_arrize(rx_field[3], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" S"); // Unique-ID
+						lcd_puts(" S"); 							// New Slave-ID
 						lcd_arrize(rx_field[4], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						break;
