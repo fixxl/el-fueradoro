@@ -904,8 +904,8 @@ int main(void) {
 						// Received identification-demand
 					case IDENT: {
 						tx_field[0] = PARAMETERS;
-						tx_field[1] = slave_id;
-						tx_field[2] = unique_id;
+						tx_field[1] = unique_id;
+						tx_field[2] = slave_id;
 						tx_field[3] = (SENDERBOX ? 50 : adc_read(5));
 						tx_field[4] = (SENDERBOX ? 0 : armed);
 						tx_field[5] = temperature;
@@ -934,12 +934,12 @@ int main(void) {
 
 						// Received Parameters
 					case PARAMETERS: {
-						if ((rx_field[2] == 'E') || (!rx_field[2]) || (rx_field[2] == unique_id)) {
+						if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id)) {
 							iderrors++;
 						}
 						else {
-							tmp = rx_field[2] - 1; 				// Index = unique_id-1 (zero-based indexing)
-							boxes[tmp] = rx_field[1];
+							tmp = rx_field[1] - 1; 				// Index = unique_id-1 (zero-based indexing)
+							boxes[tmp] = rx_field[2];
 							batteries[tmp] = rx_field[3];
 							sharpness[tmp] = (rx_field[4] ? 'j' : 'n');
 							temps[tmp] = rx_field[5];
@@ -1072,10 +1072,10 @@ int main(void) {
 						break;
 					}
 					case PARAMETERS: {
-						lcd_puts("S"); // Slave-ID
+						lcd_puts("U"); // Slave-ID
 						lcd_arrize(tx_field[1], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" U"); // Unique-ID
+						lcd_puts(" S"); // Unique-ID
 						lcd_arrize(tx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
@@ -1110,16 +1110,16 @@ int main(void) {
 						break;
 					}
 					case CHANGE: {
-						lcd_puts("S"); // Slave-ID
+						lcd_puts("U"); // Slave-ID
 						lcd_arrize(tx_field[1], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" U"); // Unique-ID
+						lcd_puts(" S"); // Unique-ID
 						lcd_arrize(tx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts("->S");
+						lcd_puts("->U");
 						lcd_arrize(tx_field[3], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" U"); // Unique-ID
+						lcd_puts(" S"); // Unique-ID
 						lcd_arrize(tx_field[4], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						break;
@@ -1163,10 +1163,10 @@ int main(void) {
 						break;
 					}
 					case PARAMETERS: {
-						lcd_puts("S");
+						lcd_puts("U");
 						lcd_arrize(rx_field[1], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" U");
+						lcd_puts(" S");
 						lcd_arrize(rx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
@@ -1178,6 +1178,21 @@ int main(void) {
 						lcd_puts(lcd_array);
 						lcd_puts("V ");
 						lcd_send(rx_field[4] ? 'j' : 'n', 1);
+						break;
+					}
+					case CHANGE: {
+						lcd_puts("U"); // Slave-ID
+						lcd_arrize(rx_field[1], lcd_array, 2, 0);
+						lcd_puts(lcd_array);
+						lcd_puts(" S"); // Unique-ID
+						lcd_arrize(rx_field[2], lcd_array, 2, 0);
+						lcd_puts(lcd_array);
+						lcd_puts("->U");
+						lcd_arrize(rx_field[3], lcd_array, 2, 0);
+						lcd_puts(lcd_array);
+						lcd_puts(" S"); // Unique-ID
+						lcd_arrize(rx_field[4], lcd_array, 2, 0);
+						lcd_puts(lcd_array);
 						break;
 					}
 					default:
