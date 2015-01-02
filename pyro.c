@@ -549,22 +549,20 @@ int main(void) {
 			changes = 0;
 			changes = remote_config(tx_field);
 			if (changes) {
-				tx_length = 5;
-				uart_puts_P(PSTR("\n\rTransmitting remote config command!\n\r"));
-
 				// If the numbers are those of the connected device
-				if (!armed && tx_field[1] == unique_id && tx_field[2] == slave_id) {
+				if (tx_field[1] == unique_id && tx_field[2] == slave_id) {
+					uart_puts_P(PSTR("\n\rIDs werden lokal angepasst!\n\r"));
 					savenumber(tx_field[3], tx_field[4]);
 					flags.b.reset_device = 1;
 				}
 				// If not...
 				else {
+					tx_length = 5;
+					uart_puts_P(PSTR("\n\rID-Konfigurationsbefehl wird gesendet!\n\r"));
 					flags.b.transmit = 1;
 				}
-
 				uart_puts_P(PSTR("\n\n\r"));
 			}
-
 			SREG = temp_sreg;
 		}
 
@@ -950,7 +948,7 @@ int main(void) {
 
 						// Received change command
 					case CHANGE: {
-						if ((unique_id == rx_field[1]) && (slave_id == rx_field[2])) {
+						if (!armed && (unique_id == rx_field[1]) && (slave_id == rx_field[2])) {
 							rem_uid = rx_field[3];
 							rem_sid = rx_field[4];
 							if (((rem_uid > 0) && (rem_uid < 31)) && ((rem_sid > 0) && (rem_sid < 31))
