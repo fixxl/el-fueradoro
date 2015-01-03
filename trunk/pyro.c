@@ -176,7 +176,7 @@ int8_t tempmeas(uint8_t type) {
 // ------------------------------------------------------------------------------------------------------------------------
 
 // Check if received uart-data are a valid ignition command
-uint8_t uart_valid(const char *field) {
+uint8_t fire_command_uart_valid(const char *field) {
 	return ((field[0] == 0xFF) && (field[1] > 0) && (field[1] < 31) && (field[2] > 0) && (field[2] < 17)
 			&& (field[3] == crc8(crc8(0, field[1]), field[2])));
 }
@@ -304,10 +304,10 @@ int main(void) {
 		tx_field[2] = '0';
 		TIMSK0 |= (1 << TOIE0);
 
-		// Transmit something to make other devices adjust frequency
+		// Transmit something to make other devices adjust to frequency
 		for (uint8_t j = 0; j < 5; j++) {
 			led_green_on();
-			rfm_transmit("UUUUU", 5);
+			rfm_transmit("UUUUUUUUUU", 10);
 			led_green_off();
 			_delay_ms(1000);
 		}
@@ -315,8 +315,8 @@ int main(void) {
 	}
 	else {
 		tx_field[0] = PARAMETERS;
-		tx_field[1] = slave_id;
-		tx_field[2] = unique_id;
+		tx_field[1] = unique_id;
+		tx_field[2] = slave_id;
 		tx_field[3] = adc_read(5);
 		armed = debounce(&KEYPIN, KEY);
 		if (armed) led_red_on();
@@ -475,7 +475,7 @@ int main(void) {
 			}
 
 			// If valid ignition command was received
-			if (uart_valid(uart_field)) {
+			if (fire_command_uart_valid(uart_field)) {
 				// Transmit to everybody
 				tx_field[0] = FIRE;
 				tx_field[1] = uart_field[1];
@@ -943,6 +943,9 @@ int main(void) {
 						if (!armed && (unique_id == rx_field[1]) && (slave_id == rx_field[2])) {
 							rem_uid = rx_field[3];
 							rem_sid = rx_field[4];
+
+							// Change IDs if they are in the valid range (1-30) and at least one of the two IDs is
+							// a different value than before
 							if (((rem_uid > 0) && (rem_uid < 31)) && ((rem_sid > 0) && (rem_sid < 31))
 									&& ((rem_uid != unique_id) || (rem_sid != slave_id))) {
 								savenumber(rem_uid, rem_sid);
