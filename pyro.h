@@ -54,12 +54,13 @@ typedef union {
 		unsigned reset_device :1;
 		unsigned clear_list :1;
 		unsigned hw :1;
-		unsigned remote:1;
+		unsigned remote :1;
 	} b;
 	uint16_t complete;
 } bitfeld_t;
 
 #define SENDERBOX 			((slave_id==0) && (unique_id==0))
+
 #define KEYDDR				DDR(KEY_PORT)
 #define KEYPIN				PIN(KEY_PORT)
 #define KEYPORT 			PORT(KEY_PORT)
@@ -88,6 +89,6 @@ void create_symbols(void);
 void key_init(void);
 void key_deinit(void);
 uint8_t debounce(volatile uint8_t *port, uint8_t pin);
-uint8_t uart_valid(const char *field);
+uint8_t fire_command_uart_valid(const char *field);
 
 #endif /* PYRO_H_ */

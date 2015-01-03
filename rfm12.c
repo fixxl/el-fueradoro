@@ -110,7 +110,7 @@ uint8_t rfm_rxoff(void) {
 // Receive byte
 static inline uint8_t rfm_rxbyte(uint8_t *errflg) {
 	uint32_t utimer;
-	utimer = (RFM_TIMEOUTVAL);
+	utimer = (RFM12_TIMEOUTVAL);
 	uint8_t value;
 
 	while (!rfm_ready() && utimer--)
@@ -124,7 +124,7 @@ static inline uint8_t rfm_rxbyte(uint8_t *errflg) {
 // Transmit byte
 static inline uint8_t rfm_txbyte(uint8_t value) {
 	uint32_t utimer;
-	utimer = (RFM_TIMEOUTVAL);
+	utimer = (RFM12_TIMEOUTVAL);
 	while (!rfm_ready() && utimer--)
 	;
 	rfm_cmd(0xB800 + value);

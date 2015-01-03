@@ -15,7 +15,7 @@ void terminal_reset(void) {
 }
 
 void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
-	uint8_t cntr = 0;
+	uint8_t cntr = 9;
 	int32_t num_temp = zahl;
 
 	while (num_temp) {
