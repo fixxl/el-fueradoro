@@ -218,7 +218,7 @@ uint8_t configprog(void) {
 }
 
 // List ignition devices
-void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* rssis, uint8_t wrongids) {
+void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* rssis, uint8_t wrongids) {
 	uint8_t i = 0, ganz, zehntel;
 
 	terminal_reset();
@@ -232,21 +232,18 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 					"\n\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r"));
 	while (i < 30) {
 		// Show Unique-ID
-		if (i < 9) uart_putc('0');
+		if ((i + 1) < 10) uart_puts_P(PSTR("0"));
 		uart_shownum(i + 1, 'd');
 		uart_puts_P(PSTR(": "));
 
 		// Show Slave-ID
-		switch (boxe[i]) {
-			case 0:
-				uart_puts_P(PSTR("---"));
-				break;
-			default: {
-				if (boxe[i] < 100) uart_puts_P(PSTR(" "));
-				if (boxe[i] < 10) uart_puts_P(PSTR("0"));
-				uart_shownum(boxe[i], 'd');
-				break;
-			}
+		if (!slvs[i]) {
+			uart_puts_P(PSTR("---"));
+		}
+		else {
+			uart_puts_P(PSTR(" "));
+			if (slvs[i] < 10) uart_puts_P(PSTR("0"));
+			uart_shownum(slvs[i], 'd');
 		}
 
 		uart_puts_P(PSTR(", "));
@@ -254,22 +251,20 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 		// Show Battery Voltages
 		ganz = batt[i] / 10;
 		zehntel = batt[i] % 10;
-		switch (ganz) {
-			case 0:
-				uart_puts_P(PSTR("----"));
-				break;
-			default: {
-				fixedspace(ganz, 'd', 2);
-				uart_puts_P(PSTR("."));
-				uart_shownum(zehntel, 'd');
-				break;
-			}
+		if (!ganz) {
+			uart_puts_P(PSTR("----"));
+		}
+		else {
+			fixedspace(ganz, 'd', 2);
+			uart_puts_P(PSTR("."));
+			uart_shownum(zehntel, 'd');
+			uart_puts_P(PSTR("V"));
 		}
 
 		uart_puts_P(PSTR(", "));
 
 		// Show if armed or not
-		if (boxe[i]) uart_putc(sharpn[i]);
+		if (slvs[i]) uart_putc(sharpn[i]);
 		else uart_puts_P(PSTR("-"));
 
 		uart_puts_P(PSTR(", "));
@@ -279,7 +274,7 @@ void list_complete(char *boxe, char *batt, char *sharpn, int8_t* temps, int8_t* 
 			fixedspace(temps[i], 'd', 4);
 		}
 		else {
-			boxe[i] ? uart_puts_P(PSTR("n.a.")) : uart_puts_P(PSTR("----"));
+			slvs[i] ? uart_puts_P(PSTR("n.a.")) : uart_puts_P(PSTR("----"));
 		}
 
 		uart_puts_P(PSTR(", "));
