@@ -225,9 +225,9 @@ int main(void) {
 	char uart_field[MAX_ARRAYSIZE + 2] = { 0 };
 	char rx_field[MAX_ARRAYSIZE + 1] = { 0 };
 	char tx_field[MAX_ARRAYSIZE + 1] = { 0 };
-	char boxes[MAX_ARRAYSIZE + 1] = { 0 };
+	char slaveid_char[MAX_ARRAYSIZE + 1] = { 0 };
 	char quantity[MAX_ARRAYSIZE + 1] = { 0 };
-	char batteries[MAX_ARRAYSIZE + 1] = { 0 };
+	char battery_voltage_char[MAX_ARRAYSIZE + 1] = { 0 };
 	char sharpness[MAX_ARRAYSIZE + 1] = { 0 };
 	int8_t temps[MAX_ARRAYSIZE + 1] = { 0 };
 	int8_t rssis[MAX_ARRAYSIZE + 1] = { 0 };
@@ -274,8 +274,8 @@ int main(void) {
 		uart_field[warten] = 1;
 		tx_field[warten] = 0;
 		rx_field[warten] = 0;
-		boxes[warten] = 0;
-		batteries[warten] = 0;
+		slaveid_char[warten] = 0;
+		battery_voltage_char[warten] = 0;
 		sharpness[warten] = 0;
 		temps[warten] = 0;
 		channel_fired[warten] = 0;
@@ -712,8 +712,8 @@ int main(void) {
 
 			flags.b.list = 0;
 
-			list_complete(boxes, batteries, sharpness, temps, rssis, iderrors);
-			evaluate_boxes(boxes, quantity);
+			list_complete(slaveid_char, battery_voltage_char, sharpness, temps, rssis, iderrors);
+			evaluate_boxes(slaveid_char, quantity);
 			list_array(quantity);
 
 			SREG = temp_sreg;
@@ -745,9 +745,9 @@ int main(void) {
 
 			iderrors = 0;
 			for (i = 0; i < 30; i++) {
-				boxes[i] = 0;
+				slaveid_char[i] = 0;
 				quantity[i] = 0;
-				batteries[i] = 0;
+				battery_voltage_char[i] = 0;
 				sharpness[i] = 0;
 				temps[i] = -128;
 				rssis[i] = 0;
@@ -755,9 +755,9 @@ int main(void) {
 
 			// Ignition devices have to write themselves in the list
 			if (!SENDERBOX) {
-				boxes[unique_id - 1] = slave_id;
+				slaveid_char[unique_id - 1] = slave_id;
 				quantity[slave_id - 1] = 1;
-				batteries[unique_id - 1] = adc_read(5);
+				battery_voltage_char[unique_id - 1] = adc_read(5);
 				sharpness[unique_id - 1] = (armed ? 'j' : 'n');
 				temps[unique_id - 1] = temperature;
 				rssis[unique_id - 1] = 0;
@@ -914,18 +914,10 @@ int main(void) {
 						transmit_flag = 0;
 						TIMSK1 |= (1 << TOIE1); 					// Enable timer interrupt
 						timer1_on();
+
 						flags.b.transmit = 1;
 						flags.b.reset_fired = 1;
-
-						// Ignition devices have to write themselves in the list
-						if (!SENDERBOX) {
-							boxes[unique_id - 1] = slave_id;
-							quantity[slave_id - 1] = 1;
-							batteries[unique_id - 1] = adc_read(5);
-							sharpness[unique_id - 1] = (armed ? 'j' : 'n');
-							temps[unique_id - 1] = temperature;
-							rssis[unique_id - 1] = 0;
-						}
+						flags.b.clear_list = 1;
 
 						break;
 					}
@@ -937,8 +929,8 @@ int main(void) {
 						}
 						else {
 							tmp = rx_field[1] - 1; 				// Index = unique_id-1 (zero-based indexing)
-							boxes[tmp] = rx_field[2];
-							batteries[tmp] = rx_field[3];
+							slaveid_char[tmp] = rx_field[2];
+							battery_voltage_char[tmp] = rx_field[3];
 							sharpness[tmp] = (rx_field[4] ? 'j' : 'n');
 							temps[tmp] = rx_field[5];
 							rssis[tmp] = rssi;
