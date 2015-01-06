@@ -51,8 +51,8 @@
 #define SCK_DDR				DDR(SCKPORT)
 #define SCK_PIN				PIN(SCKPORT)
 
-#define ACTIVATE_RFM		NSEL_PORT	&=	~(1<<NSEL)
-#define DEACTIVATE_RFM		NSEL_PORT	|=	 (1<<NSEL)
+#define ACTIVATE_RFM		NSEL_PORT	&=	~(1 << NSEL)
+#define DEACTIVATE_RFM		NSEL_PORT	|=	 (1 << NSEL)
 
 #define FRF					((FREQUENCY*524288LL + (XTALFREQ/2)) / XTALFREQ)
 #define FRF_MSB				((FRF>>16) & 0xFF)

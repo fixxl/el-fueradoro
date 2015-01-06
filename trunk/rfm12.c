@@ -199,7 +199,7 @@ void rfm_init(void) {
 		// Disable low duty cycle
 		rfm_cmd(0xC800);
 		//Automatic Frequency Control
-		rfm_cmd(0xC4F7);// AFC settings: autotuning: -20kHz...+15kHz
+		rfm_cmd(0xC430);// AFC settings: autotuning: -20kHz...+15kHz
 
 		// Disable Wakeuptimer
 		rfm_cmd(0xE000);
@@ -268,7 +268,8 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 
 	rfm_txon();// Turn on transmitter
 
-	error += rfm_txbyte(0xAA);// Send preamble of three 10101010-Bytes
+	error += rfm_txbyte(0xAA);// Send preamble of four 10101010-Bytes
+	error += rfm_txbyte(0xAA);
 	error += rfm_txbyte(0xAA);
 	error += rfm_txbyte(0xAA);
 

@@ -15,7 +15,7 @@ void terminal_reset(void) {
 }
 
 void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
-	uint8_t cntr = 9;
+	uint8_t cntr = 0;
 	int32_t num_temp = zahl;
 
 	while (num_temp) {
@@ -80,8 +80,6 @@ uint8_t remote_config(char* txf) {
 	uint8_t valid = 0;
 	char temporary[5];
 
-	terminal_reset();
-
 	uart_puts_P(PSTR(TERM_COL_YELLOW));
 	uart_puts_P(PSTR("\n\nRemote-Konfigurationsprogramm\n\r=============================\n\r"));
 
@@ -101,14 +99,24 @@ uint8_t remote_config(char* txf) {
 
 	uart_puts_P(PSTR("Neue Slave-ID:       "));
 	temporary[3] = changenumber();
-	uart_puts_P(PSTR("\n\r"));
+	uart_puts_P(PSTR("\n\n\r"));
 
-	if ((temporary[0] != temporary[2]) && (temporary[1] != temporary[3])) {
-		txf[0] = CHANGE;
-		for (uint8_t i = 0; i < 4; i++) {
-			txf[i + 1] = temporary[i];
+	if ((temporary[0] != temporary[2]) || (temporary[1] != temporary[3])) {
+		uart_puts_P(PSTR("ID-Wechsel mit j bestätigen, abbrechen mit anderer Taste! "));
+		while (!valid) {
+			valid = uart_getc();
 		}
-		valid = 1;
+		uart_putc(valid);
+		if ((valid | 0x20) == 'j') {
+			txf[0] = CHANGE;
+			for (uint8_t i = 0; i < 4; i++) {
+				txf[i + 1] = temporary[i];
+			}
+			valid = 1;
+		}
+		else {
+			valid = 0;
+		}
 	}
 	return valid;
 }
@@ -258,7 +266,6 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* 
 			fixedspace(ganz, 'd', 2);
 			uart_puts_P(PSTR("."));
 			uart_shownum(zehntel, 'd');
-			uart_puts_P(PSTR("V"));
 		}
 
 		uart_puts_P(PSTR(", "));

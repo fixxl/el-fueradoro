@@ -129,8 +129,7 @@ static inline void rfm_fifo_clear(void) {
 
 // Turn Transmitter on and off
 uint8_t rfm_txon(void) {
-	uint32_t utimer;
-	utimer = RFM69_TIMEOUTVAL;
+	uint32_t utimer = RFM69_TIMEOUTVAL;
 	rfm_cmd(0x010C, 1); // TX on (set to transmitter mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready- and TX-Ready-Flag
@@ -138,8 +137,7 @@ uint8_t rfm_txon(void) {
 }
 
 uint8_t rfm_txoff(void) {
-	uint32_t utimer;
-	utimer = RFM69_TIMEOUTVAL;
+	uint32_t utimer = RFM69_TIMEOUTVAL;
 	rfm_cmd(0x0104, 1); // TX off (set to standby mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready-Flag
@@ -148,8 +146,7 @@ uint8_t rfm_txoff(void) {
 
 // Turn Receiver on and off
 uint8_t rfm_rxon(void) {
-	uint32_t utimer;
-	utimer = RFM69_TIMEOUTVAL;
+	uint32_t utimer = RFM69_TIMEOUTVAL;
 	rfm_cmd(0x0110, 1); // RX on (set to receiver mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready--Flag
@@ -157,8 +154,7 @@ uint8_t rfm_rxon(void) {
 }
 
 uint8_t rfm_rxoff(void) {
-	uint32_t utimer;
-	utimer = RFM69_TIMEOUTVAL;
+	uint32_t utimer = RFM69_TIMEOUTVAL;
 	rfm_cmd(0x0104, 1); // RX off (set to standby mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready-Flag
@@ -167,8 +163,7 @@ uint8_t rfm_rxoff(void) {
 
 // Get RSSI-Value
 uint8_t rfm_get_rssi_dbm(void) {
-	uint32_t utimer;
-	utimer = RFM69_TIMEOUTVAL;
+	uint32_t utimer = RFM69_TIMEOUTVAL;
 	if (!rfm_cmd(0x6FFF, 0)) {
 		rfm_cmd(0x2301, 1);
 		while (!(rfm_cmd(0x23FF, 0) & (1 << 1)) && --utimer)
@@ -176,6 +171,7 @@ uint8_t rfm_get_rssi_dbm(void) {
 	}
 	return (rfm_cmd(0x24FF, 0) >> 1);
 }
+
 //------------------------------------------------------------------------------------------------------------------------
 
 // Bitrate config according to RFM12-recommendations
@@ -199,8 +195,8 @@ static inline void rfm_setbit(uint32_t bitrate) {
 			break;
 	}
 	//Frequency Deviation
-	rfm_cmd(0x0500 + (freqdev >> 8), 1);
-	rfm_cmd(0x0600 + (freqdev & 0xFF), 1);
+	rfm_cmd(0x0500 | (freqdev >> 8), 1);
+	rfm_cmd(0x0600 | (freqdev & 0xFF), 1);
 
 	//Data Rate
 	rfm_cmd(0x0300 | DATARATE_MSB, 1);
@@ -210,7 +206,7 @@ static inline void rfm_setbit(uint32_t bitrate) {
 	rfm_cmd(0x1940 | bw, 1);
 
 	// AFC
-	rfm_cmd(0x1A49, 1);
+	// rfm_cmd(0x1A60 | bw, 1);
 }
 
 // Initialise RFM
@@ -256,9 +252,9 @@ void rfm_init(void) {
 		rfm_cmd(0x3C80, 1); // Tx-Start-Condition: FIFO not empty
 		rfm_cmd(0x3D30, 1); // Packet-Config2
 
-		// Preamble length 3 bytes
+		// Preamble length 4 bytes
 		rfm_cmd(0x2C00, 1);
-		rfm_cmd(0x2D03, 1);
+		rfm_cmd(0x2D04, 1);
 
 		// Sync-Mode
 		rfm_cmd(0x2E88, 1); // set FIFO mode
@@ -270,11 +266,7 @@ void rfm_init(void) {
 		rfm_cmd(0x582D, 1); // High sensitivity mode (turn off if Rx-restart doesn't work!)
 		rfm_cmd(0x6F30, 1); // Improved DAGC
 		rfm_cmd(0x29DC, 1); // RSSI mind. -110 dBm
-		rfm_cmd(0x1E0D, 1); // Start AFC, Auto-On
-
-		utimer = RFM69_TIMEOUTVAL;
-		while ((!(rfm_cmd(0x1EFF, 0) & (1 << 4))) && --utimer)
-			;
+		rfm_cmd(0x1E00, 1); // No AFC or FEI
 
 		rfm_cmd(0x1180 + P_OUT, 1); // Set Output Power
 	}
@@ -289,8 +281,7 @@ void rfm_init(void) {
 
 // Transmit data stream
 uint8_t rfm_transmit(char *data, uint8_t length) {
-	uint32_t utimer;
-	utimer = RFM69_TIMEOUTVAL;
+	uint32_t utimer = RFM69_TIMEOUTVAL;
 	char fifoarray[MAX_ARRAYSIZE + 1];
 
 	// Turn off receiver, switch to Standby
