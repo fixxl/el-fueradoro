@@ -60,8 +60,7 @@ void uart_init(uint32_t baud) {
 /* Receive char */
 uint8_t uart_getc(void) {
 	uint8_t udrcontent;
-	uint32_t utimer;
-	utimer = UART_TIMEOUTVAL;
+	uint32_t utimer = UART_TIMEOUTVAL;
 	while (!(UCSR0A & (1 << RXC0)) && --utimer)
 		; // wait until char available or timeout
 	if (!utimer) return '\0';

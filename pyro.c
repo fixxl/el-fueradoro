@@ -309,18 +309,19 @@ int main(void) {
 			led_green_on();
 			rfm_transmit("UUUUUUUUUU", 10);
 			led_green_off();
-			_delay_ms(1000);
+			_delay_ms(900);
 		}
 		lcd_clear();
 	}
 	else {
+		armed = debounce(&KEYPIN, KEY);
+		if (armed) led_red_on();
+		else led_red_off();
+		flags.b.clear_list = 1;
 		tx_field[0] = PARAMETERS;
 		tx_field[1] = unique_id;
 		tx_field[2] = slave_id;
 		tx_field[3] = adc_read(5);
-		armed = debounce(&KEYPIN, KEY);
-		if (armed) led_red_on();
-		else led_red_off();
 		tx_field[4] = armed;
 		tx_field[5] = temperature;
 		tx_length = 6;
@@ -728,8 +729,8 @@ int main(void) {
 				lcd_clear();
 				lcd_puts("Resetting device!");
 			}
+			wdt_enable(6);
 			terminal_reset();
-			wdt_enable(4);
 			while (1)
 				;
 		}
@@ -770,7 +771,7 @@ int main(void) {
 
 // Transmit
 		// Check if device has waited long enough (according to unique-id) to be allowed to transmit
-		if (!transmission_allowed && (transmit_flag > (unique_id << 2))) transmission_allowed = 1;
+		if (!transmission_allowed && (transmit_flag > ((unique_id << 1) + 3))) transmission_allowed = 1;
 
 		// Transmission process
 		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 125))) {
@@ -924,7 +925,8 @@ int main(void) {
 
 						// Received Parameters
 					case PARAMETERS: {
-						if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id)) {
+						if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id)
+								|| slaveid_char[(uint8_t) rx_field[1]]) {
 							iderrors++;
 						}
 						else {
