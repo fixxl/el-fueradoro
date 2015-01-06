@@ -192,7 +192,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 			break;
 		}
 
-			// Hex
+		// Hex
 		case 'h':
 		case 'H': {
 			while (temp || !i) {
@@ -208,25 +208,25 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 			}
 			break;
 		}
-
 			// Decimal
 		default: {
-			while (temp /= 10) {
-				lauf++;
+			if(!zahl) {
+				uart_puts_P(PSTR("0"));
+				return;
 			}
-
 			if (zahl < 0) {
-				uart_puts_P(PSTR("-"));
+				i = 1;
 				zahl = -zahl;
 			}
-
-			for (uint8_t j = lauf; j > 0; j--) {
-				zwischenspeicher[j - 1] = ((zahl % 10) + 0x30);
+			lauf = 0;
+			while (zahl && (lauf < 33)) {
+				zwischenspeicher[lauf++] = zahl % 10;
 				zahl /= 10;
 			}
-
-			for (uint8_t j = 0; j < lauf; j++) {
-				uart_putc(zwischenspeicher[j]);
+			if (i) uart_puts_P(PSTR("-"));
+			while (lauf) {
+				uart_putc(zwischenspeicher[lauf - 1] + '0');
+				lauf--;
 			}
 			break;
 		}
