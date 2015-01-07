@@ -147,6 +147,7 @@ uint8_t rfm_txoff(void) {
 // Turn Receiver on and off
 uint8_t rfm_rxon(void) {
 	uint32_t utimer = RFM69_TIMEOUTVAL;
+	rfm_cmd(0x3D04 | rfm_cmd(0x3DFF, 0), 1);
 	rfm_cmd(0x0110, 1); // RX on (set to receiver mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready--Flag
@@ -250,7 +251,7 @@ void rfm_init(void) {
 		rfm_cmd(0x3790, 1); // Variable length, No DC-free encoding/decoding, CRC-Check, No Address filter
 		rfm_cmd(0x3800 + MAX_ARRAYSIZE, 1); // Max. Payload-Length
 		rfm_cmd(0x3C80, 1); // Tx-Start-Condition: FIFO not empty
-		rfm_cmd(0x3D30, 1); // Packet-Config2
+		rfm_cmd(0x3D40, 1); // Packet-Config2
 
 		// Preamble length 4 bytes
 		rfm_cmd(0x2C00, 1);
@@ -263,7 +264,7 @@ void rfm_init(void) {
 
 		// Receiver config
 		rfm_cmd(0x1800, 1); // LNA: 50 Ohm Input Impedance, Automatic Gain Control
-		rfm_cmd(0x582D, 1); // High sensitivity mode (turn off if Rx-restart doesn't work!)
+		rfm_cmd(0x582D, 1); // High sensitivity mode
 		rfm_cmd(0x6F30, 1); // Improved DAGC
 		rfm_cmd(0x29DC, 1); // RSSI mind. -110 dBm
 		rfm_cmd(0x1E00, 1); // No AFC or FEI
