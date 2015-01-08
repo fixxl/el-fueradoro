@@ -183,6 +183,40 @@ uint8_t fire_command_uart_valid(const char *field) {
 
 // ------------------------------------------------------------------------------------------------------------------------
 
+void device_initialisation(uint8_t ignotrans) {
+	// Senderspezifische Initialisierung
+	if (!ignotrans) {
+		clear_lcd_rx_flag = 0;
+		clear_lcd_tx_flag = 0;
+		hist_del_flag = 0;
+		key_deinit();
+		key_flag = 0;
+		leds_off();
+		lcd_init();
+		create_symbols();
+		lcd_cursorset(2, 1);
+		lcd_send(0, 1);
+		lcd_send(0, 1);
+		lcd_puts("  El Fueradoro  ");
+		lcd_send(0, 1);
+		lcd_send(0, 1);
+		lcd_cursorhome();
+		TCCR0B |= (1 << CS02 | 1 << CS00);
+		TIMSK0 |= (1 << TOIE0);
+	}
+
+	// Empfängerspezifische Initialisierung
+	else {
+		sr_init();
+		key_init();
+		key_flag = 1;
+		adc_init();
+		leds_off();
+	}
+}
+
+// ------------------------------------------------------------------------------------------------------------------------
+
 // Shift LCD-cursor (line 3 and 4)
 void cursor_x_shift(uint8_t* last_zeile, uint8_t* last_spalte, uint8_t* anz_zeile, uint8_t* anz_spalte) {
 	uint8_t lastzeile = *last_zeile, lastspalte = *last_spalte, anzzeile = *anz_zeile,
@@ -283,8 +317,20 @@ int main(void) {
 		_delay_ms(50);
 	}
 
-// Get Slave- und Unique-ID from EEPROM, initialise device accordingly
+// Initialise ADC and find out what kind of device the software runs on
+	adc_init();
+	const uint8_t ig_or_notrans = (adc_read(5)<160);
+
+// Get Slave- und Unique-ID from EEPROM
 	update_addresses(&unique_id, &slave_id);
+
+//
+	if(SENDERBOX && (!ig_or_notrans)) {
+		device_initialisation(0);
+	}
+	else {
+		device_initialisation(1);
+	}
 
 // Initialise UART and tell the PC we're ready
 	uart_init(BAUD);
@@ -530,7 +576,7 @@ int main(void) {
 			timer1_reset();
 			timer1_off();
 
-			changes = configprog();
+			changes = configprog(ig_or_notrans);
 			if (changes) flags.b.reset_device = 1;
 			changes = 0;
 			SREG = temp_sreg;

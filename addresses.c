@@ -12,40 +12,9 @@ void update_addresses(uint8_t *uniqueid, uint8_t *slaveid) {
 	uint8_t sid_local = *slaveid, uid_local = *uniqueid;
 
 	if (!addresses_load(&uid_local, &sid_local)) {
-		uart_puts_P(PSTR(TERM_COL_RED));
-		uart_puts_P(PSTR("\n\rFehler beim Laden der IDs\n\r"));
-		uart_puts_P(PSTR(TERM_COL_WHITE));
+		leds_on();
 	}
 
-	// Senderspezifische Initialisierung
-	if ((sid_local == 0) && (uid_local == 0)) {
-		clear_lcd_rx_flag = 0;
-		clear_lcd_tx_flag = 0;
-		hist_del_flag = 0;
-		key_deinit();
-		key_flag = 0;
-		leds_off();
-		lcd_init();
-		create_symbols();
-		lcd_cursorset(2, 1);
-		lcd_send(0, 1);
-		lcd_send(0, 1);
-		lcd_puts("  El Fueradoro  ");
-		lcd_send(0, 1);
-		lcd_send(0, 1);
-		lcd_cursorhome();
-		TCCR0B |= (1 << CS02 | 1 << CS00);
-		TIMSK0 |= (1 << TOIE0);
-	}
-
-	// Empfängerspezifische Initialisierung
-	else {
-		sr_init();
-		key_init();
-		key_flag = 1;
-		adc_init();
-		leds_off();
-	}
 	*slaveid = sid_local;
 	*uniqueid = uid_local;
 }
