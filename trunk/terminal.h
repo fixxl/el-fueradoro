@@ -21,7 +21,7 @@ void terminal_reset(void);
 void fixedspace(int32_t zahl, uint8_t type, uint8_t space);
 
 uint8_t remote_config(char* txf);
-uint8_t configprog(void);
+uint8_t configprog(const uint8_t devicetype);
 uint8_t changenumber(void);
 void savenumber(uint8_t uniqueid, uint8_t slaveid);
 

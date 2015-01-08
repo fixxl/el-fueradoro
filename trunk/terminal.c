@@ -122,7 +122,7 @@ uint8_t remote_config(char* txf) {
 }
 
 // Configuration programme
-uint8_t configprog(void) {
+uint8_t configprog(const uint8_t devicetype) {
 	uint8_t changes = 0; 	// Merker, ob Änderungen vorgenommen wurden
 	uint8_t choice = 0; 	// Tastatureingabe
 	uint8_t slaveid; 		// Slave-
@@ -196,12 +196,16 @@ uint8_t configprog(void) {
 			}
 			case 't':
 			case 'T': {
-				if (slaveid && uniqueid) uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
-				slaveid_old = slaveid;
-				uniqueid_old = uniqueid;
-				slaveid = 0;
-				uniqueid = 0;
-				if (uniqueid_old || slaveid_old) changes = 1;
+				if (!devicetype) {
+					if (slaveid && uniqueid) {
+						uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
+					}
+					slaveid_old = slaveid;
+					uniqueid_old = uniqueid;
+					slaveid = 0;
+					uniqueid = 0;
+					if (uniqueid_old || slaveid_old) changes = 1;
+				}
 				break;
 			}
 			default:
