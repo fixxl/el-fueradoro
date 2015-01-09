@@ -161,7 +161,7 @@ static void rfm_setbit(uint32_t bitrate) {
 	rfm_cmd(0xC600 | (DATARATE & 0xFF));
 
 	// Receiver control
-	rfm_cmd(0x9402 | bw);
+	rfm_cmd(0x9401 | bw);
 
 	//Transmitter Control Command
 	rfm_cmd(0x9800 | freqdev);
