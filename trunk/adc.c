@@ -7,6 +7,12 @@
 
 #include "global.h"
 
+// De-Initialisierung
+void adc_deinit(void) {
+	ADMUX = 0;
+	ADCSRA = 0;
+}
+
 // Initialisierung
 void adc_init(void) {
 	uint16_t nosense;
