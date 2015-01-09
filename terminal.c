@@ -161,7 +161,7 @@ uint8_t configprog(const uint8_t devicetype) {
 		uart_puts_P(PSTR("\n\n\rDevice ist derzeit als Transmitter konfiguriert."));
 	uart_puts_P(PSTR("\n\n\n\r"));
 	uart_puts_P(PSTR("(U)nique-ID ändern, (S)lave-ID ändern,\n\r"));
-	if(!devicetype) {
+	if (!devicetype) {
 		uart_puts_P(PSTR("zu (T)ransmitter machen,\n\r"));
 	}
 	uart_puts_P(PSTR("Abbruch mit beliebiger anderer Taste! "));
