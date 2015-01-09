@@ -190,6 +190,7 @@ void device_initialisation(uint8_t ignotrans) {
 		clear_lcd_tx_flag = 0;
 		hist_del_flag = 0;
 		key_deinit();
+		adc_deinit();
 		key_flag = 0;
 		leds_off();
 		lcd_init();
