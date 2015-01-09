@@ -207,7 +207,7 @@ static inline void rfm_setbit(uint32_t bitrate) {
 	rfm_cmd(0x1940 | bw, 1);
 
 	// AFC
-	// rfm_cmd(0x1A60 | bw, 1);
+	rfm_cmd(0x1A40 | bw, 1);
 }
 
 // Initialise RFM
@@ -267,9 +267,9 @@ void rfm_init(void) {
 		rfm_cmd(0x582D, 1); // High sensitivity mode
 		rfm_cmd(0x6F30, 1); // Improved DAGC
 		rfm_cmd(0x29DC, 1); // RSSI mind. -110 dBm
-		rfm_cmd(0x1E00, 1); // No AFC or FEI
+		rfm_cmd(0x1E0C, 1); // AFC auto on and clear
 
-		rfm_cmd(0x1180 + P_OUT, 1); // Set Output Power
+		rfm_cmd(0x1180 | (P_OUT & 0x1F), 1); // Set Output Power
 	}
 	rfm_cmd(0x0A80, 1); // Start RC-Oscillator
 
