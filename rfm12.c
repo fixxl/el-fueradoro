@@ -199,7 +199,7 @@ void rfm_init(void) {
 		// Disable low duty cycle
 		rfm_cmd(0xC800);
 		//Automatic Frequency Control
-		rfm_cmd(0xC430);// AFC settings: autotuning: -20kHz...+15kHz
+		rfm_cmd(0xC4F7);// AFC settings: autotuning: -20kHz...+15kHz
 
 		// Disable Wakeuptimer
 		rfm_cmd(0xE000);
