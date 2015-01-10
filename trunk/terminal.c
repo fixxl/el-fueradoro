@@ -112,6 +112,7 @@ uint8_t remote_config(char* txf) {
 			for (uint8_t i = 0; i < 4; i++) {
 				txf[i + 1] = temporary[i];
 			}
+			txf[5] = CHANGE_REPEATS;
 			valid = 1;
 		}
 		else {

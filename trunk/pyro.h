@@ -12,9 +12,6 @@
 #define KEY_PORT			C
 #define KEY_NUM				4
 
-// Wie oft sollen Zündkommandos gesendet werden?
-#define FIREREPEATS			5
-
 // Maximale Größe von Arrays
 #define MAX_ARRAYSIZE 		30
 
@@ -25,16 +22,31 @@
 #define TIMEOUTVAL			(F_CPU>>4)
 
 // Definitionen der Sende- und Empfangszustände
-#define 	FIRE			'f'
-#define 	IDENT			'i'
-#define 	REPEAT			'r'
-#define 	ERROR			'e'
-#define 	PARAMETERS		'p'
-#define 	ACKNOWLEDGED	'a'
-#define 	SETUP			's'
-#define		TEMPERATURE		't'
-#define		CHANGE			'c'
-#define 	IDLE			0
+#define 	FIRE				'f'
+#define 	IDENT				'i'
+#define 	ERROR				'e'
+#define 	PARAMETERS			'p'
+#define		TEMPERATURE			't'
+#define		CHANGE				'c'
+#define 	IDLE				0
+
+// Definitionen der Bytedauer
+#define		BYTE_DURATION_US	(8*(1000000UL + BITRATE)/BITRATE)
+
+// Definition der Längen
+#define		ADDITIONAL_LENGTH	14 // Preamble 4 + Passwort 2 + Length Byte 1 + CRC 2 + Spare 5
+#define		FIRE_LENGTH			4
+#define		IDENT_LENGTH		4
+#define		PARAMETERS_LENGTH	7
+#define		TEMPERATURE_LENGTH	5
+#define		CHANGE_LENGTH		6
+
+// Wie oft sollen Zündkommandos gesendet werden?
+#define 	FIRE_REPEATS		5
+#define		IDENT_REPEATS		3
+#define		CHANGE_REPEATS		3
+#define		PARAMETERS_REPEATS	2
+#define		TEMPERATURE_REPEATS	2
 
 // Bitflags
 typedef union {
