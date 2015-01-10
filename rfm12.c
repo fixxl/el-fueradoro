@@ -292,7 +292,6 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 
 	error += rfm_txbyte(0xAA);// Dummybyte
 	error += rfm_txbyte(0xAA);// Dummybyte
-	error += rfm_txbyte(0xAA);// Dummybyte
 
 	rfm_txoff();// TX off
 
