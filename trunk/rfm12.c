@@ -297,8 +297,6 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 
 	rfm_status();// Query status to clear potential error flags
 
-	rfm_rxon();// Turn receiver back on
-
 	return (error? 1:0);// 0 : successful, 1 : error
 }
 
@@ -324,10 +322,9 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 	crc_rec = (rfm_rxbyte(&error) << 8);// Receive CRC-Highbyte
 	crc_rec |= rfm_rxbyte(&error);// Receive CRC-Lowbyte
 
-	rfm_cmd(0xCA81);// empty FIFO					// Reset FIFO
 	rfm_status();// Status abfragen, um evtl. Fehler zu löschen
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
-	rfm_cmd(0xCA83);// Restart FIFO: enable sync word search
+	rfm_rxoff();
 
 	*length = length_local;
 

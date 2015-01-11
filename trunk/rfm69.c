@@ -312,7 +312,7 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 	while (!(rfm_cmd(0x28FF, 0) & (1 << 3)) && --utimer)
 		;
 
-	rfm_rxon();
+	rfm_txoff();
 
 	return (utimer ? 0 : 1); // 0 : successful, 1 : error
 }
@@ -338,9 +338,6 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 
 	// Clear FIFO after readout (not necessary, FIFO is cleared anyway when switching from STANDBY to RX)
 	rfm_fifo_clear();
-
-	// Turn receiver back on
-	rfm_rxon();
 
 	// Write local variable to pointer
 	*length = length_local;
