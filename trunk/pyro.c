@@ -241,7 +241,7 @@ int main(void) {
 // Variablendefinitionen
 	uint16_t scheme = 0;
 	uint8_t i, nr, inp, tmp;
-	uint8_t tx_length = 2, rx_length = 0, rxs = 0;
+	uint8_t tx_length = 2, rx_length = 0;
 	uint8_t temp_sreg;
 	uint8_t slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
 	uint8_t rfm_rx_error = 1, loopcount = 5, transmission_allowed = 1;
