@@ -241,7 +241,7 @@ int main(void) {
 // Variablendefinitionen
 	uint16_t scheme = 0;
 	uint8_t i, nr, inp, tmp;
-	uint8_t tx_length = 2, rx_length = 0;
+	uint8_t tx_length = 2, rx_length = 0, rxs = 0;
 	uint8_t temp_sreg;
 	uint8_t slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
 	uint8_t rfm_rx_error = 1, loopcount = 5, transmission_allowed = 1;
@@ -886,6 +886,8 @@ int main(void) {
 			}
 			transmit_flag = 0;
 
+			rfm_rxon();
+
 			flags.b.lcd_update = 1;
 			flags.b.tx_post = 1;
 
@@ -899,11 +901,6 @@ int main(void) {
 			temp_sreg = SREG;
 			cli();
 			flags.b.fire = 0;
-
-			// Wait depending on number of transmission received
-			for (i = loopcount - 1; i > 0; i--) {
-				_delay_ms(11);
-			}
 
 			// Backup LED status
 			ledstatus = leds_status();
@@ -964,16 +961,14 @@ int main(void) {
 			rssi = rfm_get_rssi_dbm(); 	// Measure signal strength (RFM69 only)
 #endif
 			rfm_rx_error = rfm_receive(rx_field, &rx_length); 	// Get Message
-			rfm_rxoff();
 			led_blue_off();
 
 			if (rfm_rx_error) rx_field[0] = ERROR;
 			else {
 				switch (rx_field[0]) { // Act according to type of message received
-
 					// Received ignition command (only relevant for ignition devices)
 					case FIRE: {
-						for (uint8_t i = rx_field[FIRE_REPEATS - 1]; i; i--) {
+						for (uint8_t i = rx_field[FIRE_LENGTH - 1]; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + FIRE_LENGTH) * BYTE_DURATION_US);
 						}
 
@@ -988,7 +983,7 @@ int main(void) {
 
 						// Received temperature-measurement-trigger
 					case TEMPERATURE: {
-						for (uint8_t i = rx_field[TEMPERATURE_REPEATS - 1]; i; i--) {
+						for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1]; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
 						}
 
@@ -999,7 +994,7 @@ int main(void) {
 
 						// Received identification-demand
 					case IDENT: {
-						for (uint8_t i = rx_field[IDENT_REPEATS - 1]; i; i--) {
+						for (uint8_t i = rx_field[IDENT_LENGTH - 1]; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + IDENT_LENGTH) * BYTE_DURATION_US);
 						}
 
@@ -1027,12 +1022,12 @@ int main(void) {
 
 						// Received Parameters
 					case PARAMETERS: {
-						for (uint8_t i = rx_field[PARAMETERS_REPEATS - 1]; i; i--) {
+						for (uint8_t i = rx_field[PARAMETERS_LENGTH - 1]; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + PARAMETERS_LENGTH) * BYTE_DURATION_US);
 						}
 
 						if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id)
-								|| slaveid_char[(uint8_t) rx_field[1]]) {
+								|| ( rx_field[1] && slaveid_char[(uint8_t) (rx_field[1]-1)])) {
 							iderrors++;
 						}
 						else {
@@ -1048,7 +1043,7 @@ int main(void) {
 
 						// Received change command
 					case CHANGE: {
-						for (uint8_t i = rx_field[CHANGE_REPEATS - 1]; i; i--) {
+						for (uint8_t i = rx_field[CHANGE_LENGTH - 1]; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + CHANGE_LENGTH) * BYTE_DURATION_US);
 						}
 
@@ -1072,10 +1067,10 @@ int main(void) {
 						break;
 					}
 				}
-				rfm_rxon();
 				flags.b.lcd_update = 1;
 				flags.b.rx_post = 1;
 			}
+			rfm_rxon();
 			SREG = temp_sreg;
 		}
 
@@ -1285,6 +1280,12 @@ int main(void) {
 						lcd_puts(lcd_array);
 						break;
 					}
+
+					case TEMPERATURE: {
+						lcd_puts("Temperature     ");
+						break;
+					}
+
 					default:
 						break;
 				}
