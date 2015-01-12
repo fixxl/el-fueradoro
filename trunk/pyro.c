@@ -348,8 +348,6 @@ int main(void) {
 		tx_field[0] = IDENT;
 		tx_field[1] = 'd';
 		tx_field[2] = '0';
-		tx_field[3] = IDENT_REPEATS;
-		tx_length = IDENT_LENGTH;
 		TIMSK0 |= (1 << TOIE0);
 
 		// Transmit something to make other devices adjust to frequency
@@ -372,8 +370,6 @@ int main(void) {
 		tx_field[3] = adc_read(5);
 		tx_field[4] = armed;
 		tx_field[5] = temperature;
-		tx_field[6] = PARAMETERS_REPEATS;
-		tx_length = PARAMETERS_LENGTH;
 	}
 	flags.b.transmit = 1;
 
@@ -535,8 +531,6 @@ int main(void) {
 				tx_field[0] = FIRE;
 				tx_field[1] = uart_field[1];
 				tx_field[2] = uart_field[2];
-				tx_field[3] = FIRE_REPEATS;
-				tx_length = FIRE_LENGTH;
 				flags.b.transmit = 1;
 
 				// Check if ignition was triggered on device that received the serial command
@@ -612,7 +606,6 @@ int main(void) {
 				}
 				// If not...
 				else {
-					tx_length = CHANGE_LENGTH;
 					uart_puts_P(PSTR("\n\rID-Konfigurationsbefehl wird gesendet!\n\r"));
 					flags.b.transmit = 1;
 				}
@@ -698,16 +691,12 @@ int main(void) {
 								round = 3;
 							}
 						}
-						tx_field[3] = FIRE_REPEATS;
-						tx_length = FIRE_LENGTH;
 						break;
 					}
 					case IDENT: {
 						tx_field[0] = IDENT;
 						tx_field[1] = 'd';
 						tx_field[2] = '0';
-						tx_field[3] = IDENT_REPEATS;
-						tx_length = IDENT_LENGTH;
 						break;
 					}
 					case TEMPERATURE: {
@@ -727,8 +716,6 @@ int main(void) {
 						tx_field[1] = 'e';
 						tx_field[2] = 'm';
 						tx_field[3] = 'p';
-						tx_field[4] = TEMPERATURE_REPEATS;
-						tx_length = TEMPERATURE_LENGTH;
 						break;
 					}
 					default: {
@@ -868,12 +855,15 @@ int main(void) {
 					break;
 				}
 			}
+			tx_field[tmp] = loopcount;
+			tx_field[tmp+1] = '\0';
+			tx_length = tmp + 1;
 
 			for (uint8_t i = loopcount; i; i--) {
 				led_green_on();
 
 				rfm_transmit(tx_field, tx_length); // Transmit message
-				tx_field[tmp] = i;
+				tx_field[tmp]--;
 
 				led_green_off();
 			}
@@ -968,7 +958,7 @@ int main(void) {
 				switch (rx_field[0]) { // Act according to type of message received
 					// Received ignition command (only relevant for ignition devices)
 					case FIRE: {
-						for (uint8_t i = rx_field[FIRE_LENGTH - 1]; i; i--) {
+						for (uint8_t i = rx_field[FIRE_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + FIRE_LENGTH) * BYTE_DURATION_US);
 						}
 
@@ -983,7 +973,7 @@ int main(void) {
 
 						// Received temperature-measurement-trigger
 					case TEMPERATURE: {
-						for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1]; i; i--) {
+						for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
 						}
 
@@ -994,7 +984,7 @@ int main(void) {
 
 						// Received identification-demand
 					case IDENT: {
-						for (uint8_t i = rx_field[IDENT_LENGTH - 1]; i; i--) {
+						for (uint8_t i = rx_field[IDENT_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + IDENT_LENGTH) * BYTE_DURATION_US);
 						}
 
@@ -1004,8 +994,6 @@ int main(void) {
 						tx_field[3] = (SENDERBOX ? 50 : adc_read(5));
 						tx_field[4] = (SENDERBOX ? 0 : armed);
 						tx_field[5] = temperature;
-						tx_field[6] = PARAMETERS_REPEATS;
-						tx_length = PARAMETERS_LENGTH;
 
 						transmission_allowed = 0;
 						timer1_reset();
@@ -1022,7 +1010,7 @@ int main(void) {
 
 						// Received Parameters
 					case PARAMETERS: {
-						for (uint8_t i = rx_field[PARAMETERS_LENGTH - 1]; i; i--) {
+						for (uint8_t i = rx_field[PARAMETERS_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + PARAMETERS_LENGTH) * BYTE_DURATION_US);
 						}
 
@@ -1043,7 +1031,7 @@ int main(void) {
 
 						// Received change command
 					case CHANGE: {
-						for (uint8_t i = rx_field[CHANGE_LENGTH - 1]; i; i--) {
+						for (uint8_t i = rx_field[CHANGE_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + CHANGE_LENGTH) * BYTE_DURATION_US);
 						}
 
