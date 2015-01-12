@@ -34,7 +34,7 @@
 #define		BYTE_DURATION_US	(8*(1000000UL + BITRATE)/BITRATE)
 
 // Definition der Längen
-#define		ADDITIONAL_LENGTH	16 // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
+#define		ADDITIONAL_LENGTH	13 // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
 #define		FIRE_LENGTH			4
 #define		IDENT_LENGTH		4
 #define		PARAMETERS_LENGTH	7
