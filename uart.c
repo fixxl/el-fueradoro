@@ -196,13 +196,12 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 		case 'h':
 		case 'H': {
 			while (temp || !i) {
-				zwischenspeicher[i] = temp & 0x0F;
+				zwischenspeicher[i++] = temp & 0x0F;
 				temp >>= 4;
-				i++;
 			}
 			if (i % 2) i++;
 			temp = zahl;
-			for (lauf = i; lauf > 0; lauf--) {
+			for (lauf = i; lauf; lauf--) {
 				if (zwischenspeicher[lauf - 1] > 9) uart_putc((zwischenspeicher[lauf - 1] % 10) + 'A');
 				else uart_putc(zwischenspeicher[lauf - 1] + '0');
 			}
