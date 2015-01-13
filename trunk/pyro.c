@@ -119,6 +119,47 @@ void create_symbols(void) {
 
 // ------------------------------------------------------------------------------------------------------------------------
 
+// Talking to radio modules
+uint8_t asciihex(char inp) {
+	if ((inp >= '0') && (inp <= '9')) {
+		return (inp - '0');
+	}
+	if (((inp >= 'a') && (inp <= 'f')) || ((inp >= 'A') && (inp <= 'F'))) {
+		inp |= 0x20;
+		inp -= 32;
+		return (inp - 'a' + 10);
+	}
+	return 255;
+}
+
+uint16_t rfmtalk(void) {
+	char inp;
+	unsigned char uinp, error;
+	uint16_t rfm_order = 0;
+
+	error = 0;
+
+	uart_puts("\n\rKommando in 16-bit Hex: 0x");
+	for(uint8_t i=0; i<4; i++) {
+		rfm_order <<= 4;
+		inp = uart_getc();
+		uart_putc(inp);
+		uinp = asciihex(inp);
+		error += (uinp == 255);
+		rfm_order |= uinp;
+	}
+	uart_puts("\n\r");
+	if (!error) {
+		return rfm_order;
+	}
+	else {
+		return 0xFFFF;
+	}
+}
+
+
+// ------------------------------------------------------------------------------------------------------------------------
+
 // Temperature sensor detection
 uint8_t tempident(void) {
 	int16_t var1 = 0, var2 = 0;
@@ -506,6 +547,21 @@ int main(void) {
 			// "hardware" or "hw" outputs for uC- and rfm-type
 			if (uart_strings_equal(uart_field, "hw") || uart_strings_equal(uart_field, "hardware")) {
 				flags.b.hw = 1;
+			}
+
+			// "rfm" gives access to radio module
+			if (uart_strings_equal(uart_field, "rfm")) {
+				scheme = rfmtalk();
+				if(scheme != 0xFFFF) {
+#if RFM==69
+					scheme = rfm_cmd(scheme, 0);
+#else
+					scheme = rfm_cmd(scheme);
+#endif
+					uart_puts("Ant.: 0x");
+					uart_shownum(scheme, 'h');
+					uart_puts("\n\n\r");
+				}
 			}
 
 			// "int1" last transmitted command gets re-transmitted periodically
