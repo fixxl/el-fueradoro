@@ -171,7 +171,6 @@ uint8_t uart_strings_equal(const char* string1, const char* string2) {
 void uart_shownum(int32_t zahl, uint8_t type) {
 	uint8_t i = 0, lauf = 1;
 	uint32_t bits = 1;
-	int32_t temp = zahl;
 	char zwischenspeicher[33] = { 0 };
 
 	switch (type) {
@@ -195,14 +194,13 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 		// Hex
 		case 'h':
 		case 'H': {
-			while (temp || !i) {
-				zwischenspeicher[i++] = temp & 0x0F;
-				temp >>= 4;
+			while (zahl || !i) {
+				zwischenspeicher[i++] = zahl & 0x0F;
+				zahl >>= 4;
 			}
 			if (i % 2) i++;
-			temp = zahl;
 			for (lauf = i; lauf; lauf--) {
-				if (zwischenspeicher[lauf - 1] > 9) uart_putc((zwischenspeicher[lauf - 1] % 10) + 'A');
+				if (zwischenspeicher[lauf - 1] > 9) uart_putc((zwischenspeicher[lauf - 1] - 10) + 'A');
 				else uart_putc(zwischenspeicher[lauf - 1] + '0');
 			}
 			break;

@@ -137,7 +137,7 @@ uint8_t configprog(const uint8_t devicetype) {
 
 	if (!addresses_load(&uniqueid, &slaveid)) { // Bisherige Adressen aus dem Speicher holen und prüfen
 		uart_puts_P(PSTR(TERM_COL_RED));
-		uart_puts_P(PSTR("\n\rFehler beim Laden der IDs\n\r"));
+		uart_puts_P(PSTR("\n\rFehler beim ID-Laden\n\r"));
 		uart_puts_P(PSTR(TERM_COL_WHITE));
 	}
 
@@ -158,7 +158,7 @@ uint8_t configprog(const uint8_t devicetype) {
 	uart_puts_P(PSTR("\n\r"));
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	if ((slaveid == uniqueid) && !slaveid)
-		uart_puts_P(PSTR("\n\n\rDevice ist derzeit als Transmitter konfiguriert."));
+		uart_puts_P(PSTR("\n\n\rDevice ist als Transmitter konfiguriert."));
 	uart_puts_P(PSTR("\n\n\n\r"));
 	uart_puts_P(PSTR("(U)nique-ID ändern, (S)lave-ID ändern,\n\r"));
 	if (!devicetype) {
