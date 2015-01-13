@@ -11,7 +11,8 @@
 
 // Global Variables
 volatile uint8_t transmit_flag = 0, key_flag = 0;
-volatile uint16_t clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0, hist_del_flag = 0;
+volatile uint16_t clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0, hist_del_flag =
+		0;
 
 void wdt_init(void) {
 	MCUSR = 0;
@@ -121,12 +122,11 @@ void create_symbols(void) {
 
 // Talking to radio modules
 uint8_t asciihex(char inp) {
+	inp |= 0x20;
 	if ((inp >= '0') && (inp <= '9')) {
 		return (inp - '0');
 	}
-	if (((inp >= 'a') && (inp <= 'f')) || ((inp >= 'A') && (inp <= 'F'))) {
-		inp |= 0x20;
-		inp -= 32;
+	if ((inp >= 'a') && (inp <= 'f')) {
 		return (inp - 'a' + 10);
 	}
 	return 255;
@@ -139,8 +139,12 @@ uint16_t rfmtalk(void) {
 
 	error = 0;
 
-	uart_puts("\n\rKommando in 16-bit Hex: 0x");
-	for(uint8_t i=0; i<4; i++) {
+#if(RFM==69)
+	uart_puts("\n\rKommando (16-Bit-Hex-Format, MSB zu 1 setzen für Schreibzugriff): 0x");
+#else
+	uart_puts("\n\rKommando (16-Bit-Hex-Format): 0x");
+#endif
+	for (uint8_t i = 0; i < 4; i++) {
 		rfm_order <<= 4;
 		inp = uart_getc();
 		uart_putc(inp);
@@ -148,7 +152,6 @@ uint16_t rfmtalk(void) {
 		error += (uinp == 255);
 		rfm_order |= uinp;
 	}
-	uart_puts("\n\r");
 	if (!error) {
 		return rfm_order;
 	}
@@ -156,7 +159,6 @@ uint16_t rfmtalk(void) {
 		return 0xFFFF;
 	}
 }
-
 
 // ------------------------------------------------------------------------------------------------------------------------
 
@@ -218,7 +220,8 @@ int8_t tempmeas(uint8_t type) {
 
 // Check if received uart-data are a valid ignition command
 uint8_t fire_command_uart_valid(const char *field) {
-	return ((field[0] == 0xFF) && (field[1] > 0) && (field[1] < 31) && (field[2] > 0) && (field[2] < 17)
+	return ((field[0] == 0xFF) && (field[1] > 0) && (field[1] < 31)
+			&& (field[2] > 0) && (field[2] < 17)
 			&& (field[3] == crc8(crc8(0, field[1]), field[2])));
 }
 
@@ -260,18 +263,22 @@ void device_initialisation(uint8_t ignotrans) {
 // ------------------------------------------------------------------------------------------------------------------------
 
 // Shift LCD-cursor (line 3 and 4)
-void cursor_x_shift(uint8_t* last_zeile, uint8_t* last_spalte, uint8_t* anz_zeile, uint8_t* anz_spalte) {
-	uint8_t lastzeile = *last_zeile, lastspalte = *last_spalte, anzzeile = *anz_zeile,
-			anzspalte = *anz_spalte;
+void cursor_x_shift(uint8_t* last_zeile, uint8_t* last_spalte,
+		uint8_t* anz_zeile, uint8_t* anz_spalte) {
+	uint8_t lastzeile = *last_zeile, lastspalte = *last_spalte, anzzeile =
+			*anz_zeile, anzspalte = *anz_spalte;
 
 	lastzeile = anzzeile;
 	lastspalte = anzspalte;
 	anzspalte += 7;
-	anzzeile = anzzeile + (anzspalte > 21);
-	anzspalte %= 21;
+	if (anzspalte > 21) {
+		anzzeile++;
+		anzspalte = 1;
+	}
 	if (anzzeile > 4) anzzeile = 3;
 
-	*last_zeile = lastzeile, *last_spalte = lastspalte, *anz_zeile = anzzeile, *anz_spalte = anzspalte;
+	*last_zeile = lastzeile, *last_spalte = lastspalte, *anz_zeile = anzzeile, *anz_spalte =
+			anzspalte;
 }
 
 // Main programme
@@ -509,8 +516,10 @@ int main(void) {
 			}
 
 			// "send" allows to manually send a command
-			if (uart_strings_equal(uart_field, "send") || uart_strings_equal(uart_field, "fire")
-					|| uart_strings_equal(uart_field, "ident") || uart_strings_equal(uart_field, "temp")) {
+			if (uart_strings_equal(uart_field, "send")
+					|| uart_strings_equal(uart_field, "fire")
+					|| uart_strings_equal(uart_field, "ident")
+					|| uart_strings_equal(uart_field, "temp")) {
 				flags.b.send = 1;
 				flags.b.transmit = 0;
 			}
@@ -545,28 +554,31 @@ int main(void) {
 			}
 
 			// "hardware" or "hw" outputs for uC- and rfm-type
-			if (uart_strings_equal(uart_field, "hw") || uart_strings_equal(uart_field, "hardware")) {
+			if (uart_strings_equal(uart_field, "hw")
+					|| uart_strings_equal(uart_field, "hardware")) {
 				flags.b.hw = 1;
 			}
 
 			// "rfm" gives access to radio module
 			if (uart_strings_equal(uart_field, "rfm")) {
 				scheme = rfmtalk();
-				if(scheme != 0xFFFF) {
+				if (scheme != 0xFFFF) {
 #if RFM==69
-					scheme = rfm_cmd(scheme, 0);
+					scheme = rfm_cmd(scheme, (scheme&32768) && 1);
 #else
 					scheme = rfm_cmd(scheme);
 #endif
-					uart_puts("Ant.: 0x");
+					uart_puts(" = 0x");
 					uart_shownum(scheme, 'h');
-					uart_puts("\n\n\r");
 				}
+				uart_puts("\n\n\r");
 			}
 
 			// "int1" last transmitted command gets re-transmitted periodically
 			if (uart_strings_equal(uart_field, "int1")) {
-				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls EIN\n\r"));
+				uart_puts_P(
+						PSTR(
+								"\n\n\rWiederholtes Senden des letzten Befehls EIN\n\r"));
 				timer1_reset();
 				timer1_on();
 				TIMSK1 |= (1 << TOIE1);
@@ -574,7 +586,9 @@ int main(void) {
 
 			// "int0" periodic retransmission gets stopped
 			if (uart_strings_equal(uart_field, "int0")) {
-				uart_puts_P(PSTR("\n\n\rWiederholtes Senden des letzten Befehls AUS\n\r"));
+				uart_puts_P(
+						PSTR(
+								"\n\n\rWiederholtes Senden des letzten Befehls AUS\n\r"));
 				transmit_flag = 0;
 				timer1_off();
 				TIMSK1 &= ~(1 << TOIE1);
@@ -601,7 +615,8 @@ int main(void) {
 			}
 
 			led_yellow_off();
-			if (uart_field[0] && (uart_field[0] != 0xFF)) uart_puts_P(PSTR("\n\r"));
+			if (uart_field[0] && (uart_field[0] != 0xFF))
+				uart_puts_P(PSTR("\n\r"));
 
 			SREG = temp_sreg;
 		}
@@ -662,7 +677,9 @@ int main(void) {
 				}
 				// If not...
 				else {
-					uart_puts_P(PSTR("\n\rID-Konfigurationsbefehl wird gesendet!\n\r"));
+					uart_puts_P(
+							PSTR(
+									"\n\rID-Konfigurationsbefehl wird gesendet!\n\r"));
 					flags.b.transmit = 1;
 				}
 				uart_puts_P(PSTR("\n\n\r"));
@@ -717,7 +734,8 @@ int main(void) {
 			}
 			tx_field[0] = inp;
 
-			if (tx_field[0] == FIRE || tx_field[0] == IDENT || tx_field[0] == TEMPERATURE) {
+			if (tx_field[0] == FIRE || tx_field[0] == IDENT
+					|| tx_field[0] == TEMPERATURE) {
 				// Assume, that a transmission shall take place
 				tmp = 1;
 
@@ -726,7 +744,10 @@ int main(void) {
 					case FIRE: {
 						for (uint8_t round = 1; round < 3; round++) { // Loop twice
 							nr = 0;
-							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:   ") : PSTR("\n\rKanal:      ")); // First for slave-id, then for channel
+							uart_puts_P(
+									round < 2 ?
+											PSTR("\n\rSlave-ID:   ") :
+											PSTR("\n\rKanal:      ")); // First for slave-id, then for channel
 							for (i = 0; i < 2; i++) { // Get the user to assign the numbers with 2 digits
 								inp = 0;
 								while (!inp) {
@@ -785,7 +806,8 @@ int main(void) {
 			// Take action after proper command
 			if (tmp) {
 				flags.b.transmit = 1;
-				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1]) && !channel_fired[tx_field[2] - 1]) {
+				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1])
+						&& !channel_fired[tx_field[2] - 1]) {
 					rx_field[2] = tx_field[2];
 					flags.b.fire = 1;
 				}
@@ -811,7 +833,8 @@ int main(void) {
 
 			flags.b.list = 0;
 
-			list_complete(slaveid_char, battery_voltage_char, sharpness, temps, rssis, iderrors);
+			list_complete(slaveid_char, battery_voltage_char, sharpness, temps,
+					rssis, iderrors);
 			evaluate_boxes(slaveid_char, quantity);
 			list_array(quantity);
 
@@ -869,16 +892,18 @@ int main(void) {
 
 // Transmit
 		// Check if device has waited long enough (according to unique-id) to be allowed to transmit
-		if (!transmission_allowed && (transmit_flag > ((unique_id << 1) + 3))) transmission_allowed = 1;
+		if (!transmission_allowed && (transmit_flag > ((unique_id << 1) + 3)))
+			transmission_allowed = 1;
 
 		// Transmission process
-		if (transmission_allowed && (flags.b.transmit || (transmit_flag > 125))) {
+		if (transmission_allowed
+				&& (flags.b.transmit || (transmit_flag > 125))) {
 			temp_sreg = SREG;
 			cli();
 
 			flags.b.transmit = 0;
 
-			switch(tx_field[0]) {
+			switch (tx_field[0]) {
 				case FIRE: {
 					loopcount = FIRE_REPEATS;
 					tmp = FIRE_LENGTH - 1;
@@ -912,7 +937,7 @@ int main(void) {
 				}
 			}
 			tx_field[tmp] = loopcount;
-			tx_field[tmp+1] = '\0';
+			tx_field[tmp + 1] = '\0';
 			tx_length = tmp + 1;
 
 			for (uint8_t i = loopcount; i; i--) {
@@ -1014,8 +1039,11 @@ int main(void) {
 				switch (rx_field[0]) { // Act according to type of message received
 					// Received ignition command (only relevant for ignition devices)
 					case FIRE: {
-						for (uint8_t i = rx_field[FIRE_LENGTH - 1] - 1; i; i--) {
-							_delay_us((ADDITIONAL_LENGTH + FIRE_LENGTH) * BYTE_DURATION_US);
+						for (uint8_t i = rx_field[FIRE_LENGTH - 1] - 1; i;
+								i--) {
+							_delay_us(
+									(ADDITIONAL_LENGTH + FIRE_LENGTH)
+											* BYTE_DURATION_US);
 						}
 
 						if ((rx_field[1] == slave_id) && !SENDERBOX) {
@@ -1029,8 +1057,11 @@ int main(void) {
 
 						// Received temperature-measurement-trigger
 					case TEMPERATURE: {
-						for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1; i; i--) {
-							_delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
+						for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1;
+								i; i--) {
+							_delay_us(
+									(ADDITIONAL_LENGTH + TEMPERATURE_LENGTH)
+											* BYTE_DURATION_US);
 						}
 
 						tempsenstype = tempident();
@@ -1040,8 +1071,11 @@ int main(void) {
 
 						// Received identification-demand
 					case IDENT: {
-						for (uint8_t i = rx_field[IDENT_LENGTH - 1] - 1; i; i--) {
-							_delay_us((ADDITIONAL_LENGTH + IDENT_LENGTH) * BYTE_DURATION_US);
+						for (uint8_t i = rx_field[IDENT_LENGTH - 1] - 1; i;
+								i--) {
+							_delay_us(
+									(ADDITIONAL_LENGTH + IDENT_LENGTH)
+											* BYTE_DURATION_US);
 						}
 
 						tx_field[0] = PARAMETERS;
@@ -1066,12 +1100,18 @@ int main(void) {
 
 						// Received Parameters
 					case PARAMETERS: {
-						for (uint8_t i = rx_field[PARAMETERS_LENGTH - 1] - 1; i; i--) {
-							_delay_us((ADDITIONAL_LENGTH + PARAMETERS_LENGTH) * BYTE_DURATION_US);
+						for (uint8_t i = rx_field[PARAMETERS_LENGTH - 1] - 1; i;
+								i--) {
+							_delay_us(
+									(ADDITIONAL_LENGTH + PARAMETERS_LENGTH)
+											* BYTE_DURATION_US);
 						}
 
-						if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id)
-								|| ( rx_field[1] && slaveid_char[(uint8_t) (rx_field[1]-1)])) {
+						if ((rx_field[1] == 'E') || (!rx_field[1])
+								|| (rx_field[1] == unique_id)
+								|| (rx_field[1]
+										&& slaveid_char[(uint8_t) (rx_field[1]
+												- 1)])) {
 							iderrors++;
 						}
 						else {
@@ -1087,18 +1127,24 @@ int main(void) {
 
 						// Received change command
 					case CHANGE: {
-						for (uint8_t i = rx_field[CHANGE_LENGTH - 1] - 1; i; i--) {
-							_delay_us((ADDITIONAL_LENGTH + CHANGE_LENGTH) * BYTE_DURATION_US);
+						for (uint8_t i = rx_field[CHANGE_LENGTH - 1] - 1; i;
+								i--) {
+							_delay_us(
+									(ADDITIONAL_LENGTH + CHANGE_LENGTH)
+											* BYTE_DURATION_US);
 						}
 
-						if (!armed && (unique_id == rx_field[1]) && (slave_id == rx_field[2])) {
+						if (!armed && (unique_id == rx_field[1])
+								&& (slave_id == rx_field[2])) {
 							rem_uid = rx_field[3];
 							rem_sid = rx_field[4];
 
 							// Change IDs if they are in the valid range (1-30) and at least one of the two IDs is
 							// a different value than before
-							if (((rem_uid > 0) && (rem_uid < 31)) && ((rem_sid > 0) && (rem_sid < 31))
-									&& ((rem_uid != unique_id) || (rem_sid != slave_id))) {
+							if (((rem_uid > 0) && (rem_uid < 31))
+									&& ((rem_sid > 0) && (rem_sid < 31))
+									&& ((rem_uid != unique_id)
+											|| (rem_sid != slave_id))) {
 								savenumber(rem_uid, rem_sid);
 								flags.b.reset_device = 1;
 							}
@@ -1122,8 +1168,10 @@ int main(void) {
 
 // Clear LCD in case of timeouts
 		if (SENDERBOX
-				&& (clear_lcd_tx_flag > DEL_THRES || clear_lcd_rx_flag > DEL_THRES
-						|| hist_del_flag > (3 * DEL_THRES)) && !flags.b.lcd_update) {
+				&& (clear_lcd_tx_flag > DEL_THRES
+						|| clear_lcd_rx_flag > DEL_THRES
+						|| hist_del_flag > (3 * DEL_THRES))
+				&& !flags.b.lcd_update) {
 			temp_sreg = SREG; // Speichere Statusregister
 			cli();
 
@@ -1191,7 +1239,8 @@ int main(void) {
 							lcd_arrize(tx_field[2], lcd_array, 2, 0);
 							lcd_puts(lcd_array);
 
-							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
+							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile,
+									&anzspalte);
 							hist_del_flag = 1;
 						}
 						flags.b.show_only = 0;
@@ -1206,7 +1255,8 @@ int main(void) {
 							lcd_cursorset(anzzeile, anzspalte);
 							lcd_puts("xIDENT");
 
-							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
+							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile,
+									&anzspalte);
 							hist_del_flag = 1;
 						}
 						flags.b.show_only = 0;
@@ -1240,7 +1290,8 @@ int main(void) {
 							lcd_cursorset(anzzeile, anzspalte);
 							lcd_puts("xTEMP ");
 
-							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
+							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile,
+									&anzspalte);
 							hist_del_flag = 1;
 						}
 						flags.b.show_only = 0;

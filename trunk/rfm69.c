@@ -37,7 +37,7 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 // Send 16-bit-command to RFM69 (8 bits register-number, 8 bits command)
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 	// Split command in two bytes, merge with write-/read-flag
-	uint8_t highbyte = ((command >> 8) | (wnr ? 128 : 0));
+	uint8_t highbyte = (wnr ? ((command >> 8) | 0x80) : ((command >> 8) & 0x7F));
 	uint8_t lowbyte = (wnr ? (command & 0x00FF) : 0xFF);
 
 	// Ensure correct idle levels, then enable module
