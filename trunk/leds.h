@@ -13,8 +13,10 @@
 #define LED_RED_NUM			6
 #define LED_GREEN_P			D
 #define LED_GREEN_NUM		7
-#define LED_BLUE_P			D
-#define LED_BLUE_NUM		5
+#define LED_ORANGE_P		D
+#define LED_ORANGE_NUM		5
+
+// DO NOT CHANGE ANYTHING BELOW THIS LINE
 
 void led_yellow_on(void);
 void led_yellow_off(void);
@@ -25,9 +27,9 @@ void led_red_toggle(void);
 void led_green_on(void);
 void led_green_off(void);
 void led_green_toggle(void);
-void led_blue_on(void);
-void led_blue_off(void);
-void led_blue_toggle(void);
+void led_orange_on(void);
+void led_orange_off(void);
+void led_orange_toggle(void);
 void led_init(void);
 void leds_off(void);
 void leds_on(void);
@@ -48,10 +50,10 @@ uint8_t leds_status(void);
 #define LED_GREEN_POS		LED_GREEN_NUM
 #define LED_GREEN_DDR		DDR(LED_GREEN_P)
 
-#define LED_BLUE_PORT		PORT(LED_BLUE_P)
-#define LED_BLUE_PIN		PIN(LED_BLUE_P)
-#define LED_BLUE_POS		LED_BLUE_NUM
-#define LED_BLUE_DDR		DDR(LED_BLUE_P)
+#define LED_ORANGE_PORT		PORT(LED_ORANGE_P)
+#define LED_ORANGE_PIN		PIN(LED_ORANGE_P)
+#define LED_ORANGE_POS		LED_ORANGE_NUM
+#define LED_ORANGE_DDR		DDR(LED_ORANGE_P)
 
 
 

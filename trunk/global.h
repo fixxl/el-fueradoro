@@ -19,7 +19,7 @@
 #define STRINGIZE(x) #x
 #define STRINGIZE_VALUE_OF(x) STRINGIZE(x)
 
-// Includes und Definitionen
+// Includes und Defines
 #include <avr/io.h>
 #include <avr/eeprom.h>
 #include <util/delay.h>
@@ -49,13 +49,13 @@
 #error "No valid RF-transceiver selected!"
 #endif
 
-// Globale Variablen
+// Global Variables
 extern volatile uint8_t transmit_flag, key_flag;
 extern volatile uint16_t clear_lcd_tx_flag, clear_lcd_rx_flag, hist_del_flag;
 
 
 #if ((W1PORT>TEMPHUM_PORT)+(W1PORT<TEMPHUM_PORT)+(W1NUM>TEMPHUM_NUM)+(W1NUM<TEMPHUM_NUM))
-#error Ungleiche Portzuweisungen bei Temperatursensoren!
+#error Temperature sensor ports not equal!
 #endif
 
 #endif /* GLOBAL_H_ */

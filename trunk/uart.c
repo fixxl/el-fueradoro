@@ -19,22 +19,7 @@ void allow_uart_sending(void) {
 #endif
 }
 
-void uart_cleanup(uint8_t rxtxboth) { // 1:Rx, 2:Tx, 3: both
-	uint8_t __attribute__((unused)) ttt = 0xAA;
-
-	if (rxtxboth & (1 << 0)) {
-		// Flush Receive-Buffer (read until rx-buffer empty)
-		while (UCSR0A & (1 << RXC0))
-			ttt = UDR0;
-		// Reset Receive und Transmit Complete-Flags
-		UCSR0A = (1 << RXC0);
-	}
-
-	if (rxtxboth & (1 << 1)) {
-		UCSR0A = (1 << TXC0);
-	}
-}
-
+// Initialise UART with given baud rate
 void uart_init(uint32_t baud) {
 	uint8_t sreg = SREG;
 	cli();
@@ -45,7 +30,7 @@ void uart_init(uint32_t baud) {
 	RTS_DDR |= (1 << RTS);
 #endif
 
-	uint32_t baudrate = ((F_CPU + baud * 8) / (baud * 16) - 1);
+	uint32_t baudrate = ((F_CPU + (baud << 3)) / (baud << 4) - 1);
 	/* Set baud rate */
 	UBRR0H = (baudrate >> 8);
 	UBRR0L = baudrate;
@@ -57,7 +42,7 @@ void uart_init(uint32_t baud) {
 	SREG = sreg;
 }
 
-/* Receive char */
+// Receive char
 uint8_t uart_getc(void) {
 	uint8_t udrcontent;
 	uint32_t utimer = UART_TIMEOUTVAL;
@@ -70,6 +55,7 @@ uint8_t uart_getc(void) {
 	return udrcontent;
 }
 
+// Receive string
 uint8_t uart_gets(char *s) {
 	uint8_t zeichen = 0;
 	char buchstabe = 0xFE;
@@ -99,6 +85,7 @@ uint8_t uart_gets(char *s) {
 	return zeichen; // Return the number of chars received - which equals the index of terminating '\0'
 }
 
+// Transmit char
 uint8_t uart_putc(uint8_t c) {
 	uint32_t utimer;
 	utimer = UART_TIMEOUTVAL;
@@ -143,6 +130,7 @@ uint8_t uart_putc(uint8_t c) {
 	}
 }
 
+// Transmit string
 void uart_puts(char *s) {
 	uint8_t overflow = 0;
 	while (*s && !overflow) {
@@ -150,6 +138,7 @@ void uart_puts(char *s) {
 	}
 }
 
+// Transmit string from flash memory (String constants)
 void uart_puts_P(const char *s) {
 	uint8_t overflow = 0;
 	unsigned char c;
@@ -160,6 +149,7 @@ void uart_puts_P(const char *s) {
 	}
 }
 
+// Compare strings if equal (1) or not (0)
 uint8_t uart_strings_equal(const char* string1, const char* string2) {
 	while (*string2) {
 		if (*string1++ != *string2++) return 0;
@@ -168,6 +158,7 @@ uint8_t uart_strings_equal(const char* string1, const char* string2) {
 	return 1;
 }
 
+// Print number in decimal, hexadecimal or binary format to console
 void uart_shownum(int32_t zahl, uint8_t type) {
 	uint8_t i = 0, lauf = 1;
 	uint32_t bits = 1;
@@ -230,6 +221,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 	}
 }
 
+// Ensure lower case letters
 uint8_t uart_lower_case(char letter) {
 	if ((letter >= 'A' && letter <= 'Z') || (letter == 'Ä') || (letter == 'Ö') || (letter == 'Ü')) letter |= 0x20;
 	return letter;

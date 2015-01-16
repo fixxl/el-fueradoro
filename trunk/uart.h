@@ -7,19 +7,27 @@
 #ifndef UART_H_
 #define UART_H_
 
-// Definitionen vom Controller aus gesehen!
+// Definitions (from controller-perspective!)
 #define RXDPORT		D
-#define RXD 		0 // Receiver input
+#define RXD 		0 	// Receiver input
 #define TXDPORT		D
 #define TXD 		1	// Transmitter output
 #define RTSPORT		D
-#define RTS 		2 // Output: Controller ready to receive data? (HIGH=no, LOW=yes)
+#define RTS 		2 	// Output: Controller ready to receive data? (HIGH=no, LOW=yes)
 #define CTSPORT		D
-#define CTS 		3 // Input: May controller transmit data, other side ready? (HIGH=no, LOW=yes)
+#define CTS 		3 	// Input: May controller transmit data, other side ready? (HIGH=no, LOW=yes)
 
+// Set baud rate
 #define BAUD 9600
+
+// Use RTS/CTS flow control?
 #define RTSCTSFLOW 1
+
+// Does upper case/lower case matter?
 #define CASE_SENSITIVE 0
+
+
+// DO NOT CHANGE ANYTHING BELOW THIS LINE
 
 #define RXD_PORT	PORT(RXDPORT)
 #define RXD_DDR		DDR(RXDPORT)
@@ -41,7 +49,7 @@
 
 void block_uart_sending(void);
 void allow_uart_sending(void);
-void uart_cleanup(uint8_t rxtxboth);
+
 void uart_init(uint32_t baud);
 uint8_t uart_getc(void);
 uint8_t uart_gets(char *s);

@@ -9,6 +9,7 @@
 
 #ifdef RFM12_H_
 
+// SPI-Transfer
 static inline uint8_t rfm_spi(uint8_t spibyte) {
 #if(HARDWARE_SPI_12)
 	SPDR = spibyte;
@@ -73,25 +74,27 @@ uint8_t rfm_receiving(void) {
 	return rfm_ready();
 }
 
+// Software-reset
 void rfm_reset(void) {
 	rfm_cmd(0xFE00);
 	_delay_ms(1000);
 }
 
-// Transmitter ein- und ausschalten
+// Turn Transmitter on
 uint8_t rfm_txon(void) {
 	rfm_cmd(0x8239); // TX on (set bit ET in Power Management)
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 	return 0;
 }
 
+// Turn Transmitter off
 uint8_t rfm_txoff(void) {
 	rfm_cmd(0x8209); // TX off (clear bit ET in Power Management)
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 	return 0;
 }
 
-// Turn Receiver on and off
+// Turn Receiver on
 uint8_t rfm_rxon(void) {
 	rfm_cmd(0x82D9); // RX on (set bit ER in Power Management)
 	rfm_cmd(0xCA81);// set FIFO mode
@@ -101,6 +104,7 @@ uint8_t rfm_rxon(void) {
 	return 0;
 }
 
+// Turn Receiver off
 uint8_t rfm_rxoff(void) {
 	rfm_cmd(0x8209); // RX off (clear bit ER in Power Management)
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
@@ -235,7 +239,7 @@ void rfm_nirq_clear(void) {
 // Initialise Wake-Up-Timer
 void rfm_wake_up_init(void) {
 	// Wake Up Timer
-	rfm_cmd(0xEB01);// 2,048 Sekunden
+	rfm_cmd(0xEB01);// 2.048 seconds
 	rfm_cmd(0x8201);
 	rfm_cmd(0x8203);
 	rfm_status();
@@ -283,15 +287,15 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 
 	for (uint8_t bytenum = 0; bytenum < length; bytenum++) {
 		error += rfm_txbyte(data[bytenum]);			// Transmit databyte
-		crc = crc16(crc, data[bytenum]);// CRC-Update
+		crc = crc16(crc, data[bytenum]);			// CRC-Update
 	}
 
 	crc ^= 0xFFFF;									// Final XOR for CRC
-	error += rfm_txbyte((crc >> 8) & 0xFF);// Transmit CRC-Highbyte
-	error += rfm_txbyte(crc & 0xFF);// Transmit CRC-Lowbyte
+	error += rfm_txbyte((crc >> 8) & 0xFF);			// Transmit CRC-Highbyte
+	error += rfm_txbyte(crc & 0xFF);				// Transmit CRC-Lowbyte
 
-	error += rfm_txbyte(0xAA);// Dummybyte
-	error += rfm_txbyte(0xAA);// Dummybyte
+	error += rfm_txbyte(0xAA);						// Dummybyte
+	error += rfm_txbyte(0xAA);						// Dummybyte
 
 	rfm_txoff();// TX off
 
@@ -314,21 +318,21 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 
 	for (bytenum = 0; bytenum < length_local; bytenum++) {
 		data[bytenum] = rfm_rxbyte(&error);			// Receive databyte
-		crc_calc = crc16(crc_calc, data[bytenum]);// CRC-Update
+		crc_calc = crc16(crc_calc, data[bytenum]);	// CRC-Update
 	}
 	data[length_local] = '\0';
 
-	crc_calc ^= 0xFFFF;								// Final XOR for CRC
-	crc_rec = (rfm_rxbyte(&error) << 8);// Receive CRC-Highbyte
-	crc_rec |= rfm_rxbyte(&error);// Receive CRC-Lowbyte
+	crc_calc ^= 0xFFFF;									// Final XOR for CRC
+	crc_rec = (rfm_rxbyte(&error) << 8);				// Receive CRC-Highbyte
+	crc_rec |= rfm_rxbyte(&error);						// Receive CRC-Lowbyte
 
-	rfm_status();// Status abfragen, um evtl. Fehler zu löschen
+	rfm_status();										// Query status to clear potential error flags
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 	rfm_rxoff();
 
 	*length = length_local;
 
-	return (!(crc_rec == crc_calc) || error);// 0 : successful, 1 : error
+	return (!(crc_rec == crc_calc) || error);			// 0 : successful, 1 : error
 }
 
 #endif

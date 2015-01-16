@@ -8,6 +8,9 @@
 #define 	TEMPHUM_PORT	B
 #define 	TEMPHUM_NUM		1
 
+
+// DO NOT CHANGE ANYTHING BELOW THIS LINE
+
 uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn);
 int16_t calc_average(int16_t* feld, int16_t latest_value, uint8_t vals);
 void temphumprint(char* tempfield, char* humfield, int16_t temp_l, int16_t hum_l, uint8_t digit);

@@ -6,7 +6,7 @@
 #ifndef SHIFTREGISTER_H_
 #define SHIFTREGISTER_H_
 
-// Hier Pinbelegungen eintragen
+// Adjust Ports and Pins here
 #define SER_IN_P		C
 #define SER_IN_NUM		0
 #define OE_P			C
@@ -16,14 +16,18 @@
 #define SCLOCK_P		C
 #define SCLOCK_NUM		3
 
-// Angabe, wie viele Kanäle (8/16)
+// How many channels? (8 or 16)
+// For 16 the SER_IN of the 74HC595 for channels 9-16
+// has to be connected to Q7S of the 74HC595 for channels 1-8
 #define SR_CHANNELS		16
+
+
+// DO NOT CHANGE ANYTHING BELOW THIS LINE!
 
 void sr_init(void);
 void sr_shiftout(uint16_t scheme);
 
-
-// Automatische Generierung der Bezeichnungen aus Angaben oben
+// Generation of names
 #define SER_IN_PORT		PORT(SER_IN_P)
 #define SER_IN_PIN		PIN(SER_IN_P)
 #define SER_IN_DDR		DDR(SER_IN_P)
