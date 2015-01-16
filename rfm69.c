@@ -9,6 +9,7 @@
 
 #ifdef RFM69_H_
 
+// SPI-Transfer
 static inline uint8_t rfm_spi(uint8_t spibyte) {
 #if(HARDWARE_SPI_69)
 	SPDR = spibyte;
@@ -295,11 +296,11 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 	if (length > MAX_ARRAYSIZE - 1) length = MAX_ARRAYSIZE - 1;
 
 	// Write data to FIFO-array
-	fifoarray[0] = length; // Number of data bytes
-	for (uint8_t i = 0; i < length; i++) { // Data bytes
+	fifoarray[0] = length; 													// Number of data bytes
+	for (uint8_t i = 0; i < length; i++) { 									// Data bytes
 		fifoarray[1 + i] = data[i];
 	}
-	fifoarray[length + 1] = '\0'; // Terminate string
+	fifoarray[length + 1] = '\0'; 											// Terminate string
 
 	// Write data to FIFO
 	rfm_fifo_wnr(fifoarray, 1);
@@ -329,12 +330,12 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 	rfm_fifo_wnr(fifoarray, 0);
 
 	// Read data from FIFO-array
-	length_local = fifoarray[0]; // Number of data bytes
+	length_local = fifoarray[0]; 											// Number of data bytes
 	if (length_local > MAX_ARRAYSIZE - 1) length_local = MAX_ARRAYSIZE - 1; // Limit length
 	for (uint8_t i = 0; i < length_local; i++) {
-		data[i] = fifoarray[i + 1]; // Data bytes
+		data[i] = fifoarray[i + 1]; 										// Data bytes
 	}
-	data[length_local] = '\0'; // Terminate string
+	data[length_local] = '\0'; 												// Terminate string
 
 	// Clear FIFO after readout (not necessary, FIFO is cleared anyway when switching from STANDBY to RX)
 	rfm_fifo_clear();

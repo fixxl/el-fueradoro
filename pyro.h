@@ -8,20 +8,23 @@
 #ifndef PYRO_H_
 #define PYRO_H_
 
-// Anschluss des Schlüsselschalters
-#define KEY_PORT			C
-#define KEY_NUM				4
+// Key switch location
+#define KEY_PORT				C
+#define KEY_NUM					4
 
-// Maximale Größe von Arrays
-#define MAX_ARRAYSIZE 		30
+// Maximum ID
+#define MAX_ID					30
 
-// Schwellwert zum Löschen des LCD
-#define DEL_THRES			251
+// Maximum Array Size
+#define MAX_ARRAYSIZE 			30
+
+// Threshold to clear LCD (Number of counter overflows)
+#define DEL_THRES				251
 
 // Value for input timeout
-#define TIMEOUTVAL			(F_CPU>>4)
+#define TIMEOUTVAL				(F_CPU>>4)
 
-// Definitionen der Sende- und Empfangszustände
+// Radio message types
 #define 	FIRE				'f'
 #define 	IDENT				'i'
 #define 	ERROR				'e'
@@ -30,10 +33,10 @@
 #define		CHANGE				'c'
 #define 	IDLE				0
 
-// Definitionen der Bytedauer
+// Ceiled duration of byte transmission in microseconds
 #define		BYTE_DURATION_US	(8*(1000000UL + BITRATE)/BITRATE)
 
-// Definition der Längen
+// Radio message lengths
 #define		ADDITIONAL_LENGTH	13 // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
 #define		FIRE_LENGTH			4
 #define		IDENT_LENGTH		4
@@ -41,7 +44,7 @@
 #define		TEMPERATURE_LENGTH	5
 #define		CHANGE_LENGTH		6
 
-// Wie oft sollen Zündkommandos gesendet werden?
+// Number of repetitions for radio messages
 #define 	FIRE_REPEATS		5
 #define		IDENT_REPEATS		3
 #define		CHANGE_REPEATS		3
@@ -71,29 +74,29 @@ typedef union {
 	uint16_t complete;
 } bitfeld_t;
 
-#define SENDERBOX 			((slave_id==0) && (unique_id==0))
+#define TRANSMITTER 			((slave_id==0) && (unique_id==0))
 
-#define KEYDDR				DDR(KEY_PORT)
-#define KEYPIN				PIN(KEY_PORT)
-#define KEYPORT 			PORT(KEY_PORT)
-#define KEY					KEY_NUM
+#define KEYDDR					DDR(KEY_PORT)
+#define KEYPIN					PIN(KEY_PORT)
+#define KEYPORT 				PORT(KEY_PORT)
+#define KEY						KEY_NUM
 #if(KEY_PORT==C)
-#define KEYINT 				PCINT1_vect
+#define KEYINT 					PCINT1_vect
 #elif(KEY_PORT==B)
-#define KEYINT				PCINT0_vect
+#define KEYINT					PCINT0_vect
 #else
-#define KEYINT 				PCINT2_vect
+#define KEYINT 					PCINT2_vect
 #endif
 
-// Speicher-Einstellungen zu IDs im EEPROM
-#define ANFANG_ID_SPEICHER	24
-#define STEP_ID_SPEICHER	36
-#define CRC_ID_SPEICHER		16
-#define ID_MESS				!(eeread(ANFANG_ID_SPEICHER)==eeread(ANFANG_ID_SPEICHER+STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER)==eeread(ANFANG_ID_SPEICHER+2*STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER+1)==eeread(ANFANG_ID_SPEICHER+1+STEP_ID_SPEICHER)) && (eeread(ANFANG_ID_SPEICHER+1)==eeread(ANFANG_ID_SPEICHER+1+2*STEP_ID_SPEICHER))
+// ID storage settings for EEPROM
+#define START_ADDRESS_ID_STORAGE	24
+#define STEP_ID_STORAGE				36
+#define CRC_ID_STORAGE				16
+#define ID_MESS						!(eeread(START_ADDRESS_ID_STORAGE)==eeread(START_ADDRESS_ID_STORAGE+STEP_ID_STORAGE)) && (eeread(START_ADDRESS_ID_STORAGE)==eeread(START_ADDRESS_ID_STORAGE+2*STEP_ID_STORAGE)) && (eeread(START_ADDRESS_ID_STORAGE+1)==eeread(START_ADDRESS_ID_STORAGE+1+STEP_ID_STORAGE)) && (eeread(START_ADDRESS_ID_STORAGE+1)==eeread(START_ADDRESS_ID_STORAGE+1+2*STEP_ID_STORAGE))
 
 // Temperatursensoren
-#define DS18B20				'o'
-#define DHT22				'd'
+#define DS18B20					'o'
+#define DHT22					'd'
 
 // Funktionsprototypen
 void wdt_init(void) __attribute__((naked)) __attribute__((section(".init1")));

@@ -14,6 +14,7 @@ void terminal_reset(void) {
 	uart_puts_P(PSTR("\033]0;EL FUERADORO\007"));
 }
 
+// Print number and put spaces in front to achieve a defined length
 void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
 	uint8_t cntr = 0;
 	int32_t num_temp = zahl;
@@ -32,7 +33,9 @@ void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
 	uart_shownum(zahl, type);
 }
 
-uint8_t changenumber(void) {
+
+// GUI-Routine to change IDs (allows numbers from 01 to 30)
+static uint8_t changenumber(void) {
 	uint8_t zehner = 'c', einer = 'c', number;
 	while (!(zehner >= '0' && zehner <= '3')) {
 		zehner = uart_getc();
@@ -58,22 +61,6 @@ uint8_t changenumber(void) {
 	return number;
 }
 
-void savenumber(uint8_t uniqueid, uint8_t slaveid) {
-	uint8_t sum = uniqueid + slaveid; // Summe der beiden IDs
-	uint8_t ucrc = crc8(CRC_ID_SPEICHER, uniqueid); // CRC8-Wert of Unique-ID with seed 16
-	uint8_t scrc = crc8(CRC_ID_SPEICHER, slaveid); // CRC8-Wert of Slave-ID with seed 16
-	uint8_t bothcrc = crc8(ucrc, slaveid); // CRC8-Wert of Unique-ID and Slave-ID with seed 16
-
-	for (uint8_t i = ANFANG_ID_SPEICHER; i < (ANFANG_ID_SPEICHER + 3 * STEP_ID_SPEICHER); i +=
-	STEP_ID_SPEICHER) {
-		eewrite(uniqueid, i);
-		eewrite(slaveid, i + 1);
-		eewrite(sum, i + 2);
-		eewrite(ucrc, i + 3);
-		eewrite(scrc, i + 4);
-		eewrite(bothcrc, i + 5);
-	}
-}
 
 // Remote configuration
 uint8_t remote_config(char* txf) {
@@ -218,7 +205,7 @@ uint8_t configprog(const uint8_t devicetype) {
 	} while ((slaveid != 0) ^ (uniqueid != 0));
 
 	if (changes) {
-		savenumber(uniqueid, slaveid);
+		addresses_save(uniqueid, slaveid);
 		if (address_valid(uniqueid, slaveid)) {
 			uart_puts_P(PSTR("\n\n\rÄnderung erfolgreich!\n\r"));
 		}

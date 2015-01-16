@@ -7,13 +7,13 @@
 
 #include "global.h"
 
-// De-Initialisierung
+// De-Initialisation
 void adc_deinit(void) {
 	ADMUX = 0;
 	ADCSRA = 0;
 }
 
-// Initialisierung
+// Initialisation
 void adc_init(void) {
 	uint16_t nosense;
 
@@ -48,7 +48,7 @@ void adc_init(void) {
 	}
 	nosense >>= 3;
 
-	// Switch reference if wrong reference selection is detected
+	// Switch reference if "wrong" reference selection is detected
 	if (nosense < 400) {
 		ADMUX |= (1 << REFS1);
 

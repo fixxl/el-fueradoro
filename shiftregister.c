@@ -7,40 +7,40 @@
 
 #include "global.h"
 
-// Initialisierung
+// Initialize
 void sr_init(void) {
-	// Pullup an /OE einschalten, damit /OE beim Umschalten von Eingang auf Ausgang
-	// "high" bleibt und die Ausgänge weiter inaktiv sind!
+	// Activate pullup at /OE, so /OE stays high when switching from input to output
+	// and outputs of the 74HC595 stay in high-Z-mode!
 	OE_PORT |= (1 << OE);
 
-	// Pins als Ausgänge konfigurieren
+	// Configure pins as outputs
 	SER_IN_DDR |= 1 << SER_IN;
 	OE_DDR |= 1 << OE;
 	RCLOCK_DDR |= 1 << RCLOCK;
 	SCLOCK_DDR |= 1 << SCLOCK;
 
-	// Alle Ausgänge außer /OE auf low
+	// All outputs except /OE to low
 	SER_IN_PORT &= ~(1 << SER_IN);
 	RCLOCK_PORT &= ~(1 << RCLOCK);
 	SCLOCK_PORT &= ~(1 << SCLOCK);
 
-	// Alle Schieberegisterpositionen 0 setzen...
+	// Set shift-register values to 0...
 	for (uint8_t j = 0; j < 3; j++) {
 		for (uint8_t i = 0; i < (SR_CHANNELS + 4); i++) {
-			SCLOCK_PIN = (1 << SCLOCK);			// Pin durch Toggling high
-			SCLOCK_PIN = (1 << SCLOCK);			// Pin durch Toggling low
+			SCLOCK_PIN = (1 << SCLOCK);			// Pin high after toggling
+			SCLOCK_PIN = (1 << SCLOCK);			// Pin low after toggling
 		}
-		// ... und ins Ausgaberegister übernehmen.
+		// ... and apply shift-register to output register.
 		RCLOCK_PIN = (1 << RCLOCK);				// Pin durch Toggling high
 		RCLOCK_PIN = (1 << RCLOCK);				// Pin durch Toggling low
 	}
 	_delay_ms(50);
 
-	// Ausgänge können jetzt gefahrlos aktiviert werden!
+	// Now outputs are all low and can be activated!
 	OE_PORT &= ~(1 << OE);
 }
 
-// Bitmuster an Ausgängen darstellen
+// Transfer 16 bit pattern to outputs
 void sr_shiftout(uint16_t scheme) {
 	uint8_t i;
 	uint16_t mask = 1 << (SR_CHANNELS - 1);
@@ -53,12 +53,12 @@ void sr_shiftout(uint16_t scheme) {
 		if (scheme & mask) {
 			SER_IN_PORT |= 1 << SER_IN;
 		}
-		SCLOCK_PIN = (1 << SCLOCK);				// Pin durch Toggling high
-		SCLOCK_PIN = (1 << SCLOCK);				// Pin durch Toggling low
+		SCLOCK_PIN = (1 << SCLOCK);				// Pin high after toggling
+		SCLOCK_PIN = (1 << SCLOCK);				// Pin low after toggling
 		SER_IN_PORT &= ~(1 << SER_IN);
 		mask >>= 1;
 	}
-	RCLOCK_PIN = (1 << RCLOCK);					// Pin durch Toggling high
-	RCLOCK_PIN = (1 << RCLOCK);					// Pin durch Toggling low
+	RCLOCK_PIN = (1 << RCLOCK);					// Pin high after toggling
+	RCLOCK_PIN = (1 << RCLOCK);					// Pin low after toggling
 }
 

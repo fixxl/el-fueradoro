@@ -9,6 +9,9 @@
 
 #ifdef DHT_H_
 
+// Readout DHT11 or DHT22
+// Parameters: - Pointer to temperature in degrees Celsius multiplied by 10
+//             - Pointer to relative humidity in percent multiplied by 10
 uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 	uint8_t ergebnisfeld[6] = { 0, 0, 0, 0, 0x80, '\0' };
 	uint8_t cycles = (DHT_TYPE > 15) ? 1 : 10, temperature_sign;
@@ -24,17 +27,17 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 	errorcounter++;														// Errorcounter = 2
 	timeoutcounter = 0;
 
-	// DATAPORT low setzen und bauteilspezifisch warten
+	// DATAPORT low and wait according to DHT-type
 	TEMPHUMDDR |= (1 << TEMPHUM);
 	for (uint8_t i = 0; i < cycles; i++) {
 		_delay_ms(2);
 	}
-	TEMPHUMDDR &= ~(1 << TEMPHUM); // DATAPORT zu Eingang machen (wird durch ext. Pullup high gezogen)
+	TEMPHUMDDR &= ~(1 << TEMPHUM); // DATAPORT becomes input (high through ext. Pullup)
 	timeoutcounter = 0;
 
 	_delay_us(10);
 
-	// High-Pegel abwarten (20-200us)
+	// Wait during high (20-200us)
 	while ((TEMPHUMPIN & (1 << TEMPHUM)) && timeoutcounter < 30) {
 		_delay_us(10);
 		timeoutcounter++;
@@ -43,7 +46,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 	errorcounter++;														// Errorcounter = 3
 	timeoutcounter = 0;
 
-	// Low-Pegel abwarten (80us lt. Datenblatt)
+	// Wait during low (80us)
 	while (!(TEMPHUMPIN & (1 << TEMPHUM)) && timeoutcounter < 25) {
 		_delay_us(10);
 		timeoutcounter++;
@@ -52,7 +55,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 	errorcounter++;														// Errorcounter = 4
 	timeoutcounter = 0;
 
-	// High-Pegel abwarten (80us lt. Datenblatt)
+	// Wait during high (80us)
 	while ((TEMPHUMPIN & (1 << TEMPHUM)) && timeoutcounter < 25) {
 		_delay_us(10);
 		timeoutcounter++;
@@ -61,23 +64,23 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 	errorcounter = 100;													// Errorcounter = 100
 	timeoutcounter = 0;
 
-	// 40 Datenbits (0...39) auswerten
+	// Evaluate 40 data bits (0...39)
 	for (uint8_t byte = 0; byte < 5; byte++) {
 		for (uint8_t bitcntr = 8; bitcntr; bitcntr--) {
 			timeoutcounter = 50;
 
-			// Low-Pegel abwarten (50us lt. Datenblatt)
+			// Wait during low (50us)
 			while ((!(TEMPHUMPIN & (1 << TEMPHUM))) && timeoutcounter--) {
 				_delay_us(5);
 			}
 			if(!timeoutcounter) return errorcounter;
 			ergebnisfeld[byte] <<= 1;
 
-			// Nach 30us den Pinzustand abfragen (High = 1, Low = 0)
+			// Read pin state after 30us (High = 1, Low = 0)
 			_delay_us(30);
 			if ((TEMPHUMPIN & (1 << TEMPHUM))) ergebnisfeld[byte] |= 1;
 
-			// Evtl. restlichen High-Pegel abwarten
+			// Wait during rest of high if needed
 			timeoutcounter = 50;
 			while ((TEMPHUMPIN & (1 << TEMPHUM)) && timeoutcounter--) {
 				_delay_us(5);
@@ -114,6 +117,7 @@ uint8_t dht_read(int16_t* temperatur_mal_zehn, int16_t* feuchtigkeit_mal_zehn) {
 	return 0;
 }
 
+// Calculate an average of values
 int16_t calc_average(int16_t* feld, int16_t latest_value, uint8_t vals) {
 	uint8_t a;
 	int32_t temp = 0;
@@ -129,6 +133,7 @@ int16_t calc_average(int16_t* feld, int16_t latest_value, uint8_t vals) {
 	return temp;
 }
 
+// Print values to arrays
 void temphumprint(char* tempfield, char* humfield, int16_t temp_l, int16_t hum_l, uint8_t digit) {
 	uint8_t mod, ganz;
 

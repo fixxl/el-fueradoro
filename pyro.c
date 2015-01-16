@@ -61,11 +61,11 @@ void key_deinit(void) {
 	}
 }
 
-// Schalterentprellung
+// Switch debouncing
 uint8_t debounce(volatile uint8_t *port, uint8_t pin) {
 	uint8_t keystate = 0x55, ctr = 0, timer0_regb = TCCR0B;
 
-	// Timer 0 zurücksetzen
+	// Reset Timer 0
 	TCNT0 = 0;
 	TIFR0 = (1 << TOV0);
 	TCNT0 = 160;
@@ -226,7 +226,7 @@ uint8_t fire_command_uart_valid(const char *field) {
 // ------------------------------------------------------------------------------------------------------------------------
 
 void device_initialisation(uint8_t ignotrans) {
-	// Senderspezifische Initialisierung
+	// Initialisation for transmitter
 	if (!ignotrans) {
 		clear_lcd_rx_flag = 0;
 		clear_lcd_tx_flag = 0;
@@ -248,7 +248,7 @@ void device_initialisation(uint8_t ignotrans) {
 		TIMSK0 |= (1 << TOIE0);
 	}
 
-	// Empfängerspezifische Initialisierung
+	// Initialisation for ignition device
 	else {
 		sr_init();
 		key_init();
@@ -282,7 +282,7 @@ int main(void) {
 
 	wdt_disable();
 
-// Variablendefinitionen
+// Local Variables
 	uint16_t scheme = 0;
 	uint8_t i, nr, inp, tmp;
 	uint8_t tx_length = 2, rx_length = 0;
@@ -369,8 +369,8 @@ int main(void) {
 // Get Slave- und Unique-ID from EEPROM
 	update_addresses(&unique_id, &slave_id);
 
-//
-	if (SENDERBOX && (!ig_or_notrans)) {
+// Initialise devices
+	if (TRANSMITTER && (!ig_or_notrans)) {
 		device_initialisation(0);
 	}
 	else {
@@ -388,7 +388,7 @@ int main(void) {
 // Initialise radio
 	rfm_init();
 
-	if (SENDERBOX) {
+	if (TRANSMITTER) {
 		tx_field[0] = IDENT;
 		tx_field[1] = 'd';
 		tx_field[2] = '0';
@@ -525,7 +525,7 @@ int main(void) {
 			}
 
 			// "orders" shows last transmitted and received command on the LCD
-			if (uart_strings_equal(uart_field, "orders") && SENDERBOX) {
+			if (uart_strings_equal(uart_field, "orders") && TRANSMITTER) {
 				flags.b.rx_post = 1;
 				flags.b.tx_post = 1;
 				flags.b.show_only = 1;
@@ -533,7 +533,7 @@ int main(void) {
 			}
 
 			// "zero" deletes all "already fired channel"-flags
-			if (uart_strings_equal(uart_field, "zero") && !SENDERBOX) {
+			if (uart_strings_equal(uart_field, "zero") && !TRANSMITTER) {
 				flags.b.reset_fired = 1;
 			}
 
@@ -593,7 +593,7 @@ int main(void) {
 				flags.b.transmit = 1;
 
 				// Check if ignition was triggered on device that received the serial command
-				if ((slave_id == uart_field[1]) && !SENDERBOX) {
+				if ((slave_id == uart_field[1]) && !TRANSMITTER) {
 					tmp = uart_field[2] - 1;
 					if (!(channel_fired[tmp]) && !flags.b.fire) {
 						rx_field[2] = uart_field[2];
@@ -660,7 +660,7 @@ int main(void) {
 				// If the numbers are those of the connected device
 				if (tx_field[1] == unique_id && tx_field[2] == slave_id) {
 					uart_puts_P(PSTR("\n\rIDs werden lokal angepasst!\n\r"));
-					savenumber(tx_field[3], tx_field[4]);
+					addresses_save(tx_field[3], tx_field[4]);
 					flags.b.reset_device = 1;
 				}
 				// If not...
@@ -826,7 +826,7 @@ int main(void) {
 // Software-Reset via Watchdog
 		if (flags.b.reset_device) {
 			cli();
-			if (SENDERBOX) {
+			if (TRANSMITTER) {
 				lcd_clear();
 				lcd_puts("Resetting device!");
 			}
@@ -856,7 +856,7 @@ int main(void) {
 			}
 
 			// Ignition devices have to write themselves in the list
-			if (!SENDERBOX) {
+			if (!TRANSMITTER) {
 				slaveid_char[unique_id - 1] = slave_id;
 				quantity[slave_id - 1] = 1;
 				battery_voltage_char[unique_id - 1] = adc_read(5);
@@ -957,14 +957,14 @@ int main(void) {
 			// Turn all leds on
 			leds_on();
 
-			if (armed && (rx_field[2] > 0) && (rx_field[2] < 17)) { // If channel number is valid
-				tmp = rx_field[2]; // Save channel number to variable
-				scheme = 0; // Set mask-variable to zero
+			if (armed && (rx_field[2] > 0) && (rx_field[2] < 17)) { 	// If channel number is valid
+				tmp = rx_field[2]; 										// Save channel number to variable
+				scheme = 0;												// Set mask-variable to zero
 				for (uint8_t i = 16; i; i--) {
-					scheme <<= 1; // Left-shift mask-variable
-					if (i == tmp) scheme |= 1; // Set LSB if loop variable equals channel number
+					scheme <<= 1; 										// Left-shift mask-variable
+					if (i == tmp) scheme |= 1; 				// Set LSB if loop variable equals channel number
 				}
-				sr_shiftout(scheme); // Write pattern to shift-register
+				sr_shiftout(scheme); 									// Write pattern to shift-register
 
 				/*
 				 * To avoid demage to the MOSFET in case of a short circuit after ignition, the MOSFET is set to
@@ -982,14 +982,14 @@ int main(void) {
 			// Turn all LEDs off
 			leds_off();
 
-			// Restore former state
+			// Restore former LED state
 			if (ledstatus & 1) led_yellow_on();
 			if (ledstatus & 2) led_green_on();
-			if (ledstatus & 4) led_blue_on();
+			if (ledstatus & 4) led_orange_on();
 			if (ledstatus & 8) led_red_on();
 			ledstatus = 0;
 
-			// Turn receiver back on
+			// Turn on receiver
 			rfm_rxon();
 
 			SREG = temp_sreg;
@@ -1005,23 +1005,24 @@ int main(void) {
 
 			flags.b.receive = 0;
 
-			led_blue_on();
+			led_orange_on();
 #ifdef RFM69_H_
-			rssi = rfm_get_rssi_dbm(); 	// Measure signal strength (RFM69 only)
+			rssi = rfm_get_rssi_dbm(); 							// Measure signal strength (RFM69 only)
 #endif
 			rfm_rx_error = rfm_receive(rx_field, &rx_length); 	// Get Message
-			led_blue_off();
+			led_orange_off();
 
 			if (rfm_rx_error) rx_field[0] = ERROR;
 			else {
-				switch (rx_field[0]) { // Act according to type of message received
+				switch (rx_field[0]) { 							// Act according to type of message received
 					// Received ignition command (only relevant for ignition devices)
 					case FIRE: {
+						// Wait for all repetitions to be over
 						for (uint8_t i = rx_field[FIRE_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + FIRE_LENGTH) * BYTE_DURATION_US);
 						}
 
-						if ((rx_field[1] == slave_id) && !SENDERBOX) {
+						if ((rx_field[1] == slave_id) && !TRANSMITTER) {
 							tmp = rx_field[2] - 1;
 							if (!(channel_fired[tmp]) && !flags.b.fire) {
 								flags.b.fire = 1;
@@ -1032,6 +1033,7 @@ int main(void) {
 
 						// Received temperature-measurement-trigger
 					case TEMPERATURE: {
+						// Wait for all repetitions to be over
 						for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
 						}
@@ -1043,6 +1045,7 @@ int main(void) {
 
 						// Received identification-demand
 					case IDENT: {
+						// Wait for all repetitions to be over
 						for (uint8_t i = rx_field[IDENT_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + IDENT_LENGTH) * BYTE_DURATION_US);
 						}
@@ -1050,8 +1053,8 @@ int main(void) {
 						tx_field[0] = PARAMETERS;
 						tx_field[1] = unique_id;
 						tx_field[2] = slave_id;
-						tx_field[3] = (SENDERBOX ? 50 : adc_read(5));
-						tx_field[4] = (SENDERBOX ? 0 : armed);
+						tx_field[3] = (TRANSMITTER ? 50 : adc_read(5));
+						tx_field[4] = (TRANSMITTER ? 0 : armed);
 						tx_field[5] = temperature;
 
 						transmission_allowed = 0;
@@ -1069,6 +1072,7 @@ int main(void) {
 
 						// Received Parameters
 					case PARAMETERS: {
+						// Wait for all repetitions to be over
 						for (uint8_t i = rx_field[PARAMETERS_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + PARAMETERS_LENGTH) * BYTE_DURATION_US);
 						}
@@ -1090,6 +1094,7 @@ int main(void) {
 
 						// Received change command
 					case CHANGE: {
+						// Wait for all repetitions to be over
 						for (uint8_t i = rx_field[CHANGE_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + CHANGE_LENGTH) * BYTE_DURATION_US);
 						}
@@ -1102,7 +1107,7 @@ int main(void) {
 							// a different value than before
 							if (((rem_uid > 0) && (rem_uid < 31)) && ((rem_sid > 0) && (rem_sid < 31))
 									&& ((rem_uid != unique_id) || (rem_sid != slave_id))) {
-								savenumber(rem_uid, rem_sid);
+								addresses_save(rem_uid, rem_sid);
 								flags.b.reset_device = 1;
 							}
 						}
@@ -1124,7 +1129,7 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Clear LCD in case of timeouts
-		if (SENDERBOX
+		if (TRANSMITTER
 				&& (clear_lcd_tx_flag > DEL_THRES || clear_lcd_rx_flag > DEL_THRES
 						|| hist_del_flag > (3 * DEL_THRES)) && !flags.b.lcd_update) {
 			temp_sreg = SREG; // Speichere Statusregister
@@ -1162,7 +1167,7 @@ int main(void) {
 // -------------------------------------------------------------------------------------------------------
 
 // Refresh LCD
-		if (SENDERBOX && flags.b.lcd_update) {
+		if (TRANSMITTER && flags.b.lcd_update) {
 			temp_sreg = SREG;
 			cli();
 

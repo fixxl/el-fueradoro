@@ -7,7 +7,7 @@
 
 #include "global.h"
 
-// Aus dem EEPROM lesen
+// Read from EEPROM
 uint8_t eeread(uint16_t address) {
 	uint8_t data;
 	/* Wait for completion of previous write */
@@ -23,7 +23,7 @@ uint8_t eeread(uint16_t address) {
 	return data;
 }
 
-// In den EEPROM schreiben
+// Write to EEPROM
 void eewrite(uint8_t data, uint16_t address) {
 	/* Wait for completion of previous write */
 	while (EECR & (1 << EEPE))

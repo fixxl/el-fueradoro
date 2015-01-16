@@ -8,7 +8,7 @@
 #ifndef PORTMAKROS_H_
 #define PORTMAKROS_H_
 
-// Definitionen für IO-Port-Makros
+// Definitions for IO-Port-Makros
 #define 	CONCAT(x,y) 	x##y
 #define 	DDR(x)  		CONCAT(DDR,x)
 #define 	PORT(x) 		CONCAT(PORT,x)

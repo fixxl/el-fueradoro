@@ -176,12 +176,12 @@ int16_t w1_tempmeas(void) {
 }
 
 void w1_temp_to_array(int32_t tempmalzehn, char* tempfield, uint8_t signdigit) {
-	/* 0 < signdigit < 3
-	 * 0 ... show no sign, no digit
-	 * 1 ... show no sign, digit
-	 * 2 ... show sign, no digit
-	 * 3 ... show sign, digit
-	 */
+	// 0 < signdigit < 3
+	// 0 ... show no sign, no digit
+	// 1 ... show no sign, digit
+	// 2 ... show sign, no digit
+	// 3 ... show sign, digit
+
 	signdigit &= 0x03;
 	uint8_t fieldcntr = 0, neededlength = 1;
 
