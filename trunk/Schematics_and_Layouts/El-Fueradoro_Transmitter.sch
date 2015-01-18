@@ -14849,9 +14849,9 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="R1" library="rcl" deviceset="R-EU_" device="0207/10" value="10k"/>
 <part name="P+3" library="supply1" deviceset="+5V" device=""/>
 <part name="P+7" library="supply1" deviceset="+5V" device=""/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="0207/10" value="2k2"/>
-<part name="R5" library="rcl" deviceset="R-EU_" device="0207/10" value="2k2"/>
-<part name="R6" library="rcl" deviceset="R-EU_" device="0207/10" value="2k2"/>
+<part name="R4" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
+<part name="R5" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
+<part name="R6" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="P+4" library="supply1" deviceset="+5V" device=""/>
@@ -14868,10 +14868,10 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="C9" library="rcl" deviceset="C-EU" device="025-024X044" value="15p"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
-<part name="R8" library="rcl" deviceset="R-EU_" device="0207/10" value="1k8"/>
-<part name="R9" library="rcl" deviceset="R-EU_" device="0207/10" value="1k8"/>
-<part name="R10" library="rcl" deviceset="R-EU_" device="0207/10" value="1k8"/>
-<part name="R11" library="rcl" deviceset="R-EU_" device="0207/10" value="1k8"/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
+<part name="R9" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
+<part name="R10" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
+<part name="R11" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
 <part name="LED_O" library="led" deviceset="LED" device="5MM"/>
 <part name="LED_R" library="led" deviceset="LED" device="5MM"/>
 <part name="LED_G" library="led" deviceset="LED" device="5MM"/>
@@ -14894,8 +14894,8 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="EN" library="solpad" deviceset="LSP10" device=""/>
 <part name="DB7" library="solpad" deviceset="LSP10" device=""/>
 <part name="RS" library="solpad" deviceset="LSP10" device=""/>
-<part name="R12" library="rcl" deviceset="R-EU_" device="0207/10" value="n.n."/>
-<part name="R13" library="rcl" deviceset="R-EU_" device="0207/10" value="n.n."/>
+<part name="R12" library="rcl" deviceset="R-EU_" device="0207/10" value="3k9"/>
+<part name="R13" library="rcl" deviceset="R-EU_" device="0207/10" value="6k8"/>
 <part name="GND22" library="supply1" deviceset="GND" device=""/>
 <part name="LCD_VCC" library="solpad" deviceset="LSP10" device=""/>
 <part name="LCD_CONTR" library="solpad" deviceset="LSP10" device=""/>
@@ -14923,7 +14923,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="P+11" library="supply1" deviceset="+5V" device=""/>
 <part name="U$2" library="fp" deviceset="DS18B20" device=""/>
 <part name="P+13" library="supply1" deviceset="+5V" device=""/>
-<part name="R14" library="rcl" deviceset="R-EU_" device="0207/10" value="4k7"/>
+<part name="R14" library="rcl" deviceset="R-EU_" device="0207/10" value="6k8"/>
 <part name="GND26" library="supply1" deviceset="GND" device=""/>
 <part name="U$3" library="fp" deviceset="RFM69CW" device=""/>
 </parts>
