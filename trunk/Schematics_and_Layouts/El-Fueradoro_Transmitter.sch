@@ -315,6 +315,12 @@ Source: avr.lbr</description>
 <text x="-2.54" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
 <pin name="GND" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
 </symbol>
+<symbol name="+3V3">
+<wire x1="1.27" y1="-1.905" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
+<text x="-2.54" y="-5.08" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
+<pin name="+3V3" x="0" y="-2.54" visible="off" length="short" direction="sup" rot="R90"/>
+</symbol>
 <symbol name="+5V">
 <wire x1="1.27" y1="-1.905" x2="0" y2="0" width="0.254" layer="94"/>
 <wire x1="0" y1="0" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
@@ -327,6 +333,19 @@ Source: avr.lbr</description>
 <description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
 <gates>
 <gate name="1" symbol="GND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="+3V3" prefix="+3V3">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="+3V3" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -14844,24 +14863,24 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="C7" library="rcl" deviceset="C-EU" device="025-024X044" value="100n"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
-<part name="P+1" library="supply1" deviceset="+5V" device=""/>
-<part name="P+2" library="supply1" deviceset="+5V" device=""/>
+<part name="P+1" library="supply1" deviceset="+3V3" device=""/>
+<part name="P+2" library="supply1" deviceset="+3V3" device=""/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="0207/10" value="10k"/>
-<part name="P+3" library="supply1" deviceset="+5V" device=""/>
+<part name="P+3" library="supply1" deviceset="+3V3" device=""/>
 <part name="P+7" library="supply1" deviceset="+5V" device=""/>
 <part name="R4" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
 <part name="R5" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
 <part name="R6" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
-<part name="P+4" library="supply1" deviceset="+5V" device=""/>
+<part name="P+4" library="supply1" deviceset="+3V3" device=""/>
 <part name="R2" library="rcl" deviceset="R-EU_" device="0207/10" value="10k"/>
 <part name="R3" library="rcl" deviceset="R-EU_" device="0207/10" value="10k"/>
-<part name="P+5" library="supply1" deviceset="+5V" device=""/>
-<part name="P+6" library="supply1" deviceset="+5V" device=""/>
+<part name="P+5" library="supply1" deviceset="+3V3" device=""/>
+<part name="P+6" library="supply1" deviceset="+3V3" device=""/>
 <part name="R7" library="rcl" deviceset="R-EU_" device="0207/10" value="10k"/>
-<part name="P+8" library="supply1" deviceset="+5V" device=""/>
-<part name="P+9" library="supply1" deviceset="+5V" device=""/>
+<part name="P+8" library="supply1" deviceset="+3V3" device=""/>
+<part name="P+9" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND7" library="supply1" deviceset="GND" device=""/>
 <part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49S" value="9.8304"/>
 <part name="C8" library="rcl" deviceset="C-EU" device="025-024X044" value="15p"/>
@@ -14880,12 +14899,12 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="GND12" library="supply1" deviceset="GND" device=""/>
 <part name="GND13" library="supply1" deviceset="GND" device=""/>
 <part name="GND14" library="supply1" deviceset="GND" device=""/>
-<part name="P+10" library="supply1" deviceset="+5V" device=""/>
+<part name="P+10" library="supply1" deviceset="+3V3" device=""/>
 <part name="C12" library="rcl" deviceset="C-EU" device="025-024X044" value="100n"/>
 <part name="C13" library="rcl" deviceset="CPOL-EU" device="B45181A" value="100u"/>
 <part name="GND19" library="supply1" deviceset="GND" device=""/>
 <part name="GND20" library="supply1" deviceset="GND" device=""/>
-<part name="C14" library="rcl" deviceset="CPOL-EU" device="B45181A"/>
+<part name="C14" library="rcl" deviceset="CPOL-EU" device="B45181A" value="10u"/>
 <part name="GND21" library="supply1" deviceset="GND" device=""/>
 <part name="RW" library="solpad" deviceset="LSP10" device=""/>
 <part name="DB6" library="solpad" deviceset="LSP10" device=""/>
@@ -14894,7 +14913,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="EN" library="solpad" deviceset="LSP10" device=""/>
 <part name="DB7" library="solpad" deviceset="LSP10" device=""/>
 <part name="RS" library="solpad" deviceset="LSP10" device=""/>
-<part name="R12" library="rcl" deviceset="R-EU_" device="0207/10" value="3k9"/>
+<part name="R12" library="rcl" deviceset="R-EU_" device="0207/10" value="3k3"/>
 <part name="R13" library="rcl" deviceset="R-EU_" device="0207/10" value="6k8"/>
 <part name="GND22" library="supply1" deviceset="GND" device=""/>
 <part name="LCD_VCC" library="solpad" deviceset="LSP10" device=""/>
@@ -14905,7 +14924,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="C15" library="rcl" deviceset="C-EU" device="025-024X044" value="100n"/>
 <part name="C16" library="rcl" deviceset="C-EU" device="025-024X044" value="100n"/>
 <part name="GND23" library="supply1" deviceset="GND" device=""/>
-<part name="P+12" library="supply1" deviceset="+5V" device=""/>
+<part name="P+12" library="supply1" deviceset="+3V3" device=""/>
 <part name="SV2" library="fp" deviceset="ML10" device=""/>
 <part name="X1" library="fp" deviceset="F09HPS" device=""/>
 <part name="USB+" library="solpad" deviceset="LSP10" device=""/>
@@ -14920,10 +14939,10 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="GND17" library="supply1" deviceset="GND" device=""/>
 <part name="GND18" library="supply1" deviceset="GND" device=""/>
 <part name="GND25" library="supply1" deviceset="GND" device=""/>
-<part name="P+11" library="supply1" deviceset="+5V" device=""/>
+<part name="P+11" library="supply1" deviceset="+3V3" device=""/>
 <part name="U$2" library="fp" deviceset="DS18B20" device=""/>
-<part name="P+13" library="supply1" deviceset="+5V" device=""/>
-<part name="R14" library="rcl" deviceset="R-EU_" device="0207/10" value="6k8"/>
+<part name="P+13" library="supply1" deviceset="+3V3" device=""/>
+<part name="R14" library="rcl" deviceset="R-EU_" device="0207/10" value="3k3"/>
 <part name="GND26" library="supply1" deviceset="GND" device=""/>
 <part name="U$3" library="fp" deviceset="RFM69CW" device=""/>
 </parts>
@@ -14955,7 +14974,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <wire x1="111.76" y1="165.1" x2="111.76" y2="111.76" width="0.1524" layer="98"/>
 <text x="121.92" y="157.48" size="6.4516" layer="98">ISP-Anschluss</text>
 <text x="12.7" y="157.48" size="6.4516" layer="98">Spannungsversorgung</text>
-<text x="33.02" y="172.72" size="12.9032" layer="98">EL FUERADORO - Sender</text>
+<text x="33.02" y="167.64" size="12.9032" layer="98">EL FUERADORO - Sender</text>
 </plain>
 <instances>
 <instance part="IC1" gate="G$1" x="236.22" y="116.84"/>
@@ -14973,24 +14992,24 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <instance part="C7" gate="G$1" x="43.18" y="76.2" rot="R270"/>
 <instance part="GND4" gate="1" x="33.02" y="73.66"/>
 <instance part="GND5" gate="1" x="144.78" y="119.38"/>
-<instance part="P+1" gate="1" x="25.4" y="66.04"/>
-<instance part="P+2" gate="1" x="25.4" y="40.64"/>
+<instance part="P+1" gate="G$1" x="25.4" y="66.04"/>
+<instance part="P+2" gate="G$1" x="25.4" y="40.64"/>
 <instance part="R1" gate="G$1" x="45.72" y="86.36" rot="R90"/>
-<instance part="P+3" gate="1" x="45.72" y="93.98"/>
+<instance part="P+3" gate="G$1" x="45.72" y="93.98"/>
 <instance part="P+7" gate="1" x="160.02" y="124.46"/>
 <instance part="R4" gate="G$1" x="213.36" y="43.18"/>
 <instance part="R5" gate="G$1" x="213.36" y="40.64"/>
 <instance part="R6" gate="G$1" x="213.36" y="38.1"/>
 <instance part="GND6" gate="1" x="236.22" y="12.7"/>
 <instance part="GND8" gate="1" x="241.3" y="12.7"/>
-<instance part="P+4" gate="1" x="238.76" y="71.12"/>
+<instance part="P+4" gate="G$1" x="238.76" y="71.12"/>
 <instance part="R2" gate="G$1" x="213.36" y="33.02"/>
 <instance part="R3" gate="G$1" x="266.7" y="40.64"/>
-<instance part="P+5" gate="1" x="195.58" y="35.56"/>
-<instance part="P+6" gate="1" x="271.78" y="48.26"/>
+<instance part="P+5" gate="G$1" x="195.58" y="35.56"/>
+<instance part="P+6" gate="G$1" x="271.78" y="48.26"/>
 <instance part="R7" gate="G$1" x="210.82" y="53.34" rot="R90"/>
-<instance part="P+8" gate="1" x="210.82" y="60.96"/>
-<instance part="P+9" gate="1" x="213.36" y="154.94"/>
+<instance part="P+8" gate="G$1" x="210.82" y="60.96"/>
+<instance part="P+9" gate="G$1" x="213.36" y="154.94"/>
 <instance part="GND7" gate="1" x="243.84" y="152.4" rot="R90"/>
 <instance part="Q1" gate="G$1" x="45.72" y="48.26" rot="R90"/>
 <instance part="C8" gate="G$1" x="38.1" y="50.8" rot="R90"/>
@@ -15009,7 +15028,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <instance part="GND12" gate="1" x="137.16" y="10.16"/>
 <instance part="GND13" gate="1" x="127" y="10.16"/>
 <instance part="GND14" gate="1" x="116.84" y="10.16"/>
-<instance part="P+10" gate="1" x="71.12" y="132.08" rot="R270"/>
+<instance part="P+10" gate="G$1" x="71.12" y="132.08" rot="R270"/>
 <instance part="C12" gate="G$1" x="55.88" y="129.54"/>
 <instance part="C13" gate="G$1" x="63.5" y="129.54"/>
 <instance part="GND19" gate="1" x="55.88" y="121.92"/>
@@ -15034,7 +15053,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <instance part="C15" gate="G$1" x="266.7" y="129.54" rot="R180"/>
 <instance part="C16" gate="G$1" x="266.7" y="116.84" rot="R180"/>
 <instance part="GND23" gate="1" x="266.7" y="111.76"/>
-<instance part="P+12" gate="1" x="266.7" y="139.7"/>
+<instance part="P+12" gate="G$1" x="266.7" y="139.7"/>
 <instance part="SV2" gate="G$1" x="147.32" y="129.54" rot="R90"/>
 <instance part="X1" gate="-2" x="256.54" y="109.22"/>
 <instance part="X1" gate="-3" x="256.54" y="104.14"/>
@@ -15053,9 +15072,9 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <instance part="GND17" gate="1" x="7.62" y="121.92"/>
 <instance part="GND18" gate="1" x="35.56" y="121.92"/>
 <instance part="GND25" gate="1" x="142.24" y="43.18"/>
-<instance part="P+11" gate="1" x="142.24" y="83.82"/>
+<instance part="P+11" gate="G$1" x="142.24" y="93.98"/>
 <instance part="U$2" gate="G$1" x="22.86" y="10.16"/>
-<instance part="P+13" gate="1" x="10.16" y="5.08" rot="R90"/>
+<instance part="P+13" gate="G$1" x="10.16" y="5.08" rot="R90"/>
 <instance part="R14" gate="G$1" x="17.78" y="5.08" rot="R180"/>
 <instance part="GND26" gate="1" x="33.02" y="2.54"/>
 <instance part="U$3" gate="G$1" x="238.76" y="35.56"/>
@@ -15350,100 +15369,6 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <label x="147.32" y="139.7" size="1.27" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
-<net name="+5V" class="0">
-<segment>
-<wire x1="48.26" y1="58.42" x2="25.4" y2="58.42" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="58.42" x2="25.4" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="27.94" y1="63.5" x2="25.4" y2="63.5" width="0.1524" layer="91"/>
-<junction x="25.4" y="63.5"/>
-<junction x="25.4" y="63.5"/>
-<pinref part="IC2" gate="G$1" pin="AVCC"/>
-<pinref part="C3" gate="G$1" pin="2"/>
-<pinref part="P+1" gate="1" pin="+5V"/>
-</segment>
-<segment>
-<wire x1="48.26" y1="33.02" x2="48.26" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="48.26" y1="30.48" x2="43.18" y2="30.48" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="G$1" pin="VCC@1"/>
-<pinref part="P+2" gate="1" pin="+5V"/>
-<pinref part="C1" gate="G$1" pin="2"/>
-<junction x="43.18" y="30.48"/>
-<wire x1="43.18" y1="30.48" x2="25.4" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="30.48" x2="25.4" y2="33.02" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="33.02" x2="25.4" y2="38.1" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="R1" gate="G$1" pin="2"/>
-<pinref part="P+3" gate="1" pin="+5V"/>
-</segment>
-<segment>
-<pinref part="P+4" gate="1" pin="+5V"/>
-<pinref part="C14" gate="G$1" pin="+"/>
-<pinref part="C14" gate="G$1" pin="+"/>
-<wire x1="238.76" y1="55.88" x2="238.76" y2="60.96" width="0.1524" layer="91"/>
-<junction x="238.76" y="60.96"/>
-<wire x1="238.76" y1="60.96" x2="238.76" y2="68.58" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="VDD"/>
-</segment>
-<segment>
-<pinref part="R2" gate="G$1" pin="1"/>
-<pinref part="P+5" gate="1" pin="+5V"/>
-<wire x1="195.58" y1="33.02" x2="208.28" y2="33.02" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="R3" gate="G$1" pin="2"/>
-<pinref part="P+6" gate="1" pin="+5V"/>
-<wire x1="271.78" y1="45.72" x2="271.78" y2="40.64" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="R7" gate="G$1" pin="2"/>
-<pinref part="P+8" gate="1" pin="+5V"/>
-</segment>
-<segment>
-<pinref part="IC1" gate="P" pin="VCC"/>
-<pinref part="P+9" gate="1" pin="+5V"/>
-<wire x1="228.6" y1="152.4" x2="220.98" y2="152.4" width="0.1524" layer="91"/>
-<pinref part="C4" gate="G$1" pin="2"/>
-<wire x1="220.98" y1="152.4" x2="213.36" y2="152.4" width="0.1524" layer="91"/>
-<wire x1="220.98" y1="149.86" x2="220.98" y2="152.4" width="0.1524" layer="91"/>
-<junction x="220.98" y="152.4"/>
-</segment>
-<segment>
-<pinref part="P+10" gate="1" pin="+5V"/>
-<wire x1="68.58" y1="132.08" x2="63.5" y2="132.08" width="0.1524" layer="91"/>
-<pinref part="C13" gate="G$1" pin="+"/>
-<pinref part="C12" gate="G$1" pin="1"/>
-<wire x1="55.88" y1="132.08" x2="63.5" y2="132.08" width="0.1524" layer="91"/>
-<junction x="63.5" y="132.08"/>
-<pinref part="IC3" gate="A1" pin="VO"/>
-<wire x1="45.72" y1="132.08" x2="55.88" y2="132.08" width="0.1524" layer="91"/>
-<junction x="55.88" y="132.08"/>
-</segment>
-<segment>
-<pinref part="C15" gate="G$1" pin="2"/>
-<pinref part="P+12" gate="1" pin="+5V"/>
-<wire x1="266.7" y1="137.16" x2="266.7" y2="134.62" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="P+7" gate="1" pin="+5V"/>
-<pinref part="SV2" gate="G$1" pin="2"/>
-<wire x1="160.02" y1="121.92" x2="152.4" y2="121.92" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="LCD_VCC" gate="1" pin="MP"/>
-<pinref part="BL+" gate="1" pin="MP"/>
-<wire x1="144.78" y1="81.28" x2="142.24" y2="81.28" width="0.1524" layer="91"/>
-<pinref part="P+11" gate="1" pin="+5V"/>
-<junction x="142.24" y="81.28"/>
-</segment>
-<segment>
-<pinref part="U$2" gate="G$1" pin="VCC"/>
-<pinref part="P+13" gate="1" pin="+5V"/>
-<pinref part="R14" gate="G$1" pin="2"/>
-<junction x="12.7" y="5.08"/>
-<pinref part="R14" gate="G$1" pin="2"/>
-</segment>
-</net>
 <net name="N$10" class="0">
 <segment>
 <pinref part="R4" gate="G$1" pin="2"/>
@@ -15717,10 +15642,107 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <pinref part="R14" gate="G$1" pin="1"/>
 <wire x1="22.86" y1="5.08" x2="22.86" y2="2.54" width="0.1524" layer="91"/>
 <junction x="22.86" y="5.08"/>
+<label x="22.86" y="2.54" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="IC2" gate="G$1" pin="PB1(OC1A)"/>
 <wire x1="96.52" y1="20.32" x2="101.6" y2="20.32" width="0.1524" layer="91"/>
+<label x="101.6" y="20.32" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="+3V3" class="0">
+<segment>
+<pinref part="P+10" gate="G$1" pin="+3V3"/>
+<wire x1="68.58" y1="132.08" x2="63.5" y2="132.08" width="0.1524" layer="91"/>
+<pinref part="C13" gate="G$1" pin="+"/>
+<pinref part="C12" gate="G$1" pin="1"/>
+<wire x1="55.88" y1="132.08" x2="63.5" y2="132.08" width="0.1524" layer="91"/>
+<junction x="63.5" y="132.08"/>
+<pinref part="IC3" gate="A1" pin="VO"/>
+<wire x1="45.72" y1="132.08" x2="55.88" y2="132.08" width="0.1524" layer="91"/>
+<junction x="55.88" y="132.08"/>
+</segment>
+<segment>
+<wire x1="48.26" y1="58.42" x2="25.4" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="58.42" x2="25.4" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="63.5" x2="25.4" y2="63.5" width="0.1524" layer="91"/>
+<junction x="25.4" y="63.5"/>
+<junction x="25.4" y="63.5"/>
+<pinref part="IC2" gate="G$1" pin="AVCC"/>
+<pinref part="C3" gate="G$1" pin="2"/>
+<pinref part="P+1" gate="G$1" pin="+3V3"/>
+</segment>
+<segment>
+<wire x1="48.26" y1="33.02" x2="48.26" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="30.48" x2="43.18" y2="30.48" width="0.1524" layer="91"/>
+<pinref part="IC2" gate="G$1" pin="VCC@1"/>
+<pinref part="P+2" gate="G$1" pin="+3V3"/>
+<pinref part="C1" gate="G$1" pin="2"/>
+<junction x="43.18" y="30.48"/>
+<wire x1="43.18" y1="30.48" x2="25.4" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="30.48" x2="25.4" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="33.02" x2="25.4" y2="38.1" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R1" gate="G$1" pin="2"/>
+<pinref part="P+3" gate="G$1" pin="+3V3"/>
+</segment>
+<segment>
+<pinref part="P+4" gate="G$1" pin="+3V3"/>
+<pinref part="C14" gate="G$1" pin="+"/>
+<pinref part="C14" gate="G$1" pin="+"/>
+<wire x1="238.76" y1="55.88" x2="238.76" y2="60.96" width="0.1524" layer="91"/>
+<junction x="238.76" y="60.96"/>
+<wire x1="238.76" y1="60.96" x2="238.76" y2="68.58" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="VDD"/>
+</segment>
+<segment>
+<pinref part="R2" gate="G$1" pin="1"/>
+<pinref part="P+5" gate="G$1" pin="+3V3"/>
+<wire x1="195.58" y1="33.02" x2="208.28" y2="33.02" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R3" gate="G$1" pin="2"/>
+<pinref part="P+6" gate="G$1" pin="+3V3"/>
+<wire x1="271.78" y1="45.72" x2="271.78" y2="40.64" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R7" gate="G$1" pin="2"/>
+<pinref part="P+8" gate="G$1" pin="+3V3"/>
+</segment>
+<segment>
+<pinref part="IC1" gate="P" pin="VCC"/>
+<pinref part="P+9" gate="G$1" pin="+3V3"/>
+<wire x1="228.6" y1="152.4" x2="220.98" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="C4" gate="G$1" pin="2"/>
+<wire x1="220.98" y1="152.4" x2="213.36" y2="152.4" width="0.1524" layer="91"/>
+<wire x1="220.98" y1="149.86" x2="220.98" y2="152.4" width="0.1524" layer="91"/>
+<junction x="220.98" y="152.4"/>
+</segment>
+<segment>
+<pinref part="C15" gate="G$1" pin="2"/>
+<pinref part="P+12" gate="G$1" pin="+3V3"/>
+<wire x1="266.7" y1="137.16" x2="266.7" y2="134.62" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="P+7" gate="1" pin="+5V"/>
+<pinref part="SV2" gate="G$1" pin="2"/>
+<wire x1="160.02" y1="121.92" x2="152.4" y2="121.92" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="LCD_VCC" gate="1" pin="MP"/>
+<pinref part="BL+" gate="1" pin="MP"/>
+<wire x1="144.78" y1="81.28" x2="142.24" y2="81.28" width="0.1524" layer="91"/>
+<pinref part="P+11" gate="G$1" pin="+3V3"/>
+<junction x="142.24" y="91.44"/>
+<wire x1="142.24" y1="91.44" x2="142.24" y2="81.28" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="VCC"/>
+<pinref part="P+13" gate="G$1" pin="+3V3"/>
+<pinref part="R14" gate="G$1" pin="2"/>
+<junction x="12.7" y="5.08"/>
+<pinref part="R14" gate="G$1" pin="2"/>
 </segment>
 </net>
 </nets>
