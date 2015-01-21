@@ -13331,7 +13331,6 @@ grid 5.08 mm</description>
 <pad name="DIO5" x="-12.7" y="-2.54" drill="1" diameter="1.85"/>
 <pad name="NRES" x="-12.7" y="-5.08" drill="1" diameter="1.85"/>
 <pad name="GND" x="-12.7" y="-7.62" drill="1" diameter="1.85"/>
-<pad name="ANT" x="12.7" y="-7.62" drill="1" diameter="1.85"/>
 <pad name="VDD" x="12.7" y="-5.08" drill="1" diameter="1.85"/>
 <pad name="GND1" x="12.7" y="-2.54" drill="1" diameter="1.85"/>
 <pad name="DIO3" x="12.7" y="0" drill="1" diameter="1.85"/>
@@ -13439,13 +13438,13 @@ grid 5.08 mm</description>
 <pin name="DIO5" x="-20.32" y="-10.16" length="middle"/>
 <pin name="NRES" x="22.86" y="5.08" length="middle" rot="R180"/>
 <pin name="GND" x="-2.54" y="-20.32" length="middle" direction="pwr" rot="R90"/>
-<pin name="ANT" x="22.86" y="-10.16" length="middle" rot="R180"/>
 <pin name="VDD" x="0" y="20.32" length="middle" direction="pwr" rot="R270"/>
 <pin name="GND1" x="2.54" y="-20.32" length="middle" direction="pwr" rot="R90"/>
 <pin name="DIO3" x="22.86" y="12.7" length="middle" rot="R180"/>
 <pin name="SDI" x="-20.32" y="2.54" length="middle" direction="in"/>
 <pin name="/NSEL" x="-20.32" y="12.7" length="middle" direction="in"/>
 <pin name="SCK" x="-20.32" y="7.62" length="middle" direction="in" function="clk"/>
+<text x="12.7" y="-10.16" size="1.524" layer="95">ANT</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -13562,7 +13561,6 @@ grid 5.08 mm</description>
 <device name="" package="RFM69CW">
 <connects>
 <connect gate="G$1" pin="/NSEL" pad="NSEL"/>
-<connect gate="G$1" pin="ANT" pad="ANT"/>
 <connect gate="G$1" pin="DIO0" pad="DIO0"/>
 <connect gate="G$1" pin="DIO1" pad="DIO1"/>
 <connect gate="G$1" pin="DIO2" pad="DIO2"/>
@@ -20442,10 +20440,10 @@ Source: http://www.st.com/stonline/products/literature/ds/7194/ld1117axx.pdf</de
 <part name="GND45" library="supply1" deviceset="GND" device=""/>
 <part name="GND46" library="supply1" deviceset="GND" device=""/>
 <part name="GND47" library="supply1" deviceset="GND" device=""/>
-<part name="LSP_4_8_12_16" library="solpad" deviceset="LSP11" device=""/>
-<part name="LSP_3_7_11_15" library="solpad" deviceset="LSP11" device=""/>
-<part name="LSP_2_6_10_14" library="solpad" deviceset="LSP11" device=""/>
-<part name="LSP_1_5_9_13" library="solpad" deviceset="LSP11" device=""/>
+<part name="LSP_4" library="solpad" deviceset="LSP11" device=""/>
+<part name="LSP_3" library="solpad" deviceset="LSP11" device=""/>
+<part name="LSP_2" library="solpad" deviceset="LSP11" device=""/>
+<part name="LSP_1" library="solpad" deviceset="LSP11" device=""/>
 <part name="C21" library="rcl" deviceset="CPOL-EU" device="E7.5-18" value="4700u"/>
 <part name="C22" library="rcl" deviceset="CPOL-EU" device="E7.5-18" value="4700u"/>
 <part name="GND48" library="supply1" deviceset="GND" device=""/>
@@ -20538,7 +20536,7 @@ Source: http://www.st.com/stonline/products/literature/ds/7194/ld1117axx.pdf</de
 <part name="P+19" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND79" library="supply1" deviceset="GND" device=""/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
-<part name="IC8" library="v-reg" deviceset="LD117A?*" device="V" value="LD117AV"/>
+<part name="IC8" library="v-reg" deviceset="LD117A?*" device="V" value="LM1086IT-3.3"/>
 <part name="+3V3" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V4" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
@@ -20732,10 +20730,10 @@ ein fertiges Modul (XL6009) verwendet werden </text>
 <instance part="GND45" gate="1" x="340.36" y="111.76"/>
 <instance part="GND46" gate="1" x="447.04" y="111.76"/>
 <instance part="GND47" gate="1" x="447.04" y="144.78"/>
-<instance part="LSP_4_8_12_16" gate="1" x="416.56" y="241.3" rot="R180"/>
-<instance part="LSP_3_7_11_15" gate="1" x="429.26" y="238.76" rot="R180"/>
-<instance part="LSP_2_6_10_14" gate="1" x="449.58" y="241.3" rot="R180"/>
-<instance part="LSP_1_5_9_13" gate="1" x="464.82" y="238.76" rot="R180"/>
+<instance part="LSP_4" gate="1" x="416.56" y="241.3" rot="R180"/>
+<instance part="LSP_3" gate="1" x="429.26" y="238.76" rot="R180"/>
+<instance part="LSP_2" gate="1" x="449.58" y="241.3" rot="R180"/>
+<instance part="LSP_1" gate="1" x="464.82" y="238.76" rot="R180"/>
 <instance part="C21" gate="G$1" x="20.32" y="182.88"/>
 <instance part="C22" gate="G$1" x="30.48" y="182.88"/>
 <instance part="GND48" gate="1" x="30.48" y="175.26"/>
@@ -22205,17 +22203,17 @@ ein fertiges Modul (XL6009) verwendet werden </text>
 </net>
 <net name="N$35" class="0">
 <segment>
-<pinref part="LSP_2_6_10_14" gate="1" pin="MP"/>
-<pinref part="LSP_1_5_9_13" gate="1" pin="MP"/>
+<pinref part="LSP_2" gate="1" pin="MP"/>
+<pinref part="LSP_1" gate="1" pin="MP"/>
 <wire x1="464.82" y1="241.3" x2="464.82" y2="243.84" width="0.1524" layer="91"/>
 <wire x1="464.82" y1="243.84" x2="449.58" y2="243.84" width="0.1524" layer="91"/>
 <junction x="449.58" y="243.84"/>
-<pinref part="LSP_3_7_11_15" gate="1" pin="MP"/>
+<pinref part="LSP_3" gate="1" pin="MP"/>
 <wire x1="429.26" y1="243.84" x2="439.42" y2="243.84" width="0.1524" layer="91"/>
 <wire x1="439.42" y1="243.84" x2="449.58" y2="243.84" width="0.1524" layer="91"/>
 <wire x1="429.26" y1="241.3" x2="429.26" y2="243.84" width="0.1524" layer="91"/>
 <wire x1="429.26" y1="243.84" x2="416.56" y2="243.84" width="0.1524" layer="91"/>
-<pinref part="LSP_4_8_12_16" gate="1" pin="MP"/>
+<pinref part="LSP_4" gate="1" pin="MP"/>
 <pinref part="R_Z" gate="G$1" pin="1"/>
 <wire x1="439.42" y1="248.92" x2="439.42" y2="243.84" width="0.1524" layer="91"/>
 <junction x="439.42" y="243.84"/>

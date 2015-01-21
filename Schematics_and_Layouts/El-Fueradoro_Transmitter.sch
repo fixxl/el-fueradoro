@@ -11670,7 +11670,6 @@ grid 5.08 mm</description>
 <pad name="DIO5" x="-12.7" y="-2.54" drill="1" diameter="1.85"/>
 <pad name="NRES" x="-12.7" y="-5.08" drill="1" diameter="1.85"/>
 <pad name="GND" x="-12.7" y="-7.62" drill="1" diameter="1.85"/>
-<pad name="ANT" x="12.7" y="-7.62" drill="1" diameter="1.85"/>
 <pad name="VDD" x="12.7" y="-5.08" drill="1" diameter="1.85"/>
 <pad name="GND1" x="12.7" y="-2.54" drill="1" diameter="1.85"/>
 <pad name="DIO3" x="12.7" y="0" drill="1" diameter="1.85"/>
@@ -11768,13 +11767,13 @@ grid 5.08 mm</description>
 <pin name="DIO5" x="-20.32" y="-10.16" length="middle"/>
 <pin name="NRES" x="22.86" y="5.08" length="middle" rot="R180"/>
 <pin name="GND" x="-2.54" y="-20.32" length="middle" direction="pwr" rot="R90"/>
-<pin name="ANT" x="22.86" y="-10.16" length="middle" rot="R180"/>
 <pin name="VDD" x="0" y="20.32" length="middle" direction="pwr" rot="R270"/>
 <pin name="GND1" x="2.54" y="-20.32" length="middle" direction="pwr" rot="R90"/>
 <pin name="DIO3" x="22.86" y="12.7" length="middle" rot="R180"/>
 <pin name="SDI" x="-20.32" y="2.54" length="middle" direction="in"/>
 <pin name="/NSEL" x="-20.32" y="12.7" length="middle" direction="in"/>
 <pin name="SCK" x="-20.32" y="7.62" length="middle" direction="in" function="clk"/>
+<text x="12.7" y="-10.16" size="1.524" layer="95">ANT</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -11873,7 +11872,6 @@ grid 5.08 mm</description>
 <device name="" package="RFM69CW">
 <connects>
 <connect gate="G$1" pin="/NSEL" pad="NSEL"/>
-<connect gate="G$1" pin="ANT" pad="ANT"/>
 <connect gate="G$1" pin="DIO0" pad="DIO0"/>
 <connect gate="G$1" pin="DIO1" pad="DIO1"/>
 <connect gate="G$1" pin="DIO2" pad="DIO2"/>
