@@ -618,6 +618,8 @@ int main(void) {
 			flags.b.hw = 0;
 
 			uart_puts_P(PSTR("\n\r"));
+			uart_puts(ig_or_notrans ? "Zündbox" : "Transmitter");
+			uart_puts_P(PSTR("\n\r"));
 			uart_puts_P(PSTR(STRINGIZE_VALUE_OF(MCU)));
 			uart_puts_P(PSTR("\n\rRFM"));
 			uart_shownum(RFM, 'd');

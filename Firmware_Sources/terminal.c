@@ -290,7 +290,7 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* 
 		else uart_puts_P(PSTR("----"));
 
 		if ((i % 3) == 2) uart_puts_P(PSTR("\n\r"));
-		else uart_puts_P(PSTR("     "));
+		else uart_puts_P(PSTR("\t"));
 		i++;
 	}
 	uart_puts_P(PSTR("\n\r\n\r"));
