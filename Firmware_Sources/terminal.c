@@ -120,7 +120,7 @@ uint8_t configprog(const uint8_t devicetype) {
 	terminal_reset();
 
 	uart_puts_P(PSTR(TERM_COL_YELLOW));
-	uart_puts_P(PSTR("\n\nKonfigurationsprogramm\n\r======================\n\r"));
+	uart_puts_P(PSTR("\nKonfigurationsprogramm\n\r======================\n\r"));
 
 	if (!addresses_load(&uniqueid, &slaveid)) { // Bisherige Adressen aus dem Speicher holen und prüfen
 		uart_puts_P(PSTR(TERM_COL_RED));
@@ -226,13 +226,13 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* 
 
 	terminal_reset();
 	uart_puts_P(PSTR(TERM_COL_YELLOW));
-	uart_puts_P(PSTR("\n\n\rSystemübersicht\n\r"));
+	uart_puts_P(PSTR("\n\rSystemübersicht\n\r"));
 	uart_puts_P(PSTR("===============\n\r"));
 
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(
 			PSTR(
-					"\n\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r"));
+					"\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r"));
 	while (i < 30) {
 		// Show Unique-ID
 		if ((i + 1) < 10) uart_puts_P(PSTR("0"));
@@ -304,7 +304,7 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* 
 // Show number of boxes for every Slave-ID
 void list_array(char *arr) {
 	uint8_t i = 0;
-	uart_puts_P(PSTR("\n\n\rSlave-ID: Anzahl Boxen\n\r"));
+	uart_puts_P(PSTR("\n\r\nSlave-ID: Anzahl Boxen\n\r"));
 	while (i < 30) {
 		if (i < 9) uart_putc('0');
 		uart_shownum(i + 1, 'd');
@@ -323,13 +323,11 @@ void list_array(char *arr) {
 			uart_puts_P(PSTR("\n\r"));
 		}
 		else {
-			for (uint8_t laufvariable = 0; laufvariable < 26; laufvariable++) {
-				uart_puts_P(PSTR(" "));
-			}
+			uart_puts_P(PSTR("\t \t \t \t"));
 		}
 		i++;
 	}
-	uart_puts_P(PSTR("\n\r"));
+	uart_puts_P(PSTR("\n\n\r"));
 }
 
 // Calculate number of boxes with certain Slave-ID
