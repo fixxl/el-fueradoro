@@ -214,7 +214,7 @@ void rfm_init(void) {
 		//Frequency Setting
 		rfm_cmd(0xA000 | FREQ_CHANNEL);
 
-		_delay_ms(50);
+		_delay_ms(4);
 	}
 	rfm_status();
 	rfm_rxon();

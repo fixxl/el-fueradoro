@@ -10,8 +10,8 @@
 #include "global.h"
 
 // Global Variables
-volatile uint8_t transmit_flag = 0, key_flag = 0;
-volatile uint16_t clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0, hist_del_flag = 0;
+volatile static uint8_t transmit_flag = 0, key_flag = 0, clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0;
+volatile static uint16_t hist_del_flag = 0;
 
 void wdt_init(void) {
 	MCUSR = 0;
@@ -143,7 +143,7 @@ uint16_t rfmtalk(void) {
 #else
 	uart_puts("\n\rKommando (16-Bit-Hex-Format): 0x");
 #endif
-	for (uint8_t i = 0; i < 4; i++) {
+	for (uint8_t i = 4; i; i--) {
 		rfm_order <<= 4;
 		inp = uart_getc();
 		uart_putc(inp);
@@ -295,7 +295,6 @@ int main(void) {
 	uint8_t iderrors = 0;
 	uint8_t tempsenstype = 0;
 	uint8_t rssi = 0;
-	uint8_t ledstatus = 0;
 	int8_t temperature = -128;
 
 	bitfeld_t flags;
@@ -347,9 +346,17 @@ int main(void) {
 // Initialise LEDs
 	led_init();
 
-// Initialise arrays
-	for (uint16_t warten = 0; warten < MAX_ARRAYSIZE; warten++) {
-		led_green_toggle();
+// Get Slave- und Unique-ID from EEPROM
+	update_addresses(&unique_id, &slave_id);
+	led_green_on();
+
+// Initialise arrays and show slave-id by blinking!
+	for (uint8_t warten = 0; warten < MAX_ARRAYSIZE; warten++) {
+		if(warten < slave_id) {
+			led_green_toggle();
+			led_orange_toggle();
+			_delay_ms(100);
+		}
 		uart_field[warten] = 1;
 		tx_field[warten] = 0;
 		rx_field[warten] = 0;
@@ -359,15 +366,17 @@ int main(void) {
 		temps[warten] = 0;
 		channel_fired[warten] = 0;
 		temps[warten] = -128;
-		_delay_ms(50);
 	}
+	led_green_off();
+	led_orange_off();
+	for (uint8_t warten = slave_id; warten < MAX_ARRAYSIZE; warten++) {
+		_delay_ms(100);
+	}
+
 
 // Initialise ADC and find out what kind of device the software runs on
 	adc_init();
 	const uint8_t ig_or_notrans = (adc_read(5) < 156);
-
-// Get Slave- und Unique-ID from EEPROM
-	update_addresses(&unique_id, &slave_id);
 
 // Initialise devices
 	if (TRANSMITTER && (!ig_or_notrans)) {
@@ -392,16 +401,16 @@ int main(void) {
 		tx_field[0] = IDENT;
 		tx_field[1] = 'd';
 		tx_field[2] = '0';
-		TIMSK0 |= (1 << TOIE0);
 
 		// Transmit something to make other devices adjust to frequency
-		for (uint8_t j = 0; j < 5; j++) {
+		for (uint8_t j = 5; j; j--) {
 			led_green_on();
 			rfm_transmit("UUUUUUUUUU", 10);
 			led_green_off();
-			_delay_ms(900);
+			_delay_ms(500);
 		}
 		lcd_clear();
+		TIMSK0 |= (1 << TOIE0);
 	}
 	else {
 		armed = debounce(&KEYPIN, KEY);
@@ -731,7 +740,7 @@ int main(void) {
 					case FIRE: {
 						for (uint8_t round = 1; round < 3; round++) { // Loop twice
 							nr = 0;
-							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:   ") : PSTR("\n\rKanal:      ")); // First for slave-id, then for channel
+							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:\t") : PSTR("\n\rKanal:\t   ")); // First for slave-id, then for channel
 							for (i = 0; i < 2; i++) { // Get the user to assign the numbers with 2 digits
 								inp = 0;
 								while (!inp) {
@@ -953,9 +962,6 @@ int main(void) {
 			cli();
 			flags.b.fire = 0;
 
-			// Backup LED status
-			ledstatus = leds_status();
-
 			// Turn all leds on
 			leds_on();
 
@@ -983,13 +989,7 @@ int main(void) {
 
 			// Turn all LEDs off
 			leds_off();
-
-			// Restore former LED state
-			if (ledstatus & 1) led_yellow_on();
-			if (ledstatus & 2) led_green_on();
-			if (ledstatus & 4) led_orange_on();
-			if (ledstatus & 8) led_red_on();
-			ledstatus = 0;
+			led_red_on();
 
 			// Turn on receiver
 			rfm_rxon();
@@ -1363,8 +1363,8 @@ ISR(TIMER0_OVF_vect) {
 	if (clear_lcd_tx_flag) clear_lcd_tx_flag++;
 	if (clear_lcd_rx_flag) clear_lcd_rx_flag++;
 	if (hist_del_flag) hist_del_flag++;
-	if (clear_lcd_tx_flag > 1000) clear_lcd_tx_flag = 0;
-	if (clear_lcd_rx_flag > 1000) clear_lcd_rx_flag = 0;
+	if (clear_lcd_tx_flag > (DEL_THRES + 2)) clear_lcd_tx_flag = 0;
+	if (clear_lcd_rx_flag > (DEL_THRES + 2)) clear_lcd_rx_flag = 0;
 	if (hist_del_flag > 10000) hist_del_flag = 0;
 }
 

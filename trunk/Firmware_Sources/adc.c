@@ -40,7 +40,7 @@ void adc_init(void) {
 	// Check if correct reference is selected
 	nosense = 0;
 
-	for (uint8_t i = 0; i < 8; i++) {
+	for (uint8_t i = 8; i; i--) {
 		ADCSRA |= 1 << ADSC;
 		while (ADCSRA & (1 << ADSC))
 			;
@@ -72,7 +72,7 @@ uint8_t adc_read(uint8_t channel) {
 	if (ADMUX & (1 << REFS1)) imax = 11;
 
 	// 10 or 11 measurements (reference-dependent), summing up
-	for (uint8_t i = 0; i < imax; i++) {
+	for (uint8_t i = imax; i; i--) {
 		ADCSRA |= 1 << ADSC;
 		while (ADCSRA & (1 << ADSC))
 			;

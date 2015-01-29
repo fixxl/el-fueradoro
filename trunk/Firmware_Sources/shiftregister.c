@@ -25,8 +25,8 @@ void sr_init(void) {
 	SCLOCK_PORT &= ~(1 << SCLOCK);
 
 	// Set shift-register values to 0...
-	for (uint8_t j = 0; j < 3; j++) {
-		for (uint8_t i = 0; i < (SR_CHANNELS + 4); i++) {
+	for (uint8_t j = 3; j; j--) {
+		for (uint8_t i = (SR_CHANNELS + 4); i; i--) {
 			SCLOCK_PIN = (1 << SCLOCK);			// Pin high after toggling
 			SCLOCK_PIN = (1 << SCLOCK);			// Pin low after toggling
 		}
@@ -34,7 +34,7 @@ void sr_init(void) {
 		RCLOCK_PIN = (1 << RCLOCK);				// Pin durch Toggling high
 		RCLOCK_PIN = (1 << RCLOCK);				// Pin durch Toggling low
 	}
-	_delay_ms(50);
+	_delay_ms(1);
 
 	// Now outputs are all low and can be activated!
 	OE_PORT &= ~(1 << OE);
@@ -49,7 +49,7 @@ void sr_shiftout(uint16_t scheme) {
 	SCLOCK_PORT &= ~(1 << SCLOCK);
 	RCLOCK_PORT &= ~(1 << RCLOCK);
 
-	for (i = SR_CHANNELS; i > 0; i--) {
+	for (i = SR_CHANNELS; i; i--) {
 		if (scheme & mask) {
 			SER_IN_PORT |= 1 << SER_IN;
 		}

@@ -26,7 +26,7 @@ void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
 	if ((zahl < 0) && space) space--;
 	if (space >= cntr) {
 		space -= cntr;
-		for (uint8_t i = 0; i < space; i++) {
+		for (uint8_t i = space; i; i--) {
 			uart_puts_P(PSTR(" "));
 		}
 	}
@@ -293,7 +293,7 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* 
 		else uart_puts_P(PSTR("\t"));
 		i++;
 	}
-	uart_puts_P(PSTR("\n\r\n\r"));
+	uart_puts_P(PSTR("\n\r"));
 	if (wrongids) uart_puts_P(PSTR(TERM_COL_RED));
 	uart_puts_P(PSTR("Fehlerhafte/doppelte IDs: "));
 	uart_shownum(wrongids, 'd');
