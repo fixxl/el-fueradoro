@@ -33,7 +33,6 @@ void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
 	uart_shownum(zahl, type);
 }
 
-
 // GUI-Routine to change IDs (allows numbers from 01 to 30)
 static uint8_t changenumber(void) {
 	uint8_t zehner = 'c', einer = 'c', number;
@@ -60,7 +59,6 @@ static uint8_t changenumber(void) {
 	number = (zehner - '0') * 10 + (einer - '0');
 	return number;
 }
-
 
 // Remote configuration
 uint8_t remote_config(char* txf) {
@@ -134,22 +132,32 @@ uint8_t configprog(const uint8_t devicetype) {
 	uart_puts(devicetype ? "Zündbox" : "Transmitter");
 	uart_puts_P(PSTR("\n\n\rAktuelle Unique-ID: "));
 	uart_puts_P(PSTR(TERM_COL_RED));
-	if (uniqueid != 'E') uart_shownum(uniqueid, 'd');
-	else uart_puts_P(PSTR("FEHLER"));
+	if (uniqueid != 'E') {
+		if (uniqueid < 10) uart_putc('0');
+		uart_shownum(uniqueid, 'd');
+	}
+	else {
+		uart_puts_P(PSTR("FEHLER"));
+	}
 	uart_puts_P(PSTR("\n\r"));
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(PSTR("Aktuelle Slave-ID:  "));
 	uart_puts_P(PSTR(TERM_COL_RED));
-	if (slaveid != 'e') uart_shownum(slaveid, 'd');
-	else uart_puts_P(PSTR("FEHLER"));
+	if (slaveid != 'e') {
+		if (slaveid < 10) uart_putc('0');
+		uart_shownum(slaveid, 'd');
+	}
+	else {
+		uart_puts_P(PSTR("FEHLER"));
+	}
 	uart_puts_P(PSTR("\n\r"));
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	if ((slaveid == uniqueid) && !slaveid)
 		uart_puts_P(PSTR("\n\n\rDevice ist als Transmitter konfiguriert."));
 	uart_puts_P(PSTR("\n\n\n\r"));
-	uart_puts_P(PSTR("(U)nique-ID ändern, (S)lave-ID ändern,\n\r"));
+	uart_puts_P(PSTR("(I)Ds ändern"));
 	if (!devicetype) {
-		uart_puts_P(PSTR("zu (T)ransmitter machen,\n\r"));
+		uart_puts_P(PSTR(" oder zu (T)ransmitter machen,\n\r"));
 	}
 	uart_puts_P(PSTR("Abbruch mit beliebiger anderer Taste! "));
 
@@ -157,52 +165,45 @@ uint8_t configprog(const uint8_t devicetype) {
 	while (!choice) {
 		choice = uart_getc();
 	}
+	choice |= 0x20;
 	uart_putc(choice);
 	uart_puts_P(PSTR("\n\r"));
 
-	do {
-		uart_puts_P(PSTR("\n\r"));
-		switch (choice) {
-			case 's':
-			case 'S': {
-				uart_puts_P(PSTR("Neue Slave-ID (01-30):  "));
-				uart_puts_P(PSTR(TERM_COL_RED));
-				slaveid_old = slaveid;
-				slaveid = changenumber();
-				uart_puts_P(PSTR(TERM_COL_WHITE));
-				choice = 'u';
-				if (slaveid != slaveid_old) changes = 1;
-				break;
-			}
-			case 'u':
-			case 'U': {
-				uart_puts_P(PSTR("Neue Unique-ID (01-30): "));
-				uart_puts_P(PSTR(TERM_COL_RED));
-				uniqueid_old = uniqueid;
-				uniqueid = changenumber();
-				uart_puts_P(PSTR(TERM_COL_WHITE));
-				choice = 's';
-				if (uniqueid != uniqueid_old) changes = 1;
-				break;
-			}
-			case 't':
-			case 'T': {
-				if (!devicetype) {
-					if (slaveid && uniqueid) {
-						uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
-					}
-					slaveid_old = slaveid;
-					uniqueid_old = uniqueid;
-					slaveid = 0;
-					uniqueid = 0;
-					if (uniqueid_old || slaveid_old) changes = 1;
-				}
-				break;
-			}
-			default:
-				break;
+	uart_puts_P(PSTR("\n\r"));
+	switch (choice) {
+		case 'i': {
+			uart_puts_P(PSTR("Neue Unique-ID (01-30): "));
+			uart_puts_P(PSTR(TERM_COL_RED));
+			uniqueid_old = uniqueid;
+			uniqueid = changenumber();
+			uart_puts_P(PSTR(TERM_COL_WHITE));
+
+			uart_puts_P(PSTR("\n\rNeue Slave-ID (01-30):  "));
+			uart_puts_P(PSTR(TERM_COL_RED));
+			slaveid_old = slaveid;
+			slaveid = changenumber();
+			uart_puts_P(PSTR(TERM_COL_WHITE));
+
+			if ((uniqueid != uniqueid_old) || (slaveid != slaveid_old)) changes = 1;
+			break;
 		}
-	} while ((slaveid != 0) ^ (uniqueid != 0));
+		case 't': {
+			if (!devicetype) {
+				if (slaveid && uniqueid) {
+					uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
+				}
+				slaveid_old = slaveid;
+				uniqueid_old = uniqueid;
+				slaveid = 0;
+				uniqueid = 0;
+				if (uniqueid_old || slaveid_old) changes = 1;
+			}
+			break;
+		}
+		default: {
+			break;
+		}
+	}
 
 	if (changes) {
 		addresses_save(uniqueid, slaveid);
@@ -231,8 +232,7 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* 
 
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(
-			PSTR(
-					"\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r"));
+			PSTR("\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r"));
 	while (i < 30) {
 		// Show Unique-ID
 		if ((i + 1) < 10) uart_puts_P(PSTR("0"));
