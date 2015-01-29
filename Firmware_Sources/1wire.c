@@ -32,7 +32,7 @@ uint8_t w1_bit_io(uint8_t val) {
 
 uint8_t w1_byte_wr(uint8_t byte) {
 	uint8_t j;
-	for (uint8_t i = 0; i < 8; i++) {
+	for (uint8_t i = 8; i; i--) {
 		j = w1_bit_io(byte & 1);
 		byte >>= 1;
 		if (j) byte |= 0x80;
@@ -75,7 +75,7 @@ uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 
 		id_bit_number = 64; // 8 bytes (64 bits)
 		while (id_bit_number) {
-			for (j = 8; j > 0; j--) { // 8 bits can be stored in 1 byte
+			for (j = 8; j; j--) { // 8 bits can be stored in 1 byte
 				id_bit = w1_bit_io(1); // read bit
 				cmp_id_bit = w1_bit_io(1); // read complement bit
 
@@ -188,7 +188,7 @@ void w1_temp_to_array(int32_t tempmalzehn, char* tempfield, uint8_t signdigit) {
 	int8_t temp_int_loc = tempmalzehn / 10;
 	uint8_t temp_digit_loc = tempmalzehn % 10;
 
-	if(tempmalzehn<0) {
+	if (tempmalzehn < 0) {
 		tempfield[fieldcntr++] = '-';
 		tempmalzehn = -tempmalzehn;
 	}
@@ -196,14 +196,14 @@ void w1_temp_to_array(int32_t tempmalzehn, char* tempfield, uint8_t signdigit) {
 	while (zahlkopie /= 10) {
 		neededlength++;
 	}
-	if((signdigit & 0x02) && !fieldcntr) {
+	if ((signdigit & 0x02) && !fieldcntr) {
 		tempfield[fieldcntr++] = '+';
 	}
 	for (uint8_t i = neededlength + fieldcntr; (i - fieldcntr); i--) {
-		tempfield[i-1] = (temp_int_loc % 10) + 0x30;
+		tempfield[i - 1] = (temp_int_loc % 10) + 0x30;
 		temp_int_loc /= 10;
 	}
-	if(signdigit & 1) {
+	if (signdigit & 1) {
 		tempfield[neededlength + fieldcntr] = '.';
 		tempfield[neededlength + fieldcntr + 1] = (temp_digit_loc % 10) + 0x30;
 		tempfield[neededlength + fieldcntr + 2] = '\0';
@@ -212,6 +212,5 @@ void w1_temp_to_array(int32_t tempmalzehn, char* tempfield, uint8_t signdigit) {
 		tempfield[neededlength + fieldcntr] = '\0';
 	}
 }
-
 
 #endif

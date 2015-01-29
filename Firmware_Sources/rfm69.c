@@ -230,8 +230,8 @@ void rfm_init(void) {
 #endif
 #endif
 
-	for (uint8_t i = 0; i < 20; i++) {
-		_delay_ms(5);
+	for (uint8_t i = 10; i; i--) {
+		_delay_ms(4);
 		rfm_cmd(0x0200, 1); // FSK, Packet mode, No shaping
 
 		//Bitrate + corresponding settings (Receiver bandwidth, frequency deviation)

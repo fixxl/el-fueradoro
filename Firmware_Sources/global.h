@@ -50,8 +50,8 @@
 #endif
 
 // Global Variables
-extern volatile uint8_t transmit_flag, key_flag;
-extern volatile uint16_t clear_lcd_tx_flag, clear_lcd_rx_flag, hist_del_flag;
+//extern volatile uint8_t transmit_flag, key_flag;
+//extern volatile uint16_t clear_lcd_tx_flag, clear_lcd_rx_flag, hist_del_flag;
 
 
 #if ((W1PORT>TEMPHUM_PORT)+(W1PORT<TEMPHUM_PORT)+(W1NUM>TEMPHUM_NUM)+(W1NUM<TEMPHUM_NUM))
