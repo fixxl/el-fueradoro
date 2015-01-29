@@ -355,7 +355,7 @@ int main(void) {
 		if(warten < slave_id) {
 			led_green_toggle();
 			led_orange_toggle();
-			_delay_ms(100);
+			_delay_ms(200);
 		}
 		uart_field[warten] = 1;
 		tx_field[warten] = 0;
@@ -369,9 +369,6 @@ int main(void) {
 	}
 	led_green_off();
 	led_orange_off();
-	for (uint8_t warten = slave_id; warten < MAX_ARRAYSIZE; warten++) {
-		_delay_ms(100);
-	}
 
 
 // Initialise ADC and find out what kind of device the software runs on
