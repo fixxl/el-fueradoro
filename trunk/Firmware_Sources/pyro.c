@@ -355,7 +355,7 @@ int main(void) {
 		if(warten < slave_id) {
 			led_green_toggle();
 			led_orange_toggle();
-			_delay_ms(200);
+			_delay_ms(300);
 		}
 		uart_field[warten] = 1;
 		tx_field[warten] = 0;
