@@ -35,28 +35,18 @@ void fixedspace(int32_t zahl, uint8_t type, uint8_t space) {
 
 // GUI-Routine to change IDs (allows numbers from 01 to 30)
 static uint8_t changenumber(void) {
-	uint8_t zehner = 'c', einer = 'c', number;
+	uint8_t zehner = 'c', einer = 'c', number = 0;
 	while (!(zehner >= '0' && zehner <= '3')) {
 		zehner = uart_getc();
+		if (zehner == 10 || zehner == 13) return 255;
 	}
 	uart_putc(zehner);
-	if (zehner == '0') {
-		while (!(einer >= '1' && einer <= '9')) {
-			einer = uart_getc();
-		}
-	}
-	if (zehner == '1' || zehner == '2') {
-		while (!(einer >= '0' && einer <= '9')) {
-			einer = uart_getc();
-		}
-	}
-	if (zehner == '3') {
-		while (einer != '0') {
-			einer = uart_getc();
-		}
+	while (!(number > 0 && number < 31)) {
+		einer = uart_getc();
+		if (einer == 10 || einer == 13) return 255;
+		number = (zehner - '0') * 10 + (einer - '0');
 	}
 	uart_putc(einer);
-	number = (zehner - '0') * 10 + (einer - '0');
 	return number;
 }
 
@@ -72,19 +62,23 @@ uint8_t remote_config(char* txf) {
 	uart_puts_P(PSTR("Bisherige Unique-ID: "));
 	temporary[0] = changenumber();
 	uart_puts_P(PSTR("\n\r"));
+	if(temporary[0] == 255) return 0;
 
 	uart_puts_P(PSTR("Bisherige Slave-ID:  "));
 	temporary[1] = changenumber();
 	uart_puts_P(PSTR("\n\r"));
 	uart_puts_P(PSTR("\n\r"));
+	if(temporary[1] == 255) return 0;
 
 	uart_puts_P(PSTR("Neue Unique-ID:      "));
 	temporary[2] = changenumber();
 	uart_puts_P(PSTR("\n\r"));
+	if(temporary[2] == 255) return 0;
 
 	uart_puts_P(PSTR("Neue Slave-ID:       "));
 	temporary[3] = changenumber();
 	uart_puts_P(PSTR("\n\n\r"));
+	if(temporary[3] == 255) return 0;
 
 	if ((temporary[0] != temporary[2]) || (temporary[1] != temporary[3])) {
 		uart_puts_P(PSTR("ID-Wechsel mit j bestätigen, abbrechen mit anderer Taste! "));
@@ -172,19 +166,21 @@ uint8_t configprog(const uint8_t devicetype) {
 	uart_puts_P(PSTR("\n\r"));
 	switch (choice) {
 		case 'i': {
-			uart_puts_P(PSTR("Neue Unique-ID (01-30): "));
+			uart_puts_P(PSTR("Neue Unique-ID (01-30, ENTER = alter Wert): "));
 			uart_puts_P(PSTR(TERM_COL_RED));
 			uniqueid_old = uniqueid;
 			uniqueid = changenumber();
+			if(uniqueid == 255) uniqueid = uniqueid_old;
 			uart_puts_P(PSTR(TERM_COL_WHITE));
 
-			uart_puts_P(PSTR("\n\rNeue Slave-ID (01-30):  "));
+			uart_puts_P(PSTR("\n\rNeue Slave-ID (01-30, ENTER = alter Wert):  "));
 			uart_puts_P(PSTR(TERM_COL_RED));
 			slaveid_old = slaveid;
 			slaveid = changenumber();
+			if(slaveid == 255) slaveid = slaveid_old;
 			uart_puts_P(PSTR(TERM_COL_WHITE));
 
-			if ((uniqueid != uniqueid_old) || (slaveid != slaveid_old)) changes = 1;
+			if (((uniqueid != uniqueid_old) || (slaveid != slaveid_old))) changes = 1;
 			break;
 		}
 		case 't': {
