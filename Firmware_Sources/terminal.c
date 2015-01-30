@@ -62,23 +62,23 @@ uint8_t remote_config(char* txf) {
 	uart_puts_P(PSTR("Bisherige Unique-ID: "));
 	temporary[0] = changenumber();
 	uart_puts_P(PSTR("\n\r"));
-	if(temporary[0] == 255) return 0;
+	if (temporary[0] == 255) return 0;
 
 	uart_puts_P(PSTR("Bisherige Slave-ID:  "));
 	temporary[1] = changenumber();
 	uart_puts_P(PSTR("\n\r"));
 	uart_puts_P(PSTR("\n\r"));
-	if(temporary[1] == 255) return 0;
+	if (temporary[1] == 255) return 0;
 
 	uart_puts_P(PSTR("Neue Unique-ID:      "));
 	temporary[2] = changenumber();
 	uart_puts_P(PSTR("\n\r"));
-	if(temporary[2] == 255) return 0;
+	if (temporary[2] == 255) return 0;
 
 	uart_puts_P(PSTR("Neue Slave-ID:       "));
 	temporary[3] = changenumber();
 	uart_puts_P(PSTR("\n\n\r"));
-	if(temporary[3] == 255) return 0;
+	if (temporary[3] == 255) return 0;
 
 	if ((temporary[0] != temporary[2]) || (temporary[1] != temporary[3])) {
 		uart_puts_P(PSTR("ID-Wechsel mit j bestätigen, abbrechen mit anderer Taste! "));
@@ -124,95 +124,96 @@ uint8_t configprog(const uint8_t devicetype) {
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(PSTR("\n\rAngeschlossenes Device: "));
 	uart_puts(devicetype ? "Zündbox" : "Transmitter");
-	uart_puts_P(PSTR("\n\n\rAktuelle Unique-ID: "));
-	uart_puts_P(PSTR(TERM_COL_RED));
-	if (uniqueid != 'E') {
-		if (uniqueid < 10) uart_putc('0');
-		uart_shownum(uniqueid, 'd');
-	}
-	else {
-		uart_puts_P(PSTR("FEHLER"));
-	}
-	uart_puts_P(PSTR("\n\r"));
-	uart_puts_P(PSTR(TERM_COL_WHITE));
-	uart_puts_P(PSTR("Aktuelle Slave-ID:  "));
-	uart_puts_P(PSTR(TERM_COL_RED));
-	if (slaveid != 'e') {
-		if (slaveid < 10) uart_putc('0');
-		uart_shownum(slaveid, 'd');
-	}
-	else {
-		uart_puts_P(PSTR("FEHLER"));
-	}
-	uart_puts_P(PSTR("\n\r"));
-	uart_puts_P(PSTR(TERM_COL_WHITE));
-	if ((slaveid == uniqueid) && !slaveid)
-		uart_puts_P(PSTR("\n\n\rDevice ist als Transmitter konfiguriert."));
-	uart_puts_P(PSTR("\n\n\n\r"));
-	uart_puts_P(PSTR("(I)Ds ändern"));
-	if (!devicetype) {
-		uart_puts_P(PSTR(" oder zu (T)ransmitter machen,\n\r"));
-	}
-	uart_puts_P(PSTR("Abbruch mit beliebiger anderer Taste! "));
 
-	// Evaluate input
-	while (!choice) {
-		choice = uart_getc();
-	}
-	choice |= 0x20;
-	uart_putc(choice);
-	uart_puts_P(PSTR("\n\r"));
-
-	uart_puts_P(PSTR("\n\r"));
-	switch (choice) {
-		case 'i': {
-			uart_puts_P(PSTR("Neue Unique-ID (01-30, ENTER = alter Wert): "));
-			uart_puts_P(PSTR(TERM_COL_RED));
-			uniqueid_old = uniqueid;
-			uniqueid = changenumber();
-			if(uniqueid == 255) uniqueid = uniqueid_old;
-			uart_puts_P(PSTR(TERM_COL_WHITE));
-
-			uart_puts_P(PSTR("\n\rNeue Slave-ID (01-30, ENTER = alter Wert):  "));
-			uart_puts_P(PSTR(TERM_COL_RED));
-			slaveid_old = slaveid;
-			slaveid = changenumber();
-			if(slaveid == 255) slaveid = slaveid_old;
-			uart_puts_P(PSTR(TERM_COL_WHITE));
-
-			if (((uniqueid != uniqueid_old) || (slaveid != slaveid_old))) changes = 1;
-			break;
-		}
-		case 't': {
-			if (!devicetype) {
-				if (slaveid && uniqueid) {
-					uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
-				}
-				slaveid_old = slaveid;
-				uniqueid_old = uniqueid;
-				slaveid = 0;
-				uniqueid = 0;
-				if (uniqueid_old || slaveid_old) changes = 1;
-			}
-			break;
-		}
-		default: {
-			break;
-		}
-	}
-
-	if (changes) {
-		addresses_save(uniqueid, slaveid);
-		if (address_valid(uniqueid, slaveid)) {
-			uart_puts_P(PSTR("\n\n\rÄnderung erfolgreich!\n\r"));
+	if (devicetype) {
+		uart_puts_P(PSTR("\n\n\rAktuelle Unique-ID: "));
+		uart_puts_P(PSTR(TERM_COL_RED));
+		if (uniqueid != 'E') {
+			if (uniqueid < 10) uart_putc('0');
+			uart_shownum(uniqueid, 'd');
 		}
 		else {
-			uart_puts_P(PSTR("Fehler! Bitte erneut versuchen!\n\r"));
+			uart_puts_P(PSTR("FEHLER"));
 		}
-		uart_puts_P(PSTR("\n\rNeustart...\n\n\r"));
+		uart_puts_P(PSTR("\n\r"));
+		uart_puts_P(PSTR(TERM_COL_WHITE));
+		uart_puts_P(PSTR("Aktuelle Slave-ID:  "));
+		uart_puts_P(PSTR(TERM_COL_RED));
+		if (slaveid != 'e') {
+			if (slaveid < 10) uart_putc('0');
+			uart_shownum(slaveid, 'd');
+		}
+		else {
+			uart_puts_P(PSTR("FEHLER"));
+		}
+		uart_puts_P(PSTR("\n\r"));
+		uart_puts_P(PSTR(TERM_COL_WHITE));
+		uart_puts_P(PSTR("\n\n\n\r"));
+		uart_puts_P(PSTR("(I)Ds ändern, Abbruch mit beliebiger anderer Taste! "));
+
+		// Evaluate input
+		while (!choice) {
+			choice = uart_getc();
+		}
+		choice |= 0x20;
+		uart_putc(choice);
+		uart_puts_P(PSTR("\n\r"));
+
+		uart_puts_P(PSTR("\n\r"));
+		switch (choice) {
+			case 'i': {
+				uart_puts_P(PSTR("Neue Unique-ID (01-30, ENTER = alter Wert): "));
+				uart_puts_P(PSTR(TERM_COL_RED));
+				uniqueid_old = uniqueid;
+				uniqueid = changenumber();
+				if (uniqueid == 255) uniqueid = uniqueid_old;
+				uart_puts_P(PSTR(TERM_COL_WHITE));
+
+				uart_puts_P(PSTR("\n\rNeue Slave-ID (01-30, ENTER = alter Wert):  "));
+				uart_puts_P(PSTR(TERM_COL_RED));
+				slaveid_old = slaveid;
+				slaveid = changenumber();
+				if (slaveid == 255) slaveid = slaveid_old;
+				uart_puts_P(PSTR(TERM_COL_WHITE));
+
+				if (((uniqueid != uniqueid_old) || (slaveid != slaveid_old))) changes = 1;
+				break;
+			}
+			case 't': {
+				if (!devicetype) {
+					if (slaveid && uniqueid) {
+						uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
+					}
+					slaveid_old = slaveid;
+					uniqueid_old = uniqueid;
+					slaveid = 0;
+					uniqueid = 0;
+					if (uniqueid_old || slaveid_old) changes = 1;
+				}
+				break;
+			}
+			default: {
+				break;
+			}
+		}
+
+		if (changes) {
+			addresses_save(uniqueid, slaveid);
+			if (address_valid(uniqueid, slaveid)) {
+				uart_puts_P(PSTR("\n\n\rÄnderung erfolgreich!\n\r"));
+			}
+			else {
+				uart_puts_P(PSTR("Fehler! Bitte erneut versuchen!\n\r"));
+			}
+			uart_puts_P(PSTR("\n\rNeustart...\n\n\r"));
+		}
+		else {
+			uart_puts_P(PSTR("\n\rKeine Änderung vorgenommen\n\n\r"));
+		}
+
 	}
 	else {
-		uart_puts_P(PSTR("\n\rKeine Änderung vorgenommen\n\n\r"));
+		uart_puts_P(PSTR("\n\rDevice ist Transmitter, IDs nicht änderbar!\n\n\r"));
 	}
 	return changes;
 }

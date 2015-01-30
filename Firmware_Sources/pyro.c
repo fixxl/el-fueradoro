@@ -346,8 +346,21 @@ int main(void) {
 // Initialise LEDs
 	led_init();
 
-// Get Slave- und Unique-ID from EEPROM
-	update_addresses(&unique_id, &slave_id);
+// Initialise ADC and find out what kind of device the software runs on
+	adc_init();
+	const uint8_t ig_or_notrans = (adc_read(5) < 156);
+
+// Get Slave- und Unique-ID from EEPROM for ignition devices
+	if(ig_or_notrans) {
+		update_addresses(&unique_id, &slave_id);
+	}
+	else {
+		if(unique_id || slave_id) {
+			addresses_save(0, 0);
+		}
+		unique_id = 0;
+		slave_id = 0;
+	}
 	led_green_on();
 
 // Initialise arrays and show slave-id by blinking!
@@ -371,12 +384,8 @@ int main(void) {
 	led_orange_off();
 
 
-// Initialise ADC and find out what kind of device the software runs on
-	adc_init();
-	const uint8_t ig_or_notrans = (adc_read(5) < 156);
-
 // Initialise devices
-	if (TRANSMITTER && (!ig_or_notrans)) {
+	if (TRANSMITTER) {
 		device_initialisation(0);
 	}
 	else {
