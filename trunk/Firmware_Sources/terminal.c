@@ -290,9 +290,8 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* 
 		else uart_puts_P(PSTR("\t"));
 		i++;
 	}
-	uart_puts_P(PSTR("\n\r"));
 	if (wrongids) uart_puts_P(PSTR(TERM_COL_RED));
-	uart_puts_P(PSTR("Fehlerhafte/doppelte IDs: "));
+	uart_puts_P(PSTR("\n\rFehlerhafte/doppelte IDs: "));
 	uart_shownum(wrongids, 'd');
 	if (wrongids) uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(PSTR("\n\r"));
@@ -301,7 +300,7 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t* temps, int8_t* 
 // Show number of boxes for every Slave-ID
 void list_array(char *arr) {
 	uint8_t i = 0;
-	uart_puts_P(PSTR("\n\r\nSlave-ID: Anzahl Boxen\n\r"));
+	uart_puts_P(PSTR("\n\rSlave-ID: Anzahl Boxen\n\r"));
 	while (i < 30) {
 		if (i < 9) uart_putc('0');
 		uart_shownum(i + 1, 'd');
