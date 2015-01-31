@@ -351,24 +351,33 @@ int main(void) {
 	const uint8_t ig_or_notrans = (adc_read(5) < 156);
 
 // Get Slave- und Unique-ID from EEPROM for ignition devices
-	if(ig_or_notrans) {
-		update_addresses(&unique_id, &slave_id);
+	update_addresses(&unique_id, &slave_id);
+	if (ig_or_notrans) {
+		if (!unique_id || !slave_id) {
+			if (!unique_id) unique_id = 30;
+			if (!slave_id) slave_id = 30;
+			addresses_save(unique_id, slave_id);
+			wdt_enable(6);
+			while (1)
+				;
+		}
 	}
 	else {
-		if(unique_id || slave_id) {
+		if (unique_id || slave_id) {
 			addresses_save(0, 0);
+			wdt_enable(6);
+			while (1)
+				;
 		}
-		unique_id = 0;
-		slave_id = 0;
 	}
 	led_green_on();
 
 // Initialise arrays and show slave-id by blinking!
 	for (uint8_t warten = 0; warten < MAX_ARRAYSIZE; warten++) {
-		if(warten < slave_id) {
+		if (warten < slave_id) {
 			led_green_toggle();
 			led_orange_toggle();
-			_delay_ms(300);
+			_delay_ms(200);
 		}
 		uart_field[warten] = 1;
 		tx_field[warten] = 0;
@@ -382,7 +391,6 @@ int main(void) {
 	}
 	led_green_off();
 	led_orange_off();
-
 
 // Initialise devices
 	if (TRANSMITTER) {
@@ -746,7 +754,7 @@ int main(void) {
 					case FIRE: {
 						for (uint8_t round = 1; round < 3; round++) { // Loop twice
 							nr = 0;
-							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:\t") : PSTR("\n\rKanal:\t   ")); // First for slave-id, then for channel
+							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:\t") : PSTR("\n\rKanal:  \t")); // First for slave-id, then for channel
 							for (i = 0; i < 2; i++) { // Get the user to assign the numbers with 2 digits
 								inp = 0;
 								while (!inp) {
