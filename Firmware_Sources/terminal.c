@@ -179,19 +179,6 @@ uint8_t configprog(const uint8_t devicetype) {
 				if (((uniqueid != uniqueid_old) || (slaveid != slaveid_old))) changes = 1;
 				break;
 			}
-			case 't': {
-				if (!devicetype) {
-					if (slaveid && uniqueid) {
-						uart_puts_P(PSTR("Device ist jetzt Transmitter!\n\r"));
-					}
-					slaveid_old = slaveid;
-					uniqueid_old = uniqueid;
-					slaveid = 0;
-					uniqueid = 0;
-					if (uniqueid_old || slaveid_old) changes = 1;
-				}
-				break;
-			}
 			default: {
 				break;
 			}
