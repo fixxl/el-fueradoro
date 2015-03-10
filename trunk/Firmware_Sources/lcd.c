@@ -23,10 +23,10 @@ static void lcd_busycheck(void) {
 // Clear data bits
 static void lcd_clear_all_bits(void) {
 #if(LCD_BIT_MODE==8)
-	DB0PORT &= ~(1<<DB0);
-	DB1PORT &= ~(1<<DB1);
-	DB2PORT &= ~(1<<DB2);
-	DB3PORT &= ~(1<<DB3);
+	DB0PORT &= ~(1 << DB0);
+	DB1PORT &= ~(1 << DB1);
+	DB2PORT &= ~(1 << DB2);
+	DB3PORT &= ~(1 << DB3);
 #endif
 
 	DB4PORT &= ~(1 << DB4);
@@ -38,10 +38,10 @@ static void lcd_clear_all_bits(void) {
 // Set data bits
 static void lcd_set_all_bits() {
 #if(LCD_BIT_MODE==8)
-	DB0PORT |= (1<<DB0);
-	DB1PORT |= (1<<DB1);
-	DB2PORT |= (1<<DB2);
-	DB3PORT |= (1<<DB3);
+	DB0PORT |= (1 << DB0);
+	DB1PORT |= (1 << DB1);
+	DB2PORT |= (1 << DB2);
+	DB3PORT |= (1 << DB3);
 #endif
 
 	DB4PORT |= (1 << DB4);
@@ -56,14 +56,14 @@ static void lcd_transfer(uint8_t data) {
 	lcd_clear_all_bits();
 
 #if(LCD_BIT_MODE==8)
-	if(data&1) DB0PORT |= 1<<DB0;
-	if(data&2) DB1PORT |= 1<<DB1;
-	if(data&4) DB2PORT |= 1<<DB2;
-	if(data&8) DB3PORT |= 1<<DB3;
-	if(data&16) DB4PORT |= 1<<DB4;
-	if(data&32) DB5PORT |= 1<<DB5;
-	if(data&64) DB6PORT |= 1<<DB6;
-	if(data&128) DB7PORT |= 1<<DB7;
+	if (data & 1) DB0PORT |= 1 << DB0;
+	if (data & 2) DB1PORT |= 1 << DB1;
+	if (data & 4) DB2PORT |= 1 << DB2;
+	if (data & 8) DB3PORT |= 1 << DB3;
+	if (data & 16) DB4PORT |= 1 << DB4;
+	if (data & 32) DB5PORT |= 1 << DB5;
+	if (data & 64) DB6PORT |= 1 << DB6;
+	if (data & 128) DB7PORT |= 1 << DB7;
 	lcd_enable();
 #endif
 
@@ -152,10 +152,10 @@ static uint8_t lcd_getaddr() {
 	addr |= (DB6PIN & (1 << DB6)) ? 64 : 0;
 	addr |= (DB7PIN & (1 << DB7)) ? 128 : 0;
 #if(LCD_BIT_MODE==8)
-	addr |= (DB0PIN&(1<<DB0))?1:0;
-	addr |= (DB1PIN&(1<<DB1))?2:0;
-	addr |= (DB2PIN&(1<<DB2))?4:0;
-	addr |= (DB3PIN&(1<<DB3))?8:0;
+	addr |= (DB0PIN & (1 << DB0)) ? 1 : 0;
+	addr |= (DB1PIN & (1 << DB1)) ? 2 : 0;
+	addr |= (DB2PIN & (1 << DB2)) ? 4 : 0;
+	addr |= (DB3PIN & (1 << DB3)) ? 8 : 0;
 #endif
 	E_LOW;
 
@@ -183,10 +183,10 @@ uint8_t lcd_cursorread() {
 	uint8_t zwsp = 0;
 
 #if(LCD_BIT_MODE==8)
-	zwsp |= (DB0PIN&(1<<DB0))?1:0;
-	zwsp |= (DB1PIN&(1<<DB1))?2:0;
-	zwsp |= (DB2PIN&(1<<DB2))?4:0;
-	zwsp |= (DB3PIN&(1<<DB3))?8:0;
+	zwsp |= (DB0PIN & (1 << DB0)) ? 1 : 0;
+	zwsp |= (DB1PIN & (1 << DB1)) ? 2 : 0;
+	zwsp |= (DB2PIN & (1 << DB2)) ? 4 : 0;
+	zwsp |= (DB3PIN & (1 << DB3)) ? 8 : 0;
 #endif
 
 	zwsp |= (DB4PIN & (1 << DB4)) ? 16 : 0;
@@ -199,10 +199,10 @@ uint8_t lcd_cursorread() {
 
 	// Datenleitungen werden Eingänge mit akt. Pullups
 #if(LCD_BIT_MODE==8)
-	DB0DDR &= ~(1<<DB0);
-	DB1DDR &= ~(1<<DB1);
-	DB2DDR &= ~(1<<DB2);
-	DB3DDR &= ~(1<<DB3);
+	DB0DDR &= ~(1 << DB0);
+	DB1DDR &= ~(1 << DB1);
+	DB2DDR &= ~(1 << DB2);
+	DB3DDR &= ~(1 << DB3);
 #endif
 	DB4DDR &= ~(1 << DB4);
 	DB5DDR &= ~(1 << DB5);
@@ -220,10 +220,10 @@ uint8_t lcd_cursorread() {
 
 	// Datenleitungen werden Ausgänge
 #if(LCD_BIT_MODE==8)
-	DB0DDR |= (1<<DB0);
-	DB1DDR |= (1<<DB1);
-	DB2DDR |= (1<<DB2);
-	DB3DDR |= (1<<DB3);
+	DB0DDR |= (1 << DB0);
+	DB1DDR |= (1 << DB1);
+	DB2DDR |= (1 << DB2);
+	DB3DDR |= (1 << DB3);
 #endif
 	DB4DDR |= (1 << DB4);
 	DB5DDR |= (1 << DB5);
@@ -234,10 +234,10 @@ uint8_t lcd_cursorread() {
 
 	// Datenleitungswerte von vor der Abfrage widerherstellen
 #if(LCD_BIT_MODE==8)
-	if(zwsp&1) DB0PORT |= 1<<DB0;
-	if(zwsp&2) DB1PORT |= 1<<DB1;
-	if(zwsp&4) DB2PORT |= 1<<DB2;
-	if(zwsp&8) DB3PORT |= 1<<DB3;
+	if (zwsp & 1) DB0PORT |= 1 << DB0;
+	if (zwsp & 2) DB1PORT |= 1 << DB1;
+	if (zwsp & 4) DB2PORT |= 1 << DB2;
+	if (zwsp & 8) DB3PORT |= 1 << DB3;
 #endif
 	if (zwsp & 16) DB4PORT |= 1 << DB4;
 	if (zwsp & 32) DB5PORT |= 1 << DB5;
@@ -290,7 +290,7 @@ void lcd_arrize(int32_t zahl, char *feld, uint8_t digits, uint8_t vorzeichen) {
 	if (neededlength < digits) neededlength = digits;
 
 	for (uint8_t i = neededlength + vorzeichen; (i - vorzeichen); i--) {
-		feld[i-1] = (zahl % 10) + 0x30;
+		feld[i - 1] = (zahl % 10) + 0x30;
 		zahl /= 10;
 	}
 	feld[neededlength + vorzeichen] = '\0';
@@ -310,10 +310,10 @@ void lcd_init(void) {
 	RSDDR |= 1 << RS;
 
 #if(LCD_BIT_MODE==8)
-	DB0DDR |= (1<<DB0);
-	DB1DDR |= (1<<DB1);
-	DB2DDR |= (1<<DB2);
-	DB3DDR |= (1<<DB3);
+	DB0DDR |= (1 << DB0);
+	DB1DDR |= (1 << DB1);
+	DB2DDR |= (1 << DB2);
+	DB3DDR |= (1 << DB3);
 #endif
 	DB4DDR |= (1 << DB4);
 	DB5DDR |= (1 << DB5);
