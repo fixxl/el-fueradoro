@@ -24,8 +24,8 @@ uint8_t address_valid(uint8_t uniqueid, uint8_t slaveid) {
 	uint8_t mem_unique, mem_slave, mem_sum, mem_ucrc, mem_scrc, mem_bothcrc;
 	uint8_t sum, ucrc, scrc, bothcrc;
 
-	for (uint8_t startval = START_ADDRESS_ID_STORAGE; startval < (START_ADDRESS_ID_STORAGE + 3 * STEP_ID_STORAGE);
-			startval += STEP_ID_STORAGE) {
+	for (uint8_t startval = START_ADDRESS_ID_STORAGE;
+			startval < (START_ADDRESS_ID_STORAGE + 3 * STEP_ID_STORAGE); startval += STEP_ID_STORAGE) {
 
 		// Get values from eeprom
 		mem_unique = eeread(startval);
@@ -65,11 +65,11 @@ static void address_get(uint8_t *uid, uint8_t *sid, uint8_t storage_position) {
 uint8_t addresses_load(uint8_t *uniqueid, uint8_t *slaveid) {
 	uint8_t sid_local = *slaveid, uid_local = *uniqueid;
 
-	for (uint8_t i = 0; i < 3; i++) {								// Try up to three times (three storage places)
+	for (uint8_t i = 0; i < 3; i++) {						// Try up to three times (three storage places)
 		address_get(&uid_local, &sid_local, i);						// Read from memory
 
 		if (address_valid(uid_local, sid_local)) {					// If valid numbers are found
-			if (ID_MESS) addresses_save(uid_local, sid_local); 			// Check if all storage positions are correct, rewrite if not
+			if (ID_MESS) addresses_save(uid_local, sid_local); // Check if all storage positions are correct, rewrite if not
 			*uniqueid = uid_local;
 			*slaveid = sid_local;
 			return 1;
