@@ -38,7 +38,6 @@
 #include "adc.h"
 #include "lcd.h"
 #include "shiftregister.h"
-#include "dht.h"
 #include "1wire.h"
 
 #if RFM==69
@@ -53,9 +52,5 @@
 //extern volatile uint8_t transmit_flag, key_flag;
 //extern volatile uint16_t clear_lcd_tx_flag, clear_lcd_rx_flag, hist_del_flag;
 
-
-#if ((W1PORT>TEMPHUM_PORT)+(W1PORT<TEMPHUM_PORT)+(W1NUM>TEMPHUM_NUM)+(W1NUM<TEMPHUM_NUM))
-#error Temperature sensor ports not equal!
-#endif
 
 #endif /* GLOBAL_H_ */

@@ -163,16 +163,11 @@ uint16_t rfmtalk(void) {
 
 // Temperature sensor detection
 uint8_t tempident(void) {
-	int16_t var1 = 0, var2 = 0;
-	uint8_t checkup = dht_read(&var1, &var2);
+	uint8_t checkup = w1_reset();
 
 	// Type of temp. sensor is detected by return value
 	switch (checkup) {
 		case 0: {
-			return DHT22;
-			break;
-		}
-		case 4: {
 			return DS18B20;
 			break;
 		}
@@ -198,12 +193,6 @@ int8_t tempmeas(uint8_t type) {
 			temp_hex = w1_byte_rd();
 			temp_hex += (w1_byte_rd()) << 8;
 			temperature = w1_tempread_to_celsius(temp_hex);
-			break;
-		}
-
-		case DHT22: {
-			int16_t humidity;
-			dht_read(&temperature, &humidity);
 			break;
 		}
 		default: {
