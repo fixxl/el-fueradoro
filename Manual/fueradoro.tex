@@ -130,7 +130,7 @@ In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte S
 \centering
 \includegraphics[width=.4\textwidth]{Bilder/Transmitter}
 \caption{Transmitter}
-\label{fig:senderadapter}
+\label{fig:transmitter}
 \end{figure}
 %
 \begin{figure}
@@ -140,7 +140,7 @@ In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte S
 \label{fig:zuendbox}
 \end{figure}
 
-Die in Abbildung \ref{fig:senderadapter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das -- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur -- frei nutzbare Frequenzband um $\unit[868]{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
+Die in Abbildung \ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das -- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur -- frei nutzbare Frequenzband um $\unit[868]{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
 
 Die Zündboxen, in Abbildung \ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\unit[22{,}5]{V}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16 n-Kanal-MOSFETs. Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom über den LED-Zweig auf unter \unit[5]{mA} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme -- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen -- verbunden ist, also ein geschlossener Strompfad von $\unit[22{,}5]{V}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen LED signalisiert.
 
@@ -611,7 +611,7 @@ Q1 & 1 & Standardquarz, Grundton, 9,8304 Mhz & Reichelt & 9,8304-HC49U-S & \EUR{
 \\ \hline
 \multicolumn{8}{c}{Widerstände} \\
 R13 & 1 & 6k8 & Reichelt & 1/4W 6,8K & \EUR{0,08} & \EUR{0,08} & \\
-R12, R14 &2 & 3k3 & Reichelt & METALL 3,90K & \EUR{0,08} & \EUR{0,16} & \\
+R12, R14 &2 & 3k3 & Reichelt & METALL 3,30K & \EUR{0,08} & \EUR{0,16} & \\
 R1, R2, R3, R7 & 4 & 10k & Reichelt & METALL 10,0K & \EUR{0,08} & \EUR{0,33} & \\
 R4{\dots}6, R8{\dots}11 & 7 & 1k0 & Reichelt & METALL 1,00K & \EUR{0,08} & \EUR{0,57} & 10 billiger!\\
 \\ \hline
@@ -759,7 +759,7 @@ Im eigenen Interesse ist darauf zu achten, diese Arbeiten sorgfältig und unter E
 
 \section{Kabel}
 
-Zur Verbindung der Platinen mit der Peripherie wird bei El Fueradoro eine Vielzahl von Kabeln benötigt, die grob in drei Kategorien unterteilt werden können:
+Zur Verbindung der Platinen mit der Peripherie wird bei {\anlage} eine Vielzahl von Kabeln benötigt, die grob in drei Kategorien unterteilt werden können:
 \begin{enumerate}
 \item  Flachbandkabel bzw. Flachbandkabel-Adern zum Anschluss von LCD (außer Hintergrund-
 beleuchtung), LEDs und Schlüsselschalter
@@ -826,35 +826,91 @@ Nachdem die Platinen nun fertig bestückt sind, folgen die Schritte für die Ferti
 \section{Peripherie}
 
 \subsection{Transmitter}
-LCD-Ausschnitt
+Als Gehäuse für den Transmitter wird das schwarze Kunststoffgehäuse GEH KS 50 aus dem Sortiment von Reichelt verwendet. Es besteht aus zwei miteinander zu verschraubenden Teilen, wobei der dünne Teil, auf dem später die Platine befestigt wird, als Rückwand dient. Dementsprechend sind die Bezeichnungen in der folgenden Beschreibung zu verstehen.
 
-RS232-Ausschnitt
+\begin{figure}
+\centering
+\includegraphics[]{bilder/lcddimensions}
+\caption{Abmessungen (in mm) des LCD}
+\label{fig:lcddimensions}
+\end{figure}
 
-LED-Ausschnitt
+Die Vorderseite des Gehäuses muss zunächst mit einem Ausschnitt von \mbox{97\,x\,39,5\,mm} und vier 3mm-Bohrungen für die Anbringung des LCD versehen werden. Die Abstände zueinander sind in Abbildung \ref{fig:lcddimensions} verdeutlicht. Wer nicht auf seine Messkünste vertrauen möchte oder ein LCD mit abweichenden Abmessungen besitzt, sollte zunächst einen passenden Ausschnitt für den Bildschirm mittig in der Fläche anbringen, anschließend können das LCD aufgelegt und die vier Bohrlöcher markiert und gebohrt werden.
 
-Antennenloch
+Bevor man das LCD einschraubt, muss noch eine Aussparung für den Sub-D-Anschluss, ein Loch für den Antennenanschluss (6,5 mm), vier Löcher für die Status-LEDs (5 mm)und eine Kerbe für die Versorgungskabeldurchführung in die Wand, welche später als Oberseite des Gehäuses dient, eingebracht werden.
+
+Hierfür sollte man zunächst die fertig bestückte Platine mittels zweier Schrauben in ihrer finalen Position festschrauben und das Oberteil so anlegen, dass die Position der Aussparung für die Sub-D-Buchse angezeichnet werden kann. Die Abmessung der Aussparung sollte \mbox{31\,x\,12,5\,mm} betragen. Die Positionen der restlichen Löcher sind aufgrund der Kabelverbindung mit der Platine unkritisch, die ungefähre Lage kann Abbildung \ref{fig:transmitter} auf Seite \pageref{fig:transmitter} entnommen werden. Das Versorgungskabel mit USB-Stecker wird zwecks Zugentlastung zwischen den beiden zu verschraubenden Teilen eingeklemmt, die Kerbe sollte daher nicht allzu groß ausgeführt werden. Die Bohrarbeiten am Transmitter sind damit erledigt!
+
+Nun müssen noch die elektrischen Verbindungen zwischen Platine und Peripherie hergestellt und die Peripherieteile anschließend befestigt werden -- zuerst die vier Status-LEDs:
+
+\begin{enumerate}\label{enum:leds}
+\item Die Verbindung der Adern des Flachbandkabels auf einer Länge von etwa 35 mm auftrennen
+\item Auf jede Ader einen dünnen Schrumpfschlauch der Länge 15 mm stecken (noch nicht erhitzen!)
+\item Das kürzere Anschlussbein der LED (Kathode) mit dem Seitenschneider auf eine Länge von 8\,mm trimmen und die mit GND verbundene Ader anlöten
+\item Das längere Anschlussbein der LED (Anode) mit dem Seitenschneider auf eine Länge von 8\,mm trimmen und die andere Ader anlöten
+\item Schrumpfschläuche bis ans LED-Gehäuse vorschieben und per Heißluft schrumpfen
+\end{enumerate}
+
+Anschließend das Flachbandkabel für das LCD vorbereiten, d.h. abisolieren, verzinnen und Verbindungen soweit lösen, dass alle Anschlüsse bequem erreicht werden können. Da das LCD im 4-Bit-Modus betrieben wird, werden nur die Pins 1-6 sowie 11-16 angeschlossen, 7-10 bleiben offen. Bei Anschluss der Pins 15 und 16 darauf achten, Anode und Kathode nicht zu vertauschen; die Belegung ist in der Regel so, dass die Anode an Pin 15 herausgeführt ist, kann aber von LCD zu LCD variieren. Der Lötkolben kann danach ausgeschaltet werden, jetzt geht es an die Befestigung.
+
+Zunächst wird das LCD am Gehäuse festgeschraubt, wobei darauf zu achten ist, dass die Oberseite auch in die Richtung von Antennen- und Sub-D-Anschluss zeigt. Anschließend die LEDs um den Gehäusering mit Sekunden- oder Heißkleber bestreichen und anschließend für einige Sekunden fest in eines der dafür vorgesehenen Löcher pressen. Nun die SMA-Buchse fest am Gehäuse anschrauben und das andere Kabelende mit der Buchse am Funkmodul-Adapter verbinden.
+
+Unter möglichst geringer Torsion sollte dann der Adapter in die Buchsenleisten auf der Platine gesteckt werden.
+
+Nun muss man noch die Antenne anschrauben. Wenn der Bootloader sich bereits auf dem Controller befindet, kann man das Gehäuse zuschrauben. Ansonsten den Transmitter mit Energie versorgen und den Bootloader wie in Abschnitt \ref{ch:bootloader} beschrieben flashen. Jetzt ist der Transmitter fertig aufgebaut und kann zugeschraubt werden! Die Firmware sollte kann wie in Abschnitt \ref{ch:firmwareupdate} beschrieben über die serielle Schnittstelle aufgespielt werden, wobei beim ersten Mal noch die Angabe des Dateinamens nötig ist.
 
 \subsection{Zündbox}
 Abbildung \ref{fig:zuendboxbohren} zeigt die Bohrschablone für die Oberseite des Kunststoffgehäuses der Zündbox (Kunststoffgehäuse 021-002-084 von Pollin). Diese kann dazu verwendet werden, eine Schablone aus Sperrholz oder Metall anzufertigen, welche später auf die Boxenoberseite gelegt wird, um die nötigen Bohrungen vorzunehmen. 
 
-Es ist dabei auf die richtige Orientierung der Schablone zu achten, da die Platinenbohrungen nicht symmetrisch sind und die Status- und Zündkreis-LEDs über den entsprechenden Anschlüssen auf der Platine liegen sollten. Ebenso muss die Schablone sehr exakt mittig positioniert werden, damit die Löcher nicht mit Schraubenhalterungen in den Ecken interferieren.
-
 \begin{figure}
 \centering
-\includegraphics[angle=90,scale=1]{Bilder/Zuendboxbohrschablone}
+\includegraphics[angle=90,scale=1]{Bilder/Bohrschablone}
 \caption{Bohrschablone für Zündboxoberseite}
 \label{fig:zuendboxbohren}
 \end{figure}
 
+Es ist beim Bohren der Box auf die richtige Orientierung der Schablone zu achten, da die Befestigungsbohrungen für die Platine nicht symmetrisch sind (Schrauben auf der Seite der seriellen Schnittstelle sind enger zusammen als die auf der Kanal-LED-Seite) und die Gehäuseteile durch ein Nut-Feder-System nur in einer Kombination aufeinander gesteckt werden können.
+
+Damit die Löcher nicht mit Schraubenhalterungen in den Ecken interferieren, sollte zunächst im Gehäuseinneren der passende Ort für die Kanal-LEDs von Kanal 4 und 16 (äußerste grüne LEDs in der obersten und untersten Reihe, Abstand 75\,mm) gesucht, die beiden Löcher mit einem 3-mm-Bohrer gebohrt und die Schablone auf der Oberseite in diesen beiden Bohrungen befestigt werden.
+
 Die Bohrlöcher für die 16 Kanal-LEDs sollten mit einem 3-mm-Bohrer, die der vier Status-LEDs mit einem 5-mm-Bohrer ausgeführt werden. Die LEDs werden später (nach dem Verkabeln und Festlöten des Kabels auf der Platine) seitlich mit Heißkleber bestrichen von unten bis zum Anschlag in diese Löcher eingeschoben.
 
-Da die Lautsprecherklemmen mit M3-Gewindeschrauben befestigt werden, wäre der ideale Bohrdurchmesser für die 16 Schraubenlöcher $\unit[3{,}2]{mm}$. Sollte dieser Durchmesser nicht vorhanden sein, kann aber auch mit $\unit[3{,}5]{mm}$ gearbeitet werden. Für die Lötfahnen der Klemmen ist eine rechteckige Aussparung von $\unit[4{,}5x2]{mm}$ nötig, als schnelle Lösung kann auch jeweils ein 5-mm-Loch durch den Diagonalenschnittpunkt der kleinen Rechtecke gebohrt werden.
+Da die Lautsprecherklemmen mit M3-Gewindeschrauben befestigt werden, wäre der ideale Bohrdurchmesser für die 16 Schraubenlöcher 3,2\,mm. Sollte dieser Durchmesser nicht vorhanden sein, kann aber auch mit 3,5\,mm gearbeitet werden. Für die Lötfahnen der Klemmen ist eine rechteckige Aussparung von \mbox{4,5\,x\,2\,mm} nötig, als schnelle Lösung kann auch jeweils ein 5-mm-Loch durch den Mittelpunkt (Diagonalenschnittpunkt) dieser Flächen gebohrt werden.
 
-Die rechteckige Aussparung für den Netzschalter sollte die Größe $\unit[19x13]{mm}$ besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von $\unit[12]{mm}$ und der Durchsteckplatz für die SMA-Buchse sollte mit $\unit[6{,}5]{mm}$ vorgebohrt werden.
+Die rechteckige Aussparung für den Netzschalter sollte die Größe \mbox{19\,x\,13\,mm} besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von 12\,mm und der Durchsteckplatz für die SMA-Buchse sollte mit 6,5\,mm vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt.
+
+In die linke Einschub-Seitenwand muss, sofern noch nicht im Rahmen des Lötens geschehen, ein Loch für die Durchführung der Batteriekabel mit einer Größe je nach Kabeldurchmesser.
+
+Um die Position der Sub-D-Buchse zu finnden, muss die Platine möglichst identisch zu ihrer späteren Position ins Gehäuse eingelegt werden, die Aussparung beträgt wie beim Transmitter \mbox{31\,x\,12,5\,mm}. Wenn die Aussparung fertig ist, kann die Platine in ihre endgültige Position gebracht und mit vier Schrauben befestigt werden. Die linke Seitenwand bleibt noch ausgesteckt. Jetzt ist wieder der Lötkolben dran!
+
+Zunächst vier Drahtstücke á 80\,mm abschneiden und durch die übereinander liegenden Anschlüsse für die roten Klemmen ziehen und mit den Klemmen verlöten. Die Kanal- und Status-LEDs wie auf Seite \pageref{enum:leds} beschrieben mit den zugehörigen Flachbandkabeln verbinden, anschließend den Schlüssel- und den Netzschalter mit den zugehörigen Anschlusskabeln.
+
+Bei den Schritten in den folgenden beiden Absätzen ist Sorgfalt geboten, da die Kanäle und LEDs richtig zugeordnet werden müssen, um später mit dem entsprechenden Befehl auch den richtigen Kanal zu zünden!
+
+Zunächst müssen die 16 Kabel mit den zugehörigen schwarzen Klemmen verbunden werden, was anhand des Layouts in Abbildung \ref{fig:zuendboxlayout} auf Seite \pageref{fig:zuendboxlayout} erklärt werden soll. Kanal 1 wird vom Transistor Q2 gesteuert, Kanal 2 von Q3, Kanal 3 von Q4 und allgemein Kanal x-1 von Qx . Entsprechend ist das Kabel, welches an derjenigen Lötstelle angelötet ist, die durch die dicke blaue Linie unmittelbar mit dem mittleren Pin (Drain) von Q2 verbunden ist, an der Lötfahne der schwarzen Klemme ganz unten links -- bezogen auf Abbildung \ref{fig:zuendbox} -- anzubringen. Das Kabel an der Drain von Q3 (Zick-Zack-Anordnung der Transistoren beachten!) wird mit der schwarzen Klemme daneben verbunden, das an Q4 mit der dritten und das an Q5 schließlich mit der letzten Klemme in der Reihe, die unmittelbar neben der Viererreihe für die Kanal-LEDs liegt. Man sollte sich nicht dadurch verwirren lassen, dass aufgrund des umgedrehten Deckels alles seitenverkehrt ist, man die Klemmen also beim Löten von rechts nach links belegt. Analog zum bisherigen Vorgehen verfährt man in der Reihe darüber und den beiden anderen Reihen.
+
+Nun werden mit Heiß- oder Sekundenkleber die Kanal-LEDs in die richtige Position gesteckt.
+
+Für Kanal n ist dabei immer auch LEDn zuständig, für Kanal 1 also LED1, die über R21 mit der Drain von Q2 verbunden ist, für Kanal 2 LED2, usw. Sinnvollerweise ist LED1 in das Loch zu kleben, welches in der untersten Reihe direkt neben den Klemmen liegt, LED8 dementsprechend in der zweituntersten Reihe ganz außen usw.
+
+Danach werden die vier Kabel am Leistungswiderstand jeweils mit einem der gespannten Drähte an den roten Klemmen verbunden. Hierbei spielt die Zuordnung (welches Kabel an welchen Draht?) keine Rolle. Damit sind sämtliche Kabel im inneren der Box nun verlötet und die Arbeit nähert sich langsam dem Ende!
+
+Nun die SMA-Buchse fest am Gehäuse anschrauben, die Antenne vorerst dort befestigen und das andere Kabelende mit der Buchse am RFM-Adapter verbinden. Unter möglichst geringer Torsion sollte dann der RFM-Adapter mit dem aufgelöteten Funkmodul in die Buchsenleisten auf der Platine gesteckt werden.
+
+Wenn der Bootloader bereits auf den Controller geflasht wurde, kann man jetzt die beiden Seitenwände einstecken und die Box zuschrauben (wenn man sich sicher ist, dass sie funktioniert\dots). Ansonsten muss die Box noch offen bleiben.
+
+Den männlichen Teil des Steckerpaars mit den aus der Box kommenden Batteriekabeln verlöten (Schrumpfschlauch nicht vergessen!), den weiblichen über zwei Kabel an der Batterie, wobei jeweils auf die korrekte Polung zu achten ist\footnote{Bei Deans-T-Steckern wird der obere Balken des T mit + verbunden, bei Tamiya-Steckern das eckige Profil}.
+
+Für die erste Inbetriebnahme sollte, wie zu Beginn des Kapitels empfohlen, idealerweise eine Laborspannungsquelle, ein kurzsschlussfestes Steckernetzteil oder aber eine träge 3 A-Sicherung in der Zuleitung verwendet werden. Nun die Box über den Netzschalter einschalten und, falls noch nicht geschehen, den Bootloader via ISP flashen. Nun kann die Box zugeschraubt und die
+Firmware eingespielt werden.
+
+
+
 
 \subsection{Koffer}
 
 \chapter{Aufspielen des Bootloaders}
+\label{ch:bootloader}
 
 Bevor Firmwareupdates über die serielle Schnittstelle eingespielt werden können, muss zunächst ein Programm auf den Controller gespielt werden, dessen Aufgabe es ist, die eigentliche Firmware in den Speicher zu laden und zu starten. Dieses Programm ist der so genannte Bootloader, welcher beim Start des Devices für eine Sekunde überprüft, ob ein Firmwareupdate vorgenommen werden oder die {\anlage}-Firmware normal ausgeführt werden soll.
 
@@ -883,6 +939,15 @@ Die für {\anlage} benötigten Einstellungen für Fuses und die Datenübertragung we
 
 \section{LCD an 3{,}3\,V}
 
+Zwar gibt es inzwischen auch LCDs, welche für eine Versorgung mit 3,3\,V ausgelegt sind, viele Displays jedoch sind noch für 5\,V ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
+
+Die Kontrastspannung wird zwischen Pin 3 und Pin 2 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im Normalfall wird Pin 3 auf 0 V gelegt, so dass eine Differenz von 5 V entsteht. Liegen an Pin 2 nur 3,3\,V an, muss an Pin 3 folglich eine negative Spannung anliegen, um die nötige Kontrastspannung zu erreichen. Um diese Spannung zu erreichen, wird der RS232-Treiberbaustein \enquote{angezapft}, der am Pin V- eine Spannung von 3-5,5\,V zur Verfügung stellt. Mit einem Spannungsteiler zwischen V- und GND wird daher Pin des LCD auf -1,7\,V gelegt.
+
+Manche LCDs torpedieren diesen Versuch, indem Pin 3 relativ niederohmig mit GND verbunden wird. Man sollte also im abgeklemmten Zustand den Widerstand zwischen Pin 1 und Pin 3 messen und bei Bedarf den eventuell auf der LCD-Platine be?ndlichen Widerstand zwischen den beiden Pins auslöten.
+
+Die Hintergrundbeleuchtung wird über die Pins 15 und 16 versorgt. In Reihe zu den LEDs befindet sich zwischen diesen Pins in aller Regel noch ein Widerstand, der den Strom durch die LEDs begrenzt und auf 5\,V zwischen den Pins ausgelegt ist. Bei 3,3\,V zwischen Pin 15 \& 16 erscheint das LCD daher möglicherweise zu dunkel, so dass man den Widerstand durch einen kleineren Wert ersetzen kann, um den Strom zu erhöhen.
+
+
 \section{Antennenbau}
 
 Antennen für die verwendete Übertragungsfrequenz von \unit[868]{MHz} gibt es in großer Auswahl zu kaufen, eine einfache, omnidirektionale Antenne, welche ein sehr gutes Stehwellenverhältnis von <1{,}3:1 erzielt, kann aber auch relativ schnell selbst gebaut werden. Auf möglichst exakte Einhaltung der Abmessungen ist dabei zu achten:
@@ -903,6 +968,13 @@ Antennen für die verwendete Übertragungsfrequenz von \unit[868]{MHz} gibt es in 
 \end{figure}
 
 Die Antenne wird als Sperrtopfantenne bezeichnet und besitzt den in Abbildung \ref{fig:antenne} gezeigten Aufbau. Der oberste Teil ist 88\,mm lang und besteht aus dem Innenleiter des Koaxialkabels mit dem ihn umgebenden Dielektrikum. Im mittleren Teil befindet sich ein 66{,}5\,mm langes Röhrchen, welches an seinem oberen Ende mit möglichst kurzer Verbindung an das Schirmgeflecht des Koaxialkabels angelötet wird. Anschließend folgt eine beliebige Länge Koaxialkabel, am Ende schließlich der Steckverbinder zum Anschluss an das Funkmodul.
+
+\begin{figure}[t]
+\centering
+\includegraphics[height=8cm]{Bilder/vswrmessung}%
+\caption{VSWR-Messung der gefertigten Antenne am Netzwerkanalysator}
+\label{fig:vswrmessung}
+\end{figure}
 
 Der Aufbau der Antenne erfolgt folgendermaßen:
 \begin{enumerate}
@@ -926,13 +998,6 @@ Der Aufbau der Antenne erfolgt folgendermaßen:
 \end{enumerate}
 
 Um den SMA-Steckverbinder anzubringen, müssen vom intakten Ende aus gemessen zunächst \unit[10]{mm} des Mantels entfernt werden, anschließend \unit[5]{mm} des Schirmgeflechts und zuletzt auch \unit[2{,}5]{mm} des Dielektrikums. Nun werden Schrumpfschlauch und Crimpröhrchen auf das Kabel geschoben, anschließend der kleine Stecker am Innenleiter angelötet. Das Schirmgeflecht wird aufgefächert, das Gehäuse aufs Kabel geschoben und das Crimpröhrchen aufgesteckt, vercrimpt und Schrumpfschlauch darüber angebracht. Wenn gewünscht kann -- wie in \ref{fig:antenne} rechts zu sehen -- Schrumpfschlauch 9{,}5 als Witterungsschutz über dem gesamten Steckverbinder angebracht werden.
-
-\begin{figure}[!b]
-\centering
-\includegraphics[height=8cm]{Bilder/vswrmessung}%
-\caption{VSWR-Messung der gefertigten Antenne am Netzwerkanalysator}
-\label{fig:vswrmessung}
-\end{figure}
 
 Die in Abbildung \ref{fig:vswrmessung} dargestellte Messung am Netzwerkanalysator zeigt eine sehr gute Anpassung dieser Antenne an \unit[50]{$\Omega$} im Bereich um \unit[868]{MHz}.
 
