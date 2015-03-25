@@ -23,7 +23,7 @@
 \let\origttfamily=\ttfamily
 \renewcommand{\ttfamily}{\origttfamily \hyphenchar\font=`\-}
 
-\renewcommand\tabularxcolumn[1]{m{#1}}
+\renewcommand\tabularxcolumn[1]{p{#1}}
 
 \newcommand{\pic}{\emph{Pyro Ignition Control}}
 \newcommand{\anlage}{\emph{El Fueradoro}}
@@ -78,7 +78,7 @@ Ein ganz spezielles Dankeschön an:
 \item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung
 \item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Steuersoftware und Erklärungen zum Thema elektrische Zündung
 \item \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat
-\item Der \texttt{Brauerei Löscher} für Club Mate den Bastler-Treibstoff
+\item Der \texttt{Brauerei Loscher} für Club Mate, den Bastler-Treibstoff
 \item Die vielen tollen Open-Source- und Freeware-Lösungen, welche die Softwareentwicklung erst möglich gemacht haben:
 \begin{itemize}
 \item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers
@@ -86,7 +86,7 @@ Ein ganz spezielles Dankeschön an:
 \item Kees Bakker und Thomas Holland für die Eclipse-Erweiterung \texttt{AVREclipse}
 \item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}
 \item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{GitHub}
-\item \LaTeX zur Erstellung des Handbuchs
+\item {\LaTeX} zur Erstellung des Handbuchs
 \end{itemize}
 \end{itemize}
 
@@ -112,7 +112,7 @@ Es besteht aus einer mit dem PC verbundene Transmitterbox, welche die von {\pic}
 
 Um möglichst große Flexibilität bei der Gestaltung eines Feuerwerks mit {\anlage} zu gewährleisten, was z.B. die Anzahl der verwendeten Zündboxen oder auch die Tatsache angeht, dass man identische Effekte gerne zeitgleich an zwei weiter voneinander entfernten Orten zünden möchte, können den Boxen per Software zwei Kennnummern (Slave-ID und Unique-ID) zugewiesen werden. Genaueres dazu findet sich im Abschnitt \ref{ch:kommunikationpc}.
 
-Transmitterbox und Zündbox sind in Abbildung \ref{fig:senderadapter} bzw. \ref{fig:zuendbox} mit ihren wesentlichen Bestandteilen gezeigt. Sie werden im weiteren Text unter dem Begriff \enquote{Devices} zusammengefasst, falls sich Aussagen auf beide Teile beziehen, und in den folgenden Kapiteln näher beschrieben. 
+Transmitterbox und Zündbox sind in Abbildung \ref{fig:transmitter} bzw. \ref{fig:zuendbox} mit ihren wesentlichen Bestandteilen gezeigt. Sie werden im weiteren Text unter dem Begriff \enquote{Devices} zusammengefasst, falls sich Aussagen auf beide Teile beziehen, und in den folgenden Kapiteln näher beschrieben. 
 
 \section{Aufbau}
 
@@ -212,7 +212,7 @@ Zur Kommunikation mit einem Computer verfügen alle Devices über eine serielle Sc
 
 Zunächst steht man allerdings in der Regel vor dem Problem, dass zwar die Devices eine serielle Schnittstelle besitzen, moderne Rechner aber nicht mehr mit dem früher standardmäßig verbauten 9-poligen Sub-D-Stecker der RS232-Schnittstelle ausgestattet sind. Diese wurden seit dem Ende der 1990er-Jahre von den USB-Schnittstellen verdrängt. Sollte wider Erwarten am einzusetzenden Rechner ein derartiger Anschluss vorhanden sein, können die nächsten Absätze übersprungen und der COM-Port direkt im Gerätemanager anhand von Tabelle \ref{tab:seriell} konfiguriert werden. Wer nur über USB-Ports verfügt, lese unmittelbar weiter.
 
-Weil in vielen Bereichen noch immer auf RS232 zurückgegriffen wird, existieren Adapterkabel wie in Abbildung \ref{fig:senderadapter} mit USB-Anschluss für den Rechner und einem 9-poligen RS232-Stecker für den Anschluss an der Peripherie, also die Devices von {\anlage}. In diesen Adapterkabeln ist ein Chip verbaut, um die Signalumsetzung von USB auf RS232 und umgekehrt zu bewerkstelligen. Übliche verwendete Chips sind der CH340\footnote{Treiber CH340/341: \url{http://wch.cn/download/list.asp?id=5}}, welcher sich in vielen über eBay aus China angebotenen Modellen befindet, der Prolific PL2303\footnote{Falls die automatische Treiberinstallation unter Windows fehlschlägt, funktioniert -- mit zeitweiligen Aussetzern -- oft der Treiber unter: \url{http://www.cartft.com/support/drivers/TFT/tftdrivers/GPS/PL2303_Prolific_GPS_1013_20090319.zip}} in verschiedenen Versionen oder -- bei edleren und somit auch teureren Varianten -- der uneingeschränkt zu empfehlende FTDI232, mit welchem die in den folgenden Abschnitten beschriebenen Probleme nicht auftreten sollten.
+Weil in vielen Bereichen noch immer auf RS232 zurückgegriffen wird, existieren Adapterkabel wie in Abbildung \ref{fig:transmitter} mit USB-Anschluss für den Rechner und einem 9-poligen RS232-Stecker für den Anschluss an der Peripherie, also die Devices von {\anlage}. In diesen Adapterkabeln ist ein Chip verbaut, um die Signalumsetzung von USB auf RS232 und umgekehrt zu bewerkstelligen. Übliche verwendete Chips sind der CH340\footnote{Treiber CH340/341: \url{http://wch.cn/download/list.asp?id=5}}, welcher sich in vielen über eBay aus China angebotenen Modellen befindet, der Prolific PL2303\footnote{Falls die automatische Treiberinstallation unter Windows fehlschlägt, funktioniert -- mit zeitweiligen Aussetzern -- oft der Treiber unter: \url{http://www.cartft.com/support/drivers/TFT/tftdrivers/GPS/PL2303_Prolific_GPS_1013_20090319.zip}} in verschiedenen Versionen oder -- bei edleren und somit auch teureren Varianten -- der uneingeschränkt zu empfehlende FTDI232, mit welchem die in den folgenden Abschnitten beschriebenen Probleme nicht auftreten sollten.
 
 Das Plug-and-Play-Traum\-szenario, dass sich der Adapter bei der Verbindung des USB-Steckers mit dem Rechner automatisch korrekt installiert, tritt gerade bei den günstigen Adaptern leider nur sehr selten ein. Die in den Fußnoten verlinkten Treiber sollten, sofern die automatische Treiberinstallation von Windows versagt, ihren Dienst tun, müssen allerdings teilweise mit sanfter Gewalt installiert werden. Hat man die Installation erfolgreich absolviert, sollte bei angeschlossenem Adapterkabel ein neuer Eintrag in der Art von Abbildung \ref{fig:geraetemanager} im Gerätemanager auftauchen.
 
@@ -280,8 +280,7 @@ Als minimale Zeitdauer zwischen zwei Zündungen sollte \unit[100]{ms} nicht unter
 \chapter{Kommunikation zwischen PC und Devices}
 \label{ch:kommunikationpc}
 
-In diesem Abschnitt wird die Systemüberwachung bzw. -konfiguration über die serielle Schnittstelle mittels \texttt{Puttytel} oder die {\anlage}-GUI behandelt. Auf die Kommunikation zwischen {\pic} und der Transmitterbox wird an dieser Stelle nicht eingegangen, da hier -- wenn alle Einstellungen wie in Abschnitt 2.3 erläutert getroffen wurden -- alles quasi-automatisch
-und ohne Zutun des Benutzers stattfindet.
+In diesem Abschnitt wird die Systemüberwachung bzw. -konfiguration über die serielle Schnittstelle mittels \texttt{Puttytel} oder die {\anlage}-GUI behandelt. Auf die Kommunikation zwischen {\pic} und der Transmitterbox wird an dieser Stelle nicht eingegangen, da hier -- wenn alle Einstellungen wie in Abschnitt \ref{sec:piceinrichtung} erläutert getroffen wurden -- alles quasi-automatisch und ohne Zutun des Benutzers stattfindet.
 
 \section{Puttytel}
 
@@ -346,7 +345,7 @@ Möchte man also die Unique-ID 5 zuweisen, muss man zunächst \enquote{u} und ansc
 
 Wie bereits angesprochen ist es möglich, auch eine Zündbox zur Steuerung zu verwenden, indem man sie während der Show mit dem PC verbindet.
 
-Als Transmitter (Slave-ID 0 und Unique-ID 0) konfiguriert werden können nur Devices wie in Abbildung \ref{fig:senderadapter} mit Display und ohne Klemmen für den Anschluss von Zündern. Der Grund hierfür liegt in der in Abbildung \ref{fig:pinout} auf Seite \pageref{fig:pinout} gezeigten Pinbelegung des Controllers. Wie zu erkennen ist, werden Controlleranschlüsse beim Transmitter als Steuerung des Displays verwendet, die bei der Zündbox den Zustand des Schlüsselschalters einlesen oder die Schieberegister zur Zündung der Kanäle ansteuern. Da die Software davon ausgeht, dass ein Device mit Slave-ID und Unique-ID 0 an diesen Pins ein LC-Display besitzt, werden die Pins entsprechend konfiguriert und angesteuert. Im Fall des Schlüsselschalter-Pins käme es daher zu einem Kurzschluss, wenn die Box scharf geschaltet ist, was den Controller beschädigen kann, die Ansteuerung des Schieberegisters mit LCD-Befehlen könnte dazu führen, dass Zündkanäle durchschalten und Zündungen unkontrolliert ausgelöst werden, weil die Software glaubt, die Datenpins des LCD zu modulieren, in Wahrheit aber die Schieberegister ansteuert. Die Firmware erkennt durch eine Überprüfung des Devices beim Start, ob es sich bei dem angeschlossenen Device um einen Transmitter oder eine Zündbox handelt und verhindert diesen ungewünschten Betriebsfall automatisch. 
+Als Transmitter (Slave-ID 0 und Unique-ID 0) konfiguriert werden können nur Devices wie in Abbildung \ref{fig:transmitter} mit Display und ohne Klemmen für den Anschluss von Zündern. Der Grund hierfür liegt in der in Abbildung \ref{fig:pinout} auf Seite \pageref{fig:pinout} gezeigten Pinbelegung des Controllers. Wie zu erkennen ist, werden Controlleranschlüsse beim Transmitter als Steuerung des Displays verwendet, die bei der Zündbox den Zustand des Schlüsselschalters einlesen oder die Schieberegister zur Zündung der Kanäle ansteuern. Da die Software davon ausgeht, dass ein Device mit Slave-ID und Unique-ID 0 an diesen Pins ein LC-Display besitzt, werden die Pins entsprechend konfiguriert und angesteuert. Im Fall des Schlüsselschalter-Pins käme es daher zu einem Kurzschluss, wenn die Box scharf geschaltet ist, was den Controller beschädigen kann, die Ansteuerung des Schieberegisters mit LCD-Befehlen könnte dazu führen, dass Zündkanäle durchschalten und Zündungen unkontrolliert ausgelöst werden, weil die Software glaubt, die Datenpins des LCD zu modulieren, in Wahrheit aber die Schieberegister ansteuert. Die Firmware erkennt durch eine Überprüfung des Devices beim Start, ob es sich bei dem angeschlossenen Device um einen Transmitter oder eine Zündbox handelt und verhindert diesen ungewünschten Betriebsfall automatisch. 
 
 Unabhängig davon, dass eine Zündbox nicht als Transmitter konfiguriert werden, also nicht Unique- und Slave-ID 0 besitzen darf, kann sie theoretisch trotzdem zur Steuerung und Koordinierung eines Netzes und einer Show eingesetzt werden, indem man sie über die serielle Schnittstelle mit dem PC verbindet. Bis auf die Darstellung am LCD erfüllt sie dieselben Aufgaben wie ein Transmitter und kann auch parallel noch als Zündbox fungieren. Auf entsprechenden Sicherheitsabstand zu Lebewesen und sensibler Technik ist dabei selbstverständlich zu achten!
 
@@ -505,28 +504,28 @@ In den Abbildungen \ref{fig:transmitterschematic} und \ref{fig:zuendboxschematic
 
 \begin{figure}
 \centering
-\includegraphics[angle=-90, width=.95\textwidth]{Bilder/Transmitterschaltplan}
+\includegraphics[angle=-90, width=.9\textwidth, keepaspectratio]{Bilder/Transmitterschaltplan}
 \caption{Schaltplan des Transmitters}
 \label{fig:transmitterschematic}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[angle=90, height=\textheight]{Bilder/Zuendboxschaltplan}
+\includegraphics[angle=90, height=.95\textheight,keepaspectratio]{Bilder/Zuendboxschaltplan}
 \caption{Schaltplan der Zündbox}
 \label{fig:zuendboxschematic}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[angle=90, width=\textwidth]{Bilder/Transmitterlayout}
+\includegraphics[angle=90, width=.95\textwidth, keepaspectratio]{Bilder/Transmitterlayout}
 \caption{Layout des Transmitters (keine Originalgröße!)}
 \label{fig:transmitterlayout}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{Bilder/Zuendboxlayout}
+\includegraphics[height=.95\textheight,keepaspectratio]{Bilder/Zuendboxlayout}
 \caption{Layout der Zündbox (keine Originalgröße!)}
 \label{fig:zuendboxlayout}
 \end{figure}
@@ -551,7 +550,7 @@ Die Steuerungssoftware für {\anlage} ist unter Zuhilfename des \texttt{AVR-GCC} 
 Die Quellcodedateien und ihre Funktionen sind in Tabelle \ref{tab:sourcefiles} aufgelistet.
 
 \begin{table}[h]
-\begin{tabularx}{\textwidth}{lX}
+\begin{tabular}{lp{125mm}}
 \hline \textbf{Dateiname} & \textbf{Aufgabe(n)} \\
 pyro.c & Hauptprogramm, Interruptroutinen und anlagenspezifische Funktionen (Schalterinitialisierung, spezielle LCD-Symbole, \dots) \\
 1wire.c & Steuerung des Temperatursensors \texttt{DS18B20} \\
@@ -568,7 +567,7 @@ shiftregister.c & Schieberegister-Initialisierung und -Datenübertragung \\
 terminal.c & \enquote{GUI} zur Benutzerinteraktion via Terminalprogramm \\
 timer.c & Funktionen zur Timer-Steuerung \\
 uart.c & Kommunikation über serielle Schnittstelle \\ \hline
-\end{tabularx}
+\end{tabular}
 \caption{Quellcodedateien und ihre Funktionen}
 \label{tab:sourcefiles}
 \end{table}
@@ -937,7 +936,7 @@ Die für {\anlage} benötigten Einstellungen für Fuses und die Datenübertragung we
 
 \chapter{Tipps und Tricks}
 
-\section{LCD an 3{,}3\,V}
+\section[LCD an 3,3 V]{LCD an 3{,}3\,V}
 
 Zwar gibt es inzwischen auch LCDs, welche für eine Versorgung mit 3,3\,V ausgelegt sind, viele Displays jedoch sind noch für 5\,V ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
 
