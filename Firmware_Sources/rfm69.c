@@ -148,7 +148,7 @@ uint8_t rfm_txoff(void) {
 // Turn Receiver on and off
 uint8_t rfm_rxon(void) {
 	uint32_t utimer = RFM69_TIMEOUTVAL;
-	rfm_cmd(0x3D04 | rfm_cmd(0x3DFF, 0), 1);
+	rfm_cmd((rfm_cmd(0x3DFF, 0) | 0x3D04), 1);
 	rfm_cmd(0x0110, 1); // RX on (set to receiver mode in RegOpMode)
 	while (--utimer && !(rfm_cmd(0x27FF, 0) & (1 << 7)))
 		; // Wait for Mode-Ready--Flag
@@ -208,7 +208,7 @@ static inline void rfm_setbit(uint32_t bitrate) {
 	rfm_cmd(0x1940 | bw, 1);
 
 	// AFC
-	rfm_cmd(0x1A40 | bw, 1);
+	rfm_cmd(0x1A40 | 0x8D, 1);
 }
 
 // Initialise RFM
@@ -268,7 +268,7 @@ void rfm_init(void) {
 		rfm_cmd(0x582D, 1); // High sensitivity mode
 		rfm_cmd(0x6F30, 1); // Improved DAGC
 		rfm_cmd(0x29C4, 1); // RSSI mind. -98 dBm
-		rfm_cmd(0x1E0C, 1); // AFC auto on and clear
+		rfm_cmd(0x1E24, 1); // AFC auto on and clear
 
 		rfm_cmd(0x1180 | (P_OUT & 0x1F), 1); // Set Output Power
 	}

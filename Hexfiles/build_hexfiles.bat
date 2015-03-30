@@ -7,7 +7,7 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"adc.d" -MT"adc.d" -c -o "adc.o" "../Firmware_Sources/adc.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"1wire.d" -MT"1wire.d" -c -o "1wire.o" "../Firmware_Sources/1wire.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"addresses.d" -MT"addresses.d" -c -o "addresses.o" "../Firmware_Sources/addresses.c"
-avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"dht.d" -MT"dht.d" -c -o "dht.o" "../Firmware_Sources/dht.c"
+REM avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"dht.d" -MT"dht.d" -c -o "dht.o" "../Firmware_Sources/dht.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"eeprom.d" -MT"eeprom.d" -c -o "eeprom.o" "../Firmware_Sources/eeprom.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"leds.d" -MT"leds.d" -c -o "leds.o" "../Firmware_Sources/leds.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"lcd.d" -MT"lcd.d" -c -o "lcd.o" "../Firmware_Sources/lcd.c"
@@ -19,7 +19,7 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"timer.d" -MT"timer.d" -c -o "timer.o" "../Firmware_Sources/timer.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../Firmware_Sources/uart.c"
 
-avr-gcc -Wl,-Map,Pyro_atmega328p_RFM69.map -flto -Os -mmcu=atmega328p -o "Pyro_atmega328p_RFM69.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
+avr-gcc -Wl,-Map,Pyro_atmega328p_RFM69.map -flto -Os -mmcu=atmega328p -o "Pyro_atmega328p_RFM69.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
 
 avr-size --format=avr --mcu=atmega328p Pyro_atmega328p_RFM69.elf
 
@@ -36,7 +36,7 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"adc.d" -MT"adc.d" -c -o "adc.o" "../Firmware_Sources/adc.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"1wire.d" -MT"1wire.d" -c -o "1wire.o" "../Firmware_Sources/1wire.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"addresses.d" -MT"addresses.d" -c -o "addresses.o" "../Firmware_Sources/addresses.c"
-avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"dht.d" -MT"dht.d" -c -o "dht.o" "../Firmware_Sources/dht.c"
+REM avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"dht.d" -MT"dht.d" -c -o "dht.o" "../Firmware_Sources/dht.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"eeprom.d" -MT"eeprom.d" -c -o "eeprom.o" "../Firmware_Sources/eeprom.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"leds.d" -MT"leds.d" -c -o "leds.o" "../Firmware_Sources/leds.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"lcd.d" -MT"lcd.d" -c -o "lcd.o" "../Firmware_Sources/lcd.c"
@@ -48,7 +48,7 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"timer.d" -MT"timer.d" -c -o "timer.o" "../Firmware_Sources/timer.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../Firmware_Sources/uart.c"
 
-avr-gcc -Wl,-Map,Pyro_atmega328p_RFM12.map -flto -Os -mmcu=atmega328p -o "Pyro_atmega328p_RFM12.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
+avr-gcc -Wl,-Map,Pyro_atmega328p_RFM12.map -flto -Os -mmcu=atmega328p -o "Pyro_atmega328p_RFM12.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
 
 avr-size --format=avr --mcu=atmega328p Pyro_atmega328p_RFM12.elf
 
@@ -65,7 +65,7 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"adc.d" -MT"adc.d" -c -o "adc.o" "../Firmware_Sources/adc.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"1wire.d" -MT"1wire.d" -c -o "1wire.o" "../Firmware_Sources/1wire.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"addresses.d" -MT"addresses.d" -c -o "addresses.o" "../Firmware_Sources/addresses.c"
-avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"dht.d" -MT"dht.d" -c -o "dht.o" "../Firmware_Sources/dht.c"
+REM avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"dht.d" -MT"dht.d" -c -o "dht.o" "../Firmware_Sources/dht.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"eeprom.d" -MT"eeprom.d" -c -o "eeprom.o" "../Firmware_Sources/eeprom.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"leds.d" -MT"leds.d" -c -o "leds.o" "../Firmware_Sources/leds.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"lcd.d" -MT"lcd.d" -c -o "lcd.o" "../Firmware_Sources/lcd.c"
@@ -77,7 +77,7 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"timer.d" -MT"timer.d" -c -o "timer.o" "../Firmware_Sources/timer.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=69 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../Firmware_Sources/uart.c"
 
-avr-gcc -Wl,-Map,Pyro_atmega168p_RFM69.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM69.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
+avr-gcc -Wl,-Map,Pyro_atmega168p_RFM69.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM69.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
 
 avr-size --format=avr --mcu=atmega168p Pyro_atmega168p_RFM69.elf
 
@@ -95,7 +95,7 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"adc.d" -MT"adc.d" -c -o "adc.o" "../Firmware_Sources/adc.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"1wire.d" -MT"1wire.d" -c -o "1wire.o" "../Firmware_Sources/1wire.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"addresses.d" -MT"addresses.d" -c -o "addresses.o" "../Firmware_Sources/addresses.c"
-avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"dht.d" -MT"dht.d" -c -o "dht.o" "../Firmware_Sources/dht.c"
+REM avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"dht.d" -MT"dht.d" -c -o "dht.o" "../Firmware_Sources/dht.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"eeprom.d" -MT"eeprom.d" -c -o "eeprom.o" "../Firmware_Sources/eeprom.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"leds.d" -MT"leds.d" -c -o "leds.o" "../Firmware_Sources/leds.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"lcd.d" -MT"lcd.d" -c -o "lcd.o" "../Firmware_Sources/lcd.c"
@@ -107,7 +107,7 @@ avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-section
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"timer.d" -MT"timer.d" -c -o "timer.o" "../Firmware_Sources/timer.c"
 avr-gcc -Wall -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -DRFM=12 -mmcu=atmega168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../Firmware_Sources/uart.c"
 
-avr-gcc -Wl,-Map,Pyro_atmega168p_RFM12.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM12.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./dht.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
+avr-gcc -Wl,-Map,Pyro_atmega168p_RFM12.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM12.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
 
 avr-size --format=avr --mcu=atmega168p Pyro_atmega168p_RFM12.elf
 
