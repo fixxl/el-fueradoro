@@ -196,6 +196,7 @@ static inline void rfm_setbit(uint32_t bitrate) {
 			freqdev = 737;
 			break;
 	}
+
 	//Frequency Deviation
 	rfm_cmd(0x0500 | (freqdev >> 8), 1);
 	rfm_cmd(0x0600 | (freqdev & 0xFF), 1);
@@ -207,15 +208,17 @@ static inline void rfm_setbit(uint32_t bitrate) {
 	//Receiver Bandwidth
 	rfm_cmd(0x1940 | bw, 1);
 
+	if (bw) bw--;
+
 	// AFC
-	rfm_cmd(0x1A40 | 0x8D, 1);
+	rfm_cmd(0x1A40 | bw, 1);
 }
 
 // Initialise RFM
 void rfm_init(void) {
 	uint32_t utimer;
 
-	// Configure SPI inputs and outputs
+// Configure SPI inputs and outputs
 	NSEL_PORT |= (1 << NSEL);
 	SDO_PORT |= (1 << SDO);
 	SDO_DDR &= ~(1 << SDO);
@@ -225,7 +228,7 @@ void rfm_init(void) {
 
 #ifdef SPCR
 #if HARDWARE_SPI_69
-	// Activate and configure hardware SPI at F_CPU/16
+// Activate and configure hardware SPI at F_CPU/16
 	SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
 #endif
 #endif
@@ -286,29 +289,29 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 	uint32_t utimer = RFM69_TIMEOUTVAL;
 	char fifoarray[MAX_ARRAYSIZE + 1];
 
-	// Turn off receiver, switch to Standby
+// Turn off receiver, switch to Standby
 	rfm_rxoff();
 
-	// Clear FIFO
+// Clear FIFO
 	rfm_fifo_clear();
 
-	// Limit length
+// Limit length
 	if (length > MAX_ARRAYSIZE - 1) length = MAX_ARRAYSIZE - 1;
 
-	// Write data to FIFO-array
+// Write data to FIFO-array
 	fifoarray[0] = length; 													// Number of data bytes
 	for (uint8_t i = 0; i < length; i++) { 									// Data bytes
 		fifoarray[1 + i] = data[i];
 	}
 	fifoarray[length + 1] = '\0'; 											// Terminate string
 
-	// Write data to FIFO
+// Write data to FIFO
 	rfm_fifo_wnr(fifoarray, 1);
 
-	// Turn on transmitter (Transmitting starts automatically if FIFO not empty)
+// Turn on transmitter (Transmitting starts automatically if FIFO not empty)
 	rfm_txon();
 
-	// Wait for Package Sent
+// Wait for Package Sent
 	utimer = RFM69_TIMEOUTVAL;
 	while (!(rfm_cmd(0x28FF, 0) & (1 << 3)) && --utimer)
 		;
@@ -323,13 +326,13 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 	char fifoarray[MAX_ARRAYSIZE + 1];
 	uint8_t length_local;
 
-	// Turn off receiver, switch to Standby
+// Turn off receiver, switch to Standby
 	rfm_rxoff();
 
-	// Read FIFO-data into FIFO-array
+// Read FIFO-data into FIFO-array
 	rfm_fifo_wnr(fifoarray, 0);
 
-	// Read data from FIFO-array
+// Read data from FIFO-array
 	length_local = fifoarray[0]; 											// Number of data bytes
 	if (length_local > MAX_ARRAYSIZE - 1) length_local = MAX_ARRAYSIZE - 1; // Limit length
 	for (uint8_t i = 0; i < length_local; i++) {
@@ -337,14 +340,14 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 	}
 	data[length_local] = '\0'; 												// Terminate string
 
-	// Clear FIFO after readout (not necessary, FIFO is cleared anyway when switching from STANDBY to RX)
+// Clear FIFO after readout (not necessary, FIFO is cleared anyway when switching from STANDBY to RX)
 	rfm_fifo_clear();
 
-	// Write local variable to pointer
+// Write local variable to pointer
 	*length = length_local;
 
-	// Return value is for compatibility reasons with RFM12
-	// It's always 0 because PayloadReady only occurs after successful hardware CRC
+// Return value is for compatibility reasons with RFM12
+// It's always 0 because PayloadReady only occurs after successful hardware CRC
 	return 0; // 0 : successful, 1 : error
 }
 

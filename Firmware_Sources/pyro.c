@@ -186,6 +186,7 @@ int8_t tempmeas(uint8_t type) {
 
 	switch (type) {
 		case DS18B20: {
+			w1_temp_conf(125, -40, 9);
 			w1_command(CONVERT_T, NULL);
 			while (!w1_bit_io(1))
 				;

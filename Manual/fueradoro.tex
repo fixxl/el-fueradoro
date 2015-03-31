@@ -518,7 +518,7 @@ In den Abbildungen \ref{fig:transmitterschematic} und \ref{fig:zuendboxschematic
 
 \begin{figure}
 \centering
-\includegraphics[angle=90, width=.95\textwidth, keepaspectratio]{Bilder/Transmitterlayout}
+\includegraphics[width=.95\textwidth, keepaspectratio]{Bilder/Transmitterlayout}
 \caption{Layout des Transmitters (keine Originalgröße!)}
 \label{fig:transmitterlayout}
 \end{figure}
@@ -534,7 +534,7 @@ In den Abbildungen \ref{fig:transmitterschematic} und \ref{fig:zuendboxschematic
 
 Die Pinbelegung des \texttt{ATmega328p} in den verschiedenen Devices ist in Abbildung \ref{fig:pinout} gezeigt.
 
-Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er beim Starten der Firmware als Eingang geschaltet wird und aufgrund der dort anliegenden Spannung die sicherheitsrelevante Erkennung, um welchen Devicetyp es sich handelt, vorgenommen wird. Aufgrund eines internen Pullup-Widerstands im LCD werden bei angeschlossenem Transmitter stets \unit[3{,}3]{V} an diesem Pin anliegen, bei Zündboxen bewegt sich die heruntergeteilte Spannung der Versorgungsbatterie im Bereich unterhalb von \unit[1{,}1]{V}.
+Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er beim Starten der Firmware als Eingang geschaltet wird und aufgrund der dort anliegenden Spannung die sicherheitsrelevante Erkennung, um welchen Devicetyp es sich handelt, vorgenommen wird. Aufgrund eines internen Pullup-Widerstands im LCD werden bei angeschlossenem Transmitter stets $\unit[3{,}3]{V}$ an diesem Pin anliegen, bei Zündboxen bewegt sich die heruntergeteilte Spannung der Versorgungsbatterie im Bereich unterhalb von $\unit[1{,}1]{V}$.
 
 \begin{figure}
 \centering
@@ -557,7 +557,6 @@ pyro.c & Hauptprogramm, Interruptroutinen und anlagenspezifische Funktionen (Sch
 adc.c & Erfassung der Versorgungsspannung und des Devicetyps mittels Analog-Digital-Converter \\
 addresses.c & Unique- und Slave-ID aus dem Speicher holen, speichern, überprüfen \\
 crcchk.c & Überprüfen der Korrektheit empfangener Zeichenketten \\
-dht.c & Steuerung der Temperatursensoren \texttt{DHT22} oder \texttt{DHT11} (obsolet)\\
 eeprom.c & Direkter Zugriff auf den EEPROM des Controllers \\
 lcd.c & Steuerung des LCD \\
 leds.c & Kontrolle der vier Status-LEDs \\
@@ -795,7 +794,16 @@ Es dient der Übersichtlichkeit und dem späteren Verständnis ungemein, wenn man v
 
 \section{Platinen}
 
-Ausgangspunkt der Bestückung ist die geätzte und gebohrte Platine mit allen Leiterbahnen auf der Ober- und Unterseite. Anschließend sollten die Bauteile in folgender Reihenfolge eingelötet werden:
+Ausgangspunkt der Bestückung ist die geätzte und gebohrte Platine mit allen Leiterbahnen auf der Ober- und Unterseite. Für selbst gefertigte, einseitig geätzte Platinen, bei denen die Leitungen auf der Oberseite als Drahtbrücken ausgeführt sind, sind diese in Abbildung \ref{fig:platinen} dargestellt.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{bilder/platinen}
+\caption{Platinen für Transmitter (oben) und Zündbox (unten)}
+\label{fig:platinen}
+\end{figure}
+
+Anschließend sollten die Bauteile in folgender Reihenfolge eingelötet werden:
 \begin{description}
 \item[Widerstände] mit Ausnahme von R\_Z
 \item[Dioden] mit korrekter Polung
