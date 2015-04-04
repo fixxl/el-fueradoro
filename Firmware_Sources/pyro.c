@@ -1003,6 +1003,13 @@ int main(void) {
 
 // -------------------------------------------------------------------------------------------------------
 
+// RFM69-RSSI-Timeout
+#ifdef RFM69_H_
+		if (rfm_cmd(0x27FF, 0) & (1 << 2)) {
+			rfm_cmd((rfm_cmd(0x3DFF, 0) | 0x3D04), 1);
+		}
+#endif
+
 // Receive
 		flags.b.receive = rfm_receiving();
 		if (flags.b.receive) {
@@ -1185,28 +1192,30 @@ int main(void) {
 				lcd_puts("Tx: ");
 				switch (tx_field[0]) {
 					case FIRE: {
-						lcd_send(0, 1);
-						lcd_puts(" S");
-						lcd_arrize(tx_field[1], lcd_array, 2, 0);
-						lcd_puts(lcd_array);
-						lcd_puts(" CH");
-						lcd_arrize(tx_field[2], lcd_array, 2, 0);
-						lcd_puts(lcd_array);
-						lcd_puts("      ");
-
-						if (!flags.b.show_only) {
-							lcd_cursorset(lastzeile, lastspalte);
-							lcd_puts(" ");
-							lcd_cursorset(anzzeile, anzspalte);
-							lcd_puts("x");
+						if (tx_field[1] && (tx_field[1] < 31) && tx_field[2] && (tx_field[2] < 17)) {
+							lcd_send(0, 1);
+							lcd_puts(" S");
 							lcd_arrize(tx_field[1], lcd_array, 2, 0);
 							lcd_puts(lcd_array);
-							lcd_send(0, 1);
+							lcd_puts(" CH");
 							lcd_arrize(tx_field[2], lcd_array, 2, 0);
 							lcd_puts(lcd_array);
+							lcd_puts("      ");
 
-							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
-							hist_del_flag = 1;
+							if (!flags.b.show_only) {
+								lcd_cursorset(lastzeile, lastspalte);
+								lcd_puts(" ");
+								lcd_cursorset(anzzeile, anzspalte);
+								lcd_puts("x");
+								lcd_arrize(tx_field[1], lcd_array, 2, 0);
+								lcd_puts(lcd_array);
+								lcd_send(0, 1);
+								lcd_arrize(tx_field[2], lcd_array, 2, 0);
+								lcd_puts(lcd_array);
+
+								cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
+								hist_del_flag = 1;
+							}
 						}
 						flags.b.show_only = 0;
 						break;
@@ -1289,14 +1298,16 @@ int main(void) {
 				lcd_puts("Rx: ");
 				switch (rx_field[0]) {
 					case FIRE: {
-						lcd_send(0, 1);
-						lcd_puts(" S");
-						lcd_arrize(rx_field[1], lcd_array, 2, 0);
-						lcd_puts(lcd_array);
-						lcd_puts(" CH");
-						lcd_arrize(rx_field[2], lcd_array, 2, 0);
-						lcd_puts(lcd_array);
-						lcd_puts("      ");
+						if (rx_field[1] && (rx_field[1] < 31) && rx_field[2] && (rx_field[2] < 17)) {
+							lcd_send(0, 1);
+							lcd_puts(" S");
+							lcd_arrize(rx_field[1], lcd_array, 2, 0);
+							lcd_puts(lcd_array);
+							lcd_puts(" CH");
+							lcd_arrize(rx_field[2], lcd_array, 2, 0);
+							lcd_puts(lcd_array);
+							lcd_puts("      ");
+						}
 						break;
 					}
 					case IDENT: {
@@ -1324,18 +1335,21 @@ int main(void) {
 					}
 
 					case CHANGE: {
-						lcd_puts("U"); 							// Old Unique-ID
-						lcd_arrize(rx_field[1], lcd_array, 2, 0);
-						lcd_puts(lcd_array);
-						lcd_puts(" S"); 						// Old Slave-ID
-						lcd_arrize(rx_field[2], lcd_array, 2, 0);
-						lcd_puts(lcd_array);
-						lcd_puts("->U");						// New Unique-ID
-						lcd_arrize(rx_field[3], lcd_array, 2, 0);
-						lcd_puts(lcd_array);
-						lcd_puts(" S"); 						// New Slave-ID
-						lcd_arrize(rx_field[4], lcd_array, 2, 0);
-						lcd_puts(lcd_array);
+						if (rx_field[1] && rx_field[2] && rx_field[3] && rx_field[4] && (rx_field[1] < 31)
+								&& (rx_field[2] < 31) && (rx_field[3] < 31) && (rx_field[1] < 31)) {
+							lcd_puts("U"); 							// Old Unique-ID
+							lcd_arrize(rx_field[1], lcd_array, 2, 0);
+							lcd_puts(lcd_array);
+							lcd_puts(" S"); 						// Old Slave-ID
+							lcd_arrize(rx_field[2], lcd_array, 2, 0);
+							lcd_puts(lcd_array);
+							lcd_puts("->U");						// New Unique-ID
+							lcd_arrize(rx_field[3], lcd_array, 2, 0);
+							lcd_puts(lcd_array);
+							lcd_puts(" S"); 						// New Slave-ID
+							lcd_arrize(rx_field[4], lcd_array, 2, 0);
+							lcd_puts(lcd_array);
+						}
 						break;
 					}
 

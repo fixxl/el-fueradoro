@@ -74,7 +74,7 @@ typedef union {
 	uint16_t complete;
 } bitfeld_t;
 
-#define TRANSMITTER 			((slave_id==0) && (unique_id==0))
+#define TRANSMITTER 			(!ig_or_notrans)
 
 #define KEYDDR					DDR(KEY_PORT)
 #define KEYPIN					PIN(KEY_PORT)

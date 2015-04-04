@@ -255,7 +255,7 @@ void rfm_init(void) {
 		rfm_cmd(0x3790, 1); // Variable length, No DC-free encoding/decoding, CRC-Check, No Address filter
 		rfm_cmd(0x3800 + MAX_ARRAYSIZE, 1); // Max. Payload-Length
 		rfm_cmd(0x3C80, 1); // Tx-Start-Condition: FIFO not empty
-		rfm_cmd(0x3D40, 1); // Packet-Config2
+		rfm_cmd(0x3DA0, 1); // Packet-Config2
 
 		// Preamble length 4 bytes
 		rfm_cmd(0x2C00, 1);
@@ -271,7 +271,9 @@ void rfm_init(void) {
 		rfm_cmd(0x582D, 1); // High sensitivity mode
 		rfm_cmd(0x6F30, 1); // Improved DAGC
 		rfm_cmd(0x29C4, 1); // RSSI mind. -98 dBm
-		rfm_cmd(0x1E2C, 1); // AFC auto on and clear
+		rfm_cmd(0x1E2D, 1); // AFC auto on and clear
+		rfm_cmd(0x2A00, 1); // No Timeout after Rx-Start if no RSSI-Interrupt occurs
+		rfm_cmd(0x2B32, 1); // Timeout after RSSI-Interrupt if no Payload-Ready-Interrupt occurs
 
 		rfm_cmd(0x1180 | (P_OUT & 0x1F), 1); // Set Output Power
 	}
