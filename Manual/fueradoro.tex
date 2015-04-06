@@ -814,12 +814,22 @@ Anschließend sollten die Bauteile in folgender Reihenfolge eingelötet werden:
 \item[Leistungswiderstand] R\_Z
 \item[Temperatursensor] mit korrekter Orientierung
 \item[Integrierte Schaltungen] mit korrekter Orientierung
+\begin{center}
+Der Stand bis zu diesem Punkt ist in Abbildung \ref{fig:platinenzwischenschritt} dargestellt.
+\end{center}
 \item[Anschluss-Kabel] für Klemmen (Zündbox) bzw. LCD (Transmitter)
 \item[Steckerkabel] für Netz- und Schlüsselschalter
 \item[LED-Kabel] für Status-LEDs und Kanal-LEDs. Um den Überblick zu behalten sollte dabei jeweils das Kabel für den GND-Anschluss vor dem Einlöten markiert werden
 \item[MOSFETs] mit korrekter Orientierung (Metallplatte sitzt auf der Seite der großen Elkos)
 \item[Batterie- bzw. USB-Versorgungs-Kabel] Falls bei der Zündbox fertig konfektionierte Kabel mit Anschluss verwendet werden, vor dem Löten die Seitenwand auf der Schalterseite durchbohren und beide Kabel durchfädeln. Beim Trasmitter wird das Kabel zwischen zwei miteinander verschraubten Teilen verlegt.
 \end{description}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{bilder/platinenzwischenschritt}
+\caption{Zündboxplatine vor dem Einlöten der Kabel und MOSFETs}
+\label{fig:platinenzwischenschritt}
+\end{figure}
 
 \section{Funkmodul-Adapter}
 
@@ -829,6 +839,15 @@ Nachdem die Platinen nun fertig bestückt sind, folgen die Schritte für die Ferti
 \item[SMA-Buchse] anlöten, so dass sie direkt an der Platine anliegt. Falls Anschlüsse zu lang sind und am Modul anstoßen, vorsichtig mit Trennscheibe (Außenleiter) oder Seitenschneider (Innenleiter) kürzen.
 \item[Stiftleiste] in einen 6-poligen und einen 7-poligen Abschnitt teilen und anlöten.
 \end{description}
+
+\begin{figure}
+\centering
+\includegraphics[width=.5\textwidth]{bilder/funkmoduladapter}
+\caption{Fertig aufgebauter Funkmoduladapter}
+\label{fig:funkmoduladapter}
+\end{figure}
+
+Der fertige Adapter ist in Abbildung \ref{fig:funkmoduladapter} gezeigt.
 
 \section{Peripherie}
 
@@ -867,7 +886,7 @@ Unter möglichst geringer Torsion sollte dann der Adapter in die Buchsenleisten a
 Nun muss man noch die Antenne anschrauben. Wenn der Bootloader sich bereits auf dem Controller befindet, kann man das Gehäuse zuschrauben. Ansonsten den Transmitter mit Energie versorgen und den Bootloader wie in Abschnitt \ref{ch:bootloader} beschrieben flashen. Jetzt ist der Transmitter fertig aufgebaut und kann zugeschraubt werden! Die Firmware sollte kann wie in Abschnitt \ref{ch:firmwareupdate} beschrieben über die serielle Schnittstelle aufgespielt werden, wobei beim ersten Mal noch die Angabe des Dateinamens nötig ist.
 
 \subsection{Zündbox}
-Abbildung \ref{fig:zuendboxbohren} zeigt die Bohrschablone für die Oberseite des Kunststoffgehäuses der Zündbox (Kunststoffgehäuse 021-002-084 von Pollin). Diese kann dazu verwendet werden, eine Schablone aus Sperrholz oder Metall anzufertigen, welche später auf die Boxenoberseite gelegt wird, um die nötigen Bohrungen vorzunehmen. 
+Abbildung \ref{fig:zuendboxbohren} zeigt die Bohrschablone für die Oberseite des Kunststoffgehäuses der Zündbox (Kunststoffgehäuse 021-002-084 von Pollin). Die Oberseite des Gehäuses ist dabei der Teil ohne sichtbare Schraublöcher. Diese kann dazu verwendet werden, eine Schablone aus Sperrholz oder Metall anzufertigen, welche später auf die Boxenoberseite gelegt wird, um die nötigen Bohrungen vorzunehmen. 
 
 \begin{figure}
 \centering
@@ -884,11 +903,18 @@ Die Bohrlöcher für die 16 Kanal-LEDs sollten mit einem 3-mm-Bohrer, die der vier
 
 Da die Lautsprecherklemmen mit M3-Gewindeschrauben befestigt werden, wäre der ideale Bohrdurchmesser für die 16 Schraubenlöcher 3,2\,mm. Sollte dieser Durchmesser nicht vorhanden sein, kann aber auch mit 3,5\,mm gearbeitet werden. Für die Lötfahnen der Klemmen ist eine rechteckige Aussparung von \mbox{4,5\,x\,2\,mm} nötig, als schnelle Lösung kann auch jeweils ein 5-mm-Loch durch den Mittelpunkt (Diagonalenschnittpunkt) dieser Flächen gebohrt werden.
 
-Die rechteckige Aussparung für den Netzschalter sollte die Größe \mbox{19\,x\,13\,mm} besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von 12\,mm und der Durchsteckplatz für die SMA-Buchse sollte mit 6,5\,mm vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt.
+Die rechteckige Aussparung für den Netzschalter sollte die Größe \mbox{19\,x\,13\,mm} besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von 12\,mm und der Durchsteckplatz für die SMA-Buchse sollte mit 6,5\,mm vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt. Die Innenansicht des Zündboxdeckels (noch ohne SMA-Anschluss) ist in Abbildung \ref{fig:zuendboxdeckel} dargestellt. Hierbei ist auch zu erkennen, wo sich die Nut (unten, bei den Status-LEDs) und wo die Feder (oben) beim Deckel befinden muss. Dementsprechend muss es bei der Unterseite andersherum sein.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{bilder/zuendboxdeckel}
+\caption{Innenansicht des Zündboxdeckels}
+\label{fig:zuendboxdeckel}
+\end{figure}
 
 In die linke Einschub-Seitenwand muss, sofern noch nicht im Rahmen des Lötens geschehen, ein Loch für die Durchführung der Batteriekabel mit einer Größe je nach Kabeldurchmesser.
 
-Um die Position der Sub-D-Buchse zu finnden, muss die Platine möglichst identisch zu ihrer späteren Position ins Gehäuse eingelegt werden, die Aussparung beträgt wie beim Transmitter \mbox{31\,x\,12,5\,mm}. Wenn die Aussparung fertig ist, kann die Platine in ihre endgültige Position gebracht und mit vier Schrauben befestigt werden. Die linke Seitenwand bleibt noch ausgesteckt. Jetzt ist wieder der Lötkolben dran!
+Um die Position der Sub-D-Buchse in der Wand, welche in der Nut endet, zu finnden, muss die Platine möglichst identisch zu ihrer späteren Position ins Gehäuse eingelegt werden, die Aussparung beträgt wie beim Transmitter \mbox{31\,x\,12,5\,mm}. Wenn die Aussparung fertig ist, kann die Platine in ihre endgültige Position gebracht und mit vier Schrauben befestigt werden. Die linke Seitenwand bleibt noch ausgesteckt. Jetzt ist wieder der Lötkolben dran!
 
 Zunächst vier Drahtstücke á 80\,mm abschneiden und durch die übereinander liegenden Anschlüsse für die roten Klemmen ziehen und mit den Klemmen verlöten. Die Kanal- und Status-LEDs wie auf Seite \pageref{enum:leds} beschrieben mit den zugehörigen Flachbandkabeln verbinden, anschließend den Schlüssel- und den Netzschalter mit den zugehörigen Anschlusskabeln.
 
