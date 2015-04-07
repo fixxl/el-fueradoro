@@ -1003,13 +1003,6 @@ int main(void) {
 
 // -------------------------------------------------------------------------------------------------------
 
-// RFM69-RSSI-Timeout
-#ifdef RFM69_H_
-		if (rfm_cmd(0x27FF, 0) & (1 << 2)) {
-			rfm_cmd((rfm_cmd(0x3DFF, 0) | 0x3D04), 1);
-		}
-#endif
-
 // Receive
 		flags.b.receive = rfm_receiving();
 		if (flags.b.receive) {

@@ -44,7 +44,6 @@ uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 	// Ensure correct idle levels, then enable module
 	SCK_PORT &= ~(1 << SCK);
 	SDI_PORT &= ~(1 << SDI);
-	ACTIVATE_RFM;
 
 	// SPI-Transfer
 	rfm_spi(highbyte);
@@ -53,27 +52,29 @@ uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 	// Disable module
 	SDI_PORT &= ~(1 << SDI);
 	SCK_PORT &= ~(1 << SCK);
-	DEACTIVATE_RFM;
 
 	return lowbyte;
 }
 
 uint8_t rfm_receiving(void) {
-	uint8_t status;
-	ACTIVATE_RFM;
-	status = rfm_cmd(0x28FF, 0);
-	DEACTIVATE_RFM;
+	uint16_t status;
+
+	status = rfm_status();
+
+	// No Payload and RSSI-Rx-Timeout -> Rx-Restart
+	if((!(status & (1 << 2))) && (status & (1<<10))) {
+		rfm_cmd((rfm_cmd(0x3DFF, 0) | 0x3D04), 1);
+	}
+
 	// Check if PayloadReady is set AND unused bit is not set (if bit 0 is set, module is not plugged in)
 	return ((status & (1 << 2)) && !(status & (1 << 0)));
 }
 
 uint16_t rfm_status(void) {
 	uint16_t status = 0;
-	ACTIVATE_RFM;
 	status |= rfm_cmd(0x2700, 0);
 	status <<= 8;
 	status |= rfm_cmd(0x2800, 0);
-	DEACTIVATE_RFM;
 	return status;
 }
 
