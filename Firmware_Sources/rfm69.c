@@ -62,7 +62,7 @@ uint8_t rfm_receiving(void) {
 	status = rfm_status();
 
 	// No Payload and RSSI-Rx-Timeout -> Rx-Restart
-	if((!(status & (1 << 2))) && (status & (1<<10))) {
+	if ((!(status & (1 << 2))) && (status & (1 << 10))) {
 		rfm_cmd((rfm_cmd(0x3DFF, 0) | 0x3D04), 1);
 	}
 
