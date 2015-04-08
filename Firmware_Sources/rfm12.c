@@ -47,9 +47,9 @@ uint16_t rfm_cmd(uint16_t command) {
 	order.bytes[1] = rfm_spi(order.bytes[1]);
 	order.bytes[0] = rfm_spi(order.bytes[0]);
 
+	DEACTIVATE_RFM;
 	SCK_PORT &= ~(1 << SCK);
 	SDI_PORT &= ~(1 << SDI);
-	DEACTIVATE_RFM;
 
 	return order.zahl;
 }
@@ -145,20 +145,24 @@ uint16_t rfm_status(void) {
 static void rfm_setbit(uint32_t bitrate) {
 	uint8_t bw, freqdev;
 
-	switch (bitrate) {
-		case 38400:
-		case 57600:
-		bw = 160;
-		freqdev = 80;
-		break;
-		case 115200:
-		bw = 128;
-		freqdev = 112;
-		break;
-		default:
-		bw = 192;
-		freqdev = 32;
-		break;
+	switch (bitrate / 19200) {
+		case 0:
+		case 1: {
+			bw = 192;
+			freqdev = 32;
+			break;
+		}
+		case 2:
+		case 3: {
+			bw = 160;
+			freqdev = 80;
+			break;
+		}
+		default: {
+			bw = 128;
+			freqdev = 112;
+			break;
+		}
 	}
 
 	//Data Rate
@@ -287,21 +291,21 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 
 	for (uint8_t bytenum = 0; bytenum < length; bytenum++) {
 		error += rfm_txbyte(data[bytenum]);			// Transmit databyte
-		crc = crc16(crc, data[bytenum]);			// CRC-Update
+		crc = crc16(crc, data[bytenum]);// CRC-Update
 	}
 
 	crc ^= 0xFFFF;									// Final XOR for CRC
-	error += rfm_txbyte((crc >> 8) & 0xFF);			// Transmit CRC-Highbyte
-	error += rfm_txbyte(crc & 0xFF);				// Transmit CRC-Lowbyte
+	error += rfm_txbyte((crc >> 8) & 0xFF);// Transmit CRC-Highbyte
+	error += rfm_txbyte(crc & 0xFF);// Transmit CRC-Lowbyte
 
-	error += rfm_txbyte(0xAA);						// Dummybyte
-	error += rfm_txbyte(0xAA);						// Dummybyte
+	error += rfm_txbyte(0xAA);		// Dummybyte
+	error += rfm_txbyte(0xAA);		// Dummybyte
 
-	rfm_txoff();// TX off
+	rfm_txoff();					// TX off
 
-	rfm_status();// Query status to clear potential error flags
+	rfm_status();					// Query status to clear potential error flags
 
-	return (error? 1:0);// 0 : successful, 1 : error
+	return (error? 1:0);			// 0 : successful, 1 : error
 }
 
 // Receive data
@@ -318,21 +322,21 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 
 	for (bytenum = 0; bytenum < length_local; bytenum++) {
 		data[bytenum] = rfm_rxbyte(&error);			// Receive databyte
-		crc_calc = crc16(crc_calc, data[bytenum]);	// CRC-Update
+		crc_calc = crc16(crc_calc, data[bytenum]);// CRC-Update
 	}
 	data[length_local] = '\0';
 
 	crc_calc ^= 0xFFFF;									// Final XOR for CRC
-	crc_rec = (rfm_rxbyte(&error) << 8);				// Receive CRC-Highbyte
-	crc_rec |= rfm_rxbyte(&error);						// Receive CRC-Lowbyte
+	crc_rec = (rfm_rxbyte(&error) << 8);// Receive CRC-Highbyte
+	crc_rec |= rfm_rxbyte(&error);// Receive CRC-Lowbyte
 
-	rfm_status();										// Query status to clear potential error flags
+	rfm_status();				  // Query status to clear potential error flags
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 	rfm_rxoff();
 
 	*length = length_local;
 
-	return (!(crc_rec == crc_calc) || error);			// 0 : successful, 1 : error
+	return (!(crc_rec == crc_calc) || error);// 0 : successful, 1 : error
 }
 
 #endif

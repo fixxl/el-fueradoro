@@ -44,12 +44,14 @@ uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 	// Ensure correct idle levels, then enable module
 	SCK_PORT &= ~(1 << SCK);
 	SDI_PORT &= ~(1 << SDI);
+	ACTIVATE_RFM;
 
 	// SPI-Transfer
 	rfm_spi(highbyte);
 	lowbyte = rfm_spi(lowbyte);
 
 	// Disable module
+	DEACTIVATE_RFM;
 	SDI_PORT &= ~(1 << SDI);
 	SCK_PORT &= ~(1 << SCK);
 
@@ -182,20 +184,24 @@ static inline void rfm_setbit(uint32_t bitrate) {
 	uint8_t bw;
 	uint16_t freqdev;
 
-	switch (bitrate) {
-		case 38400:
-		case 57600:
-			bw = 0x02; // 125 kHz
-			freqdev = 1475;
-			break;
-		case 115200:
-			bw = 0x09; // 200 kHz
-			freqdev = 1966;
-			break;
-		default:
+	switch (bitrate / 19200) {
+		case 0:
+		case 1: {
 			bw = 0x03; // 62.5 kHz
 			freqdev = 737;
 			break;
+		}
+		case 2:
+		case 3: {
+			bw = 0x02; // 125 kHz
+			freqdev = 1475;
+			break;
+		}
+		default: {
+			bw = 0x09; // 200 kHz
+			freqdev = 1966;
+			break;
+		}
 	}
 
 	//Frequency Deviation
