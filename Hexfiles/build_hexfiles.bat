@@ -117,5 +117,4 @@ copy "Pyro_atmega168p_RFM12.hex" .\Updater > NUL
 for %%a in (*) do if /I not %%~na==build_hexfiles del /q %%a
 echo Done
 echo.
-pause
-
+sleep 10
