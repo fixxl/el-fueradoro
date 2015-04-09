@@ -118,4 +118,4 @@ for %%a in (*) do if /I not %%~na==build_hexfiles del /q %%a
 echo Done
 echo.
 
-
+sleep 10
