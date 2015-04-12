@@ -277,7 +277,7 @@ void rfm_init(void) {
 		rfm_cmd(0x1800, 1); // LNA: 50 Ohm Input Impedance, Automatic Gain Control
 		rfm_cmd(0x582D, 1); // High sensitivity mode
 		rfm_cmd(0x6F30, 1); // Improved DAGC
-		rfm_cmd(0x29C4, 1); // RSSI mind. -98 dBm
+		rfm_cmd(0x29C8, 1); // RSSI mind. -100 dBm
 		rfm_cmd(0x1E2D, 1); // AFC auto on and clear
 		rfm_cmd(0x2A00, 1); // No Timeout after Rx-Start if no RSSI-Interrupt occurs
 		rfm_cmd(0x2B28, 1); // Timeout after RSSI-Interrupt if no Payload-Ready-Interrupt occurs
