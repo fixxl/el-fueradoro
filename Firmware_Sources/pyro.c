@@ -966,11 +966,12 @@ int main(void) {
 			cli();
 			flags.b.fire = 0;
 
-			// Turn all leds on
-			leds_on();
-
 			if (armed && (rx_field[2] > 0) && (rx_field[2] < 17)) { 	// If channel number is valid
 				tmp = rx_field[2]; 										// Save channel number to variable
+
+				// Turn all leds on
+				leds_on();
+
 				scheme = 0;												// Set mask-variable to zero
 				for (uint8_t i = 16; i; i--) {
 					scheme <<= 1; 										// Left-shift mask-variable
@@ -989,11 +990,13 @@ int main(void) {
 
 				// Mark fired channel as fired
 				channel_fired[rx_field[2] - 1] = 1;
+
+				// Turn all LEDs off
+				leds_off();
+				led_red_on();
 			}
 
-			// Turn all LEDs off
-			leds_off();
-			led_red_on();
+
 
 			// Turn on receiver
 			rfm_rxon();
@@ -1028,7 +1031,7 @@ int main(void) {
 							_delay_us((ADDITIONAL_LENGTH + FIRE_LENGTH) * BYTE_DURATION_US);
 						}
 
-						if ((rx_field[1] == slave_id) && !TRANSMITTER) {
+						if (armed && (rx_field[1] == slave_id) && !TRANSMITTER) {
 							tmp = rx_field[2] - 1;
 							if (!(channel_fired[tmp]) && !flags.b.fire) {
 								flags.b.fire = 1;
@@ -1083,6 +1086,8 @@ int main(void) {
 							_delay_us((ADDITIONAL_LENGTH + PARAMETERS_LENGTH) * BYTE_DURATION_US);
 						}
 
+						// Increment ID error, if ID-error (='E') or 0 or unique-id of this device
+						// or already used unique-id was received as unique-id
 						if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id)
 								|| (rx_field[1] && slaveid_char[(uint8_t) (rx_field[1] - 1)])) {
 							iderrors++;

@@ -1,4 +1,4 @@
-\documentclass[pdftex, parskip, numbers=noenddot]{scrbook}
+\documentclass[pdftex, parskip, numbers=noenddot, toc=listof]{scrbook}
 
 \usepackage[T1]{fontenc}
 \usepackage[latin1]{inputenc}
@@ -16,6 +16,7 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{datetime}
 \usepackage[pdftex, colorlinks=false, breaklinks=true, pdfborder={0 0 0}]{hyperref}
+\usepackage{bookmark}
 
 \renewcommand{\dateseparator}{.}
 
@@ -35,6 +36,8 @@
 \clearscrplain
 \ohead[\pagemark]{\pagemark}
 \ihead[]{\anlage}
+
+\setuptoc{toc}{totoc}
 
 \begin{document}
 \begin{titlepage}
@@ -92,8 +95,6 @@ Ein ganz spezielles Dankeschön an:
 
 
 \tableofcontents
-\listoffigures
-\listoftables
 %
 \part{Benutzerhandbuch}
 
@@ -101,7 +102,7 @@ Ein ganz spezielles Dankeschön an:
 
 {\anlage} ist eine Eigenentwicklung zur automatisierten Zündung von Feuerwerkschoreographien per Computer und Funk, der Name {\anlage} leitet sich aus den spanischen Wörtern fuego, radio und oro her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
 
-Es besteht aus einer mit dem PC verbundene Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung \ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen.
+Es besteht aus einer mit dem PC verbundene Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen.
 
 \begin{figure}
 \centering
@@ -110,9 +111,9 @@ Es besteht aus einer mit dem PC verbundene Transmitterbox, welche die von {\pic}
 \label{fig:system}
 \end{figure}
 
-Um möglichst große Flexibilität bei der Gestaltung eines Feuerwerks mit {\anlage} zu gewährleisten, was z.B. die Anzahl der verwendeten Zündboxen oder auch die Tatsache angeht, dass man identische Effekte gerne zeitgleich an zwei weiter voneinander entfernten Orten zünden möchte, können den Boxen per Software zwei Kennnummern (Slave-ID und Unique-ID) zugewiesen werden. Genaueres dazu findet sich im Abschnitt \ref{ch:kommunikationpc}.
+Um möglichst große Flexibilität bei der Gestaltung eines Feuerwerks mit {\anlage} zu gewährleisten, was z.B. die Anzahl der verwendeten Zündboxen oder auch die Tatsache angeht, dass man identische Effekte gerne zeitgleich an zwei weiter voneinander entfernten Orten zünden möchte, können den Boxen per Software zwei Kennnummern (Slave-ID und Unique-ID) zugewiesen werden. Genaueres dazu findet sich im Abschnitt~\ref{ch:kommunikationpc}.
 
-Transmitterbox und Zündbox sind in Abbildung \ref{fig:transmitter} bzw. \ref{fig:zuendbox} mit ihren wesentlichen Bestandteilen gezeigt. Sie werden im weiteren Text unter dem Begriff \enquote{Devices} zusammengefasst, falls sich Aussagen auf beide Teile beziehen, und in den folgenden Kapiteln näher beschrieben. 
+Transmitterbox und Zündbox sind in Abbildung~\ref{fig:transmitter} bzw.~\ref{fig:zuendbox} mit ihren wesentlichen Bestandteilen gezeigt. Sie werden im weiteren Text unter dem Begriff \enquote{Devices} zusammengefasst, falls sich Aussagen auf beide Teile beziehen, und in den folgenden Kapiteln näher beschrieben. 
 
 \section{Aufbau}
 
@@ -140,20 +141,20 @@ In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte S
 \label{fig:zuendbox}
 \end{figure}
 
-Die in Abbildung \ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das -- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur -- frei nutzbare Frequenzband um $\unit[868]{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
+Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das -- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur -- frei nutzbare Frequenzband um $\unit[868]{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
 
-Die Zündboxen, in Abbildung \ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\unit[22{,}5]{V}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16 n-Kanal-MOSFETs. Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom über den LED-Zweig auf unter \unit[5]{mA} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme -- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen -- verbunden ist, also ein geschlossener Strompfad von $\unit[22{,}5]{V}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen LED signalisiert.
+Die Zündboxen, in Abbildung~\ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\unit[22{,}5]{V}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16 n-Kanal-MOSFETs. Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom über den LED-Zweig auf unter \unit[5]{mA} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme -- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen -- verbunden ist, also ein geschlossener Strompfad von $\unit[22{,}5]{V}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen LED signalisiert.
 
 \section{Energieversorgung}
 
 Die in unmittelbarer Nähe des zu steuernden PCs platzierte Transmitterbox bezieht ihre nötige elektrische Energie aus dem USB-Port eines PCs. Das fest mit der Transmitterbox verbundene USB-Kabel dient ausschließlich diesem Zweck. Sie verfügt über keinen Ein/Aus-Schalter, sondern ist eingeschaltet, solange sie mit dem USB-Port verbunden und der PC eingeschaltet ist. Da der USB-Port \enquote{angezapft} wird, ohne in der sonst üblichen Weise mit dem Controller zu kommunizieren, empfiehlt sich, die USB-Verbindung erst nach komplett abgeschlossenem Bootvorgang herzustellen und vor dem Herunterfahren des Rechners wieder zu trennen.
 
-Aufgrund der anzunehmenden Platzierung der Zündboxen im freien Feld, abseits von Steckdosen und anderen Energiequellen werden sie über eine Batterie versorgt. \textbf{Um ordnungsgemäße Funktionalität zu garantieren und Schäden an der Schaltung zu vermeiden, muss die Batteriespannung zwischen \unit[8]{V} und \unit[15]{V} liegen!} Empfohlen wird die Verwendung eines Blei-Vlies-Akkus mit Nennspannung \unit[12]{V}, wie er auch in Abbildung \ref{fig:zuendbox} über der Zündbox zu erahnen ist.
+Aufgrund der anzunehmenden Platzierung der Zündboxen im freien Feld, abseits von Steckdosen und anderen Energiequellen werden sie über eine Batterie versorgt. \textbf{Um ordnungsgemäße Funktionalität zu garantieren und Schäden an der Schaltung zu vermeiden, muss die Batteriespannung zwischen \unit[8]{V} und \unit[15]{V} liegen!} Empfohlen wird die Verwendung eines Blei-Vlies-Akkus mit Nennspannung \unit[12]{V}, wie er auch in Abbildung~\ref{fig:zuendbox} über der Zündbox zu erahnen ist.
 
 \section{Die Status-LEDs}
 \label{ch:leds}
 
-Alle Devices verfügen über vier Status-LEDs. Bei den Transmitterboxen liegen sie direkt neben dem Kabel für die Energieversorgung auf der Seite, bei den Zündboxen auf der Oberseite. Diese sind mit ihrer Bedeutung in Tabelle \ref{tab:statusleds} aufgeführt und leuchten, wenn das jeweilige Device die mit der LED verknüpfte Tätigkeit ausführt. Das Blinken der grünen LED während des Initialisierungsvorgangs jedes Devices ist von der sonstigen Funktion unabhängig.
+Alle Devices verfügen über vier Status-LEDs. Bei den Transmitterboxen liegen sie direkt neben dem Kabel für die Energieversorgung auf der Seite, bei den Zündboxen auf der Oberseite. Diese sind mit ihrer Bedeutung in Tabelle~\ref{tab:statusleds} aufgeführt und leuchten, wenn das jeweilige Device die mit der LED verknüpfte Tätigkeit ausführt. Das Blinken der grünen LED während des Initialisierungsvorgangs jedes Devices ist von der sonstigen Funktion unabhängig.
 
 \begin{table}
 \centering
@@ -180,7 +181,7 @@ Bei einem Zündvorgang leuchten für die Dauer der Zündung (\unit[11]{ms}) alle vi
 \end{figure}
 %
 
-Aktuelle Statusanzeigen werden bei der Transmitterbox auf dem LC-Display ausgegeben. Ein Beispiel zeigt Abbildung \ref{fig:senderanzeige}. In Zeile 1 wird hinter der Abkürzung \enquote{Tx} (Transmitted) der letzte gesendete Befehl (Zündbefehl oder Identifizierungsaufforderung) angezeigt, in Zeile 2 -- im Bild nicht zu sehen -- ggf. hinter der Abkürzung \enquote{Rx} (Received) die letzte empfangene Rückmeldung (angeforderte Parameter).
+Aktuelle Statusanzeigen werden bei der Transmitterbox auf dem LC-Display ausgegeben. Ein Beispiel zeigt Abbildung~\ref{fig:senderanzeige}. In Zeile 1 wird hinter der Abkürzung \enquote{Tx} (Transmitted) der letzte gesendete Befehl (Zündbefehl oder Identifizierungsaufforderung) angezeigt, in Zeile 2 -- im Bild nicht zu sehen -- ggf. hinter der Abkürzung \enquote{Rx} (Received) die letzte empfangene Rückmeldung (angeforderte Parameter).
 
 In den Zeilen 3 und 4 werden die letzten sechs gesendeten Kommandos aufgelistet. Zwei zweistellige Zahlen getrennt durch ein Flammensymbol stehen dabei für einen Zündbefehl. Die erste Zahl gibt die Slave-ID, die zweite den zu zündenden Kanal an. Für den Fall, dass eine Aufforderung zur Identifikation gesendet wurde, erscheint \enquote{IDENT}, für eine Aufforderung zur Temperaturmessung \enquote{TEMP}. Das \enquote{x} steht immer vor dem bis dato letzten Befehl, springt also mit jedem neuen Befehl eine Stelle weiter.
 
@@ -196,11 +197,11 @@ Alle Zeilen werden nach einer bestimmten Zeit automatisch gelöscht.
 \label{fig:schalterzuend}
 \end{figure}
 
-Die Zündboxen verfügen, wie in Abbildung \ref{fig:schalterzuend} zu erkennen, über zwei Schalter, einen schwarzen Wippschalter zum Ein- und Ausschalten der Energieversorgung sowie einen Schlüsselschalter, um die Zündbox \enquote{scharf} zu schalten.
+Die Zündboxen verfügen, wie in Abbildung~\ref{fig:schalterzuend} zu erkennen, über zwei Schalter, einen schwarzen Wippschalter zum Ein- und Ausschalten der Energieversorgung sowie einen Schlüsselschalter, um die Zündbox \enquote{scharf} zu schalten.
 
 Die Scharfschaltung durch den Schlüsselschalter geschieht auf die Weise, dass durch eine Zustandsabfrage vor der Zündung letztere nur ausgeführt wird, wenn das Schloss auf den grünen Punkt am Gehäuse zeigt. Befindet sich der Schlüssel in waagrechter Stellung und zeigt auf den roten Punkt, so ist der Schalter geöffnet und Zündbefehle werden von der Box ignoriert. Für das Scharfschalten der Box ist der Anwender selbst verantwortlich.
 
-Ob Boxen scharf geschaltet sind, ist an der Box -- wie in Abschnitt \ref{ch:leds} ausgeführt -- durch das Dauerleuchten der roten Status-LED erkennbar, kann aber auch durch eine Identifizierungsabfrage ausgelesen werden (siehe Abschnitt \ref{sec:config}).
+Ob Boxen scharf geschaltet sind, ist an der Box -- wie in Abschnitt~\ref{ch:leds} ausgeführt -- durch das Dauerleuchten der roten Status-LED erkennbar, kann aber auch durch eine Identifizierungsabfrage ausgelesen werden (siehe Abschnitt~\ref{sec:config}).
 
 
 \chapter{Vorbereitung des PCs}
@@ -210,11 +211,11 @@ Zur Kommunikation mit einem Computer verfügen alle Devices über eine serielle Sc
 \section{Installation eines USB-RS232-Adapters}
 \label{sec:usbadapter}
 
-Zunächst steht man allerdings in der Regel vor dem Problem, dass zwar die Devices eine serielle Schnittstelle besitzen, moderne Rechner aber nicht mehr mit dem früher standardmäßig verbauten 9-poligen Sub-D-Stecker der RS232-Schnittstelle ausgestattet sind. Diese wurden seit dem Ende der 1990er-Jahre von den USB-Schnittstellen verdrängt. Sollte wider Erwarten am einzusetzenden Rechner ein derartiger Anschluss vorhanden sein, können die nächsten Absätze übersprungen und der COM-Port direkt im Gerätemanager anhand von Tabelle \ref{tab:seriell} konfiguriert werden. Wer nur über USB-Ports verfügt, lese unmittelbar weiter.
+Zunächst steht man allerdings in der Regel vor dem Problem, dass zwar die Devices eine serielle Schnittstelle besitzen, moderne Rechner aber nicht mehr mit dem früher standardmäßig verbauten 9-poligen Sub-D-Stecker der RS232-Schnittstelle ausgestattet sind. Diese wurden seit dem Ende der 1990er-Jahre von den USB-Schnittstellen verdrängt. Sollte wider Erwarten am einzusetzenden Rechner ein derartiger Anschluss vorhanden sein, können die nächsten Absätze übersprungen und der COM-Port direkt im Gerätemanager anhand von Tabelle~\ref{tab:seriell} konfiguriert werden. Wer nur über USB-Ports verfügt, lese unmittelbar weiter.
 
-Weil in vielen Bereichen noch immer auf RS232 zurückgegriffen wird, existieren Adapterkabel wie in Abbildung \ref{fig:transmitter} mit USB-Anschluss für den Rechner und einem 9-poligen RS232-Stecker für den Anschluss an der Peripherie, also die Devices von {\anlage}. In diesen Adapterkabeln ist ein Chip verbaut, um die Signalumsetzung von USB auf RS232 und umgekehrt zu bewerkstelligen. Übliche verwendete Chips sind der CH340\footnote{Treiber CH340/341: \url{http://wch.cn/download/list.asp?id=5}}, welcher sich in vielen über eBay aus China angebotenen Modellen befindet, der Prolific PL2303\footnote{Falls die automatische Treiberinstallation unter Windows fehlschlägt, funktioniert -- mit zeitweiligen Aussetzern -- oft der Treiber unter: \url{http://www.cartft.com/support/drivers/TFT/tftdrivers/GPS/PL2303_Prolific_GPS_1013_20090319.zip}} in verschiedenen Versionen oder -- bei edleren und somit auch teureren Varianten -- der uneingeschränkt zu empfehlende FTDI232, mit welchem die in den folgenden Abschnitten beschriebenen Probleme nicht auftreten sollten.
+Weil in vielen Bereichen noch immer auf RS232 zurückgegriffen wird, existieren Adapterkabel wie in Abbildung~\ref{fig:transmitter} mit USB-Anschluss für den Rechner und einem 9-poligen RS232-Stecker für den Anschluss an der Peripherie, also die Devices von {\anlage}. In diesen Adapterkabeln ist ein Chip verbaut, um die Signalumsetzung von USB auf RS232 und umgekehrt zu bewerkstelligen. Übliche verwendete Chips sind der CH340\footnote{Treiber CH340/341: \url{http://wch.cn/download/list.asp?id=5}}, welcher sich in vielen über eBay aus China angebotenen Modellen befindet, der Prolific PL2303\footnote{Falls die automatische Treiberinstallation unter Windows fehlschlägt, funktioniert -- mit zeitweiligen Aussetzern -- oft der Treiber unter: \url{http://www.cartft.com/support/drivers/TFT/tftdrivers/GPS/PL2303_Prolific_GPS_1013_20090319.zip}} in verschiedenen Versionen oder -- bei edleren und somit auch teureren Varianten -- der uneingeschränkt zu empfehlende FTDI232, mit welchem die in den folgenden Abschnitten beschriebenen Probleme nicht auftreten sollten.
 
-Das Plug-and-Play-Traum\-szenario, dass sich der Adapter bei der Verbindung des USB-Steckers mit dem Rechner automatisch korrekt installiert, tritt gerade bei den günstigen Adaptern leider nur sehr selten ein. Die in den Fußnoten verlinkten Treiber sollten, sofern die automatische Treiberinstallation von Windows versagt, ihren Dienst tun, müssen allerdings teilweise mit sanfter Gewalt installiert werden. Hat man die Installation erfolgreich absolviert, sollte bei angeschlossenem Adapterkabel ein neuer Eintrag in der Art von Abbildung \ref{fig:geraetemanager} im Gerätemanager auftauchen.
+Das Plug-and-Play-Traum\-szenario, dass sich der Adapter bei der Verbindung des USB-Steckers mit dem Rechner automatisch korrekt installiert, tritt gerade bei den günstigen Adaptern leider nur sehr selten ein. Die in den Fußnoten verlinkten Treiber sollten, sofern die automatische Treiberinstallation von Windows versagt, ihren Dienst tun, müssen allerdings teilweise mit sanfter Gewalt installiert werden. Hat man die Installation erfolgreich absolviert, sollte bei angeschlossenem Adapterkabel ein neuer Eintrag in der Art von Abbildung~\ref{fig:geraetemanager} im Gerätemanager auftauchen.
 
 Weil viele Chips dazu tendieren, sich beim Anschluss an immer wieder andere USB-Ports neu zu installieren bzw. eine andere COM-Port-Nummer anzunehmen, wird empfohlen, für den USB-RS232-Adapter stets denselben USB-Steckplatz zu nutzen.
 
@@ -225,7 +226,7 @@ Weil viele Chips dazu tendieren, sich beim Anschluss an immer wieder andere USB-
 \label{fig:geraetemanager}
 \end{figure}
 
-Durch Doppelklick auf den Eintrag und den Reiter Anschlusseinstellungen kann die nun vorhandene serielle Schnittstelle unter Windows konfiguriert werden. Um Kompatibilität mit {\pic} zu gewährleisten, ist das Hauptfenster nach Tabelle \ref{tab:seriell} zu konfigurieren.
+Durch Doppelklick auf den Eintrag und den Reiter Anschlusseinstellungen kann die nun vorhandene serielle Schnittstelle unter Windows konfiguriert werden. Um Kompatibilität mit {\pic} zu gewährleisten, ist das Hauptfenster nach Tabelle~\ref{tab:seriell} zu konfigurieren.
 
 \begin{table}[b]
 \begin{center}
@@ -256,7 +257,7 @@ Hardware- und treiberseitig steht einer erfolgreichen Kommunikation von Rechner 
 \label{fig:puttytelstart}
 \end{figure}
 
-\texttt{Puttytel} kann per Doppelklick gestartet werden, woraufhin man zu einem Startbildschirm gelangt. Man wählt in der linken Spalte unten links \enquote{Serial} und stellt die Parameter -- analog zur Konfiguration des COM-Ports nach Tabelle \ref{tab:seriell} -- wie in Abbildung \ref{fig:puttytelstart} ein, ehe man die serielle Verbindung per Klick auf \enquote{Open} startet. Vor dem Start der Verbindung sollte man das verbundene Device mit Strom versorgen.
+\texttt{Puttytel} kann per Doppelklick gestartet werden, woraufhin man zu einem Startbildschirm gelangt. Man wählt in der linken Spalte unten links \enquote{Serial} und stellt die Parameter -- analog zur Konfiguration des COM-Ports nach Tabelle~\ref{tab:seriell} -- wie in Abbildung~\ref{fig:puttytelstart} ein, ehe man die serielle Verbindung per Klick auf \enquote{Open} startet. Vor dem Start der Verbindung sollte man das verbundene Device mit Strom versorgen.
 
 Um bei \texttt{Puttytel} nicht immer all diese Einstellungen per Hand vornehmen zu müssen, bietet sich an, unter Windows eine Verknüpfung auf \texttt{puttytel.exe} zu erstellen und in den Verknüpfungseigenschaften als Ziel anzugeben:
 \begin{verbatim}
@@ -280,13 +281,13 @@ Als minimale Zeitdauer zwischen zwei Zündungen sollte \unit[100]{ms} nicht unter
 \chapter{Kommunikation zwischen PC und Devices}
 \label{ch:kommunikationpc}
 
-In diesem Abschnitt wird die Systemüberwachung bzw. -konfiguration über die serielle Schnittstelle mittels \texttt{Puttytel} oder die {\anlage}-GUI behandelt. Auf die Kommunikation zwischen {\pic} und der Transmitterbox wird an dieser Stelle nicht eingegangen, da hier -- wenn alle Einstellungen wie in Abschnitt \ref{sec:piceinrichtung} erläutert getroffen wurden -- alles quasi-automatisch und ohne Zutun des Benutzers stattfindet.
+In diesem Abschnitt wird die Systemüberwachung bzw. -konfiguration über die serielle Schnittstelle mittels \texttt{Puttytel} oder die {\anlage}-GUI behandelt. Auf die Kommunikation zwischen {\pic} und der Transmitterbox wird an dieser Stelle nicht eingegangen, da hier -- wenn alle Einstellungen wie in Abschnitt~\ref{sec:piceinrichtung} erläutert getroffen wurden -- alles quasi-automatisch und ohne Zutun des Benutzers stattfindet.
 
 \section{Puttytel}
 
 \subsection{Befehlsübersicht}
 
-Hat man mittels \texttt{Puttytel} eine Verbindung zwischen einem Device und dem PC aufbauen können, sieht man vor sich zunächst nur einen schwarzen Bildschirm. Um nun mit dem Device kommunizieren zu können, existieren einige Befehle gemäß Tabelle \ref{tab:commands}.
+Hat man mittels \texttt{Puttytel} eine Verbindung zwischen einem Device und dem PC aufbauen können, sieht man vor sich zunächst nur einen schwarzen Bildschirm. Um nun mit dem Device kommunizieren zu können, existieren einige Befehle gemäß Tabelle~\ref{tab:commands}.
 
 \begin{table}[bt]
 \begin{center}
@@ -315,7 +316,7 @@ Diese können, sofern \texttt{Puttytel} die aktive Anwendung ist, direkt über die
 
 Aufgrund der eingebauten Timeout-Funktion, welche ein Hängenbleiben des Programms während einer Show verhindern soll, bricht die Firmware die Eingabe ab, wenn zwischen der Eingabe der einzelnen Buchstaben mehr als 3\,s vergehen. Lässt man diese Zeit verstreichen, wird automatisch ein Drücken der \emph{ENTER}-Taste übermittelt, die Befehlseingabe also abgeschlossen und das Device ist unmittelbar bereit, einen neuen Befehl aufzunehmen. Wird also nach Eingabe eines gültigen Befehls die \emph{ENTER}-Taste nicht gedrückt, wird der Befehl durch den Timeout dennoch ausgelöst. Möchte man dies vermeiden, sollte man den Befehl vor Ausführung durch Eingabe weiterer Zeichen ungültig machen oder durch Entfernen aller Zeichen mittels \emph{BACKSPACE} löschen.
 
-Von den in Tabelle \ref{tab:commands} aufgeführten Befehlen funktionieren lediglich zwei nicht bei allen Devices. \enquote{orders} setzt voraus, dass das angeschlossene Device zuvor -- über das durch \enquote{conf} zu erreichende Menü -- als Transmitterbox konfiguriert wurde bzw. im Fall von \enquote{zero} nicht als Transmitterbox.
+Von den in Tabelle~\ref{tab:commands} aufgeführten Befehlen funktionieren lediglich zwei nicht bei allen Devices. \enquote{orders} setzt voraus, dass das angeschlossene Device zuvor -- über das durch \enquote{conf} zu erreichende Menü -- als Transmitterbox konfiguriert wurde bzw. im Fall von \enquote{zero} nicht als Transmitterbox.
 
 
 \subsection{Konfiguration}
@@ -324,58 +325,49 @@ Von den in Tabelle \ref{tab:commands} aufgeführten Befehlen funktionieren ledigl
 \subsubsection{Lokal}
 \label{subsec:localconf}
 
-Mit \enquote{conf} gelangt man ins Konfigurationsmenü für die lokale Konfiguration der IDs, welches den Benutzer wie in Abbildung \ref{fig:conf} gezeigt empfängt. Hier sind die beiden wichtigsten Parameter jeder Zündbox, die Unique-ID und die Slave-ID, aufgeführt, die der Benutzer nach eigenen Bedürfnissen vergeben kann.
+Mit \enquote{conf} gelangt man ins Konfigurationsmenü für die lokale Konfiguration der IDs, dessen Ablauf beispielhaft in Abbildung~\ref{fig:conf} gezeigt ist. Hier sind die beiden wichtigsten Parameter jeder Zündbox, die Unique-ID und die Slave-ID, aufgeführt, die der Benutzer nach eigenen Bedürfnissen vergeben kann.
 
 Die \textbf{Unique-ID} dient der Identifikation jeder einzelnen Zündbox im Funksystem. Jeder verwendeten Zündbox muss daher, um die Funktion von {\anlage} gewährleisten zu können, eine andere Unique-ID im Bereich von 01-30 (zweistellige Eingabe!) zugeteilt werden.
 
 Die \textbf{Slave-ID} entscheidet, auf welche Zündbefehle eine Zündbox reagiert. Sollen also zwei oder mehr Boxen stets zur selben Zeit denselben Kanal zünden, kann ihnen einfach die gleiche Slave-ID zugewiesen werden. Wie oben ausgeführt muss die Zuweisung der Unique-IDs allerdings eineindeutig sein, d.h. jede Box hat eine unterschiedliche Unique-ID bzw. jede Unique-ID gehört zu genau einer Zündbox.
 
-Die Zuweisung von Slave- und Unique-ID vom Startbildschirm des Konfigurationsprogramms aus geschieht, indem man den Anweisungen auf dem Bildschirm folgt. U bzw. u (Groß- oder Kleinschreibung spielt hier keine Rolle) ändert die Unique-ID, S bzw. s die Slave-ID einer Zündbox. Die neue Unique- bzw. Slave-ID muss stets zweistellig ohne Bestätigung durch Enter oder eine andere Taste eingegeben werden.
-
 Die Null als Slave- und Unique-ID identifiziert ein Device als Transmitterbox. Die Software erkennt dabei automatisch, ob es sich beim angeschlossenen Device grundsätzlich um einen Transmitter oder eine Zündbox handelt und weist Transmittern unmittelbar beim Hochfahren Null als Slave-ID und Unique-ID zu. Ein vom Aufbau her als Zündbox ausgeführtes Device muss immer von Null verschiedene IDs besitzen.
+
+Die Zuweisung von Slave- und Unique-ID vom Startbildschirm des Konfigurationsprogramms aus geschieht, indem man den Anweisungen auf dem Bildschirm folgt. Die Eingabe von \enquote{I} bzw. \enquote{i} (Groß- oder Kleinschreibung spielt keine Rolle) erlaubt eine Änderung von Unique-ID und Slave-ID einer Zündbox. Die neue Unique- bzw. Slave-ID muss stets zweistellig ohne Bestätigung durch Enter oder eine andere Taste eingegeben werden. Beide IDs können im Bereich von 01-30 liegen.
 
 \begin{figure}
 \centering
 \includegraphics[width=.8\textwidth]{Bilder/conf}
-\caption{Startbildschirm des Konfigurationsprogramms}
+\caption{Ablauf des Konfigurationsprogramms bei Verbindung mit einer Zündbox}
 \label{fig:conf}
 \end{figure}
 
-Möchte man also die Unique-ID 5 zuweisen, muss man zunächst \enquote{u} und anschließend \enquote{05} eingeben, für Slave-ID 12 dementsprechend \enquote{s} und \enquote{12}. Ein Sonderfall tritt auf, wenn man ein zuvor als Transmitter konfiguriertes Device nun als Zündbox konfigurieren will. Es erscheint dann nach Eingabe der neuen Slave-ID (Unique-ID) automatisch die Eingabeaufforderung für die neue Unique-ID (Slave-ID), da entweder beide IDs den Wert 0 haben müssen (Transmitter) oder beide IDs einen anderen Wert als 0 (Zündbox). Die zugewiesenen IDs werden an drei Stellen im internen Speicher mit Prüfsummen hinterlegt und bleiben sowohl nach dem Ausschalten als auch nach einem Firmwareupdate erhalten.
+Möchte man beispielsweise die Unique-ID 5 und die Slave-ID 12 zuweisen, muss man nach Anzeige des Startbildschirms zunächst \enquote{i} und anschließend \enquote{05} und \enquote{12} eingeben. Will man eine der beiden IDs beibehalten und nur die andere ändern, kann die Änderung durch Drücken von Enter übersprungen werden. Die zugewiesenen IDs werden an drei Stellen im internen Speicher mit Prüfsummen hinterlegt und bleiben sowohl nach dem Ausschalten als auch nach einem Firmwareupdate erhalten. Eine Änderung mindestens einer der IDs führt zu einem sofortigen Neustart der Zündbox.
 
-Wie bereits angesprochen ist es möglich, auch eine Zündbox zur Steuerung zu verwenden, indem man sie während der Show mit dem PC verbindet.
+Als Transmitter (Slave-ID 0 und Unique-ID 0) konfiguriert werden können nur Devices wie in Abbildung~\ref{fig:transmitter} mit Display und ohne Klemmen für den Anschluss von Zündern. Der Grund hierfür liegt in der in Abbildung~\ref{fig:pinout} auf Seite \pageref{fig:pinout} gezeigten Pinbelegung des Controllers. Wie zu erkennen ist, werden Controlleranschlüsse beim Transmitter als Steuerung des Displays verwendet, die bei der Zündbox den Zustand des Schlüsselschalters einlesen oder die Schieberegister zur Zündung der Kanäle ansteuern. Da die Software davon ausgeht, dass ein Device mit Slave-ID und Unique-ID 0 an diesen Pins ein LC-Display besitzt, werden die Pins entsprechend konfiguriert und angesteuert. Im Fall des Schlüsselschalter-Pins käme es daher zu einem Kurzschluss, wenn die Box scharf geschaltet ist, was den Controller beschädigen kann, die Ansteuerung des Schieberegisters mit LCD-Befehlen könnte dazu führen, dass Zündkanäle durchschalten und Zündungen unkontrolliert ausgelöst werden, weil die Software glaubt, die Datenpins des LCD zu modulieren, in Wahrheit aber die Schieberegister ansteuert. Die Firmware erkennt durch eine Überprüfung des Devices beim Start, ob es sich bei dem angeschlossenen Device um einen Transmitter oder eine Zündbox handelt und verhindert diesen ungewünschten Betriebsfall somit automatisch. Nährere Informationen zu dieser Unterscheidung finden sich in Abschnitt~\ref{ch:pinbelegung}.
 
-Als Transmitter (Slave-ID 0 und Unique-ID 0) konfiguriert werden können nur Devices wie in Abbildung \ref{fig:transmitter} mit Display und ohne Klemmen für den Anschluss von Zündern. Der Grund hierfür liegt in der in Abbildung \ref{fig:pinout} auf Seite \pageref{fig:pinout} gezeigten Pinbelegung des Controllers. Wie zu erkennen ist, werden Controlleranschlüsse beim Transmitter als Steuerung des Displays verwendet, die bei der Zündbox den Zustand des Schlüsselschalters einlesen oder die Schieberegister zur Zündung der Kanäle ansteuern. Da die Software davon ausgeht, dass ein Device mit Slave-ID und Unique-ID 0 an diesen Pins ein LC-Display besitzt, werden die Pins entsprechend konfiguriert und angesteuert. Im Fall des Schlüsselschalter-Pins käme es daher zu einem Kurzschluss, wenn die Box scharf geschaltet ist, was den Controller beschädigen kann, die Ansteuerung des Schieberegisters mit LCD-Befehlen könnte dazu führen, dass Zündkanäle durchschalten und Zündungen unkontrolliert ausgelöst werden, weil die Software glaubt, die Datenpins des LCD zu modulieren, in Wahrheit aber die Schieberegister ansteuert. Die Firmware erkennt durch eine Überprüfung des Devices beim Start, ob es sich bei dem angeschlossenen Device um einen Transmitter oder eine Zündbox handelt und verhindert diesen ungewünschten Betriebsfall automatisch. 
-
-Unabhängig davon, dass eine Zündbox nicht als Transmitter konfiguriert werden, also nicht Unique- und Slave-ID 0 besitzen darf, kann sie theoretisch trotzdem zur Steuerung und Koordinierung eines Netzes und einer Show eingesetzt werden, indem man sie über die serielle Schnittstelle mit dem PC verbindet. Bis auf die Darstellung am LCD erfüllt sie dieselben Aufgaben wie ein Transmitter und kann auch parallel noch als Zündbox fungieren. Auf entsprechenden Sicherheitsabstand zu Lebewesen und sensibler Technik ist dabei selbstverständlich zu achten!
+Unabhängig davon, dass eine Zündbox nicht als Transmitter konfiguriert werden, also nicht Unique- und Slave-ID 0 besitzen kann, kann sie theoretisch trotzdem zur Steuerung und Koordinierung eines Netzes und einer Show eingesetzt werden, indem man sie über die serielle Schnittstelle mit dem PC verbindet. Bis auf die Darstellung am LCD erfüllt sie dieselben Aufgaben wie ein Transmitter und kann auch parallel noch als Zündbox fungieren. Auf entsprechenden Sicherheitsabstand zu Lebewesen und sensibler Technik ist dabei selbstverständlich zu achten!
 
 \subsubsection{Ferngesteuert}
 \label{subsec:remoteconf}
 
-Über den Befehl \enquote{remote} gelangt man ins Konfigurationsprogramm zur ferngesteuerten Vergabe von Unique- und Slave-ID. Der Programmablauf ist beispielhaft in Abbildung \ref{fig:remote} gezeigt: Die Eingabe der alten und neuen IDs erfolgt analog zur Eingabe bei lokaler Konfiguration, am Ende muss die Änderung noch bestätigt werden. Werden als alte Unique- und Slave-ID die Daten der verbundenen Box eingegeben, so werden deren Kennzahlen wie bei einer lokalen Konfiguration geändert und kein weiterer Befehl gesendet.
-
-Durch \enquote{remote} und die Eingabe von Unique- und Slave-ID einer nicht per Kabel verbundenen Box ist es möglich, die IDs einer eingeschalteten Zündbox per Funk zu ändern. Voraussetzung ist dabei, dass die angesprochene Zündbox nicht scharf geschaltet ist -- hierdurch soll ein Eingriff von außen während einer Show unterbunden werden, aus Sicherheitsgründen ist es außerdem nicht möglich, ein Device ferngesteuert als Transmitter zu konfigurieren.
-
-\begin{figure}
-\centering
-\includegraphics[width=.8\textwidth]{Bilder/remote}
-\caption{Beispiel einer ferngesteuerten ID-Zuweisung}
-\label{fig:remote}
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=.8\textwidth]{Bilder/remote}
+	\caption{Beispiel einer ferngesteuerten ID-Zuweisung}
+	\label{fig:remote}
 \end{figure}
+
+Über den Befehl \enquote{remote} gelangt man ins Konfigurationsprogramm zur ferngesteuerten Vergabe von Unique- und Slave-ID. Der Programmablauf ist beispielhaft in Abbildung~\ref{fig:remote} gezeigt: Die Eingabe der alten und neuen IDs erfolgt analog zur Eingabe bei lokaler Konfiguration, am Ende muss die Änderung noch bestätigt werden. Werden als alte Unique- und Slave-ID die Daten der verbundenen Box eingegeben, so werden deren Kennzahlen wie bei einer lokalen Konfiguration geändert und kein weiterer Befehl gesendet.
+
+Durch \enquote{remote} und die Eingabe von Unique- und Slave-ID einer nicht per Kabel verbundenen Box ist es möglich, die IDs einer eingeschalteten Zündbox per Funk zu ändern. Voraussetzung ist dabei, dass die angesprochene Zündbox nicht scharf geschaltet ist -- hierdurch soll ein Eingriff von außen während einer Show unterbunden werden.
 
 Der Anwender hat selbst darauf zu achten, durch ein ferngesteuertes Update nicht einem Device eine bereits vergebene Unique-ID zuzuweisen! Falls dies dennoch geschieht, ist das weitere Vorgehen davon abhängig, ob die Devices auch die gleiche Slave-ID besitzen oder nicht. Sind die Slave-IDs nicht identisch, so kann durch einen weiteren \enquote{remote}-Befehl die Unique-ID-Zuweisung geändert werden. Bei identischen Slave-IDs funktioniert dies nicht, da stets alle Devices auf den Änderungsbefehl in gleicher Weise reagieren würden. Hier müssen daher alle Devices mit identischen IDs bis auf eines ausgeschaltet werden, dem man dann neue IDs zuweisen kann. Nun kann dann jeweils ein weiteres Device eingeschaltet und seine IDs neu gesetzt werden, bis wieder alle unterschiedliche Unique-IDs besitzen.
 
 \subsection{Systemübersicht}
 \label{sec:list}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=.8\textwidth]{Bilder/list}
-\caption{Systemübersicht}
-\label{fig:list}
-\end{figure}
-
-Mit \enquote{list} ist es möglich, sich die Systemübersicht entsprechend Abbildung \ref{fig:list} anzeigen zu lassen. Es werden zwei Tabellen ausgegeben, wobei die obere nach Unique-ID geordnet anzeigt:
+Mit \enquote{list} ist es möglich, sich die Systemübersicht entsprechend Abbildung~\ref{fig:list} anzeigen zu lassen. Es werden zwei Tabellen ausgegeben, wobei die obere nach Unique-ID geordnet anzeigt:
 \begin{enumerate}
 \item Welche Slave-ID der Unique-ID zugewiesen ist.
 \item Welche Spannung die Batterie der Box mit der entsprechenden Unique-ID liefert.
@@ -388,7 +380,14 @@ Die untere Tabelle listet auf, wie viele Boxen mit der entsprechenden Slave-ID d
 
 Zwischen den beiden Tabellen wird die Anzahl der fehlerhaften IDs aufgelistet. Dies kann entweder auf doppelte Zuweisung von Unique-IDs oder Fehler beim Auslesen der IDs (fehlerhafte Prüfsummen) zurückzuführen sein. Für normalen Betrieb sollte dieser Wert stets 0 betragen.
 
-Der dargestellte Zustand entspricht den empfangenen Parametern nach der letzten Identifikationsaufforderung, für eine möglichst aktuelle Liste sollte also zuvor, wie im Abschnitt \ref{sec:manuellessenden} beschrieben eine Identifikationsaufforderung gesendet werden.
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=.8\textwidth]{Bilder/list}
+	\caption{Systemübersicht}
+	\label{fig:list}
+\end{figure}
+
+Der dargestellte Zustand entspricht den empfangenen Parametern nach der letzten Identifikationsaufforderung, für eine möglichst aktuelle Liste sollte also zuvor, wie im Abschnitt~\ref{sec:manuellessenden} beschrieben eine Identifikationsaufforderung gesendet werden.
  
 
 \subsection{Manuelles Senden}
@@ -406,7 +405,7 @@ Jede andere Angabe als \enquote{f}, \enquote{i} oder \enquote{t} beendet den Mod
 
 Die zwingend für den Betrieb von {\anlage} notwendigen Zugriffe auf das Funkmodul werden von der Software automatisch getätigt, so dass diese Funktion in der Regel nicht gebraucht wird, dennoch ist es möglich das verwendete Funkmodul \texttt{RFM69CW\footnote{Links zum Datenblatt: \href{http://www.hoperf.com/upload/rf/RFM69CW-V1.1.pdf}{Homepage von Hersteller HopeRF} oder \href{http://www.pollin.de/shop/downloads/D810303D.PDF}{Pollin}}} unmittelbar über das Terminalprogramm anzusprechen, um Werte aus den Registern zu lesen oder die Register neu zu beschreiben.
 
-Nach Eingabe von \enquote{rfm} und Bestätigung mit \emph{ENTER} erscheint eine Aufforderung zur Befehlseingabe. Diese hat im Hexadezimalformat als 16-Bit-Wert zu erfolgen, d.h. vierstellig mit den zulässigen Zeichen 0-9 und A-F bzw. a-f. Jedes eingegebene Zeichen symbolisiert dabei vier Bits, die Umrechnung ist in Tabelle \ref{tab:zahlensysteme} gezeigt.
+Nach Eingabe von \enquote{rfm} und Bestätigung mit \emph{ENTER} erscheint eine Aufforderung zur Befehlseingabe. Diese hat im Hexadezimalformat als 16-Bit-Wert zu erfolgen, d.h. vierstellig mit den zulässigen Zeichen 0-9 und A-F bzw. a-f. Jedes eingegebene Zeichen symbolisiert dabei vier Bits, die Umrechnung ist in Tabelle~\ref{tab:zahlensysteme} gezeigt.
 
 \begin{table}[t]
 \begin{center}
@@ -425,7 +424,7 @@ Binär & 1000 & 1001 & 1010 & 1011 & 1100 & 1101 & 1110 & 1111 \\ \hline
 \label{tab:zahlensysteme}
 \end{table}
 
-Die Bedeutung der Eingabe für das Funkmodul ist in Tabelle \ref{tab:rfmcommand} illustriert. Hierbei sollte auch klar werden, wie sich die Werte für die Zeichen 1-4 zusammensetzen. Ist ein Bit gesetzt, muss die entsprechende Zahl (8, 4, 2, 1) zum Zeichenwert addiert werden, so dass sich bei vier gesetzten Bits als Maximalwert 15 ergibt, ist nur das oberste Bit gesetzt, lautet der Wert 8, ist nur das unterste gesetzt 1, sind die beiden mittleren Bits gesetzt 6, usw.
+Die Bedeutung der Eingabe für das Funkmodul ist in Tabelle~\ref{tab:rfmcommand} illustriert. Hierbei sollte auch klar werden, wie sich die Werte für die Zeichen 1-4 zusammensetzen. Ist ein Bit gesetzt, muss die entsprechende Zahl (8, 4, 2, 1) zum Zeichenwert addiert werden, so dass sich bei vier gesetzten Bits als Maximalwert 15 ergibt, ist nur das oberste Bit gesetzt, lautet der Wert 8, ist nur das unterste gesetzt 1, sind die beiden mittleren Bits gesetzt 6, usw.
 
 Es ist zu erkennen, dass das erste einzugebende Zeichen sowohl das Schreiben/Lesen-Bit enthält als auch die obersten drei Bit der Registeradresse. Die acht Datenbits sind lediglich für einen Schreibbefehl relevant, bei einem Lesezugriff kann als drittes und viertes Zeichen ohne Konsequenzen ein beliebiger Hexadezimalwert im Bereich von 0x00 bis 0xFF übertragen werden.
 
@@ -460,7 +459,7 @@ Das Modul antwortet nun mit einem 8-Bit-Wert, z.B. mit dem Wert 0x9A, welcher de
 
 Will man die Sendeleistung nun auf $\unit[6]{dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\unit[6]{dBm}$ einzuschreiben, gibt man im Terminalprogramm \enquote{rfm} gefolgt von \enquote{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
 
-Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers wie im Abschnitt \ref{subsec:readpower} sollte dann den eben eingeschriebenen Wert 0x98 zurückgeben.
+Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers wie im Abschnitt~\ref{subsec:readpower} sollte dann den eben eingeschriebenen Wert 0x98 zurückgeben.
 
 \section{GUI}
 
@@ -500,7 +499,7 @@ Der Updater führt nach Übertragung der Daten einen CRC-Check durch. Sollte diese
 
 \chapter{Schaltpläne \& Layouts}
 
-In den Abbildungen \ref{fig:transmitterschematic} und \ref{fig:zuendboxschematic} sind die Schaltpläne von Transmitter und Zündbox nach Funktionseinheiten unterteilt gezeigt, in den Abbildungen \ref{fig:transmitterlayout} und \ref{fig:zuendboxlayout} die Layouts.
+In den Abbildungen~\ref{fig:transmitterschematic} und~\ref{fig:zuendboxschematic} sind die Schaltpläne von Transmitter und Zündbox nach Funktionseinheiten unterteilt gezeigt, in den Abbildungen~\ref{fig:transmitterlayout} und~\ref{fig:zuendboxlayout} die Layouts.
 
 \begin{figure}
 \centering
@@ -531,8 +530,9 @@ In den Abbildungen \ref{fig:transmitterschematic} und \ref{fig:zuendboxschematic
 \end{figure}
 
 \chapter{Pinbelegung}
+\label{ch:pinbelegung}
 
-Die Pinbelegung des \texttt{ATmega328p} in den verschiedenen Devices ist in Abbildung \ref{fig:pinout} gezeigt.
+Die Pinbelegung des \texttt{ATmega328p} in den verschiedenen Devices ist in Abbildung~\ref{fig:pinout} gezeigt.
 
 Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er beim Starten der Firmware als Eingang geschaltet wird und aufgrund der dort anliegenden Spannung die sicherheitsrelevante Erkennung, um welchen Devicetyp es sich handelt, vorgenommen wird. Aufgrund eines internen Pullup-Widerstands im LCD werden bei angeschlossenem Transmitter stets $\unit[3{,}3]{V}$ an diesem Pin anliegen, bei Zündboxen bewegt sich die heruntergeteilte Spannung der Versorgungsbatterie im Bereich unterhalb von $\unit[1{,}1]{V}$.
 
@@ -547,7 +547,7 @@ Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er be
 
 Die Steuerungssoftware für {\anlage} ist unter Zuhilfename des \texttt{AVR-GCC} in der Programmiersprache \texttt{C} geschrieben. Sie umfasst insgesamt 15 Sourcefiles (.c) mit zugehörigen Headerdateien (.h), eine Headerdatei zur Generierung von Registeradressen \enquote{portmakros.h} sowie eine globale Headerdatei \enquote{global.h}, in welcher alle anderen erfasst sind.
 
-Die Quellcodedateien und ihre Funktionen sind in Tabelle \ref{tab:sourcefiles} aufgelistet.
+Die Quellcodedateien und ihre Funktionen sind in Tabelle~\ref{tab:sourcefiles} aufgelistet.
 
 \begin{table}[h]
 \begin{tabular}{lp{125mm}}
@@ -575,7 +575,7 @@ uart.c & Kommunikation über serielle Schnittstelle \\ \hline
 
 \chapter{Materialliste}
 
-In den Tabellen \ref{tab:transmitterbom} und \ref{tab:zuendboxbom} sind die benötigten Teile für den Aufbau eines Transmitters und einer Zündbox zusammen mit möglichen Bezugsquellen und Preisen (Stand Januar 2015) aufgelistet.
+In den Tabellen~\ref{tab:transmitterbom} und~\ref{tab:zuendboxbom} sind die benötigten Teile für den Aufbau eines Transmitters und einer Zündbox zusammen mit möglichen Bezugsquellen und Preisen (Stand Januar 2015) aufgelistet.
 
 \begin{longtable}{p{1.2cm}cp{2.5cm}llllp{1.5cm}}
 \multicolumn{8}{c}{\textbf{Materialliste Transmitter}}\\
@@ -720,7 +720,7 @@ SV2 & 1 & Wannenstecker, 10-pol & Reichelt & WSL 10G & \EUR{0,08} & \EUR{0,08} &
 
 \chapter{Platinenherstellung}
 
-Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung \ref{fig:transmitterprint} die Platine des Transmitters als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage, in Abbildung \ref{fig:zuendboxprint} die der Zündbox und in Abbildung \ref{fig:rfmprint} die Adapterplatine zum Auflöten des Funkmoduls.
+Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage, in Abbildung~\ref{fig:zuendboxprint} die der Zündbox und in Abbildung~\ref{fig:rfmprint} die Adapterplatine zum Auflöten des Funkmoduls.
 
 Die Oberseite ist hierbei jeweils schon gespiegelt, die Ausdrücke können für einen Tonertransfer also einfach ausgedruckt, im Zwischenraum gefaltet werden, wobei auf möglichst exakte Deckung zu achten ist.
 
@@ -788,13 +788,13 @@ T            & Flachband & 10    & 100 mm &  1 & LCD\\ \hline
 \label{tab:kabel}
 \end{table}
 
-In Tabelle \ref{tab:kabel} sind die benötigten Abschnitte aufgelistet. Alle Kabel sollten am einen Ende jeweils auf einer Länge von 4\,mm zum Festlöten an der Platine, am anderen auf einer Länge von 6\,mm abisoliert und verzinnt werden. Zur Vereinfachung der Arbeit ist es ratsam, die Adern des Flachbandkabels erst danach zu trennen, so dass nicht jeder \enquote{Zweierverbund} einzeln abisoliert und verzinnt werden muss.
+In Tabelle~\ref{tab:kabel} sind die benötigten Abschnitte aufgelistet. Alle Kabel sollten am einen Ende jeweils auf einer Länge von 4\,mm zum Festlöten an der Platine, am anderen auf einer Länge von 6\,mm abisoliert und verzinnt werden. Zur Vereinfachung der Arbeit ist es ratsam, die Adern des Flachbandkabels erst danach zu trennen, so dass nicht jeder \enquote{Zweierverbund} einzeln abisoliert und verzinnt werden muss.
 
 Es dient der Übersichtlichkeit und dem späteren Verständnis ungemein, wenn man verschiedene Kabelfarben verwendet und sich dabei an gängige Konventionen hält (Akkuspannung rot, Masse schwarz).
 
 \section{Platinen}
 
-Ausgangspunkt der Bestückung ist die geätzte und gebohrte Platine mit allen Leiterbahnen auf der Ober- und Unterseite. Für selbst gefertigte, einseitig geätzte Platinen, bei denen die Leitungen auf der Oberseite als Drahtbrücken ausgeführt sind, sind diese in Abbildung \ref{fig:platinen} dargestellt.
+Ausgangspunkt der Bestückung ist die geätzte und gebohrte Platine mit allen Leiterbahnen auf der Ober- und Unterseite. Für selbst gefertigte, einseitig geätzte Platinen, bei denen die Leitungen auf der Oberseite als Drahtbrücken ausgeführt sind, sind diese in Abbildung~\ref{fig:platinen} dargestellt.
 
 \begin{figure}[t]
 \centering
@@ -815,7 +815,7 @@ Anschließend sollten die Bauteile in folgender Reihenfolge eingelötet werden:
 \item[Temperatursensor] mit korrekter Orientierung
 \item[Integrierte Schaltungen] mit korrekter Orientierung
 \begin{center}
-Der Stand bis zu diesem Punkt ist in Abbildung \ref{fig:platinenzwischenschritt} dargestellt.
+Der Stand bis zu diesem Punkt ist in Abbildung~\ref{fig:platinenzwischenschritt} dargestellt.
 \end{center}
 \item[Anschluss-Kabel] für Klemmen (Zündbox) bzw. LCD (Transmitter)
 \item[Steckerkabel] für Netz- und Schlüsselschalter
@@ -847,7 +847,7 @@ Nachdem die Platinen nun fertig bestückt sind, folgen die Schritte für die Ferti
 \label{fig:funkmoduladapter}
 \end{figure}
 
-Der fertige Adapter ist in Abbildung \ref{fig:funkmoduladapter} gezeigt.
+Der fertige Adapter ist in Abbildung~\ref{fig:funkmoduladapter} gezeigt.
 
 \section{Peripherie}
 
@@ -861,11 +861,11 @@ Als Gehäuse für den Transmitter wird das schwarze Kunststoffgehäuse GEH KS 50 au
 \label{fig:lcddimensions}
 \end{figure}
 
-Die Vorderseite des Gehäuses muss zunächst mit einem Ausschnitt von \mbox{97\,x\,39,5\,mm} und vier 3mm-Bohrungen für die Anbringung des LCD versehen werden. Die Abstände zueinander sind in Abbildung \ref{fig:lcddimensions} verdeutlicht. Wer nicht auf seine Messkünste vertrauen möchte oder ein LCD mit abweichenden Abmessungen besitzt, sollte zunächst einen passenden Ausschnitt für den Bildschirm mittig in der Fläche anbringen, anschließend können das LCD aufgelegt und die vier Bohrlöcher markiert und gebohrt werden.
+Die Vorderseite des Gehäuses muss zunächst mit einem Ausschnitt von \mbox{97\,x\,39,5\,mm} und vier 3mm-Bohrungen für die Anbringung des LCD versehen werden. Die Abstände zueinander sind in Abbildung~\ref{fig:lcddimensions} verdeutlicht. Wer nicht auf seine Messkünste vertrauen möchte oder ein LCD mit abweichenden Abmessungen besitzt, sollte zunächst einen passenden Ausschnitt für den Bildschirm mittig in der Fläche anbringen, anschließend können das LCD aufgelegt und die vier Bohrlöcher markiert und gebohrt werden.
 
 Bevor man das LCD einschraubt, muss noch eine Aussparung für den Sub-D-Anschluss, ein Loch für den Antennenanschluss (6,5 mm), vier Löcher für die Status-LEDs (5 mm)und eine Kerbe für die Versorgungskabeldurchführung in die Wand, welche später als Oberseite des Gehäuses dient, eingebracht werden.
 
-Hierfür sollte man zunächst die fertig bestückte Platine mittels zweier Schrauben in ihrer finalen Position festschrauben und das Oberteil so anlegen, dass die Position der Aussparung für die Sub-D-Buchse angezeichnet werden kann. Die Abmessung der Aussparung sollte \mbox{31\,x\,12,5\,mm} betragen. Die Positionen der restlichen Löcher sind aufgrund der Kabelverbindung mit der Platine unkritisch, die ungefähre Lage kann Abbildung \ref{fig:transmitter} auf Seite \pageref{fig:transmitter} entnommen werden. Das Versorgungskabel mit USB-Stecker wird zwecks Zugentlastung zwischen den beiden zu verschraubenden Teilen eingeklemmt, die Kerbe sollte daher nicht allzu groß ausgeführt werden. Die Bohrarbeiten am Transmitter sind damit erledigt!
+Hierfür sollte man zunächst die fertig bestückte Platine mittels zweier Schrauben in ihrer finalen Position festschrauben und das Oberteil so anlegen, dass die Position der Aussparung für die Sub-D-Buchse angezeichnet werden kann. Die Abmessung der Aussparung sollte \mbox{31\,x\,12,5\,mm} betragen. Die Positionen der restlichen Löcher sind aufgrund der Kabelverbindung mit der Platine unkritisch, die ungefähre Lage kann Abbildung~\ref{fig:transmitter} auf Seite \pageref{fig:transmitter} entnommen werden. Das Versorgungskabel mit USB-Stecker wird zwecks Zugentlastung zwischen den beiden zu verschraubenden Teilen eingeklemmt, die Kerbe sollte daher nicht allzu groß ausgeführt werden. Die Bohrarbeiten am Transmitter sind damit erledigt!
 
 Nun müssen noch die elektrischen Verbindungen zwischen Platine und Peripherie hergestellt und die Peripherieteile anschließend befestigt werden -- zuerst die vier Status-LEDs:
 
@@ -883,10 +883,10 @@ Zunächst wird das LCD am Gehäuse festgeschraubt, wobei darauf zu achten ist, das
 
 Unter möglichst geringer Torsion sollte dann der Adapter in die Buchsenleisten auf der Platine gesteckt werden.
 
-Nun muss man noch die Antenne anschrauben. Wenn der Bootloader sich bereits auf dem Controller befindet, kann man das Gehäuse zuschrauben. Ansonsten den Transmitter mit Energie versorgen und den Bootloader wie in Abschnitt \ref{ch:bootloader} beschrieben flashen. Jetzt ist der Transmitter fertig aufgebaut und kann zugeschraubt werden! Die Firmware sollte kann wie in Abschnitt \ref{ch:firmwareupdate} beschrieben über die serielle Schnittstelle aufgespielt werden, wobei beim ersten Mal noch die Angabe des Dateinamens nötig ist.
+Nun muss man noch die Antenne anschrauben. Wenn der Bootloader sich bereits auf dem Controller befindet, kann man das Gehäuse zuschrauben. Ansonsten den Transmitter mit Energie versorgen und den Bootloader wie in Abschnitt~\ref{ch:bootloader} beschrieben flashen. Jetzt ist der Transmitter fertig aufgebaut und kann zugeschraubt werden! Die Firmware sollte kann wie in Abschnitt~\ref{ch:firmwareupdate} beschrieben über die serielle Schnittstelle aufgespielt werden, wobei beim ersten Mal noch die Angabe des Dateinamens nötig ist.
 
 \subsection{Zündbox}
-Abbildung \ref{fig:zuendboxbohren} zeigt die Bohrschablone für die Oberseite des Kunststoffgehäuses der Zündbox (Kunststoffgehäuse 021-002-084 von Pollin). Die Oberseite des Gehäuses ist dabei der Teil ohne sichtbare Schraublöcher. Diese kann dazu verwendet werden, eine Schablone aus Sperrholz oder Metall anzufertigen, welche später auf die Boxenoberseite gelegt wird, um die nötigen Bohrungen vorzunehmen. 
+Abbildung~\ref{fig:zuendboxbohren} zeigt die Bohrschablone für die Oberseite des Kunststoffgehäuses der Zündbox (Kunststoffgehäuse 021-002-084 von Pollin). Die Oberseite des Gehäuses ist dabei der Teil ohne sichtbare Schraublöcher. Diese kann dazu verwendet werden, eine Schablone aus Sperrholz oder Metall anzufertigen, welche später auf die Boxenoberseite gelegt wird, um die nötigen Bohrungen vorzunehmen. 
 
 \begin{figure}
 \centering
@@ -903,7 +903,7 @@ Die Bohrlöcher für die 16 Kanal-LEDs sollten mit einem 3-mm-Bohrer, die der vier
 
 Da die Lautsprecherklemmen mit M3-Gewindeschrauben befestigt werden, wäre der ideale Bohrdurchmesser für die 16 Schraubenlöcher 3,2\,mm. Sollte dieser Durchmesser nicht vorhanden sein, kann aber auch mit 3,5\,mm gearbeitet werden. Für die Lötfahnen der Klemmen ist eine rechteckige Aussparung von \mbox{4,5\,x\,2\,mm} nötig, als schnelle Lösung kann auch jeweils ein 5-mm-Loch durch den Mittelpunkt (Diagonalenschnittpunkt) dieser Flächen gebohrt werden.
 
-Die rechteckige Aussparung für den Netzschalter sollte die Größe \mbox{19\,x\,13\,mm} besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von 12\,mm und der Durchsteckplatz für die SMA-Buchse sollte mit 6,5\,mm vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt. Die Innenansicht des Zündboxdeckels (noch ohne SMA-Anschluss) ist in Abbildung \ref{fig:zuendboxdeckel} dargestellt. Hierbei ist auch zu erkennen, wo sich die Nut (unten, bei den Status-LEDs) und wo die Feder (oben) beim Deckel befinden muss. Dementsprechend muss es bei der Unterseite andersherum sein.
+Die rechteckige Aussparung für den Netzschalter sollte die Größe \mbox{19\,x\,13\,mm} besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von 12\,mm und der Durchsteckplatz für die SMA-Buchse sollte mit 6,5\,mm vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt. Die Innenansicht des Zündboxdeckels (noch ohne SMA-Anschluss) ist in Abbildung~\ref{fig:zuendboxdeckel} dargestellt. Hierbei ist auch zu erkennen, wo sich die Nut (unten, bei den Status-LEDs) und wo die Feder (oben) beim Deckel befinden muss. Dementsprechend muss es bei der Unterseite andersherum sein.
 
 \begin{figure}
 \centering
@@ -920,7 +920,7 @@ Zunächst vier Drahtstücke á 80\,mm abschneiden und durch die übereinander liegen
 
 Bei den Schritten in den folgenden beiden Absätzen ist Sorgfalt geboten, da die Kanäle und LEDs richtig zugeordnet werden müssen, um später mit dem entsprechenden Befehl auch den richtigen Kanal zu zünden!
 
-Zunächst müssen die 16 Kabel mit den zugehörigen schwarzen Klemmen verbunden werden, was anhand des Layouts in Abbildung \ref{fig:zuendboxlayout} auf Seite \pageref{fig:zuendboxlayout} erklärt werden soll. Kanal 1 wird vom Transistor Q2 gesteuert, Kanal 2 von Q3, Kanal 3 von Q4 und allgemein Kanal x-1 von Qx . Entsprechend ist das Kabel, welches an derjenigen Lötstelle angelötet ist, die durch die dicke blaue Linie unmittelbar mit dem mittleren Pin (Drain) von Q2 verbunden ist, an der Lötfahne der schwarzen Klemme ganz unten links -- bezogen auf Abbildung \ref{fig:zuendbox} -- anzubringen. Das Kabel an der Drain von Q3 (Zick-Zack-Anordnung der Transistoren beachten!) wird mit der schwarzen Klemme daneben verbunden, das an Q4 mit der dritten und das an Q5 schließlich mit der letzten Klemme in der Reihe, die unmittelbar neben der Viererreihe für die Kanal-LEDs liegt. Man sollte sich nicht dadurch verwirren lassen, dass aufgrund des umgedrehten Deckels alles seitenverkehrt ist, man die Klemmen also beim Löten von rechts nach links belegt. Analog zum bisherigen Vorgehen verfährt man in der Reihe darüber und den beiden anderen Reihen.
+Zunächst müssen die 16 Kabel mit den zugehörigen schwarzen Klemmen verbunden werden, was anhand des Layouts in Abbildung~\ref{fig:zuendboxlayout} auf Seite \pageref{fig:zuendboxlayout} erklärt werden soll. Kanal 1 wird vom Transistor Q2 gesteuert, Kanal 2 von Q3, Kanal 3 von Q4 und allgemein Kanal x-1 von Qx . Entsprechend ist das Kabel, welches an derjenigen Lötstelle angelötet ist, die durch die dicke blaue Linie unmittelbar mit dem mittleren Pin (Drain) von Q2 verbunden ist, an der Lötfahne der schwarzen Klemme ganz unten links -- bezogen auf Abbildung~\ref{fig:zuendbox} -- anzubringen. Das Kabel an der Drain von Q3 (Zick-Zack-Anordnung der Transistoren beachten!) wird mit der schwarzen Klemme daneben verbunden, das an Q4 mit der dritten und das an Q5 schließlich mit der letzten Klemme in der Reihe, die unmittelbar neben der Viererreihe für die Kanal-LEDs liegt. Man sollte sich nicht dadurch verwirren lassen, dass aufgrund des umgedrehten Deckels alles seitenverkehrt ist, man die Klemmen also beim Löten von rechts nach links belegt. Analog zum bisherigen Vorgehen verfährt man in der Reihe darüber und den beiden anderen Reihen.
 
 Nun werden mit Heiß- oder Sekundenkleber die Kanal-LEDs in die richtige Position gesteckt.
 
@@ -941,7 +941,7 @@ Firmware eingespielt werden.
 
 \subsection{Koffer}
 
-Als Aufbewahrungsort für die Zündboxen bietet sich ein robuster Aluminiumkoffer an, um die Zündboxen vor Wettereinflüssen und Feuerwerks\-nieder\-schlag zu schützen. Als gutes Pendant zum Plastikgehäuse bietet sich der in der Materialliste in Tabelle \ref{tab:zuendboxbom} aufgeführte Alu-Koffer 545 von Bilora an, in dem neben der Zündbox auch der zugehörige Blei-Gel-Akku für die Stromversorgung untergebracht werden kann.
+Als Aufbewahrungsort für die Zündboxen bietet sich ein robuster Aluminiumkoffer an, um die Zündboxen vor Wettereinflüssen und Feuerwerks\-nieder\-schlag zu schützen. Als gutes Pendant zum Plastikgehäuse bietet sich der in der Materialliste in Tabelle~\ref{tab:zuendboxbom} aufgeführte Alu-Koffer 545 von Bilora an, in dem neben der Zündbox auch der zugehörige Blei-Gel-Akku für die Stromversorgung untergebracht werden kann.
 
 Er besitzt eine gewürfelte Schaumstoffeinlage, die entsprechend angepasst werden kann, um einen festen Stand von Zündbox und Akku im Koffer zu ermöglichen.
 
@@ -965,7 +965,7 @@ Bevor Firmwareupdates über die serielle Schnittstelle eingespielt werden können,
 
 Um den Bootloader auf den Controller zu brennen und einige Grundeinstellungen des Controllers, die so genannten Fuses, welche neben den Einstellungen, welche die Verwendung eines Bootloaders ermöglichen, auch Funktionen wie die Brown-Out-Detektion oder die Taktquelle regeln, wird eine spezielles Programmiergerät zur In-System-Programmierung (ISP) benötigt, welche den Controller in den Resetzustand versetzt und anschließend den Bootloader über die SPI-Schnittstelle an eine festgelegte Stelle im Flash-Speicher schreibt.
 
-Auf der Platine jedes Devices ist für ISP ein zehnpoliger zweireihiger Wannenstecker angebracht, an den gängige Programmiergeräte wie der weit verbreitete \emph{AVRISP mkII} angeschlossen werden. Seine Pinbelegung ist in Abbildung \ref{fig:isp} gezeigt.
+Auf der Platine jedes Devices ist für ISP ein zehnpoliger zweireihiger Wannenstecker angebracht, an den gängige Programmiergeräte wie der weit verbreitete \emph{AVRISP mkII} angeschlossen werden. Seine Pinbelegung ist in Abbildung~\ref{fig:isp} gezeigt.
 
 Zum Brennen des Bootloaders gibt es ein Kommandozeilentool namens \emph{btldflsh.exe} für den \emph{AVRISP mkII}, welches auf \emph{AVRDUDE} basiert. Dem Tool muss als Parameter die iHex-Datei des controllertyp- und frequenzspezifischen Bootloaders übergeben werden.
 
@@ -1009,7 +1009,7 @@ Antennen für die verwendete Übertragungsfrequenz von \unit[868]{MHz} gibt es in 
 \label{fig:antenne}
 \end{figure}
 
-Die Antenne wird als Sperrtopfantenne bezeichnet und besitzt den in Abbildung \ref{fig:antenne} gezeigten Aufbau. Der oberste Teil ist 88\,mm lang und besteht aus dem Innenleiter des Koaxialkabels mit dem ihn umgebenden Dielektrikum. Im mittleren Teil befindet sich ein 66{,}5\,mm langes Röhrchen, welches an seinem oberen Ende mit möglichst kurzer Verbindung an das Schirmgeflecht des Koaxialkabels angelötet wird. Anschließend folgt eine beliebige Länge Koaxialkabel, am Ende schließlich der Steckverbinder zum Anschluss an das Funkmodul.
+Die Antenne wird als Sperrtopfantenne bezeichnet und besitzt den in Abbildung~\ref{fig:antenne} gezeigten Aufbau. Der oberste Teil ist 88\,mm lang und besteht aus dem Innenleiter des Koaxialkabels mit dem ihn umgebenden Dielektrikum. Im mittleren Teil befindet sich ein 66{,}5\,mm langes Röhrchen, welches an seinem oberen Ende mit möglichst kurzer Verbindung an das Schirmgeflecht des Koaxialkabels angelötet wird. Anschließend folgt eine beliebige Länge Koaxialkabel, am Ende schließlich der Steckverbinder zum Anschluss an das Funkmodul.
 
 \begin{figure}[t]
 \centering
@@ -1039,9 +1039,9 @@ Der Aufbau der Antenne erfolgt folgendermaßen:
 \item Falls nötig: Kabel in Endposition einfädeln, bevor SMA-Steckverbinder am intakten Ende angebracht wird
 \end{enumerate}
 
-Um den SMA-Steckverbinder anzubringen, müssen vom intakten Ende aus gemessen zunächst \unit[12]{mm} des Mantels entfernt werden, anschließend \unit[8]{mm} des Schirmgeflechts und zuletzt auch \unit[4]{mm} des Dielektrikums. Nun werden Schrumpfschlauch und Crimpröhrchen auf das Kabel geschoben, anschließend der kleine Stecker am Innenleiter angelötet. Das Schirmgeflecht wird aufgefächert, das Gehäuse aufs Kabel geschoben und das Crimpröhrchen aufgesteckt, vercrimpt und Schrumpfschlauch darüber angebracht. Wenn gewünscht kann -- wie in \ref{fig:antenne} rechts zu sehen -- Schrumpfschlauch 9{,}5 als Witterungsschutz über dem gesamten Steckverbinder angebracht werden.
+Um den SMA-Steckverbinder anzubringen, müssen vom intakten Ende aus gemessen zunächst \unit[12]{mm} des Mantels entfernt werden, anschließend \unit[8]{mm} des Schirmgeflechts und zuletzt auch \unit[4]{mm} des Dielektrikums. Nun werden Schrumpfschlauch und Crimpröhrchen auf das Kabel geschoben, anschließend der kleine Stecker am Innenleiter angelötet. Das Schirmgeflecht wird aufgefächert, das Gehäuse aufs Kabel geschoben und das Crimpröhrchen aufgesteckt, vercrimpt und Schrumpfschlauch darüber angebracht. Wenn gewünscht kann -- wie in~\ref{fig:antenne} rechts zu sehen -- Schrumpfschlauch 9{,}5 als Witterungsschutz über dem gesamten Steckverbinder angebracht werden.
 
-Die in Abbildung \ref{fig:vswrmessung} dargestellte Messung am Netzwerkanalysator zeigt eine sehr gute Anpassung dieser Antenne an \unit[50]{$\Omega$} im Bereich um \unit[868]{MHz}.
+Die in Abbildung~\ref{fig:vswrmessung} dargestellte Messung am Netzwerkanalysator zeigt eine sehr gute Anpassung dieser Antenne an \unit[50]{$\Omega$} im Bereich um \unit[868]{MHz}.
 
 
 
@@ -1062,4 +1062,8 @@ Der Herstellungsprozess gliedert sich in folgende Schritte:
 \end{enumerate}
 
 Der gesamte Ablauf kann transparent in der Datei \enquote{build\_hexfiles.bat} im Verzeichnis \enquote{Hexfiles} nachvollzogen werden.
+\bookmarksetup{startatroot}
+\addtocontents{toc}{\bigskip}
+\listoffigures
+\listoftables
 \end{document}
