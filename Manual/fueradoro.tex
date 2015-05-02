@@ -5,6 +5,7 @@
 \usepackage[ngerman]{babel}
 \usepackage[babel=true, german=quotes]{csquotes}
 \usepackage[hang]{caption}
+\usepackage{subcaption}
 \usepackage{lmodern}
 \usepackage[]{longtable}
 \usepackage{eurosym}
@@ -76,7 +77,7 @@ Vielen Dank an alle, die in irgendeiner Form zur Entwicklung von {\anlage} beige
 
 Ein ganz spezielles Dankeschön an:
 \begin{itemize}
-\item Marc Weissmann, der mit seinem Projekt FIRE - Feuerwerk im Röthelheimpark Erlangen den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an immer voll vertraut hat
+\item Marc Weissmann, der mit seinem Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE -- Feuerwerk im Röthelheimpark Erlangen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an immer voll vertraut hat
 \item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen hat
 \item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung
 \item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Steuersoftware und Erklärungen zum Thema elektrische Zündung
@@ -459,12 +460,72 @@ Das Modul antwortet nun mit einem 8-Bit-Wert, z.B. mit dem Wert 0x9A, welcher de
 
 Will man die Sendeleistung nun auf $\unit[6]{dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\unit[6]{dBm}$ einzuschreiben, gibt man im Terminalprogramm \enquote{rfm} gefolgt von \enquote{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
 
-Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers wie im Abschnitt~\ref{subsec:readpower} sollte dann den eben eingeschriebenen Wert 0x98 zurückgeben.
+Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers wie im Abschnitt~\ref{subsec:readpower} sollte dann den eben eingeschriebenen Wert 0x98 zurückgeben.\clearpage
 
 \section{GUI}
 
-Die GUI stellt eine graphische Umsetzung zur Implementierung der \texttt{Puttytel}-Funktionen dar.
+Die GUI stellt eine graphische Oberfläche zur Implementierung der \texttt{Puttytel}-Funktionen dar, indem über die serielle Schnittstelle ein- und ausgehende Daten geparst und an den entsprechenden Stellen innerhalb der Oberfläche dargestellt werden. \vfill
 
+\begin{figure}[h]
+	\centering
+	       \begin{subfigure}[t]{0.4\textwidth}
+	       	\includegraphics[width=\textwidth]{bilder/gui-start}
+	       	\caption{Keine serielle Verbindung}
+	       	\label{fig:gui-unconnected}
+	       \end{subfigure}%
+	       \begin{subfigure}[t]{0.4\textwidth}
+	       	\includegraphics[width=\textwidth]{bilder/gui-connected}
+	       	\caption{Verbindung erfolgreich hergestellt}
+	       	\label{fig:gui-connected}
+	       \end{subfigure}
+	\caption{Startbildschirm der GUI}
+	\label{fig:gui-start}
+\end{figure}
+
+\vfill
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.45\textwidth]{bilder/gui-senden}
+	\caption{Sendebildschirm der GUI}
+	\label{fig:gui-senden}
+\end{figure}
+
+\vfill
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.45\textwidth]{bilder/gui-netzwerk}
+	\caption{Netzwerkanzeige der GUI}
+	\label{fig:gui-netzwerk}
+\end{figure}
+
+\vfill
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[t]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{bilder/gui-local-trans}
+		\caption{Transmitter}
+		\label{fig:gui-lokal-trans}
+	\end{subfigure}%
+	\begin{subfigure}[t]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{bilder/gui-local-ig}
+		\caption{Zündbox}
+		\label{fig:gui-local-ig}
+	\end{subfigure}
+	\caption{Lokale ID-Konfiguration}
+	\label{fig:gui-local}
+\end{figure}
+
+\vfill
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.45\textwidth]{bilder/gui-remote}
+	\caption{Remote-ID-Einstellung}
+	\label{fig:gui-remote}
+\end{figure}
 
 \chapter{Firmwareupdate}
 \label{ch:firmwareupdate}
