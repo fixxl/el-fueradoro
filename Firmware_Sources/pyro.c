@@ -1187,7 +1187,7 @@ int main(void) {
 			// TRANSMITTER (1. Line + 3./4. Line)
 			if (flags.b.tx_post) {
 				lcd_cursorset(1, 1);
-				lcd_puts("Tx: ");
+				lcd_puts("Tx:");
 				switch (tx_field[0]) {
 					case FIRE: {
 						if (tx_field[1] && (tx_field[1] < 31) && tx_field[2] && (tx_field[2] < 17)) {
@@ -1198,7 +1198,7 @@ int main(void) {
 							lcd_puts(" CH");
 							lcd_arrize(tx_field[2], lcd_array, 2, 0);
 							lcd_puts(lcd_array);
-							lcd_puts("      ");
+							lcd_puts("       ");
 
 							if (!flags.b.show_only) {
 								lcd_cursorset(lastzeile, lastspalte);
@@ -1219,7 +1219,7 @@ int main(void) {
 						break;
 					}
 					case IDENT: {
-						lcd_puts("Identify        ");
+						lcd_puts("Identify         ");
 
 						if (!flags.b.show_only) {
 							lcd_cursorset(lastzeile, lastspalte);
@@ -1237,7 +1237,7 @@ int main(void) {
 						lcd_puts("U"); 								// Unique-ID
 						lcd_arrize(tx_field[1], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" S"); 							// Salve-ID
+						lcd_puts("S"); 							// Salve-ID
 						lcd_arrize(tx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
@@ -1247,13 +1247,13 @@ int main(void) {
 						lcd_puts(".");
 						lcd_arrize((tx_field[3] % 10), lcd_array, 1, 0);
 						lcd_puts(lcd_array);
-						lcd_puts("V ");
-						lcd_send(tx_field[4] ? 'j' : 'n', 1); // Armed?
 						lcd_puts(" ");
+						lcd_send(tx_field[4] ? 'j' : 'n', 1); // Armed?
+						lcd_puts("    ");
 						break;
 					}
 					case TEMPERATURE: {
-						lcd_puts("Temperature     ");
+						lcd_puts("Temperature      ");
 
 						if (!flags.b.show_only) {
 							lcd_cursorset(lastzeile, lastspalte);
@@ -1281,6 +1281,7 @@ int main(void) {
 						lcd_puts(" S"); 						// New Slave-ID
 						lcd_arrize(tx_field[4], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
+						lcd_puts(" ");
 						break;
 					}
 					default:
@@ -1293,7 +1294,7 @@ int main(void) {
 			// RECEIVER (2. Line)
 			if (flags.b.rx_post) {
 				lcd_cursorset(2, 1);
-				lcd_puts("Rx: ");
+				lcd_puts("Rx:");
 				switch (rx_field[0]) {
 					case FIRE: {
 						if (rx_field[1] && (rx_field[1] < 31) && rx_field[2] && (rx_field[2] < 17)) {
@@ -1304,19 +1305,19 @@ int main(void) {
 							lcd_puts(" CH");
 							lcd_arrize(rx_field[2], lcd_array, 2, 0);
 							lcd_puts(lcd_array);
-							lcd_puts("      ");
+							lcd_puts("        ");
 						}
 						break;
 					}
 					case IDENT: {
-						lcd_puts("Identify        ");
+						lcd_puts("Identify         ");
 						break;
 					}
 					case PARAMETERS: {
 						lcd_puts("U");
 						lcd_arrize(rx_field[1], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
-						lcd_puts(" S");
+						lcd_puts("S");
 						lcd_arrize(rx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
@@ -1326,9 +1327,16 @@ int main(void) {
 						lcd_puts(".");
 						lcd_arrize(rx_field[3] % 10, lcd_array, 1, 0);
 						lcd_puts(lcd_array);
-						lcd_puts("V ");
+						lcd_puts(" ");
 						lcd_send(rx_field[4] ? 'j' : 'n', 1);
 						lcd_puts(" ");
+						if(!rssi) {
+							lcd_puts("---");
+						}
+						else{
+							lcd_arrize(((rssi < -99) ? -99 : rssi), lcd_array, 2, 1);
+							lcd_puts(lcd_array);
+						}
 						break;
 					}
 
@@ -1347,12 +1355,13 @@ int main(void) {
 							lcd_puts(" S"); 						// New Slave-ID
 							lcd_arrize(rx_field[4], lcd_array, 2, 0);
 							lcd_puts(lcd_array);
+							lcd_puts(" ");
 						}
 						break;
 					}
 
 					case TEMPERATURE: {
-						lcd_puts("Temperature     ");
+						lcd_puts("Temperature      ");
 						break;
 					}
 
