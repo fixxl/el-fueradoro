@@ -1329,12 +1329,12 @@ int main(void) {
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
 						lcd_send(rx_field[4] ? 'j' : 'n', 1);
-						lcd_puts(" ");
+						lcd_puts(" -");
 						if(!rssi) {
-							lcd_puts("---");
+							lcd_puts("--");
 						}
 						else{
-							lcd_arrize(((rssi < -99) ? -99 : rssi), lcd_array, 2, 1);
+							lcd_arrize(((rssi > 99) ? 99 : rssi), lcd_array, 2, 0);
 							lcd_puts(lcd_array);
 						}
 						break;
