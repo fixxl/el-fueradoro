@@ -464,50 +464,52 @@ Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im
 
 \section{GUI}
 
-Die GUI stellt eine graphische Oberfläche zur Implementierung der \texttt{Puttytel}-Funktionen dar, indem über die serielle Schnittstelle ein- und ausgehende Daten geparst und an den entsprechenden Stellen innerhalb der Oberfläche dargestellt werden. \vfill
-
-\begin{figure}[h]
+\begin{figure}[!h]%
 	\centering
-	       \begin{subfigure}[t]{0.45\textwidth}
-	       	\includegraphics[width=\textwidth]{bilder/gui-start}
-	       	\caption{Keine serielle Verbindung}
-	       	\label{fig:gui-unconnected}
-	       \end{subfigure}%
-	       \begin{subfigure}[t]{0.45\textwidth}
-	       	\includegraphics[width=\textwidth]{bilder/gui-connected}
-	       	\caption{Verbindung erfolgreich hergestellt}
-	       	\label{fig:gui-connected}
-	       \end{subfigure}
+	\begin{subfigure}[t]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{bilder/gui-start}
+		\caption{Keine serielle Verbindung}
+		\label{fig:gui-unconnected}
+	\end{subfigure}%
+	\begin{subfigure}[t]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{bilder/gui-connected}
+		\caption{Verbindung erfolgreich hergestellt}
+		\label{fig:gui-connected}
+	\end{subfigure}%
 	\caption{Startbildschirm der GUI}
 	\label{fig:gui-start}
-\end{figure}
+\end{figure}%
 
-\vfill
+Die GUI stellt eine graphische Oberfläche zur Implementierung der \texttt{Puttytel}-Funktionen dar, indem über die serielle Schnittstelle ein- und ausgehende Daten geparst und an den entsprechenden Stellen innerhalb der Oberfläche dargestellt werden. Die Software ist in die fünf Reiter \enquote{Start}, \enquote{Senden}, \enquote{Netzwerk}, \enquote{ID~(lokal)} und \enquote{ID~(remote)} unterteilt, in denen die entsprechenden Funktionen ausgeführt werden können.
 
-\begin{figure}[h]
+Nach dem Start der Software sind alle Schaltflächen in allen Reitern mit Ausnahme der Auswahl der zur Verfügung stehenden COM-Ports und der Schaltfläche \enquote{Verbinden} im Reiter \enquote{Start} ausgegraut und deaktiviert, was in Abbildung~\ref{fig:gui-unconnected} dargestellt ist. Nach Auswahl des entsprechenden Ports und Klick auf \enquote{Verbinden}, werden diese beiden Schaltflächen ausgegraut und deaktiviert. Im Gegenzug erscheint in der Fußleiste der Devicetyp mit verwendetem Controller und Funkmodul und die Schaltflächen \enquote{Trennen} sowie \enquote{Device-Neustart} werden im aktuellen Reiter aktiv (Abbildung~\ref{fig:gui-connected}).%
+%
+\begin{figure}[!b]
 	\centering
 	\includegraphics[width=0.5\textwidth]{bilder/gui-senden}
 	\caption{Sendebildschirm der GUI}
 	\label{fig:gui-senden}
 \end{figure}
 
-\vfill
+Nach Herstellung der Verbindung sind auch die sonstigen Schaltflächen aktiv, Abbildung~\ref{fig:gui-senden} zeigt den Reiter \enquote{Senden} im aktiven Zustand. Hier kann per Klick eine Identifizierungsaufforderung verschickt, eine Temperaturmessung getriggert, ein Zündvorgang ausgelöst oder ein Befehl ans Funkmodul geschickt werden. Bei \enquote{Zünden} und \enquote{Funkmodul} ist darauf zu achten, dass beim Klick auf die Schaltfläche unmittelbar die aktuell in den Eingabefeldern stehenden Werte übertragen werden, man diese also vor dem Klicken anpassen muss. Bei Temperaturanfrage und Funkmodulzugriff wird im entsprechenden Anzeigefeld die Antwort des angeschlossenen Devices -- also die Temperatur in Grad Celsius oder die Antwort des Funkmoduls auf den aktuellen Registerzugriff als 8-bit-Hexadezimalwert -- ausgegeben.
 
-\begin{figure}[h]
+Der Reiter \enquote{Netzwerk} (Abbildung~\ref{fig:gui-netzwerk}) dient einzig und allein der Darstellung der aktuell im System befindlichen Zündboxen mit ihren Parametern Unique-ID, Slave-ID, Batteriespannung, Scharf\-schaltungs-Status, Temperatur und gemessenem RSSI-Wert beim Empfang der Parameter.
+
+\begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.5\textwidth]{bilder/gui-netzwerk}
 	\caption{Netzwerkanzeige der GUI}
 	\label{fig:gui-netzwerk}
 \end{figure}
 
-\vfill
+Die Ansicht des Reiters \enquote{ID~(lokal)} ist, wie Abbildung~\ref{fig:gui-local} zeigt, abhängig vom angeschlossenen Devicetyp. Bei Transmittern sind die Schaltflächen deaktiviert, da hier keine Änderungen an den IDs vorgenommen werden können (Abbildung~\ref{fig:gui-local-trans}). Bei Zündboxen werden bei Aufruf des Reiters die aktuellen IDs in die entsprechenden Felder kopiert, können verändert und die Änderungen dann durch Klick auf \enquote{Werte übernehmen} übernommen werden (Abbildung~\ref{fig:gui-local-ig}).
 
-\begin{figure}[h]
+\begin{figure}[!b]
 	\centering
 	\begin{subfigure}[t]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{bilder/gui-local-trans}
 		\caption{Transmitter}
-		\label{fig:gui-lokal-trans}
+		\label{fig:gui-local-trans}
 	\end{subfigure}%
 	\begin{subfigure}[t]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{bilder/gui-local-ig}
@@ -518,9 +520,9 @@ Die GUI stellt eine graphische Oberfläche zur Implementierung der \texttt{Puttyt
 	\label{fig:gui-local}
 \end{figure}
 
-\vfill
+Im Reiter \enquote{ID~(remote)} können alte und neue ID-Kombination eingestellt werden. Durch Klick auf \enquote{Ausführen} wird der Befehl zur ID-Änderung gesendet.
 
-\begin{figure}[h]
+\begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.45\textwidth]{bilder/gui-remote}
 	\caption{Remote-ID-Einstellung}
