@@ -610,6 +610,8 @@ Diese Unterscheidung ist wichtig, da der Programmablauf sich bei Transmittern (S
 
 Würde die Software beim Start nicht überprüfen, auf welcher Art Device sie gerade läuft, könnte das Programm bei falscher Konfiguration davon ausgehen, auf einem anderen Device zu laufen. Während die Zündbox-Konfiguration auf einem Transmitter -- abgesehen davon, dass das LCD nichts anzeigen würde -- keine Probleme hervorriefe, würde es zu Schäden am Controller kommen und zu unerwünschten Zündungen führen, wenn die Transmitter-Konfiguration auf einer Zündbox gestartet werden würde: Im Fall des Schlüsselschalter-Pins käme es  zu einem Kurzschluss, wenn die Box scharf geschaltet ist, was den Controller beschädigen kann, die Ansteuerung des Schieberegisters mit LCD-Befehlen würde dazu führen, dass Zündkanäle durchschalten, weil die Ansteuerbefehle des LCD ans Schieberegister weitergeleitet werden.
 
+Für den Betrieb der Devices von {\anlage} müssen nicht zwingend die Standardlayouts verwendet werden, die Firmware kann, sofern die Peripherie mit den \enquote{richtigen} Pins verbunden ist, auch auf anderen Boards wie z.\,B. Arduino lauffähig.
+
 \chapter{Software}
 
 Die Steuerungssoftware für {\anlage} ist unter Zuhilfename des \texttt{AVR-GCC} in der Programmiersprache \texttt{C} geschrieben. Sie umfasst insgesamt 15 Sourcefiles (.c) mit zugehörigen Headerdateien (.h), eine Headerdatei zur Generierung von Registeradressen \enquote{portmakros.h} sowie eine globale Headerdatei \enquote{global.h}, in welcher alle anderen erfasst sind.
