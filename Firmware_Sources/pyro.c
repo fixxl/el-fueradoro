@@ -245,6 +245,10 @@ void device_initialisation(uint8_t ignotrans) {
 		key_flag = 1;
 		adc_init();
 		leds_off();
+		
+		// Make unused pin input with active pullup
+		DDRD &= ~(1 << PD4);
+		PORTD |= (1 << PD4);
 	}
 }
 
