@@ -1026,7 +1026,7 @@ Bevor Firmwareupdates über die serielle Schnittstelle eingespielt werden können,
 \begin{figure}[!h]
 \centering
 \includegraphics[width=.35\textwidth]{Bilder/isp}
-\caption{Pinbelegung des ISP-Platinensteckers: Ansicht von oben, Aussparung an Pin~5. Quelle: \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}}}
+\caption{Pinbelegung des ISP-Platinensteckers: Ansicht von oben, Gehäuseaussparung an Pin~5. Quelle: \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}}}
 \label{fig:isp}
 \end{figure}
 
@@ -1050,13 +1050,15 @@ Nach einmaligem Flashen des Bootloaders und EEPROMs wird die ISP-Schnittstelle n
 
 \section[LCD an 3,3 V]{LCD an 3{,}3\,V}
 
-Zwar gibt es inzwischen auch LCDs, welche für eine Versorgung mit 3,3\,V ausgelegt sind, viele Displays jedoch sind noch für 5\,V ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
+Zwar gibt es inzwischen auch LCDs, welche sich von Haus aus für eine Versorgung mit $\unit[3{,}3]{V}$ eignen, viele Displays jedoch sind noch für $\unit[5]{V}$ ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
 
-Die Kontrastspannung wird zwischen Pin 3 und Pin 2 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im Normalfall wird Pin 3 auf 0 V gelegt, so dass eine Differenz von 5 V entsteht. Liegen an Pin 2 nur 3,3\,V an, muss an Pin 3 folglich eine negative Spannung anliegen, um die nötige Kontrastspannung zu erreichen. Um diese Spannung zu erreichen, wird der RS232-Treiberbaustein \enquote{angezapft}, der am Pin V- eine Spannung von 3-5,5\,V zur Verfügung stellt. Mit einem Spannungsteiler zwischen V- und GND wird daher Pin des LCD auf -1,7\,V gelegt.
+Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall} -- also bei Betrieb des Displays mit einer Versorgungsspannung von $\unit[5]{V}$ -- wird Pin~3 auf $\unit[0]{V}$ gelegt, so dass sich eine Kontrastspannung von $\unit[5]{V}$ entsteht. Liegen an Pin~2 nur $\unit[3{,}3]{V}$ an, muss an Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
 
-Manche LCDs torpedieren diesen Versuch, indem Pin 3 relativ niederohmig mit GND verbunden wird. Man sollte also im abgeklemmten Zustand den Widerstand zwischen Pin 1 und Pin 3 messen und bei Bedarf den eventuell auf der LCD-Platine be?ndlichen Widerstand zwischen den beiden Pins auslöten.
+Als Quelle der negativen Spannung dient der RS232-Treiberbaustein, der am Pin V- eine Spannung von $\unit[-5{,}5]{V}$ zur Verfügung stellt. Über einen Spannungsteiler zwischen V- und GND wird daher Pin~3 des LCD auf $\unit[-1,7]{V}$ gelegt. Manche LCDs torpedieren diesen Versuch, indem Pin~3 relativ niederohmig mit GND verbunden wird. Man sollte also im abgeklemmten Zustand den Widerstand zwischen Pin 1 und Pin 3 messen und bei Bedarf den eventuell auf der LCD-Platine befindlichen Widerstand zwischen den beiden Pins auslöten.
 
-Die Hintergrundbeleuchtung wird über die Pins 15 und 16 versorgt. In Reihe zu den LEDs befindet sich zwischen diesen Pins in aller Regel noch ein Widerstand, der den Strom durch die LEDs begrenzt und auf 5\,V zwischen den Pins ausgelegt ist. Bei 3,3\,V zwischen Pin 15 \& 16 erscheint das LCD daher möglicherweise zu dunkel, so dass man den Widerstand durch einen kleineren Wert ersetzen kann, um den Strom zu erhöhen.
+Die Hintergrundbeleuchtung wird über die Pins~15 und 16 versorgt. Zwischen diesen Pins befindet sich in Reihe zu den LEDs in aller Regel noch ein Widerstand, welcher den Strom durch die LEDs begrenzt und für eine Spannung von $\unit[5]{V}$ zwischen den Pins ausgelegt ist. Bei $\unit[3{,}3]{V}$ zwischen Pin~15~\&~16 erscheint das LCD daher möglicherweise zu dunkel, so dass man den Widerstand durch einen kleineren Wert ersetzen kann, um die Spannungsdifferenz auszugleichen.
+
+Der ursprüngliche LED-Vorwärtsstrom sowie die Aufteilung der Spannung auf LED und Vorwiderstand können durch Anlegen von $\unit[5]{V}$ zwischen Pin~15~\&~16, Spannungsmessung über dem Original-Widerstand und anschließende Division durch den Widerstandswert (korrekt ablesen oder messen) ermittelt werden. Da der Spannungsabfall über den LEDs sich nicht ändert und der Strom gleich bleiben soll, muss der Wert des neuen Widerstands so verkleinert werden, dass bei identischem Stromfluss über ihm $\unit[1{,}7]{V}$ weniger abfallen als am Original-Widerstand. Ist z.\,B. original ein Widerstand von $\unit[150]{\Omega}$ verbaut, über dem eine Spannung von $\unit[2]{V}$ anliegt (hieraus resultiert eine LED-Vorwärtsspannung von $\unit[3]{V}$), ergibt sich ein LED-Vorwärtsstrom von $\unit[13]{mA}$. Dementsprechend wäre bei einem Spannungsabfall von nur noch $\unit[0{,}3]{V}$ für den gleichen Strom ein Widerstand von $\unit[22]{\Omega}$ einzusetzen.
 
 
 \section{Antennenbau}
