@@ -564,7 +564,9 @@ Der Updater führt nach Übertragung der Daten einen CRC-Check durch. Sollte diese
 
 \chapter{Schaltpläne \& Layouts}
 
-In den Abbildungen~\ref{fig:transmitterschematic} und~\ref{fig:zuendboxschematic} sind die Schaltpläne von Transmitter und Zündbox nach Funktionseinheiten unterteilt gezeigt, in den Abbildungen~\ref{fig:transmitterlayout} und~\ref{fig:zuendboxlayout} die Layouts. Erstellt wurden diese mit \texttt{EAGLE} von CadSoft, die Originaldateien sind im Unterordner \enquote{Schematics\_and\_Layouts} des Projekt-Hauptverzeichnisses abgelegt.
+In den Abbildungen~\ref{fig:transmitterschematic} und~\ref{fig:zuendboxschematic} sind die Schaltpläne von Transmitter und Zündbox nach Funk\-tions\-ein\-heiten unterteilt gezeigt, in den Abbildungen~\ref{fig:transmitterlayout} und~\ref{fig:zuendboxlayout} die Layouts. Erstellt wurden diese mit der Layoutsoftware \texttt{EAGLE} von CadSoft, die Originaldateien sind im Unterordner \enquote{Schematics\_and\_Layouts} des Projekt-Hauptverzeichnisses abgelegt.
+
+Die Layouts wurden dabei so gestaltet, dass die Platinen nicht zwingend zweiseitig gefertigt werden müssen. Die Anzahl der Leiterbahnen auf der Oberseite wurde minimiert, zudem verlaufen sie nicht unterhalb von Bauelementen und können daher als Drahtbrücken ausgeführt werden.
 
 \begin{figure}
 \centering
@@ -612,7 +614,7 @@ Diese Unterscheidung ist wichtig, da der Programmablauf sich bei Transmittern (S
 
 Würde die Software beim Start nicht überprüfen, auf welcher Art Device sie gerade läuft, könnte das Programm bei falscher Konfiguration davon ausgehen, auf einem anderen Device zu laufen. Während die Zündbox-Konfiguration auf einem Transmitter -- abgesehen davon, dass das LCD nichts anzeigen würde -- keine Probleme hervorriefe, würde es zu Schäden am Controller kommen und zu unerwünschten Zündungen führen, wenn die Transmitter-Konfiguration auf einer Zündbox gestartet werden würde: Im Fall des Schlüsselschalter-Pins käme es  zu einem Kurzschluss, wenn die Box scharf geschaltet ist, was den Controller beschädigen kann, die Ansteuerung des Schieberegisters mit LCD-Befehlen würde dazu führen, dass Zündkanäle durchschalten, weil die Ansteuerbefehle des LCD ans Schieberegister weitergeleitet werden.
 
-Für den Betrieb der Devices von {\anlage} müssen nicht zwingend die Standardlayouts verwendet werden, die Firmware kann, sofern die Peripherie mit den \enquote{richtigen} Pins verbunden ist, auch auf anderen Boards wie z.\,B. Arduino lauffähig.
+Für den Betrieb der Devices von {\anlage} müssen nicht zwingend die Standardlayouts verwendet werden, die Firmware kann, sofern die Peripherie mit den \enquote{richtigen} Pins verbunden ist, auch auf anderen Boards wie z.\,B. Arduino laufen.
 
 \chapter{Software}
 
@@ -791,9 +793,9 @@ SV2 & 1 & Wannenstecker, 10-pol & Reichelt & WSL 10G & \EUR{0,08} & \EUR{0,08} &
 
 \chapter{Platinenherstellung}
 
-Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage, in Abbildung~\ref{fig:zuendboxprint} die der Zündbox und in Abbildung~\ref{fig:rfmprint} die Adapterplatine zum Auflöten des Funkmoduls.
+Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage: In Abbildung~\ref{fig:zuendboxprint} die der Zündbox und in Abbildung~\ref{fig:rfmprint} die Adapterplatine zum Auflöten des Funkmoduls.
 
-Die Oberseite ist hierbei jeweils schon gespiegelt, die Ausdrücke können für einen Tonertransfer also einfach ausgedruckt, im Zwischenraum gefaltet werden, wobei auf möglichst exakte Deckung zu achten ist.
+Die Oberseite ist hierbei jeweils schon gespiegelt, die Ausdrücke können für einen Tonertransfer also einfach ausgedruckt und im Zwischenraum gefaltet werden, wobei auf möglichst exakte Deckung zu achten ist.
 
 \begin{figure}
 \centering
@@ -1010,11 +1012,11 @@ Firmware eingespielt werden.
 
 \subsection{Koffer}
 
-Als Aufbewahrungsort für die Zündboxen bietet sich ein robuster Aluminiumkoffer an, um die Zündboxen vor Wettereinflüssen und Feuerwerks\-nieder\-schlag zu schützen. Als gutes Pendant zum Plastikgehäuse bietet sich der in der Materialliste in Tabelle~\ref{tab:zuendboxbom} aufgeführte Alu-Koffer 545 von Bilora an, in dem neben der Zündbox auch der zugehörige Blei-Gel-Akku für die Stromversorgung untergebracht werden kann.
+Als Aufbewahrungsort für die Zündboxen tut ein robuster Aluminiumkoffer wertvolle Dienste, um die Zündboxen vor Wettereinflüssen und Feuerwerks\-nieder\-schlag zu schützen. Als gutes Pendant zum Plastikgehäuse bietet sich der in der Materialliste in Tabelle~\ref{tab:zuendboxbom} aufgeführte Alu-Koffer 545 von Bilora an, der gerade ausreichend Platz für eine Zündbox und den zugehörigen Blei-Gel-Akku für die Stromversorgung bietet.
 
-Er besitzt eine gewürfelte Schaumstoffeinlage, die entsprechend angepasst werden kann, um einen festen Stand von Zündbox und Akku im Koffer zu ermöglichen.
+Er besitzt zudem eine gewürfelte Schaumstoffeinlage, die entsprechend angepasst werden kann, um auch beim Transport einen festen Stand von Zündbox und Akku im Koffer zu ermöglichen.
 
-Etwas Arbeit ist nötig, um die Antenne geeignet anzubringen, um bei geschlossenem Koffer die Zündkommandos noch sicher und zuverlässig empfangen zu können.
+Etwas Arbeit ist nötig, um die Antenne in eine geeignete Position zu bringen, um bei geschlossenem Koffer die Zündkommandos noch sicher und zuverlässig empfangen zu können. Wenn die Antenne nicht außerhalb des Gehäuses angebracht ist, können ankommende Signale nicht bzw. nur äußerst stark gedämpft hinein- und abgehende so gut wie nicht hinausgelangen, weil der Alukoffer als Faradayscher Käfig wirkt.
 
 
 
@@ -1034,7 +1036,9 @@ Bevor Firmwareupdates über die serielle Schnittstelle eingespielt werden können,
 
 Um den Bootloader auf den Controller zu brennen und einige Grundeinstellungen des Controllers, die so genannten Fuses, welche neben den Einstellungen, welche die Verwendung eines Bootloaders ermöglichen, auch Funktionen wie die Brown-Out-Detektion oder die Taktquelle regeln, wird ein spezielles Programmiergerät zur In-System-Programmierung (ISP) benötigt, welches den Controller in den Resetzustand versetzt und anschließend den Bootloader über die SPI-Schnittstelle an eine festgelegte Stelle im Flash-Speicher des Controllers schreibt.
 
-Auf der Platine jedes Devices ist für ISP ein zehnpoliger zweireihiger Wannenstecker vorgesehen, an den gängige Programmiergeräte wie der weit verbreitete \emph{AVRISP mkII} angeschlossen werden. Seine Pinbelegung ist in Abbildung~\ref{fig:isp} gezeigt.
+Auf der Platine jedes Devices ist für ISP ein zehnpoliger zweireihiger Wannenstecker vorgesehen, an den gängige Programmiergeräte wie der weit verbreitete \emph{AVRISP mkII} angeschlossen werden. Seine Pinbelegung ist in Abbildung~\ref{fig:isp} gezeigt. Nach einmaligem Flashen des Bootloaders und EEPROMs wird die ISP-Schnittstelle nicht wieder benötigt, alle weiteren Änderungen können über die serielle Schnittstelle und den Bootloader vorgenommen werden.
+
+\section{Verwendung des AVRISP mkII}
 
 Zum Brennen des Bootloaders gibt es ein Kommandozeilentool namens \emph{btldflsh.exe} für den \emph{AVRISP mkII}, welches auf \emph{AVRDUDE} basiert. Dem Tool muss als Parameter die iHex-Datei des controllertyp- und frequenzspezifischen Bootloaders übergeben werden.
 
@@ -1046,7 +1050,25 @@ Für einen \texttt{ATmega328P} mit einer Taktfrequenz von \unit[9{,}8304]{MHz} la
 
 Die für {\anlage} benötigten Einstellungen für Fuses und die Datenübertragung werden auf diese Weise automatisch angepasst. Ebenfalls übertragen wird beim Flashen des Bootloaders eine Standardversion des EEPROMS, so dass die Devices standardmäßig 1 als Unique- und Slave-ID zugewiesen bekommen (Transmitter rekonfigurieren sich dann automatisch beim ersten Start der Firmware).
 
-Nach einmaligem Flashen des Bootloaders und EEPROMs wird die ISP-Schnittstelle nicht wieder benötigt, alle weiteren Änderungen können über die serielle Schnittstelle und den Bootloader vorgenommen werden.
+\section{Verwendung eines anderen Programmieradapters}
+
+Selbstverständlich ist das Aufspielen des Bootloaders auch mit anderen Programmern möglich.
+
+Wichtig für die ordnungsgemäße Funktion des Bootloaders sowie später der Firmware ist neben einer fehlerfreien Programmierung auch das korrekte Setzen der Fuse-Bits, welches bei Einsatz eines alternativen Programmieradapters manuell vorgenommen werden muss.
+
+Für {\anlage} müssen die Fusebits beim \texttt{ATmega328P} gemäß Tabelle \ref{tab:fuses} gesetzt werden.
+
+\begin{table}[h]
+\begin{tabularx}{\textwidth}{llX}
+	\textbf{Fuse} & \textbf{Wert} & \textbf{Bedeutung} \\ \hline
+	Low Fuse & 0xF7 & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle \\
+	High Fuse & 0xD6 &  Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten)\\
+	Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\unit[2{,}7]{V}$
+\end{tabularx}
+\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
+\label{tab:fuses}
+\end{table}
+\footnotetext{Bei der Extended Fuse werden nur die unteren drei Bit verwendet, die oberen fünf sind nicht in Gebrauch und können daher beliebig jeweils mit 1 oder 0 beschrieben und gelesen werden. Im Beispiel werden die nicht-relevanten Bits mit 0 beschrieben, so dass sich der Wert 0x05 ergibt, äquivalent dazu könnte der Wert aber beispielsweise auch 0xFD oder 0xA5 lauten.}
 
 \chapter{Tipps und Tricks}
 

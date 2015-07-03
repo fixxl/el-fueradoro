@@ -25,17 +25,17 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 			SDI_PORT &= ~(1 << SDI);
 		}
 		spibyte <<= 1;
-		SCK_PIN = (1 << SCK);
+		SCK_PIN = (1 << SCK);						// Fast-toggling SCK-Pin by writing to PIN-Register. Some older AVRs don't get that, use "SCK_PORT ^= (1 << SCK);" instead!
 		__asm__ __volatile__( "rjmp 1f\n 1:" );
 		if (SDO_PIN & (1 << SDO)) spibyte |= 0x01;
 		else spibyte &= 0xFE;
-		SCK_PIN = (1 << SCK);
+		SCK_PIN = (1 << SCK);						// Fast-toggling SCK-Pin by writing to PIN-Register. Some older AVRs don't get that, use "SCK_PORT ^= (1 << SCK);" instead!
 	}
 #endif
 	return spibyte;
 }
 
-// Send 16-bit-command to RFM69 (8 bits register-number, 8 bits command)
+// Send 16-bit-command to RFM69 (1 bit write-/read-access, 7 bits register-number, 8 bits command)
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr) {
 	// Split command in two bytes, merge with write-/read-flag
 	uint8_t highbyte = (wnr ? ((command >> 8) | 0x80) : ((command >> 8) & 0x7F));

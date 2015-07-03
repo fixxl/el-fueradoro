@@ -387,12 +387,7 @@ int main(void) {
 	led_orange_off();
 
 // Initialise devices
-	if (TRANSMITTER) {
-		device_initialisation(0);
-	}
-	else {
-		device_initialisation(1);
-	}
+	device_initialisation(ig_or_notrans);
 
 // Initialise UART and tell the PC we're ready
 	uart_init(BAUD);
