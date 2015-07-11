@@ -103,7 +103,7 @@ Ein ganz spezielles Dankeschön an:
 
 \chapter{Das System}
 
-{\anlage} ist eine Eigenentwicklung zur automatisierten Zündung von Feuerwerkschoreographien per Computer und Funk, der Name {\anlage} leitet sich aus den spanischen Wörtern fuego, radio und oro her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
+{\anlage} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich aus den spanischen Wörtern fuego, radio und oro her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
 
 Es besteht aus einer mit dem PC verbundene Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen.
 
@@ -114,7 +114,7 @@ Es besteht aus einer mit dem PC verbundene Transmitterbox, welche die von {\pic}
 \label{fig:system}
 \end{figure}
 
-Um möglichst große Flexibilität bei der Gestaltung eines Feuerwerks mit {\anlage} zu gewährleisten, was z.\,B. die Anzahl der verwendeten Zündboxen oder auch die Tatsache angeht, dass man identische Effekte gerne zeitgleich an zwei weiter voneinander entfernten Orten zünden möchte, können den Boxen per Software zwei Kennnummern (Slave-ID und Unique-ID) zugewiesen werden. Genaueres dazu findet sich im Abschnitt~\ref{ch:kommunikationpc}.
+Um möglichst große Flexibilität bei der Gestaltung eines Feuerwerks mit {\anlage} zu gewährleisten, was z.\,B. die Anzahl der verwendeten Zündboxen oder auch die Tatsache angeht, dass man identische Effekte gerne zeitgleich an zwei weiter voneinander entfernten Orten zünden möchte, können den Boxen per Software zwei Kennnummern (Unique-ID und Slave-ID) zugewiesen werden. Genaueres dazu findet sich im Abschnitt~\ref{ch:kommunikationpc}.
 
 Transmitterbox und Zündbox sind in Abbildung~\ref{fig:transmitter} bzw.~\ref{fig:zuendbox} mit ihren wesentlichen Bestandteilen gezeigt. Sie werden im weiteren Text unter dem Begriff \enquote{Devices} zusammengefasst, falls sich Aussagen auf beide Teile beziehen, und in den folgenden Kapiteln näher beschrieben. 
 
@@ -124,24 +124,25 @@ Detailliertere Infos zum Aufbau erhalten interessierte Leser im nächsten Teil di
 
 Die Transmitterbox ist mit einem LC-Display mit 20 Spalten und 4 Zeilen ausgestattet. 
 
-In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte Schieberegister \texttt{74HC595}, welche mit ihren insgesamt 16 Ausgängen 16 Feldeffekttransistoren vom Typ \texttt{IRF3708} für die Zündung ansteuern, außerdem ist auf der Platine mit dem \texttt{MC33063} ein Hochsetzsteller zur Erzeugung einer höheren Zündspannung integriert sowie ein Schlüsselschalter zum Scharfschalten der Boxen. Parallel zur Drain-Source-Strecke jedes Feldeffekttransistors ist eine LED mit Vorwiderstand geschaltet, um zu signalisieren, an welchen Kanälen Zünder angeschlossen sind.
+In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte Schieberegister \texttt{74HC595}, welche mit ihren insgesamt 16 Ausgängen 16 Feldeffekttransistoren vom Typ \texttt{IRF3708} für die Zündung ansteuern, außerdem ist auf der Platine mit dem \texttt{MC33063} bzw. einem fertigen Modul mit dem \texttt{XL6009} ein Hochsetzsteller zur Erzeugung einer höheren Zündspannung integriert sowie ein Schlüsselschalter zum Scharfschalten der Boxen. Parallel zur Drain-Source-Strecke jedes Feldeffekttransistors ist eine LED mit Vorwiderstand geschaltet, um zu signalisieren, an welchen Kanälen Zünder angeschlossen sind.
 
 
 
 \section{Transmitterbox und Zündboxen}
 
 \begin{figure}
-\centering
-\includegraphics[width=.4\textwidth]{Bilder/Transmitter}
-\caption{Transmitter}
-\label{fig:transmitter}
-\end{figure}
-%
-\begin{figure}
-\centering
-\includegraphics[width=.75\textwidth]{Bilder/DraufsichtZuendbox} \\ \vspace{2mm}
-\caption{Zündbox von oben, eingebettet in Koffer}
-\label{fig:zuendbox}
+	\centering
+	\begin{subfigure}[t]{0.405\textwidth}
+		\includegraphics[height=96mm]{Bilder/Transmitter}
+		\caption{Transmitter}
+		\label{fig:transmitter}
+	\end{subfigure} 
+	\begin{subfigure}[t]{0.55\textwidth}
+		\includegraphics[height=96mm]{Bilder/DraufsichtZuendbox}
+		\caption{Zündbox von oben, eingebettet in Koffer}
+		\label{fig:zuendbox}
+	\end{subfigure}%
+	\caption{Die Devices von {\anlage}}	
 \end{figure}
 
 Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das -- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur -- frei nutzbare Frequenzband um $\unit[868]{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
@@ -157,34 +158,35 @@ Aufgrund der anzunehmenden Platzierung der Zündboxen im freien Feld, abseits von
 \section{Die Status-LEDs}
 \label{ch:leds}
 
-Alle Devices verfügen über vier Status-LEDs. Bei den Transmitterboxen liegen sie direkt neben dem Kabel für die Energieversorgung auf der Seite, bei den Zündboxen auf der Oberseite. Diese sind mit ihrer Bedeutung in Tabelle~\ref{tab:statusleds} aufgeführt und leuchten, wenn das jeweilige Device die mit der LED verknüpfte Tätigkeit ausführt. Das Blinken der grünen LED während des Initialisierungsvorgangs jedes Devices ist von der sonstigen Funktion unabhängig.
+Alle Devices verfügen über vier Status-LEDs. Bei den Transmitterboxen liegen sie direkt neben dem Kabel für die Energieversorgung auf der Seite, bei den Zündboxen auf der Oberseite. Diese sind mit ihrer Bedeutung in Tabelle~\ref{tab:statusleds} aufgeführt und leuchten, wenn das jeweilige Device die mit der LED verknüpfte Tätigkeit ausführt.
 
 \begin{table}
-\centering
-\begin{tabularx}{.5\textwidth}{l|X}
-\textbf{Farbe} & \textbf{Funktion} \\ \hline
-orange & Funkmodul empfängt \\
-grün	& Funkmodul sendet \\
-gelb & Daten kommen über serielle Schnittstelle an \\
-rot & Zündbox ist scharf geschaltet
-\end{tabularx}
-\caption{Farben und Funktionen der Status-LEDs}
-\label{tab:statusleds}
+	\centering
+	\begin{tabularx}{.5\textwidth}{l|X}
+		\textbf{Farbe} & \textbf{Funktion} \\ \hline
+		orange & Funkmodul empfängt \\
+		grün	& Funkmodul sendet \\
+		gelb & Daten kommen über serielle Schnittstelle an \\
+		rot & Zündbox ist scharf geschaltet
+	\end{tabularx}
+	\caption{Farben und Funktionen der Status-LEDs}
+	\label{tab:statusleds}
 \end{table}
+
+Während des Bootvorgangs leuchten bei den Zündboxen die orange und grüne LED im Wechsel, wodurch dem Benutzer die aktuell eingestellte Slave-ID der Box visualisiert wird. Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
 
 Bei einem Zündvorgang leuchten für die Dauer der Zündung (\unit[11]{ms}) alle vier LEDs.
 
 \section{Das LCD der Transmitterbox}
 
-\begin{figure}
-\centering
-\includegraphics[width=.7\textwidth]{Bilder/SenderAnzeige}
-\caption{LCD während der Show}
-\label{fig:senderanzeige}
-\end{figure}
-%
-
 Aktuelle Statusanzeigen werden bei der Transmitterbox auf dem LC-Display ausgegeben. Ein Beispiel zeigt Abbildung~\ref{fig:senderanzeige}. In Zeile 1 wird hinter der Abkürzung \enquote{Tx} (Transmitted) der letzte gesendete Befehl (Zündbefehl oder Identifizierungsaufforderung) angezeigt, in Zeile 2 -- im Bild nicht zu sehen -- ggf. hinter der Abkürzung \enquote{Rx} (Received) die letzte empfangene Rückmeldung (angeforderte Parameter).
+
+\begin{figure}
+	\centering
+	\includegraphics[width=.7\textwidth]{Bilder/SenderAnzeige}
+	\caption{LCD während der Show}
+	\label{fig:senderanzeige}
+\end{figure}
 
 In den Zeilen 3 und 4 werden die letzten sechs gesendeten Kommandos aufgelistet. Zwei zweistellige Zahlen getrennt durch ein Flammensymbol stehen dabei für einen Zündbefehl. Die erste Zahl gibt die Slave-ID, die zweite den zu zündenden Kanal an. Für den Fall, dass eine Aufforderung zur Identifikation gesendet wurde, erscheint \enquote{IDENT}, für eine Aufforderung zur Temperaturmessung \enquote{TEMP}. Das \enquote{x} steht immer vor dem bis dato letzten Befehl, springt also mit jedem neuen Befehl eine Stelle weiter.
 
@@ -193,14 +195,14 @@ Alle Zeilen werden nach einer bestimmten Zeit automatisch gelöscht.
 
 \section{Schalter an den Zündboxen}
 
-\begin{figure}
-\centering
-\includegraphics[width=.6\textwidth]{Bilder/SchalterZuendbox}
-\caption{Schalter und serielle Schnittstelle an der Zündbox}
-\label{fig:schalterzuend}
-\end{figure}
-
 Die Zündboxen verfügen, wie in Abbildung~\ref{fig:schalterzuend} zu erkennen, über zwei Schalter, einen schwarzen Wippschalter zum Ein- und Ausschalten der Energieversorgung sowie einen Schlüsselschalter, um die Zündbox \enquote{scharf} zu schalten.
+
+\begin{figure}[!b]
+	\centering
+	\includegraphics[width=.6\textwidth]{Bilder/SchalterZuendbox}
+	\caption{Schalter und serielle Schnittstelle an der Zündbox}
+	\label{fig:schalterzuend}
+\end{figure}
 
 Die Scharfschaltung durch den Schlüsselschalter geschieht auf die Weise, dass durch eine Zustandsabfrage vor der Zündung letztere nur ausgeführt wird, wenn das Schloss auf den grünen Punkt am Gehäuse zeigt. Befindet sich der Schlüssel in waagrechter Stellung und zeigt auf den roten Punkt, so ist der Schalter geöffnet und Zündbefehle werden von der Box ignoriert. Für das Scharfschalten der Box ist der Anwender selbst verantwortlich.
 
@@ -223,30 +225,30 @@ Das Plug-and-Play-Traum\-szenario, dass sich der Adapter bei der Verbindung des 
 Weil viele Chips dazu tendieren, sich beim Anschluss an immer wieder andere USB-Ports neu zu installieren bzw. eine andere COM-Port-Nummer anzunehmen, wird empfohlen, für den USB-RS232-Adapter stets denselben USB-Steckplatz zu nutzen.
 
 \begin{figure}
-\centering
-\includegraphics[width=.7\textwidth]{Bilder/geraetemanager}
-\caption{Eintrag des USB-RS232-Adapters im Gerätemanager}
-\label{fig:geraetemanager}
+	\centering
+	\includegraphics[width=.7\textwidth]{Bilder/geraetemanager}
+	\caption{Eintrag des USB-RS232-Adapters im Gerätemanager}
+	\label{fig:geraetemanager}
 \end{figure}
 
 Durch Doppelklick auf den Eintrag und den Reiter Anschlusseinstellungen kann die nun vorhandene serielle Schnittstelle unter Windows konfiguriert werden. Um Kompatibilität mit {\pic} zu gewährleisten, ist das Hauptfenster nach Tabelle~\ref{tab:seriell} zu konfigurieren.
 
 \begin{table}[b]
-\begin{center}
-\begin{tabularx}{7cm}{Xl}
-\hline
-Bits pro Sekunde & 9600 \\
-Datenbits & 8 \\
-Parität & keine \\
-Stoppbits & 1 \\
-Flusssteuerung & Hardware \\ \hline
-\end{tabularx}
-\caption{Konfiguration der seriellen Schnittstelle}
-\label{tab:seriell}
-\end{center}
+	\begin{center}
+		\begin{tabularx}{7cm}{Xl}
+			\hline
+			Bits pro Sekunde & 9600 \\
+			Datenbits & 8 \\
+			Parität & keine \\
+			Stoppbits & 1 \\
+			Flusssteuerung & Hardware \\ \hline
+		\end{tabularx}
+		\caption{Konfiguration der seriellen Schnittstelle}
+		\label{tab:seriell}
+	\end{center}
 \end{table}
 
-Unter der Schaltfläche erweitert kann man zudem die Puffer ausschalten, was aber nicht zwingend notwendig ist und die Funktionsweise normalerweise weder positiv noch negativ beeinflusst, sowie die Portnummer für den neu geschaffenen COM-Port einstellen.
+Unter der Schaltfläche \enquote{Erweitert} kann man zudem die Puffer ausschalten, was aber nicht zwingend notwendig ist und die Funktionsweise normalerweise weder positiv noch negativ beeinflusst, sowie die Portnummer für den neu geschaffenen COM-Port einstellen.
 
 
 \section{Einrichtung des Terminalprogramms}
@@ -254,10 +256,10 @@ Unter der Schaltfläche erweitert kann man zudem die Puffer ausschalten, was aber
 Hardware- und treiberseitig steht einer erfolgreichen Kommunikation von Rechner und Devices nun nichts mehr im Wege, für eine komfortable Unterhaltung außerhalb von {\pic} fehlt aber noch die entsprechende Software. Empfohlen wird die Verwendung des kostenlosen Programms \emph{Puttytel}\footnote{Herunterzuladen unter: \url{http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html}}, mit welchem auch die im Rahmen dieser Anleitung gezeigten Beispiele durchgeführt werden. Es besteht nur aus einer einzigen ausführbaren Datei.
 
 \begin{figure}
-\centering
-\includegraphics[width=.5\textwidth]{Bilder/puttytelstart}
-\caption{Einstellungen für \texttt{Puttytel}}
-\label{fig:puttytelstart}
+	\centering
+	\includegraphics[width=.5\textwidth]{Bilder/puttytelstart}
+	\caption{Einstellungen für \texttt{Puttytel}}
+	\label{fig:puttytelstart}
 \end{figure}
 
 \texttt{Puttytel} kann per Doppelklick gestartet werden, woraufhin man zu einem Startbildschirm gelangt. Man wählt in der linken Spalte unten links \enquote{Serial} und stellt die Parameter -- analog zur Konfiguration des COM-Ports nach Tabelle~\ref{tab:seriell} -- wie in Abbildung~\ref{fig:puttytelstart} ein, ehe man die serielle Verbindung per Klick auf \enquote{Open} startet. Vor dem Start der Verbindung sollte man das verbundene Device mit Strom versorgen.
@@ -276,7 +278,7 @@ Die ohne Leerzeichen auf \enquote{com} folgende Zahl ist natürlich entsprechend 
 
 Um eine reibungslose Kommunikation zwischen {\pic} und {\anlage} sicherzustellen, muss in {\pic} als wesentliche Einstellung unter dem Menüpunkt \enquote{Einstellungen $\rightarrow$ Optionen} im Reiter \enquote{Output} der richtige COM-Port eingestellt werden. Über \enquote{Einstellungen $\rightarrow$ Connect} wird die serielle Verbindung aufgebaut und in der untersten Leiste anzeigt, ob der Verbindungsaufbau erfolgreich war.
 
-Zudem sollte im Reiter \enquote{Allgemein} die globale Verzögerung erfahrungsgemäß auf etwa 0{,}07\,s eingestellt werden. Dies ist die Zeit, die aufgrund von Datenübertragungen und Rechenvorgängen zwischen dem Beginn des Sendens des Befehls vom PC zum Transmitter und dem Zünden des Kanals an der Zündbox vergehen.
+Zudem sollte im Reiter \enquote{Allgemein} die globale Verzögerung erfahrungsgemäß auf etwa 0{,}07\,s eingestellt werden. Dies ist die Zeit, die aufgrund von Datenübertragungen und Rechenvorgängen zwischen dem Beginn des Sendens des Befehls vom PC zum Transmitter und dem Zünden des Kanals an der Zündbox vergeht.
 
 Als minimale Zeitdauer zwischen zwei Zündungen sollte \unit[100]{ms} nicht unterschritten werden, das Scharfschalten vor Beginn der Show ist ebenfalls nicht zu vergessen!
 
@@ -295,33 +297,33 @@ In diesem Abschnitt wird die Systemüberwachung bzw. -konfiguration über die seri
 Hat man mittels \texttt{Puttytel} eine Verbindung zwischen einem Device und dem PC aufbauen können, sieht man vor sich zunächst nur einen schwarzen Bildschirm. Um nun mit dem Device kommunizieren zu können, existieren einige Befehle gemäß Tabelle~\ref{tab:commands}.
 
 \begin{table}[bt]
-\begin{center}
-\begin{tabularx}{.9\textwidth}{lX}
-\hline
-\textbf{Befehl} & \textbf{Wirkung}\\ \hline \hline
-\hyperref[subsec:localconf]{conf} & Startet das Konfigurationsprogramm zur lokalen Zuweisung von Slave- und Unique-ID  \\
-\hyperref[subsec:remoteconf]{remote} & Startet das Konfigurationsprogramm zur ferngesteuerten Zuweisung von Slave- und Unique-ID \\
-\hyperref[sec:list]{list} & Zeigt die Systemübersicht (Zuweisung Unique- und Slave-ID, Batteriespannung jeder Box, Scharfschaltungsstatus Temperatur, RSSI, Anzahl Boxen je Slave-ID) \\ \hline
-\hyperref[sec:manuellessenden]{send} & Startet das Menü zur manuellen Eingabe einer Anweisung ans Funkmodul (Zündbefehl, Identifizierungsaufforderung oder Temperaturmessung) \\
-\hyperref[sec:manuellessenden]{fire} & Führt zu einer Eingabemaske, in die Slave-ID und Kanal für die Zündung einzugeben sind\\
-\hyperref[sec:manuellessenden]{ident} & Sendet eine Identifizierungsaufforderung an alle anderen Devices \\
-\hyperref[sec:manuellessenden]{temp} & Gibt über die serielle Schnittstelle die Temperatur aus und fordert alle anderen Devices ebenfalls zur Temperaturmessung auf. Zum Auslesen der neu gemessenen Temperaturen muss dann eine Identifizierungsanfrage geschickt werden\\ \hline
-\hyperref[sec:rfmzugriff]{rfm} & Erlaubt unmittelbaren Zugriff auf das Funkmodul durch Eingabe einer 16-Bit-Hexadezimalzahl, um Registerwerte auszulesen oder neu zu setzen\\ \hline
-orders & Gibt letztes gesendetes und empfangenes Pattern auf LCD aus\\
-zero & Markiert alle Kanäle der verbundenen Zündbox als noch nicht abgefeuert\\ \hline
-cls & Löscht den Terminal-Bildschirm\\
-kill & Löst einen Neustart des Device aus\\ \hline
-\end{tabularx}
-\caption{Kommandos zur Konfiguration über die serielle Schnittstelle}
-\label{tab:commands}
-\end{center}
+	\begin{center}
+		\begin{tabularx}{.9\textwidth}{lX}
+			\hline
+			\textbf{Befehl} & \textbf{Wirkung}\\ \hline \hline
+			\hyperref[subsec:localconf]{conf} & Startet das Konfigurationsprogramm zur lokalen Zuweisung von Unique- und Slave-ID  \\
+			\hyperref[subsec:remoteconf]{remote} & Startet das Konfigurationsprogramm zur ferngesteuerten Zuweisung von Unique- und Slave-ID \\
+			\hyperref[sec:list]{list} & Zeigt die Systemübersicht (Zuweisung Unique- und Slave-ID, Batteriespannung jeder Box, Scharfschaltungsstatus Temperatur, RSSI, Anzahl Boxen je Slave-ID) \\ \hline
+			\hyperref[sec:manuellessenden]{send} & Startet das Menü zur manuellen Eingabe einer Anweisung ans Funkmodul (Zündbefehl, Identifizierungsaufforderung oder Temperaturmessung) \\
+			\hyperref[sec:manuellessenden]{fire} & Führt zu einer Eingabemaske, in die Slave-ID und Kanal für die Zündung einzugeben sind\\
+			\hyperref[sec:manuellessenden]{ident} & Sendet eine Identifizierungsaufforderung an alle anderen Devices \\
+			\hyperref[sec:manuellessenden]{temp} & Gibt über die serielle Schnittstelle die Temperatur aus und fordert alle anderen Devices ebenfalls zur Temperaturmessung auf. Zum Auslesen der neu gemessenen Temperaturen muss dann eine Identifizierungsanfrage geschickt werden\\ \hline
+			\hyperref[sec:rfmzugriff]{rfm} & Erlaubt unmittelbaren Zugriff auf das Funkmodul durch Eingabe einer 16-Bit-Hexadezimalzahl, um Registerwerte auszulesen oder neu zu setzen\\ \hline
+			orders & Gibt letztes gesendetes und empfangenes Pattern auf LCD aus\\
+			zero & Markiert alle Kanäle der verbundenen Zündbox als noch nicht abgefeuert\\ \hline
+			cls & Löscht den Terminal-Bildschirm\\
+			kill & Löst einen Neustart des Device aus\\ \hline
+		\end{tabularx}
+		\caption{Kommandos zur Konfiguration über die serielle Schnittstelle}
+		\label{tab:commands}
+	\end{center}
 \end{table}
 
 Diese können, sofern \texttt{Puttytel} die aktive Anwendung ist, direkt über die PC-Tastatur eingegeben werden und sollten zur unmittelbaren Ausführung mit Druck auf die Taste \emph{ENTER} abgeschlossen werden. Sobald das erste Zeichen eingegeben wurde, leuchtet die gelbe Status-LED am Device. Unbekannte Befehle werden ignoriert, sämtliche Buchstaben als Kleinbuchstaben interpretiert. Korrekturen sind unter Verwendung der \emph{BACKSPACE}-Taste möglich.
 
-Aufgrund der eingebauten Timeout-Funktion, welche ein Hängenbleiben des Programms während einer Show verhindern soll, bricht die Firmware die Eingabe ab, wenn zwischen der Eingabe der einzelnen Buchstaben mehr als 3\,s vergehen. Lässt man diese Zeit verstreichen, wird automatisch ein Drücken der \emph{ENTER}-Taste übermittelt, die Befehlseingabe also abgeschlossen und das Device ist unmittelbar bereit, einen neuen Befehl aufzunehmen. Wird also nach Eingabe eines gültigen Befehls die \emph{ENTER}-Taste nicht gedrückt, wird der Befehl durch den Timeout dennoch ausgelöst. Möchte man dies vermeiden, sollte man den Befehl vor Ausführung durch Eingabe weiterer Zeichen ungültig machen oder durch Entfernen aller Zeichen mittels \emph{BACKSPACE} löschen.
+Aufgrund der eingebauten Timeout-Funktion, welche ein Hängenbleiben des Programms während einer Show verhindern soll, bricht die Firmware die Eingabe ab, wenn zwischen der Eingabe der einzelnen Buchstaben mehr als $\unit[3]{s}$ vergehen. Lässt man diese Zeit verstreichen, wird automatisch ein Drücken der \emph{ENTER}-Taste übermittelt, die Befehlseingabe also abgeschlossen und das Device ist unmittelbar bereit, einen neuen Befehl aufzunehmen. Wird also nach Eingabe eines gültigen Befehls die \emph{ENTER}-Taste nicht gedrückt, wird der Befehl durch den Timeout dennoch ausgelöst. Möchte man dies vermeiden, sollte man den Befehl vor Ausführung durch Eingabe weiterer Zeichen ungültig machen oder durch Entfernen aller Zeichen mittels \emph{BACKSPACE} löschen.
 
-Von den in Tabelle~\ref{tab:commands} aufgeführten Befehlen funktionieren lediglich zwei nicht bei allen Devices. \enquote{orders} setzt voraus, dass das angeschlossene Device zuvor -- über das durch \enquote{conf} zu erreichende Menü -- als Transmitterbox konfiguriert wurde bzw. im Fall von \enquote{zero} nicht als Transmitterbox.
+Von den in Tabelle~\ref{tab:commands} aufgeführten Befehlen funktionieren lediglich zwei nicht bei allen Devices: \enquote{orders} setzt voraus, dass das angeschlossene Device ein Transmitter ist, \enquote{zero} wirkt nur bei Zündboxen.
 
 
 \subsection{Konfiguration}
@@ -336,9 +338,9 @@ Die \textbf{Unique-ID} dient der Identifikation jeder einzelnen Zündbox im Funks
 
 Die \textbf{Slave-ID} entscheidet, auf welche Zündbefehle eine Zündbox reagiert. Sollen also zwei oder mehr Boxen stets zur selben Zeit denselben Kanal zünden, kann ihnen einfach die gleiche Slave-ID zugewiesen werden.
 
-Die Null als Slave- und Unique-ID identifiziert ein Device als Transmitterbox. Die Software erkennt dabei automatisch, ob es sich beim angeschlossenen Device grundsätzlich um einen Transmitter oder eine Zündbox handelt und weist Transmittern unmittelbar beim Hochfahren Null als Slave-ID und Unique-ID zu. Ein vom Aufbau her als Zündbox ausgeführtes Device muss immer von Null verschiedene IDs besitzen.
+Die Null als Unique- und Slave-ID identifiziert ein Device als Transmitterbox. Die Software erkennt dabei automatisch, ob es sich beim angeschlossenen Device grundsätzlich um einen Transmitter oder eine Zündbox handelt\footnote{Wie diese automatische Erkennung funktioniert, ist im Abschnitt \ref{ch:pinbelegung} ab Seite \pageref{ch:pinbelegung} beschrieben} und weist Transmittern unmittelbar beim Hochfahren \enquote{0} als Unique- und Slave-ID zu. Ein vom Aufbau her als Zündbox ausgeführtes Device muss immer von Null verschiedene IDs besitzen.
 
-Die Zuweisung von Slave- und Unique-ID vom Startbildschirm des Konfigurationsprogramms aus geschieht, indem man den Anweisungen auf dem Bildschirm folgt. Die Eingabe von \enquote{I} bzw. \enquote{i} (Groß- oder Kleinschreibung spielt keine Rolle) erlaubt eine Änderung von Unique-ID und Slave-ID einer Zündbox. Die neue Unique- bzw. Slave-ID muss stets zweistellig ohne Bestätigung durch Enter oder eine andere Taste eingegeben werden. Beide IDs können im Bereich von 01-30 liegen.
+Die Zuweisung von Unique- und Slave-ID vom Startbildschirm des Konfigurationsprogramms aus geschieht, indem man den Anweisungen auf dem Bildschirm folgt. Die Eingabe von \enquote{I} bzw. \enquote{i} (Groß- oder Kleinschreibung spielt keine Rolle) erlaubt eine Änderung von Unique- und Slave-ID einer Zündbox. Die neue Unique- bzw. Slave-ID muss stets zweistellig ohne Bestätigung durch Enter oder eine andere Taste eingegeben werden. Beide IDs können im Bereich von 01-30 liegen.
 
 \begin{figure}
 \centering
@@ -349,7 +351,7 @@ Die Zuweisung von Slave- und Unique-ID vom Startbildschirm des Konfigurationspro
 
 Möchte man beispielsweise die Unique-ID 5 und die Slave-ID 12 zuweisen, muss man nach Anzeige des Startbildschirms zunächst \enquote{i} und anschließend \enquote{05} und \enquote{12} eingeben. Will man eine der beiden IDs beibehalten und nur die andere ändern, kann die Änderung durch Drücken von Enter übersprungen werden. Die zugewiesenen IDs werden an drei Stellen im internen Speicher mit Prüfsummen hinterlegt und bleiben sowohl nach dem Ausschalten als auch nach einem Firmwareupdate erhalten. Eine Änderung mindestens einer der IDs führt zu einem sofortigen Neustart der Zündbox.
 
-Unabhängig davon, dass eine Zündbox nicht als Transmitter konfiguriert werden, also nicht Unique- und Slave-ID 0 besitzen kann, kann sie theoretisch trotzdem zur Steuerung und Koordinierung eines Netzes und einer Show eingesetzt werden, indem man sie über die serielle Schnittstelle mit dem PC verbindet. Bis auf die Darstellung am LCD erfüllt sie dieselben Aufgaben wie ein Transmitter und kann auch parallel noch als Zündbox fungieren. Auf entsprechenden Sicherheitsabstand zu Lebewesen und sensibler Technik ist dabei selbstverständlich zu achten!
+Unabhängig davon, dass eine Zündbox nicht als Transmitter konfiguriert werden, also nicht Unique- und Slave-ID  besitzen kann, kann sie theoretisch trotzdem zur Steuerung und Koordinierung eines Netzes und einer Show eingesetzt werden, indem man sie über die serielle Schnittstelle mit dem PC verbindet. Bis auf die Darstellung am LCD erfüllt sie dieselben Aufgaben wie ein Transmitter und kann auch parallel noch als Zündbox fungieren. Auf entsprechenden Sicherheitsabstand zu Lebewesen und sensibler Technik ist dabei selbstverständlich zu achten!
 
 \subsubsection{Ferngesteuert}
 \label{subsec:remoteconf}
@@ -363,7 +365,7 @@ Unabhängig davon, dass eine Zündbox nicht als Transmitter konfiguriert werden, a
 
 Über den Befehl \enquote{remote} gelangt man ins Konfigurationsprogramm zur ferngesteuerten Vergabe von Unique- und Slave-ID. Der Programmablauf ist beispielhaft in Abbildung~\ref{fig:remote} gezeigt: Die Eingabe der alten und neuen IDs erfolgt analog zur Eingabe bei lokaler Konfiguration, am Ende muss die Änderung noch bestätigt werden. Werden als alte Unique- und Slave-ID die Daten der verbundenen Box eingegeben, so werden deren Kennzahlen wie bei einer lokalen Konfiguration geändert und kein weiterer Befehl gesendet.
 
-Durch \enquote{remote} und die Eingabe von Unique- und Slave-ID einer nicht per Kabel verbundenen Box ist es möglich, die IDs einer eingeschalteten Zündbox per Funk zu ändern. Voraussetzung ist dabei, dass die angesprochene Zündbox nicht scharf geschaltet ist -- hierdurch soll ein Eingriff von außen während einer Show unterbunden werden.
+Durch \enquote{remote} und die Eingabe von Unique- und Slave-ID einer nicht per Kabel verbundenen Box ist es möglich, die IDs einer eingeschalteten Zündbox per Funk zu ändern. Voraussetzung ist dabei, dass die angesprochene Zündbox nicht scharf geschaltet ist.
 
 Der Anwender hat selbst darauf zu achten, durch ein ferngesteuertes Update nicht einem Device eine bereits vergebene Unique-ID zuzuweisen! Falls dies dennoch geschieht, ist das weitere Vorgehen davon abhängig, ob die Devices auch die gleiche Slave-ID besitzen oder nicht. Sind die Slave-IDs nicht identisch, so kann durch einen weiteren \enquote{remote}-Befehl die Unique-ID-Zuweisung geändert werden. Bei identischen Slave-IDs funktioniert dies nicht, da stets alle Devices auf den Änderungsbefehl in gleicher Weise reagieren würden. Hier müssen daher alle Devices mit identischen IDs bis auf eines ausgeschaltet werden, dem man dann neue IDs zuweisen kann. Nun kann dann jeweils ein weiteres Device eingeschaltet und seine IDs neu gesetzt werden, bis wieder alle unterschiedliche Unique-IDs besitzen.
 
@@ -376,7 +378,7 @@ Mit \enquote{list} ist es möglich, sich die Systemübersicht entsprechend Abbildu
 \item Welche Spannung die Batterie der Box mit der entsprechenden Unique-ID liefert.
 \item Ist die Box mit der jeweiligen Unique-ID scharf geschaltet: (j)a oder (n)ein.
 \item Temperatur im Inneren der Box, sofern die Box über einen eingebauten Temperatursensor verfügt.
-\item Wie stark ist das von der Box empfangene Signal (RSSI = Received Signal Strength Indication). Werte stehen nur bei Aufruf von \enquote{list} an einem Device mit \texttt{RFM69} zur Verfügung.
+\item Wie stark ist das von der Box empfangene Signal (RSSI = Received Signal Strength Indication).
 \end{enumerate}
 
 Die untere Tabelle listet auf, wie viele Boxen mit der entsprechenden Slave-ID derzeit aktiv sind.
@@ -390,7 +392,7 @@ Zwischen den beiden Tabellen wird die Anzahl der fehlerhaften IDs aufgelistet. D
 	\label{fig:list}
 \end{figure}
 
-Der dargestellte Zustand entspricht den empfangenen Parametern nach der letzten Identifikationsaufforderung, für eine möglichst aktuelle Liste sollte also zuvor, wie im Abschnitt~\ref{sec:manuellessenden} beschrieben eine Identifikationsaufforderung gesendet werden.
+Der dargestellte Zustand entspricht den empfangenen Parametern nach der letzten Identifikationsaufforderung bzw. nach dem Einschalten der Zündbox. Für eine möglichst aktuelle Liste sollte also vor dem Aufruf von \enquote{list}, wie im Abschnitt~\ref{sec:manuellessenden} beschrieben, eine Identifikationsaufforderung gesendet werden.
  
 
 \subsection{Manuelles Senden}
@@ -536,13 +538,21 @@ Im Reiter \enquote{ID~(remote)} können alte und neue ID-Kombination eingestellt 
 
 \textbf{WICHTIG: Aus Sicherheitsgründen darf kein Update durchgeführt werden, solange Zünder mit dem Device verbunden sind, da sich die Devices im Falle eines Übertragungsfehlers völlig unvorhersehbar verhalten können.}
 
-Die aktuelle Firmware kann aus dem Repository
+\section{Herunterladen}
+
+Die aktuelle Firmware kann aus dem Git-Repository
 \begin{center}\url{https://github.com/fixxl/el-fueradoro}\end{center}
-heruntergeladen werden. Sie beinhaltet den kompletten C-Quellcode, das AVR-Eclipse-Projekt, die kompilierten iHex-Dateien für Firmware und Bootloader, die nötigen Software-Tools zur Übertragung zwischen PC und Mikrocontroller sowie die vorliegende Anleitung. Zum Selbstkompilieren wird der Compiler AVR-GCC benötigt.
+mittels Git-Client oder direkt über den Link
+\begin{center}\url{https://github.com/fixxl/el-fueradoro/archive/master.zip}\end{center}
+heruntergeladen werden.
+
+Im Repository enthalten sind der komplette C-Quellcode, das AVR-Eclipse-Projekt, die kom\-pilierten iHex-Dateien für Firmware und Bootloader, die nötigen Software-Tools zur Übertragung zwischen PC und Mikrocontroller sowie die vorliegende Anleitung.
+
+\section{Aktualisierung}
 
 {\anlage} bietet die Möglichkeit, die Firmware via serielle Schnittstelle vom PC aus zu aktualisieren. Hierfür gibt es das Programm \emph{fwupdate.exe}, welches zunächst einen Reset auslöst, um den Bootloader des Devices zu aktivieren und anschließend die im iHex-Format vorliegende Firmware überträgt.
 
-\emph{fwupdate.exe} muss über die Kommandozeile mit zwei Parametern gestartet werden, nämlich der Angabe der seriellen Schnittstelle und dem Namen der zu übertragenden Firmware-Datei. Aufgrund der Möglichkeit, zwei verschiedene Mikrocontroller und zwei verschiedene Funkmodultypen zu verwenden, existieren vier verschiedene Firmwaredateien, welche sich im gleichen Ordner wie \emph{fwupdate.exe} befinden sollten. 
+\emph{fwupdate.exe} muss über die Kommandozeile mit zwei Parametern gestartet werden, nämlich der Angabe der seriellen Schnittstelle und dem Namen der zu übertragenden Firmware-Datei. Da zu Beginn der Entwicklung von {\anlage} auch noch Vorgänger des \emph{ATmega328P} und des Funkmoduls \emph{RFM69CW} verwendet wurden, existieren auch hierfür noch Firmwareversionen, so dass sich insgesamt vier verschiedene Firmwaredateien im gleichen Ordner wie \emph{fwupdate.exe} befinden sollten.
 
 Um nun die neue Firmware zu übertragen, lautet das Kommando für ein Device am \emph{COM4} mit dem \emph{ATmega328P} und dem Funkmodul \emph{RFM69CW}:
 
@@ -552,7 +562,7 @@ Um nun die neue Firmware zu übertragen, lautet das Kommando für ein Device am \e
 
 Die Angabe der Dateiendung \emph{.hex} kann hierbei -- ebenso wie das \emph{.exe} hinter \emph{fwupdate} -- auch weggelassen werden, die Firmware-Datei muss jedoch zwingend auf \emph{.hex} enden.
 
-\emph{fwupdate.exe} ist, sofern bereits eine korrekt funktionierende Firmware auf dem Device vorhanden ist, in der Lage, automatisiert zu ermitteln, welche Firmwaredatei die benötigte ist, das Kommando für ein Update über \emph{COM4} lautet dann:
+\emph{fwupdate.exe} ist, sofern bereits eine korrekt funktionierende Firmware auf dem Device vorhanden ist, in der Lage, automatisiert zu ermitteln, welche Firmwaredatei die benötigte ist, das Kommando für ein Update über \emph{COM4} lautet dann nur noch:
 
 \begin{center}
 \emph{fwupdate.exe /c4 /fa}
@@ -610,7 +620,7 @@ Die Pinbelegung des \texttt{ATmega328p} in den verschiedenen Devices ist in Abbi
 
 Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er beim Starten der Firmware als Eingang geschaltet wird und aufgrund der dort anliegenden Spannung die sicherheitsrelevante Erkennung, um welchen Devicetyp es sich handelt, vorgenommen wird. Aufgrund eines internen Pullup-Widerstands im LCD werden bei angeschlossenem Transmitter stets $\unit[3{,}3]{V}$ an diesem Pin anliegen, bei Zündboxen bewegt sich die heruntergeteilte Spannung der Versorgungsbatterie im Bereich unterhalb von $\unit[1{,}1]{V}$.
 
-Diese Unterscheidung ist wichtig, da der Programmablauf sich bei Transmittern (Slave-ID 0 und Unique-ID 0) anders gestaltet als bei Zündboxen und Controllerpins, wie in Abbildung~\ref{fig:pinout} zu sehen, bei Transmittern anders belegt sind und für eine andere Datenrichtung (Eingang/Ausgang) ausgelegt sind als bei Zündboxen.  Wie zu erkennen werden Controlleranschlüsse beim Transmitter als Steuerung des Displays verwendet, die bei der Zündbox den Zustand des Schlüsselschalters einlesen oder die Schieberegister zur Zündung der Kanäle ansteuern.
+Diese Unterscheidung ist wichtig, da der Programmablauf sich bei Transmittern (Unique-ID 0 und Slave-ID 0) anders gestaltet als bei Zündboxen und Controllerpins, wie in Abbildung~\ref{fig:pinout} zu sehen, bei Transmittern anders belegt sind und für eine andere Datenrichtung (Eingang/Ausgang) ausgelegt sind als bei Zündboxen.  Wie zu erkennen werden Controlleranschlüsse beim Transmitter als Steuerung des Displays verwendet, die bei der Zündbox den Zustand des Schlüsselschalters einlesen oder die Schieberegister zur Zündung der Kanäle ansteuern.
 
 Würde die Software beim Start nicht überprüfen, auf welcher Art Device sie gerade läuft, könnte das Programm bei falscher Konfiguration davon ausgehen, auf einem anderen Device zu laufen. Während die Zündbox-Konfiguration auf einem Transmitter -- abgesehen davon, dass das LCD nichts anzeigen würde -- keine Probleme hervorriefe, würde es zu Schäden am Controller kommen und zu unerwünschten Zündungen führen, wenn die Transmitter-Konfiguration auf einer Zündbox gestartet werden würde: Im Fall des Schlüsselschalter-Pins käme es  zu einem Kurzschluss, wenn die Box scharf geschaltet ist, was den Controller beschädigen kann, die Ansteuerung des Schieberegisters mit LCD-Befehlen würde dazu führen, dass Zündkanäle durchschalten, weil die Ansteuerbefehle des LCD ans Schieberegister weitergeleitet werden.
 
@@ -1069,6 +1079,9 @@ Für {\anlage} müssen die Fusebits beim \texttt{ATmega328P} gemäß Tabelle \ref{ta
 \label{tab:fuses}
 \end{table}
 \footnotetext{Bei der Extended Fuse werden nur die unteren drei Bit verwendet, die oberen fünf sind nicht in Gebrauch und können daher beliebig jeweils mit 1 oder 0 beschrieben und gelesen werden. Im Beispiel werden die nicht-relevanten Bits mit 0 beschrieben, so dass sich der Wert 0x05 ergibt, äquivalent dazu könnte der Wert aber beispielsweise auch 0xFD oder 0xA5 lauten.}
+
+Wird beim Flashen des Bootloaders das Standard-EEPROM-Image nicht mitübertragen, die herstellerseitige Voreinstellung des EEPROMs also nicht verändert, werden Zündboxen -- nach dem Programmieren der \enquote{echten} Firmware -- zunächst \enquote{E} bzw. \enquote{e} für \enquote{Error} als Unique- bzw. Slave-ID melden, da an den Speicherstellen für IDs und Prüfsummen nicht zueinander passende Werte stehen. Die Zündbox muss dann einmalig kabelgebunden über die lokale Konfiguration auf gültige Werte eingestellt werden.
+
 
 \chapter{Tipps und Tricks}
 
