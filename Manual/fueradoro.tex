@@ -1085,17 +1085,21 @@ Wird beim Flashen des Bootloaders das Standard-EEPROM-Image nicht mitübertragen,
 
 \chapter{Tipps und Tricks}
 
-\section[LCD an 3,3 V]{LCD an 3{,}3\,V}
+\section[5V-LCD an 3,3V]{5\,V-LCD an 3{,}3\,V}
 
 Zwar gibt es inzwischen auch LCDs, welche sich von Haus aus für eine Versorgung mit $\unit[3{,}3]{V}$ eignen, viele Displays jedoch sind noch für $\unit[5]{V}$ ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
 
-Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall} -- also bei Betrieb des Displays mit einer Versorgungsspannung von $\unit[5]{V}$ -- wird Pin~3 auf $\unit[0]{V}$ gelegt, so dass sich eine Kontrastspannung von $\unit[5]{V}$ entsteht. Liegen an Pin~2 nur $\unit[3{,}3]{V}$ an, muss an Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
+Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall} -- also bei Betrieb des Displays mit einer Versorgungsspannung von $\unit[5]{V}$ -- wird Pin~3 auf $\unit[0]{V}$ gelegt, so dass sich eine Kontrastspannung von $\unit[5]{V}$ entsteht. Liegen an Pin~2 nur $\unit[3{,}3]{V}$ an, muss Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
 
-Als Quelle der negativen Spannung dient der RS232-Treiberbaustein, der am Pin V- eine Spannung von $\unit[-5{,}5]{V}$ zur Verfügung stellt. Über einen Spannungsteiler zwischen V- und GND wird daher Pin~3 des LCD auf $\unit[-1,7]{V}$ gelegt. Manche LCDs torpedieren diesen Versuch, indem Pin~3 relativ niederohmig mit GND verbunden wird. Man sollte also im abgeklemmten Zustand den Widerstand zwischen Pin 1 und Pin 3 messen und bei Bedarf den eventuell auf der LCD-Platine befindlichen Widerstand zwischen den beiden Pins auslöten.
+Als Quelle der negativen Spannung dient der RS232-Treiberbaustein, der am Pin V- eine Spannung von $\unit[-5{,}5]{V}$ zur Verfügung stellt. Über einen Spannungsteiler -- im Schaltplan auf Seite~\pageref{fig:transmitterschematic} von $R12 = \unit[3{,}3]{k\Omega}$ und $R13 = \unit[6{,}8]{k\Omega}$ gebildet -- zwischen V- und GND wird daher Pin~3 des LCD auf $\unit[-1,8]{V}$ gelegt.
+
+Manche LCDs torpedieren diesen Versuch, indem Pin~3 relativ niederohmig mit GND verbunden wird. Man sollte also im abgeklemmten Zustand den Widerstand zwischen Pin 1 und Pin 3 messen und bei Bedarf den eventuell auf der LCD-Platine befindlichen Widerstand zwischen den beiden Pins auslöten.
 
 Die Hintergrundbeleuchtung wird über die Pins~15 und 16 versorgt. Zwischen diesen Pins befindet sich in Reihe zu den LEDs in aller Regel noch ein Widerstand, welcher den Strom durch die LEDs begrenzt und für eine Spannung von $\unit[5]{V}$ zwischen den Pins ausgelegt ist. Bei $\unit[3{,}3]{V}$ zwischen Pin~15~\&~16 erscheint das LCD daher möglicherweise zu dunkel, so dass man den Widerstand durch einen kleineren Wert ersetzen kann, um die Spannungsdifferenz auszugleichen.
 
-Der ursprüngliche LED-Vorwärtsstrom sowie die Aufteilung der Spannung auf LED und Vorwiderstand können durch Anlegen von $\unit[5]{V}$ zwischen Pin~15~\&~16, Spannungsmessung über dem Original-Widerstand und anschließende Division durch den Widerstandswert (korrekt ablesen oder messen) ermittelt werden. Da der Spannungsabfall über den LEDs sich nicht ändert und der Strom gleich bleiben soll, muss der Wert des neuen Widerstands so verkleinert werden, dass bei identischem Stromfluss über ihm $\unit[1{,}7]{V}$ weniger abfallen als am Original-Widerstand. Ist z.\,B. original ein Widerstand von $\unit[150]{\Omega}$ verbaut, über dem eine Spannung von $\unit[2]{V}$ anliegt (hieraus resultiert eine LED-Vorwärtsspannung von $\unit[3]{V}$), ergibt sich ein LED-Vorwärtsstrom von $\unit[13]{mA}$. Dementsprechend wäre bei einem Spannungsabfall von nur noch $\unit[0{,}3]{V}$ für den gleichen Strom ein Widerstand von $\unit[22]{\Omega}$ einzusetzen.
+Der ursprüngliche LED-Vorwärtsstrom sowie die Aufteilung der Spannung auf LED und Vorwiderstand können durch Anlegen von $\unit[5]{V}$ zwischen Pin~15~\&~16, Spannungsmessung über dem Original-Widerstand und anschließende Division durch den Widerstandswert (korrekt ablesen oder messen) ermittelt werden. Da der Spannungsabfall über den LEDs sich nicht ändert und der Strom gleich bleiben soll, muss der Wert des neuen Widerstands so verkleinert werden, dass bei identischem Stromfluss über ihm $\unit[1{,}7]{V}$ weniger abfallen als am Original-Widerstand.
+
+Ist z.\,B. original ein Widerstand von $\unit[150]{\Omega}$ verbaut, über dem eine Spannung von $\unit[2]{V}$ anliegt (hieraus resultiert eine LED-Vorwärtsspannung von $\unit[3]{V}$), ergibt sich ein LED-Vorwärtsstrom von $\unit[13]{mA}$. Dementsprechend wäre bei einem Spannungsabfall von nur noch $\unit[0{,}3]{V}$ für den gleichen Strom ein Widerstand von $\unit[22]{\Omega}$ einzusetzen.
 
 
 \section{Antennenbau}
