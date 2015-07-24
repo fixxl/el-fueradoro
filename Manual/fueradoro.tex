@@ -456,15 +456,30 @@ d7 {\dots} d0 & Zu schreibender Registerwert (beliebig falls w/$\overline{\mbox{
 \subsubsection{Auslesen der eingestellten Sendeleistung}
 \label{subsec:readpower}
 
-Zur Veranschaulichung soll hier die Abfrage der aktuell eingestellten Sendeleistung und eine anschließende Änderung derselben simuliert werden: Aus dem Datenblatt, dem die Bedeutungen aller Registeradressen und ihrer acht Registerbits zu entnehmen sind, kann die Registeradresse 0x11 als diejenige identifiziert werden, in der die Informationen zur Sendeleistung hinterlegt sind. Um nun den aktuellen Wert auszulesen, gibt man im Terminalprogramm \enquote{rfm} gefolgt von \enquote{ENTER} ein und anschließend die Zeichenfolge \enquote{11FF}, wobei die beiden hinteren Stellen wie erwähnt keine Rolle spielen.
+Zur Veranschaulichung soll hier die Abfrage der aktuell eingestellten Sendeleistung und eine anschließende Änderung derselben simuliert werden: Aus dem Datenblatt, dem die Bedeutungen aller Registeradressen und ihrer acht Registerbits zu entnehmen sind, kann die Registeradresse 0x11 als diejenige identifiziert werden, in der die Informationen zur Sendeleistung hinterlegt sind. Um nun den aktuellen Wert auszulesen, gibt man -- wie in Abbildung~\ref{fig:rfmread} gezeigt -- im Terminalprogramm \enquote{rfm} gefolgt von \enquote{ENTER} ein und anschließend die Zeichenfolge \enquote{11FF}, wobei die beiden hinteren Stellen wie erwähnt keine Rolle spielen.
+
+\begin{figure}[b]
+	\centering
+	\includegraphics[width=.8\textwidth]{Bilder/rfmbefehl}
+	\caption{Auslesen der gesetzten Sendeleistung}
+	\label{fig:rfmread}
+\end{figure}
 
 Das Modul antwortet nun mit einem 8-Bit-Wert, z.\,B. mit dem Wert 0x9A, welcher dem Binärwert 10011010 entspricht, dessen Bedeutung dem Datenblatt entnommen werden kann: Das oberste Bit signalisiert, dass die Verstärkerstufe PA0 aktiv ist, die beiden folgenden Bits sind 0, da PA1 und PA2 in der Variante \texttt{RFM69CW} nicht genutzt werden können. Die unteren fünf Bits schließlich stehen für die eingestellte Sendeleistung, wobei man vom aus den fünf Bits berechneten Wert noch 18 abziehen muss, um die Sendeleistung in dBm zu erhalten. Gesetzt sind die Bits 4, 3 und 1, was dem Wert 26 ($= 2^4 + 2^3 + 2^1$) entspricht, daraus resultiert eine eingestellte Sendeleistung von $\unit[8]{dBm}$.
 
 \subsubsection{Setzen der Sendeleistung}
 
-Will man die Sendeleistung nun auf $\unit[6]{dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\unit[6]{dBm}$ einzuschreiben, gibt man im Terminalprogramm \enquote{rfm} gefolgt von \enquote{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
+Will man die Sendeleistung nun auf $\unit[6]{dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\unit[6]{dBm}$ einzuschreiben, gibt man im Terminalprogramm -- wie in Abbildung~\ref{fig:rfmwrite} gezeigt -- \enquote{rfm} gefolgt von \enquote{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
 
-Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers wie im Abschnitt~\ref{subsec:readpower} sollte dann den eben eingeschriebenen Wert 0x98 zurückgeben.\clearpage
+Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers wie im Abschnitt~\ref{subsec:readpower} sollte dann den eben eingeschriebenen Wert 0x98 zurückgeben.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.8\textwidth]{Bilder/rfmbefehl2}
+	\caption{Setzen der Sendeleistung mit anschließendem Auslesen}
+	\label{fig:rfmwrite}
+\end{figure}
+\clearpage
 
 \section{GUI}
 
