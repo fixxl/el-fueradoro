@@ -79,21 +79,21 @@ Vielen Dank an alle, die in irgendeiner Form zur Entwicklung von {\anlage} beige
 
 Ein ganz spezielles Dankeschön an:
 \begin{itemize}
-\item Marc Weissmann, der mit seinem Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE -- Feuerwerk im Röthelheimpark Erlangen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an immer voll vertraut hat
-\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen hat
-\item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung
-\item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Steuersoftware und Erklärungen zum Thema elektrische Zündung
-\item \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat
-\item Der \texttt{Brauerei Loscher} für Club Mate, den Bastler-Treibstoff
-\item Die vielen tollen Open-Source- und Freeware-Lösungen, welche die Softwareentwicklung erst möglich gemacht haben:
-\begin{itemize}
-\item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers
-\item Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}
-\item Kees Bakker und Thomas Holland für die Eclipse-Erweiterung \texttt{AVREclipse}
-\item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}
-\item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{GitHub}
-\item {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs
-\end{itemize}
+	\item Marc Weissmann, der mit seinem Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE -- Feuerwerk im Röthelheimpark Erlangen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an immer voll vertraut hat. Sein mit {\anlage} gezündetes Silvesterfeuerwerk 2014/15 ist \underline{\href{https://vimeo.com/116115628}{hier}} zu sehen.
+	\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen hat.
+	\item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung.
+	\item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Steuersoftware und Erklärungen zum Thema elektrische Zündung.
+	\item \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat.
+	\item Der \texttt{Brauerei Loscher} für Club Mate, den Bastler-Treibstoff.
+	\item Die vielen tollen Open-Source- und Freeware-Lösungen, welche die Softwareentwicklung erst möglich gemacht haben:
+	\begin{itemize}
+		\item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers.
+		\item Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}.
+		\item Kees Bakker und Thomas Holland für die Eclipse-Erweiterung \texttt{AVREclipse}.
+		\item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}.
+		\item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{GitHub}.
+		\item {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs.
+	\end{itemize}
 \end{itemize}
 
 
@@ -103,7 +103,7 @@ Ein ganz spezielles Dankeschön an:
 
 \chapter{Das System}
 
-{\anlage} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich aus den spanischen Wörtern fuego, radio und oro her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
+{\anlage} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich als Kofferwort aus den spanischen Wörtern \emph{fuego}, \emph{radio} und \emph{oro} her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
 
 Es besteht aus einer mit dem PC verbundene Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen.
 
@@ -120,7 +120,7 @@ Transmitterbox und Zündbox sind in Abbildung~\ref{fig:transmitter} bzw.~\ref{fig
 
 \section{Aufbau}
 
-Detailliertere Infos zum Aufbau erhalten interessierte Leser im nächsten Teil dieses Dokuments. An dieser Stelle soll nur kurz auf die Funktionalität eingegangen werden. Herzstück aller Devices ist der 8-bit-Mikrocontroller \texttt{ATmega328P} von Atmel, welcher die verschiedenen Peripheriebausteine kontrolliert. In jedem Device befinden sich ein Funkmodul \texttt{RFM69CW} von HopeRF, welches die drahtlose Kommunikation zwischen den einzelnen Devices übernimmt, ein RS232-Treiberbaustein \texttt{MAX202} mit an die Gehäuseaußenseite geführter Sub-D-Buchse zur Kommunikation zwischen Mikrocontroller und PC sowie vier Status-LEDs.
+Detailliertere Infos zum Aufbau erhalten interessierte Leser in den nächsten Teilen dieses Dokuments ab Seite~\pageref{part:dokumentation}. An dieser Stelle soll nur kurz auf die Funktionalität eingegangen werden. Herzstück aller Devices ist der 8-bit-Mikrocontroller \texttt{ATmega328P} von Atmel, welcher die verschiedenen Peripheriebausteine kontrolliert. In jedem Device befinden sich ein Funkmodul \texttt{RFM69CW} von HopeRF, welches die drahtlose Kommunikation zwischen den einzelnen Devices übernimmt, ein RS232-Treiberbaustein \texttt{MAX202} mit an die Gehäuseaußenseite geführter Sub-D-Buchse zur Kommunikation zwischen Mikrocontroller und PC sowie vier Status-LEDs.
 
 Die Transmitterbox ist mit einem LC-Display mit 20 Spalten und 4 Zeilen ausgestattet. 
 
@@ -264,11 +264,9 @@ Hardware- und treiberseitig steht einer erfolgreichen Kommunikation von Rechner 
 
 \texttt{Puttytel} kann per Doppelklick gestartet werden, woraufhin man zu einem Startbildschirm gelangt. Man wählt in der linken Spalte unten links \enquote{Serial} und stellt die Parameter -- analog zur Konfiguration des COM-Ports nach Tabelle~\ref{tab:seriell} -- wie in Abbildung~\ref{fig:puttytelstart} ein, ehe man die serielle Verbindung per Klick auf \enquote{Open} startet. Vor dem Start der Verbindung sollte man das verbundene Device mit Strom versorgen.
 
-Um bei \texttt{Puttytel} nicht immer all diese Einstellungen per Hand vornehmen zu müssen, bietet sich an, unter Windows eine Verknüpfung auf \texttt{puttytel.exe} zu erstellen und in den Verknüpfungseigenschaften als Ziel anzugeben:
+Um bei \texttt{Puttytel} nicht immer all diese Einstellungen per Hand vornehmen zu müssen, bietet sich an, unter Windows eine Verknüpfung auf \texttt{puttytel.exe} zu erstellen und in den Ver\-knüpf\-ungs\-eigen\-schaften als Ziel anzugeben:
 \begin{center}
-	\begin{verbatim}
-	"c:\programme\puttytel\puttytel.exe" -serial com24 -sercfg 9600,8,1,n,R
-	\end{verbatim}
+	\verb|"c:\programme\puttytel\puttytel.exe" -serial com24 -sercfg 9600,8,1,n,R|
 \end{center}
 
 Die ohne Leerzeichen auf \enquote{com} folgende Zahl ist natürlich entsprechend dem verwendeten seriellen Anschluss (COM5, COM37, \dots) anzupassen.
@@ -586,6 +584,7 @@ Die Angabe der Dateiendung \emph{.hex} kann hierbei -- ebenso wie das \emph{.exe
 Der Updater führt nach Übertragung der Daten einen CRC-Check durch. Sollte dieser fehlschlagen, wurde die Firmware nicht korrekt übertragen. Dies kann zufällig passieren oder auf ein Hardwareproblem, welches in der Regel beim USB-RS232-Adapter liegt, zurückzuführen sein. Für den Fall eines CRC-Fehlers sollte die Firmware erneut übertragen werden. Bleibt das Update beim Punkt \enquote{COMx at 9600 baud:} stehen, sollte die Stromversorgung des Device kurz unterbrochen und wieder aktiviert werden. Das Kabel für die serielle Verbindung bleibt währenddessen mit Device und PC verbunden.
 
 \part{Dokumentation}
+\label{part:dokumentation}
 
 \chapter{Schaltpläne \& Layouts}
 
@@ -645,7 +644,7 @@ Für den Betrieb der Devices von {\anlage} müssen nicht zwingend die Standardlayo
 
 Die Steuerungssoftware für {\anlage} ist unter Zuhilfename des \texttt{AVR-GCC} in der Programmiersprache \texttt{C} geschrieben. Sie umfasst insgesamt 15 Sourcefiles (.c) mit zugehörigen Headerdateien (.h), eine Headerdatei zur Generierung von Registeradressen \enquote{portmakros.h} sowie eine globale Headerdatei \enquote{global.h}, in welcher alle anderen erfasst sind.
 
-Die Quellcodedateien und ihre Funktionen sind in Tabelle~\ref{tab:sourcefiles} aufgelistet.
+Die Quellcodedateien und ihre Aufgaben sind in Tabelle~\ref{tab:sourcefiles} aufgelistet.
 
 \begin{table}[h]
 \begin{tabular}{lp{125mm}}
