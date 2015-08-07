@@ -10,13 +10,15 @@
 #ifdef ONEWIRE_H_
 
 uint8_t w1_reset(void) {
+	uint8_t retval = 1;
+	W1_PORT &= ~(1 << W1);
 	W1_DDR |= (1 << W1);
 	_delay_us(500);
 	W1_DDR &= ~(1 << W1);
 	_delay_us(66);
-	if (W1_PIN & (1 << W1)) return 1;
+	if (!(W1_PIN & (1 << W1))) retval = 0;
 	_delay_us(434);
-	return 0;
+	return retval;
 }
 
 uint8_t w1_bit_io(uint8_t val) {
@@ -64,9 +66,9 @@ void w1_command(uint8_t command, uint8_t *id) {
 
 uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 	uint8_t id_bit_number, j, last_zero = LAST_DEVICE;
-	uint8_t id_bit, cmp_id_bit, crcw = 1;
+	uint8_t id_bit, cmp_id_bit, crcw = 1, tries = 10;
 
-	while (crcw) {
+	while (crcw && tries--) {
 		crcw = 0;
 		if (w1_reset()) return PRESENCE_ERR; // error, no device found
 		w1_byte_wr(SEARCH_ROM); // issue ROM search command

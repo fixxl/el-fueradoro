@@ -163,46 +163,44 @@ uint16_t rfmtalk(void) {
 
 // Temperature sensor detection
 uint8_t tempident(void) {
-	uint8_t checkup = w1_reset();
+	uint8_t checkup = 0;
+
+	for (uint8_t i = 5; i; i--) {
+		checkup += w1_reset();				// In case of sensor connection w1_reset() will return 0
+		checkup += !((W1_PIN & (1 << W1)) && 1);// In case of sensor connection the right side will end up as 0
+	}
 
 	// Type of temp. sensor is detected by return value
-	switch (checkup) {
-		case 0: {
-			return DS18B20;
-			break;
-		}
-		default: {
-			return 0;
-			break;
-		}
-	}
-	return 0;
+	if (!checkup) return DS18B20;
+	else return 0;
 }
 
 // Temperature measurement
 int8_t tempmeas(uint8_t type) {
 	int16_t temperature = -128;
 	uint16_t temp_hex;
+	uint32_t utimer;
 
-	switch (type) {
-		case DS18B20: {
-			w1_temp_conf(125, -40, 9);
-			w1_command(CONVERT_T, NULL);
-			while (!w1_bit_io(1))
-				;
-			w1_command(READ, NULL);
-			temp_hex = w1_byte_rd();
-			temp_hex += (w1_byte_rd()) << 8;
-			temperature = w1_tempread_to_celsius(temp_hex);
-			break;
-		}
-		default: {
-			return -128;
-		}
+	if (!type) {
+		return -128;
 	}
-	temperature += (temperature < 0) ? -5 : 5;
-	temperature /= 10;
-	return (int8_t) temperature;
+	else {
+		w1_temp_conf(125, -40, 9);
+		w1_command(CONVERT_T, NULL);
+
+		utimer = F_CPU / 128;
+		while (!w1_bit_io(1) && --utimer)
+			;
+
+		w1_command(READ, NULL);
+		temp_hex = w1_byte_rd();
+		temp_hex += (w1_byte_rd()) << 8;
+		temperature = w1_tempread_to_celsius(temp_hex);
+
+		temperature += (temperature < 0) ? -5 : 5;
+		temperature /= 10;
+		return (int8_t) temperature;
+	}
 }
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -245,7 +243,7 @@ void device_initialisation(uint8_t ignotrans) {
 		key_flag = 1;
 		adc_init();
 		leds_off();
-		
+
 		// Make unused pin input with active pullup
 		DDRD &= ~(1 << PD4);
 		PORTD |= (1 << PD4);
@@ -287,7 +285,6 @@ int main(void) {
 	uint8_t armed = 0;
 	uint8_t changes = 0;
 	uint8_t iderrors = 0;
-	uint8_t tempsenstype = 0;
 	uint8_t rssi = 0;
 	int8_t temperature = -128;
 
@@ -394,7 +391,7 @@ int main(void) {
 	allow_uart_sending();
 
 // Detect temperature sensor and measure temperature if possible
-	tempsenstype = tempident();
+	const uint8_t tempsenstype = tempident();
 	temperature = tempmeas(tempsenstype);
 
 // Initialise radio
@@ -995,8 +992,6 @@ int main(void) {
 				led_red_on();
 			}
 
-
-
 			// Turn on receiver
 			rfm_rxon();
 
@@ -1045,8 +1040,6 @@ int main(void) {
 						for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
 						}
-
-						tempsenstype = tempident();
 						temperature = tempmeas(tempsenstype);
 						break;
 					}
@@ -1329,10 +1322,10 @@ int main(void) {
 						lcd_puts(" ");
 						lcd_send(rx_field[4] ? 'j' : 'n', 1);
 						lcd_puts(" -");
-						if(!rssi) {
+						if (!rssi) {
 							lcd_puts("--");
 						}
-						else{
+						else {
 							lcd_arrize(((rssi > 99) ? 99 : rssi), lcd_array, 2, 0);
 							lcd_puts(lcd_array);
 						}
