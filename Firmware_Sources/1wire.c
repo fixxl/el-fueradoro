@@ -9,6 +9,7 @@
 
 #ifdef ONEWIRE_H_
 
+// Search for 1-wire-device on bus
 uint8_t w1_reset(void) {
 	uint8_t retval = 1;
 	W1_PORT &= ~(1 << W1);
@@ -21,6 +22,7 @@ uint8_t w1_reset(void) {
 	return retval;
 }
 
+// IO-Access
 uint8_t w1_bit_io(uint8_t val) {
 	W1_DDR |= (1 << W1);
 	_delay_us(5);
@@ -32,6 +34,7 @@ uint8_t w1_bit_io(uint8_t val) {
 	return val;
 }
 
+// Write a byte
 uint8_t w1_byte_wr(uint8_t byte) {
 	uint8_t j;
 	for (uint8_t i = 8; i; i--) {
@@ -42,10 +45,12 @@ uint8_t w1_byte_wr(uint8_t byte) {
 	return byte;
 }
 
+// Read a byte
 uint8_t w1_byte_rd(void) {
 	return w1_byte_wr(0xFF);
 }
 
+// Send a command to a single or to all devices
 void w1_command(uint8_t command, uint8_t *id) {
 	uint8_t i;
 	w1_reset();
@@ -64,6 +69,7 @@ void w1_command(uint8_t command, uint8_t *id) {
 	w1_byte_wr(command);
 }
 
+// Perform rom search (detect all available sensors)
 uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 	uint8_t id_bit_number, j, last_zero = LAST_DEVICE;
 	uint8_t id_bit, cmp_id_bit, crcw = 1, tries = 10;
@@ -108,6 +114,7 @@ uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 	return last_zero; // to continue search
 }
 
+// Collect sensor IDs
 uint8_t w1_get_sensor_ids(uint8_t id_field[][8]) {
 	uint8_t devnum, diff, id[9];
 
@@ -123,6 +130,7 @@ uint8_t w1_get_sensor_ids(uint8_t id_field[][8]) {
 	return devnum;
 }
 
+// Configure temperature parameters
 void w1_temp_conf(int8_t th, int8_t tl, uint8_t res) {
 	res -= 9;
 	res <<= 5;
@@ -135,6 +143,7 @@ void w1_temp_conf(int8_t th, int8_t tl, uint8_t res) {
 	w1_byte_wr(res);
 }
 
+// Read temperature in generic format
 uint16_t w1_read_temp(uint8_t *id) {
 	uint8_t scratchpad[10], value, crcw = 1;
 
@@ -151,6 +160,7 @@ uint16_t w1_read_temp(uint8_t *id) {
 	return (scratchpad[0] + (scratchpad[1] << 8));
 }
 
+// Transform generic format into deci-degrees
 int16_t w1_tempread_to_celsius(uint16_t temp) {
 	int16_t celsius = (temp & 0xF800) ? -1 : 1;
 
@@ -160,6 +170,7 @@ int16_t w1_tempread_to_celsius(uint16_t temp) {
 	return celsius;
 }
 
+// Complete temperature measurement cycle
 int16_t w1_tempmeas(void) {
 	uint8_t diff, id[9];
 	uint16_t temp_hex;
@@ -177,6 +188,7 @@ int16_t w1_tempmeas(void) {
 	return temp;
 }
 
+// Temperature to string conversion
 void w1_temp_to_array(int32_t tempmalzehn, char* tempfield, uint8_t signdigit) {
 	// 0 < signdigit < 3
 	// 0 ... show no sign, no digit
