@@ -274,9 +274,23 @@ Die ohne Leerzeichen auf \enquote{com} folgende Zahl ist natürlich entsprechend 
 \section{Einrichtung von \pic}
 \label{sec:piceinrichtung}
 
-Um eine reibungslose Kommunikation zwischen {\pic} und {\anlage} sicherzustellen, muss in {\pic} als wesentliche Einstellung unter dem Menüpunkt \enquote{Einstellungen $\rightarrow$ Optionen} im Reiter \enquote{Output} der richtige COM-Port eingestellt werden. Über \enquote{Einstellungen $\rightarrow$ Connect} wird die serielle Verbindung aufgebaut und in der untersten Leiste anzeigt, ob der Verbindungsaufbau erfolgreich war.
+Um eine reibungslose Kommunikation zwischen {\pic} und {\anlage} sicherzustellen, muss in {\pic} als wesentliche Einstellung unter dem Menüpunkt \enquote{Einstellungen $\rightarrow$ Optionen} im Reiter \enquote{Output}~-- gezeigt in Abbildung~\ref{fig:pic-comport}~-- der richtige COM-Port eingestellt werden. Über \enquote{Einstellungen $\rightarrow$ Connect} wird die serielle Verbindung aufgebaut und in der untersten Leiste anzeigt, ob der Verbindungsaufbau erfolgreich war.
 
-Zudem sollte im Reiter \enquote{Allgemein} die globale Verzögerung erfahrungsgemäß auf etwa 0{,}07\,s eingestellt werden. Dies ist die Zeit, die aufgrund von Datenübertragungen und Rechenvorgängen zwischen dem Beginn des Sendens des Befehls vom PC zum Transmitter und dem Zünden des Kanals an der Zündbox vergeht.
+\begin{figure}
+	\centering
+	\includegraphics[width=.65\textwidth]{Bilder/pic-comport}
+	\caption{Einstellung des COM-Ports in {\pic}}
+	\label{fig:pic-comport}
+\end{figure}
+
+Zudem sollte im Reiter \enquote{Allgemein} die globale Verzögerung erfahrungsgemäß, wie Abbildung~\ref{fig:pic-delay} zeigt, auf etwa 0{,}07\,s eingestellt werden. Dies ist die Zeit, die aufgrund von Datenübertragungen und Rechenvorgängen zwischen dem Beginn des Sendens des Befehls vom PC zum Transmitter und dem Zünden des Kanals an der Zündbox vergeht.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=.65\textwidth]{Bilder/pic-delay}
+	\caption{Einstellung des Global Delay in \pic}
+	\label{fig:pic-delay}
+\end{figure}
 
 Als minimale Zeitdauer zwischen zwei Zündungen sollte \unit[100]{ms} nicht unterschritten werden, das Scharfschalten vor Beginn der Show ist ebenfalls nicht zu vergessen!
 
