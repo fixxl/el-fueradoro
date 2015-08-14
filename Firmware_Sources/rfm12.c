@@ -311,7 +311,7 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 // Receive data
 uint8_t rfm_receive(char *data, uint8_t *length) {
 	uint8_t bytenum, length_local, error = 0;
-	uint16_t crc_rec, crc_calc = CRC16_SEED;
+	uint16_t crc_calc = CRC16_SEED;
 
 	rfm_status(); 									// Query status to clear potential error flags
 
@@ -327,8 +327,9 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 	data[length_local] = '\0';
 
 	crc_calc ^= 0xFFFF;									// Final XOR for CRC
-	crc_rec = (rfm_rxbyte(&error) << 8);// Receive CRC-Highbyte
-	crc_rec |= rfm_rxbyte(&error);// Receive CRC-Lowbyte
+
+	crc_calc = crc16(crc_calc, rfm_rxbyte(&error));
+	crc_calc = crc16(crc_calc, rfm_rxbyte(&error));
 
 	rfm_status();				  // Query status to clear potential error flags
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
@@ -336,7 +337,7 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 
 	*length = length_local;
 
-	return (!(crc_rec == crc_calc) || error);// 0 : successful, 1 : error
+	return (crc_calc || error);// 0 : successful, 1 : error
 }
 
 #endif
