@@ -147,7 +147,16 @@ In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte S
 
 Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das -- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur -- frei nutzbare Frequenzband um $\unit[868]{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
 
-Die Zündboxen, in Abbildung~\ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\unit[22{,}5]{V}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16 n-Kanal-MOSFETs. Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom über den LED-Zweig auf unter \unit[5]{mA} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme -- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen -- verbunden ist, also ein geschlossener Strompfad von $\unit[22{,}5]{V}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen LED signalisiert.
+Die Zündboxen, in Abbildung~\ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden zusammen einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\unit[22{,}5]{V}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16~n-Kanal-MOSFETs.
+
+Welches der beiden Kabel an welcher Klemme des Zündkanals angeschlossen wird, spielt keine Rolle, da es sich bei den Zündern um passive elektrische Bauelemente handelt, die in beiden Richtungen gleichermaßen von Strom durchflossen werden können. Die Verdrahtung sollte aber stets im ausgeschalteten Zustand der Boxen erfolgen und aus Sicherheitsgründen immer in folgender Reihenfolge:
+\begin{itemize}
+	\item Beim Anklemmen der Kabel zuerst ein Kabel an der schwarzen Klemme befestigen, anschließend das andere an der roten!
+	\item Beim Lösen der Kabel zuerst das Kabel von der roten Klemme lösen, anschließend das von der schwarzen!
+\end{itemize}
+Dies ist der Tatsache geschuldet, dass, wenn eine Seite des Zündkanals fest mit der Zündspannung, d.\,h. einer roten Klemme verbunden ist, ein frei baumelndes zweites Kabel durch Berührung eines Bauteils auf Massepotential, z.\,B. der Antennenbuchse oder der Überwurfmutter des gewinkelten SMA-Steckers, einen Kurzschluss und somit eine Zündung auslösen würde -- selbst dann, wenn die Box nicht scharf geschaltet ist!
+
+Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom durch den LED-Zweig auf unter \unit[5]{mA} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme -- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen -- verbunden ist, also ein geschlossener Strompfad von $\unit[22{,}5]{V}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen grünen LED signalisiert. Ein Leuchten der grünen LED ist dabei lediglich ein Indikator, dass \enquote{etwas} am jeweiligen Kanal angeschlossen ist, eine Aussage, ob der Widerstand des angeschlossenen Zündernetzwerks gering genug ist, um eine Zündung auszulösen, wird durch die LED ausdrücklich nicht getroffen.
 
 \section{Energieversorgung}
 
@@ -162,7 +171,7 @@ Alle Devices verfügen über vier Status-LEDs. Bei den Transmitterboxen liegen sie
 
 \begin{table}
 	\centering
-	\begin{tabularx}{.5\textwidth}{l|X}
+	\begin{tabularx}{.6\textwidth}{X|l}
 		\textbf{Farbe} & \textbf{Funktion} \\ \hline
 		orange & Funkmodul empfängt \\
 		grün	& Funkmodul sendet \\
