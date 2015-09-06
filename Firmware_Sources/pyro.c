@@ -740,7 +740,7 @@ int main(void) {
 					case FIRE: {
 						for (uint8_t round = 1; round < 3; round++) { // Loop twice
 							nr = 0;
-							uart_puts_P(round < 2 ? PSTR("\n\rSlave-ID:\t") : PSTR("\n\rKanal:  \t")); // First for slave-id, then for channel
+							uart_puts_P(round < 2 ? PSTR("Slave-ID:\t") : PSTR("\n\rKanal:  \t")); // First for slave-id, then for channel
 							for (i = 0; i < 2; i++) { // Get the user to assign the numbers with 2 digits
 								inp = 0;
 								while (!inp) {
