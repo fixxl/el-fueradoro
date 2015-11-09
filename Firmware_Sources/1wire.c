@@ -25,12 +25,13 @@ uint8_t w1_reset(void) {
 // IO-Access
 uint8_t w1_bit_io(uint8_t val) {
 	W1_DDR |= (1 << W1);
-	_delay_us(5);
+	_delay_us(3);
 	if (val) W1_DDR &= ~(1 << W1);
-	_delay_us(14);
+	_delay_us(11);
 	if (!(W1_PIN & (1 << W1))) val = 0;
-	_delay_us(41);
+	_delay_us(46);
 	W1_DDR &= ~(1 << W1);
+	_delay_us(2);
 	return val;
 }
 
