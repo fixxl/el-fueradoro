@@ -162,17 +162,18 @@ uint16_t w1_read_temp(uint8_t *id) {
 }
 
 // Transform generic format into deci-degrees
-int16_t w1_tempread_to_celsius(uint16_t temp) {
+int16_t w1_tempread_to_celsius(uint16_t temp, uint8_t digit) {
 	int16_t celsius = (temp & 0xF800) ? -1 : 1;
 
 	if (celsius < 0) temp = -temp;
-	celsius *= (((temp << 2) + temp + 4) >> 3);
+	if(digit) celsius *= (((temp << 2) + temp + 4) >> 3);
+	else celsius *= ((temp + 8) >> 4);
 
 	return celsius;
 }
 
 // Complete temperature measurement cycle
-int16_t w1_tempmeas(void) {
+int16_t w1_tempmeas(uint8_t byten) {
 	uint8_t diff, id[9];
 	uint16_t temp_hex;
 	int16_t temp;
@@ -185,7 +186,8 @@ int16_t w1_tempmeas(void) {
 	w1_command(READ, id);
 	temp_hex = w1_byte_rd();
 	temp_hex += (w1_byte_rd()) << 8;
-	temp = w1_tempread_to_celsius(temp_hex);
+	if(byten) temp = w1_tempread_to_celsius(temp_hex, 1);
+	else temp = w1_tempread_to_celsius(temp_hex, 0);
 	return temp;
 }
 

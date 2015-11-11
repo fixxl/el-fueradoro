@@ -195,10 +195,8 @@ int8_t tempmeas(uint8_t type) {
 		w1_command(READ, NULL);
 		temp_hex = w1_byte_rd();
 		temp_hex += (w1_byte_rd()) << 8;
-		temperature = w1_tempread_to_celsius(temp_hex);
+		temperature = w1_tempread_to_celsius(temp_hex, 0);
 
-		temperature += (temperature < 0) ? -5 : 5;
-		temperature /= 10;
 		return (int8_t) temperature;
 	}
 }
