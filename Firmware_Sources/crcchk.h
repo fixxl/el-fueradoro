@@ -6,8 +6,8 @@
 #ifndef CRCCHK_H_
 #define CRCCHK_H_
 
-#define CRC16_SEED	0x1D0F
-#define CRC8_SEED	0
+#define CRC16_SEED  0x1D0F
+#define CRC8_SEED 0
 
 uint16_t crc16(uint16_t crc, uint8_t data);
 uint8_t crc8 (uint8_t crc, uint8_t data);

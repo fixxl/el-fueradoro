@@ -9,11 +9,11 @@
 #define GLOBAL_H_
 
 #ifndef MCU
-#define MCU "atmega168p"
+	#define MCU "atmega168p"
 #endif
 
 #ifndef RFM
-#define RFM 69
+	#define RFM 69
 #endif
 
 #define STRINGIZE(x) #x
@@ -41,11 +41,11 @@
 #include "1wire.h"
 
 #if RFM==69
-#include "rfm69.h"
+	#include "rfm69.h"
 #elif RFM==12
-#include "rfm12.h"
+	#include "rfm12.h"
 #else
-#error "No valid RF-transceiver selected!"
+	#error "No valid RF-transceiver selected!"
 #endif
 
 // Global Variables

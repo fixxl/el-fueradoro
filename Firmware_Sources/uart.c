@@ -8,15 +8,15 @@
 #include "global.h"
 
 void block_uart_sending(void) {
-#if RTSCTSFLOW
+	#if RTSCTSFLOW
 	RTS_PORT |= (1 << RTS);
-#endif
+	#endif
 }
 
 void allow_uart_sending(void) {
-#if RTSCTSFLOW
+	#if RTSCTSFLOW
 	RTS_PORT &= ~(1 << RTS);
-#endif
+	#endif
 }
 
 // Initialise UART with given baud rate
@@ -24,11 +24,11 @@ void uart_init(uint32_t baud) {
 	uint8_t sreg = SREG;
 	cli();
 
-#if RTSCTSFLOW
+	#if RTSCTSFLOW
 	CTS_PORT |= (1 << CTS);
 	CTS_DDR &= ~(1 << CTS);
 	RTS_DDR |= (1 << RTS);
-#endif
+	#endif
 
 	uint32_t baudrate = ((F_CPU + (baud << 3)) / (baud << 4) - 1);
 	/* Set baud rate */
@@ -48,7 +48,7 @@ uint8_t uart_getc(void) {
 	uint32_t utimer = UART_TIMEOUTVAL;
 	while (!(UCSR0A & (1 << RXC0)) && --utimer)
 		; // wait until char available or timeout
-	if (!utimer) return '\0';
+	if (!utimer) { return '\0'; }
 	block_uart_sending();
 	udrcontent = UDR0;
 	allow_uart_sending();
@@ -61,10 +61,10 @@ uint8_t uart_gets(char *s) {
 	char buchstabe = 0xFE;
 	while (buchstabe && (zeichen < MAX_ARRAYSIZE - 1)) {
 		buchstabe = uart_getc();
-#if !CASE_SENSITIVE
+		#if !CASE_SENSITIVE
 		buchstabe = uart_lower_case(buchstabe);
-#endif
-		if ((buchstabe == 13) || (buchstabe == 10)) buchstabe = '\0'; // ENTER means "end of string"
+		#endif
+		if ((buchstabe == 13) || (buchstabe == 10)) { buchstabe = '\0'; } // ENTER means "end of string"
 		if ((buchstabe == 8) || (buchstabe == 127)) { // In case of backspace
 			if (!zeichen) {
 				s[0] = '\0';
@@ -78,10 +78,10 @@ uint8_t uart_gets(char *s) {
 		else {
 			s[zeichen] = buchstabe; // Write char to array
 			uart_putc(buchstabe);
-			if (buchstabe) zeichen++;
+			if (buchstabe) { zeichen++; }
 		}
 	}
-	if (zeichen) uart_puts_P(PSTR("\n\r"));
+	if (zeichen) { uart_puts_P(PSTR("\n\r")); }
 	return zeichen; // Return the number of chars received - which equals the index of terminating '\0'
 }
 
@@ -89,10 +89,10 @@ uint8_t uart_gets(char *s) {
 uint8_t uart_putc(uint8_t c) {
 	uint32_t utimer;
 	utimer = UART_TIMEOUTVAL;
-#if RTSCTSFLOW
+	#if RTSCTSFLOW
 	while ((CTS_PIN & (1 << CTS)) && --utimer)
 		; /* wait till sending is allowed */
-#endif
+	#endif
 	if (utimer) {
 		utimer = UART_TIMEOUTVAL;
 		while (!(UCSR0A & (1 << UDRE0)) && --utimer)
@@ -144,17 +144,17 @@ void uart_puts_P(const char *s) {
 	unsigned char c;
 	while (!overflow) {
 		c = pgm_read_byte(s++);
-		if (c == '\0') break;
+		if (c == '\0') { break; }
 		overflow = uart_putc(c);
 	}
 }
 
 // Compare strings if equal (1) or not (0)
-uint8_t uart_strings_equal(const char* string1, const char* string2) {
+uint8_t uart_strings_equal(const char *string1, const char *string2) {
 	while (*string2) {
-		if (*string1++ != *string2++) return 0;
+		if (*string1++ != *string2++) { return 0; }
 	}
-	if (*string1) return 0;
+	if (*string1) { return 0; }
 	return 1;
 }
 
@@ -171,9 +171,9 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 			while (bits < zahl) {
 				bits <<= 1;
 			}
-			if (bits < 128) bits = 128;
-			else if (bits < 32768) bits = 32768;
-			else bits = 2147483648;
+			if (bits < 128) { bits = 128; }
+			else if (bits < 32768) { bits = 32768; }
+			else { bits = 2147483648; }
 
 			while (bits) {
 				uart_putc((zahl & bits) ? '1' : '0');
@@ -189,16 +189,16 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 				zwischenspeicher[i++] = zahl & 0x0F;
 				zahl >>= 4;
 			}
-			if (i % 2) i++;
+			if (i % 2) { i++; }
 			for (lauf = i; lauf; lauf--) {
-				if (zwischenspeicher[lauf - 1] > 9) uart_putc((zwischenspeicher[lauf - 1] - 10) + 'A');
-				else uart_putc(zwischenspeicher[lauf - 1] + '0');
+				if (zwischenspeicher[lauf - 1] > 9) { uart_putc((zwischenspeicher[lauf - 1] - 10) + 'A'); }
+				else { uart_putc(zwischenspeicher[lauf - 1] + '0'); }
 			}
 			break;
 		}
-			// Decimal
+		// Decimal
 		default: {
-			if(!zahl) {
+			if (!zahl) {
 				uart_puts_P(PSTR("0"));
 				return;
 			}
@@ -211,7 +211,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 				zwischenspeicher[lauf++] = zahl % 10;
 				zahl /= 10;
 			}
-			if (i) uart_puts_P(PSTR("-"));
+			if (i) { uart_puts_P(PSTR("-")); }
 			while (lauf) {
 				uart_putc(zwischenspeicher[lauf - 1] + '0');
 				lauf--;
@@ -223,6 +223,6 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 
 // Ensure lower case letters
 uint8_t uart_lower_case(char letter) {
-	if ((letter >= 'A' && letter <= 'Z') || (letter == 'Ä') || (letter == 'Ö') || (letter == 'Ü')) letter |= 0x20;
+	if ((letter >= 'A' && letter <= 'Z') || (letter == 'Ä') || (letter == 'Ö') || (letter == 'Ü')) { letter |= 0x20; }
 	return letter;
 }

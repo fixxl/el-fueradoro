@@ -11,12 +11,12 @@
 
 // SPI-Transfer
 static inline uint8_t rfm_spi(uint8_t spibyte) {
-#if(HARDWARE_SPI_12)
+	#if(HARDWARE_SPI_12)
 	SPDR = spibyte;
 	while (!(SPSR & (1 << SPIF)))
-	;
+		;
 	spibyte = SPDR;
-#else
+	#else
 	for (uint8_t i = 8; i; i--) {
 		if (spibyte & 0x80) {
 			SDI_PORT |= (1 << SDI);
@@ -27,11 +27,11 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 		spibyte <<= 1;
 		SCK_PIN = (1 << SCK);
 		__asm__ __volatile__( "rjmp 1f\n 1:" );
-		if (SDO_PIN & (1 << SDO)) spibyte |= 0x01;
-		else spibyte &= 0xFE;
+		if (SDO_PIN & (1 << SDO)) { spibyte |= 0x01; }
+		else { spibyte &= 0xFE; }
 		SCK_PIN = (1 << SCK);
 	}
-#endif
+	#endif
 	return spibyte;
 }
 
@@ -118,8 +118,8 @@ static inline uint8_t rfm_rxbyte(uint8_t *errflg) {
 	uint8_t value;
 
 	while (!rfm_ready() && utimer--)
-	;
-	if (!utimer) (*errflg)++;
+		;
+	if (!utimer) { (*errflg)++; }
 	value = rfm_cmd(0xB000);
 
 	return value;
@@ -130,7 +130,7 @@ static inline uint8_t rfm_txbyte(uint8_t value) {
 	uint32_t utimer;
 	utimer = (RFM12_TIMEOUTVAL);
 	while (!rfm_ready() && utimer--)
-	;
+		;
 	rfm_cmd(0xB800 + value);
 	return (utimer ? 0 : 1); // 0 : successful, 1 : error
 }
@@ -185,12 +185,12 @@ void rfm_init(void) {
 	SCK_DDR |= (1 << SCK);
 	NSEL_DDR |= (1 << NSEL);
 
-#ifdef SPCR
-#if HARDWARE_SPI_12
+	#ifdef SPCR
+	#if HARDWARE_SPI_12
 	// Activate and configure hardware SPI at F_CPU/16
-	SPCR |= (1 << SPE | 1 << MSTR | 1<<SPR0);
-#endif
-#endif
+	SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
+	#endif
+	#endif
 
 	_delay_ms(500);
 	for (uint8_t runs = 5; runs; runs--) {
@@ -226,7 +226,7 @@ void rfm_init(void) {
 
 // Clear all interrupt sources
 void rfm_nirq_clear(void) {
-#if (USE_NIRQ)
+	#if (USE_NIRQ)
 	// Alles aus
 	rfm_cmd(0x8201);
 	rfm_cmd(0x8047 | ((FR_CONST_1 - (FREQUENCY < 400000000L)) << 4));
@@ -237,7 +237,7 @@ void rfm_nirq_clear(void) {
 			rfm_cmd(0xB000);
 		}
 	}
-#endif
+	#endif
 }
 
 // Initialise Wake-Up-Timer
@@ -269,7 +269,7 @@ void rfm_set_timer_and_sleep(uint8_t mantissa, uint8_t exponent) {
 // Transmit data
 uint8_t rfm_transmit(char *data, uint8_t length) {
 	uint8_t error = 0;
-	uint16_t crc = CRC16_SEED;						// Set CRC-Seed
+	uint16_t crc = CRC16_SEED;            // Set CRC-Seed
 
 	rfm_rxoff();// Turn off receiver
 	rfm_status();// Query status to clear potential error flags
@@ -287,25 +287,25 @@ uint8_t rfm_transmit(char *data, uint8_t length) {
 	error += rfm_txbyte(length);// Transmit number of databytes
 	crc = crc16(crc, length);// CRC-Update
 
-	if (length > MAX_ARRAYSIZE) length = MAX_ARRAYSIZE;
+	if (length > MAX_ARRAYSIZE) { length = MAX_ARRAYSIZE; }
 
 	for (uint8_t bytenum = 0; bytenum < length; bytenum++) {
-		error += rfm_txbyte(data[bytenum]);			// Transmit databyte
+		error += rfm_txbyte(data[bytenum]);     // Transmit databyte
 		crc = crc16(crc, data[bytenum]);// CRC-Update
 	}
 
-	crc ^= 0xFFFF;									// Final XOR for CRC
+	crc ^= 0xFFFF;                  // Final XOR for CRC
 	error += rfm_txbyte((crc >> 8) & 0xFF);// Transmit CRC-Highbyte
 	error += rfm_txbyte(crc & 0xFF);// Transmit CRC-Lowbyte
 
-	error += rfm_txbyte(0xAA);		// Dummybyte
-	error += rfm_txbyte(0xAA);		// Dummybyte
+	error += rfm_txbyte(0xAA);    // Dummybyte
+	error += rfm_txbyte(0xAA);    // Dummybyte
 
-	rfm_txoff();					// TX off
+	rfm_txoff();          // TX off
 
-	rfm_status();					// Query status to clear potential error flags
+	rfm_status();         // Query status to clear potential error flags
 
-	return (error? 1:0);			// 0 : successful, 1 : error
+	return (error ? 1 : 0);   // 0 : successful, 1 : error
 }
 
 // Receive data
@@ -313,25 +313,25 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 	uint8_t bytenum, length_local, error = 0;
 	uint16_t crc_calc = CRC16_SEED;
 
-	rfm_status(); 									// Query status to clear potential error flags
+	rfm_status();                   // Query status to clear potential error flags
 
 	length_local = rfm_rxbyte(&error);// Receive data length
 	crc_calc = crc16(crc_calc, length_local);// CRC-Update
 
-	if (length_local > MAX_ARRAYSIZE) length_local = MAX_ARRAYSIZE;
+	if (length_local > MAX_ARRAYSIZE) { length_local = MAX_ARRAYSIZE; }
 
 	for (bytenum = 0; bytenum < length_local; bytenum++) {
-		data[bytenum] = rfm_rxbyte(&error);			// Receive databyte
+		data[bytenum] = rfm_rxbyte(&error);     // Receive databyte
 		crc_calc = crc16(crc_calc, data[bytenum]);// CRC-Update
 	}
 	data[length_local] = '\0';
 
-	crc_calc ^= 0xFFFF;									// Final XOR for CRC
+	crc_calc ^= 0xFFFF;                 // Final XOR for CRC
 
 	crc_calc = crc16(crc_calc, rfm_rxbyte(&error));
 	crc_calc = crc16(crc_calc, rfm_rxbyte(&error));
 
-	rfm_status();				  // Query status to clear potential error flags
+	rfm_status();         // Query status to clear potential error flags
 	__asm__ __volatile__( "rjmp 1f\n 1:" );
 	rfm_rxoff();
 

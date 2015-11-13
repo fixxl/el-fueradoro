@@ -69,7 +69,7 @@ uint8_t adc_read(uint8_t channel) {
 	ADMUX &= ~(0x07);
 	ADMUX |= channel;
 
-	if (ADMUX & (1 << REFS1)) imax = 11;
+	if (ADMUX & (1 << REFS1)) { imax = 11; }
 
 	// 10 or 11 measurements (reference-dependent), summing up
 	for (uint8_t i = imax; i; i--) {

@@ -5,10 +5,10 @@
  */
 
 #ifndef EEPROM_H_
-#define EEPROM_H_
+	#define EEPROM_H_
 
-uint8_t eeread(uint16_t address);
-void eewrite(uint8_t data, uint16_t address);
+	uint8_t eeread(uint16_t address);
+	void eewrite(uint8_t data, uint16_t address);
 
 
 

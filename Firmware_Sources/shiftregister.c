@@ -27,12 +27,12 @@ void sr_init(void) {
 	// Set shift-register values to 0...
 	for (uint8_t j = 3; j; j--) {
 		for (uint8_t i = (SR_CHANNELS + 4); i; i--) {
-			SCLOCK_PIN = (1 << SCLOCK);			// Pin high after toggling
-			SCLOCK_PIN = (1 << SCLOCK);			// Pin low after toggling
+			SCLOCK_PIN = (1 << SCLOCK);     // Pin high after toggling
+			SCLOCK_PIN = (1 << SCLOCK);     // Pin low after toggling
 		}
 		// ... and apply shift-register to output register.
-		RCLOCK_PIN = (1 << RCLOCK);				// Pin durch Toggling high
-		RCLOCK_PIN = (1 << RCLOCK);				// Pin durch Toggling low
+		RCLOCK_PIN = (1 << RCLOCK);       // Pin durch Toggling high
+		RCLOCK_PIN = (1 << RCLOCK);       // Pin durch Toggling low
 	}
 	_delay_ms(1);
 
@@ -53,12 +53,12 @@ void sr_shiftout(uint16_t scheme) {
 		if (scheme & mask) {
 			SER_IN_PORT |= 1 << SER_IN;
 		}
-		SCLOCK_PIN = (1 << SCLOCK);				// Pin high after toggling
-		SCLOCK_PIN = (1 << SCLOCK);				// Pin low after toggling
+		SCLOCK_PIN = (1 << SCLOCK);       // Pin high after toggling
+		SCLOCK_PIN = (1 << SCLOCK);       // Pin low after toggling
 		SER_IN_PORT &= ~(1 << SER_IN);
 		mask >>= 1;
 	}
-	RCLOCK_PIN = (1 << RCLOCK);					// Pin high after toggling
-	RCLOCK_PIN = (1 << RCLOCK);					// Pin low after toggling
+	RCLOCK_PIN = (1 << RCLOCK);         // Pin high after toggling
+	RCLOCK_PIN = (1 << RCLOCK);         // Pin low after toggling
 }
 

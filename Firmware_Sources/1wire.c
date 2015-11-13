@@ -1,6 +1,6 @@
 /************************************************************************/
-/*																		*/
-/*			Access Dallas 1-Wire Devices								*/
+/*                                    */
+/*      Access Dallas 1-Wire Devices                */
 /*                                                                      */
 /*                                                                      */
 /************************************************************************/
@@ -17,7 +17,7 @@ uint8_t w1_reset(void) {
 	_delay_us(500);
 	W1_DDR &= ~(1 << W1);
 	_delay_us(66);
-	if (!(W1_PIN & (1 << W1))) retval = 0;
+	if (!(W1_PIN & (1 << W1))) { retval = 0; }
 	_delay_us(434);
 	return retval;
 }
@@ -26,9 +26,9 @@ uint8_t w1_reset(void) {
 uint8_t w1_bit_io(uint8_t val) {
 	W1_DDR |= (1 << W1);
 	_delay_us(3);
-	if (val) W1_DDR &= ~(1 << W1);
+	if (val) { W1_DDR &= ~(1 << W1); }
 	_delay_us(11);
-	if (!(W1_PIN & (1 << W1))) val = 0;
+	if (!(W1_PIN & (1 << W1))) { val = 0; }
 	_delay_us(46);
 	W1_DDR &= ~(1 << W1);
 	_delay_us(2);
@@ -41,7 +41,7 @@ uint8_t w1_byte_wr(uint8_t byte) {
 	for (uint8_t i = 8; i; i--) {
 		j = w1_bit_io(byte & 1);
 		byte >>= 1;
-		if (j) byte |= 0x80;
+		if (j) { byte |= 0x80; }
 	}
 	return byte;
 }
@@ -61,7 +61,8 @@ void w1_command(uint8_t command, uint8_t *id) {
 		i = 8;
 		do {
 			w1_byte_wr(*id++);
-		} while (--i);
+		}
+		while (--i);
 	}
 	else {
 		w1_byte_wr(SKIP_ROM); // to all devices
@@ -77,7 +78,7 @@ uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 
 	while (crcw && tries--) {
 		crcw = 0;
-		if (w1_reset()) return PRESENCE_ERR; // error, no device found
+		if (w1_reset()) { return PRESENCE_ERR; } // error, no device found
 		w1_byte_wr(SEARCH_ROM); // issue ROM search command
 
 		last_zero = LAST_DEVICE; // set last position where zero was written to 0
@@ -88,7 +89,7 @@ uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 				id_bit = w1_bit_io(1); // read bit
 				cmp_id_bit = w1_bit_io(1); // read complement bit
 
-				if (id_bit && cmp_id_bit) return DATA_ERR; // data error if bit AND complement are 1
+				if (id_bit && cmp_id_bit) { return DATA_ERR; } // data error if bit AND complement are 1
 
 				if (!id_bit && !cmp_id_bit) { // Discrepancy if bit AND complement are 0
 
@@ -96,7 +97,7 @@ uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 					// Go the '0'-direction if last_discrepancy is equal to id_bit_number.
 					// Go the same direction as last time if last_discrepancy is smaller than id_bit_number
 					if ((last_discrepancy > id_bit_number)
-							|| ((*id & 1) && (last_discrepancy != id_bit_number))) {
+					    || ((*id & 1) && (last_discrepancy != id_bit_number))) {
 						id_bit = 1; // now 1
 						last_zero = id_bit_number; // next pass 0
 					}
@@ -105,7 +106,7 @@ uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 
 				w1_bit_io(id_bit); // write bit
 				*id >>= 1;
-				if (id_bit) *id |= 0x80; // store bit
+				if (id_bit) { *id |= 0x80; } // store bit
 				id_bit_number--;
 			}
 			crcw = crc8(crcw, *id);
@@ -156,7 +157,7 @@ uint16_t w1_read_temp(uint8_t *id) {
 			scratchpad[i] = value;
 			crcw = crc8(crcw, value);
 		}
-		if (scratchpad[7] == 0xFF) return DEVICE_REMOVED;
+		if (scratchpad[7] == 0xFF) { return DEVICE_REMOVED; }
 	}
 	return (scratchpad[0] + (scratchpad[1] << 8));
 }
@@ -165,9 +166,9 @@ uint16_t w1_read_temp(uint8_t *id) {
 int16_t w1_tempread_to_celsius(uint16_t temp, uint8_t digit) {
 	int16_t celsius = (temp & 0xF800) ? -1 : 1;
 
-	if (celsius < 0) temp = -temp;
-	if(digit) celsius *= (((temp << 2) + temp + 4) >> 3);
-	else celsius *= ((temp + 8) >> 4);
+	if (celsius < 0) { temp = -temp; }
+	if (digit) { celsius *= (((temp << 2) + temp + 4) >> 3); }
+	else { celsius *= ((temp + 8) >> 4); }
 
 	return celsius;
 }
@@ -186,13 +187,13 @@ int16_t w1_tempmeas(uint8_t byten) {
 	w1_command(READ, id);
 	temp_hex = w1_byte_rd();
 	temp_hex += (w1_byte_rd()) << 8;
-	if(byten) temp = w1_tempread_to_celsius(temp_hex, 1);
-	else temp = w1_tempread_to_celsius(temp_hex, 0);
+	if (byten) { temp = w1_tempread_to_celsius(temp_hex, 1); }
+	else { temp = w1_tempread_to_celsius(temp_hex, 0); }
 	return temp;
 }
 
 // Temperature to string conversion
-void w1_temp_to_array(int32_t tempmalzehn, char* tempfield, uint8_t signdigit) {
+void w1_temp_to_array(int32_t tempmalzehn, char *tempfield, uint8_t signdigit) {
 	// 0 < signdigit < 3
 	// 0 ... show no sign, no digit
 	// 1 ... show no sign, digit
