@@ -13,10 +13,13 @@
 static inline uint8_t rfm_spi(uint8_t spibyte) {
 	#if(HARDWARE_SPI_12)
 	SPDR = spibyte;
+
 	while (!(SPSR & (1 << SPIF)))
 		;
+
 	spibyte = SPDR;
 	#else
+
 	for (uint8_t i = 8; i; i--) {
 		if (spibyte & 0x80) {
 			SDI_PORT |= (1 << SDI);
@@ -24,13 +27,17 @@ static inline uint8_t rfm_spi(uint8_t spibyte) {
 		else {
 			SDI_PORT &= ~(1 << SDI);
 		}
+
 		spibyte <<= 1;
 		SCK_PIN = (1 << SCK);
 		__asm__ __volatile__( "rjmp 1f\n 1:" );
+
 		if (SDO_PIN & (1 << SDO)) { spibyte |= 0x01; }
 		else { spibyte &= 0xFE; }
+
 		SCK_PIN = (1 << SCK);
 	}
+
 	#endif
 	return spibyte;
 }
@@ -119,7 +126,9 @@ static inline uint8_t rfm_rxbyte(uint8_t *errflg) {
 
 	while (!rfm_ready() && utimer--)
 		;
+
 	if (!utimer) { (*errflg)++; }
+
 	value = rfm_cmd(0xB000);
 
 	return value;
@@ -129,8 +138,10 @@ static inline uint8_t rfm_rxbyte(uint8_t *errflg) {
 static inline uint8_t rfm_txbyte(uint8_t value) {
 	uint32_t utimer;
 	utimer = (RFM12_TIMEOUTVAL);
+
 	while (!rfm_ready() && utimer--)
 		;
+
 	rfm_cmd(0xB800 + value);
 	return (utimer ? 0 : 1); // 0 : successful, 1 : error
 }
@@ -152,12 +163,14 @@ static void rfm_setbit(uint32_t bitrate) {
 			freqdev = 32;
 			break;
 		}
+
 		case 2:
 		case 3: {
 			bw = 160;
 			freqdev = 80;
 			break;
 		}
+
 		default: {
 			bw = 128;
 			freqdev = 112;
@@ -193,6 +206,7 @@ void rfm_init(void) {
 	#endif
 
 	_delay_ms(500);
+
 	for (uint8_t runs = 5; runs; runs--) {
 
 		rfm_cmd(0xC000); // CLK: 1MHz
@@ -220,6 +234,7 @@ void rfm_init(void) {
 
 		_delay_ms(4);
 	}
+
 	rfm_status();
 	rfm_rxon();
 }
@@ -237,6 +252,7 @@ void rfm_nirq_clear(void) {
 			rfm_cmd(0xB000);
 		}
 	}
+
 	#endif
 }
 
@@ -324,6 +340,7 @@ uint8_t rfm_receive(char *data, uint8_t *length) {
 		data[bytenum] = rfm_rxbyte(&error);     // Receive databyte
 		crc_calc = crc16(crc_calc, data[bytenum]);// CRC-Update
 	}
+
 	data[length_local] = '\0';
 
 	crc_calc ^= 0xFFFF;                 // Final XOR for CRC

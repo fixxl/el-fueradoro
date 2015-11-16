@@ -46,9 +46,12 @@ void uart_init(uint32_t baud) {
 uint8_t uart_getc(void) {
 	uint8_t udrcontent;
 	uint32_t utimer = UART_TIMEOUTVAL;
+
 	while (!(UCSR0A & (1 << RXC0)) && --utimer)
 		; // wait until char available or timeout
+
 	if (!utimer) { return '\0'; }
+
 	block_uart_sending();
 	udrcontent = UDR0;
 	allow_uart_sending();
@@ -59,12 +62,15 @@ uint8_t uart_getc(void) {
 uint8_t uart_gets(char *s) {
 	uint8_t zeichen = 0;
 	char buchstabe = 0xFE;
+
 	while (buchstabe && (zeichen < MAX_ARRAYSIZE - 1)) {
 		buchstabe = uart_getc();
 		#if !CASE_SENSITIVE
 		buchstabe = uart_lower_case(buchstabe);
 		#endif
+
 		if ((buchstabe == 13) || (buchstabe == 10)) { buchstabe = '\0'; } // ENTER means "end of string"
+
 		if ((buchstabe == 8) || (buchstabe == 127)) { // In case of backspace
 			if (!zeichen) {
 				s[0] = '\0';
@@ -78,10 +84,13 @@ uint8_t uart_gets(char *s) {
 		else {
 			s[zeichen] = buchstabe; // Write char to array
 			uart_putc(buchstabe);
+
 			if (buchstabe) { zeichen++; }
 		}
 	}
+
 	if (zeichen) { uart_puts_P(PSTR("\n\r")); }
+
 	return zeichen; // Return the number of chars received - which equals the index of terminating '\0'
 }
 
@@ -90,38 +99,51 @@ uint8_t uart_putc(uint8_t c) {
 	uint32_t utimer;
 	utimer = UART_TIMEOUTVAL;
 	#if RTSCTSFLOW
+
 	while ((CTS_PIN & (1 << CTS)) && --utimer)
 		; /* wait till sending is allowed */
+
 	#endif
+
 	if (utimer) {
 		utimer = UART_TIMEOUTVAL;
+
 		while (!(UCSR0A & (1 << UDRE0)) && --utimer)
 			;
+
 		switch (c) {
 			case 'ä':
 				c = 228;
 				break;
+
 			case 'Ä':
 				c = 196;
 				break;
+
 			case 'ö':
 				c = 246;
 				break;
+
 			case 'Ö':
 				c = 214;
 				break;
+
 			case 'ü':
 				c = 252;
 				break;
+
 			case 'Ü':
 				c = 220;
 				break;
+
 			case 'ß':
 				c = 223;
 				break;
+
 			default:
 				break;
 		}
+
 		UDR0 = c;
 		return 0;
 	}
@@ -133,6 +155,7 @@ uint8_t uart_putc(uint8_t c) {
 // Transmit string
 void uart_puts(char *s) {
 	uint8_t overflow = 0;
+
 	while (*s && !overflow) {
 		overflow = uart_putc(*s++);
 	}
@@ -142,9 +165,12 @@ void uart_puts(char *s) {
 void uart_puts_P(const char *s) {
 	uint8_t overflow = 0;
 	unsigned char c;
+
 	while (!overflow) {
 		c = pgm_read_byte(s++);
+
 		if (c == '\0') { break; }
+
 		overflow = uart_putc(c);
 	}
 }
@@ -154,7 +180,9 @@ uint8_t uart_strings_equal(const char *string1, const char *string2) {
 	while (*string2) {
 		if (*string1++ != *string2++) { return 0; }
 	}
+
 	if (*string1) { return 0; }
+
 	return 1;
 }
 
@@ -171,6 +199,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 			while (bits < zahl) {
 				bits <<= 1;
 			}
+
 			if (bits < 128) { bits = 128; }
 			else if (bits < 32768) { bits = 32768; }
 			else { bits = 2147483648; }
@@ -179,6 +208,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 				uart_putc((zahl & bits) ? '1' : '0');
 				bits >>= 1;
 			}
+
 			break;
 		}
 
@@ -189,33 +219,43 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 				zwischenspeicher[i++] = zahl & 0x0F;
 				zahl >>= 4;
 			}
+
 			if (i % 2) { i++; }
+
 			for (lauf = i; lauf; lauf--) {
 				if (zwischenspeicher[lauf - 1] > 9) { uart_putc((zwischenspeicher[lauf - 1] - 10) + 'A'); }
 				else { uart_putc(zwischenspeicher[lauf - 1] + '0'); }
 			}
+
 			break;
 		}
+
 		// Decimal
 		default: {
 			if (!zahl) {
 				uart_puts_P(PSTR("0"));
 				return;
 			}
+
 			if (zahl < 0) {
 				i = 1;
 				zahl = -zahl;
 			}
+
 			lauf = 0;
+
 			while (zahl && (lauf < 33)) {
 				zwischenspeicher[lauf++] = zahl % 10;
 				zahl /= 10;
 			}
+
 			if (i) { uart_puts_P(PSTR("-")); }
+
 			while (lauf) {
 				uart_putc(zwischenspeicher[lauf - 1] + '0');
 				lauf--;
 			}
+
 			break;
 		}
 	}
@@ -224,5 +264,6 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 // Ensure lower case letters
 uint8_t uart_lower_case(char letter) {
 	if ((letter >= 'A' && letter <= 'Z') || (letter == 'Ä') || (letter == 'Ö') || (letter == 'Ü')) { letter |= 0x20; }
+
 	return letter;
 }

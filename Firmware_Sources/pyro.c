@@ -34,6 +34,7 @@ void key_init(void) {
 		PCICR |= (1 << PCIE2);
 		PCMSK2 |= (1 << KEY);
 	}
+
 	if (KEYPORT == PORTC) {
 		PCICR |= (1 << PCIE1);
 		PCMSK1 |= (1 << KEY);
@@ -55,6 +56,7 @@ void key_deinit(void) {
 		PCICR &= ~(1 << PCIE2);
 		PCMSK2 &= ~(1 << KEY);
 	}
+
 	if (KEYPORT == PORTC) {
 		PCICR &= ~(1 << PCIE1);
 		PCMSK1 &= ~(1 << KEY);
@@ -75,13 +77,17 @@ uint8_t debounce(volatile uint8_t *port, uint8_t pin) {
 	while (((keystate != 0x00) && (keystate != 0xFF)) || (ctr < 8)) {
 		keystate <<= 1; // Shift left
 		keystate |= ((*port & (1 << pin)) > 0); // Write 0 or 1 to LSB
+
 		while (!(TIFR0 & (1 << TOV0)))
 			// Wait for timer overflow
 			;
+
 		TIFR0 = (1 << TOV0); // Clear interrupt flag
 		TCNT0 = 160; // Preload timer
+
 		if (ctr < 8) { ctr++; } // Make sure at least 8 queries are executed
 	}
+
 	TCCR0B = timer0_regb;
 
 	// return 1 for active switch, 0 for inactive
@@ -122,12 +128,15 @@ void create_symbols(void) {
 // Talking to radio modules
 uint8_t asciihex(char inp) {
 	inp |= 0x20;
+
 	if ((inp >= '0') && (inp <= '9')) {
 		return (inp - '0');
 	}
+
 	if ((inp >= 'a') && (inp <= 'f')) {
 		return (inp - 'a' + 10);
 	}
+
 	return 255;
 }
 
@@ -143,6 +152,7 @@ uint16_t rfmtalk(void) {
 	#else
 	uart_puts("\n\rKommando (16-Bit-Hex-Format): 0x");
 	#endif
+
 	for (uint8_t i = 4; i; i--) {
 		rfm_order <<= 4;
 		inp = uart_getc();
@@ -151,6 +161,7 @@ uint16_t rfmtalk(void) {
 		error += (uinp == 255);
 		rfm_order |= uinp;
 	}
+
 	if (!error) {
 		return rfm_order;
 	}
@@ -189,6 +200,7 @@ int8_t tempmeas(uint8_t type) {
 		w1_command(CONVERT_T, NULL);
 
 		utimer = F_CPU / 128;
+
 		while (!w1_bit_io(1) && --utimer)
 			;
 
@@ -258,10 +270,12 @@ void cursor_x_shift(uint8_t *last_zeile, uint8_t *last_spalte, uint8_t *anz_zeil
 	lastzeile = anzzeile;
 	lastspalte = anzspalte;
 	anzspalte += 7;
+
 	if (anzspalte > 21) {
 		anzzeile++;
 		anzspalte = 1;
 	}
+
 	if (anzzeile > 4) { anzzeile = 3; }
 
 	*last_zeile = lastzeile, *last_spalte = lastspalte, *anz_zeile = anzzeile, *anz_spalte = anzspalte;
@@ -341,12 +355,16 @@ int main(void) {
 
 	// Get Slave- und Unique-ID from EEPROM for ignition devices
 	update_addresses(&unique_id, &slave_id);
+
 	if (ig_or_notrans) {
 		if (!unique_id || !slave_id) {
 			if (!unique_id) { unique_id = 30; }
+
 			if (!slave_id) { slave_id = 30; }
+
 			addresses_save(unique_id, slave_id);
 			wdt_enable(6);
+
 			while (1)
 				;
 		}
@@ -355,10 +373,12 @@ int main(void) {
 		if (unique_id || slave_id) {
 			addresses_save(0, 0);
 			wdt_enable(6);
+
 			while (1)
 				;
 		}
 	}
+
 	led_green_on();
 
 	// Initialise arrays and show slave-id by blinking!
@@ -368,6 +388,7 @@ int main(void) {
 			led_orange_toggle();
 			_delay_ms(200);
 		}
+
 		uart_field[warten] = 1;
 		tx_field[warten] = 0;
 		rx_field[warten] = 0;
@@ -378,6 +399,7 @@ int main(void) {
 		channel_fired[warten] = 0;
 		temps[warten] = -128;
 	}
+
 	led_green_off();
 	led_orange_off();
 
@@ -407,13 +429,16 @@ int main(void) {
 			led_green_off();
 			_delay_ms(500);
 		}
+
 		lcd_clear();
 		TIMSK0 |= (1 << TOIE0);
 	}
 	else {
 		armed = debounce(&KEYPIN, KEY);
+
 		if (armed) { led_red_on(); }
 		else { led_red_off(); }
+
 		flags.b.clear_list = 1;
 		tx_field[0] = PARAMETERS;
 		tx_field[1] = unique_id;
@@ -422,6 +447,7 @@ int main(void) {
 		tx_field[4] = armed;
 		tx_field[5] = temperature;
 	}
+
 	flags.b.transmit = 1;
 
 	// Enable Interrupts
@@ -446,8 +472,10 @@ int main(void) {
 
 			// Box armed: armed = 1, Box not armed: armed = 0
 			armed = debounce(&KEYPIN, KEY);
+
 			if (armed) { led_red_on(); }
 			else { led_red_off(); }
+
 			SREG = temp_sreg;
 		}
 
@@ -455,6 +483,7 @@ int main(void) {
 
 		// UART-Routine
 		flags.b.uart_active = ((UCSR0A & (1 << RXC0)) && 1);
+
 		if (flags.b.uart_active) {
 			temp_sreg = SREG;
 			cli();
@@ -490,12 +519,14 @@ int main(void) {
 					uart_field[0] = uart_lower_case(uart_field[0]);
 					#endif
 					uart_putc(uart_field[0]); // Show first char so everything looks as it should
+
 					if (!uart_gets(uart_field + 1)) {
 						uart_puts_P(PSTR("\033[1D"));
 						uart_puts_P(PSTR(" "));
 						uart_puts_P(PSTR("\033[1D"));
 						uart_field[0] = '\0';
 					}
+
 					break;
 				}
 			}
@@ -562,6 +593,7 @@ int main(void) {
 			// "rfm" gives access to radio module
 			if (uart_strings_equal(uart_field, "rfm")) {
 				scheme = rfmtalk();
+
 				if (scheme != 0xFFFF) {
 					#if RFM==69
 					scheme = rfm_cmd(scheme, (scheme & 32768) && 1);
@@ -571,6 +603,7 @@ int main(void) {
 					uart_puts(" --> : 0x");
 					uart_shownum(scheme, 'h');
 				}
+
 				uart_puts("\n\n\r");
 			}
 
@@ -602,6 +635,7 @@ int main(void) {
 				// Check if ignition was triggered on device that received the serial command
 				if ((slave_id == uart_field[1]) && !TRANSMITTER) {
 					tmp = uart_field[2] - 1;
+
 					if (!(channel_fired[tmp]) && !flags.b.fire) {
 						rx_field[2] = uart_field[2];
 						flags.b.fire = 1;
@@ -611,6 +645,7 @@ int main(void) {
 			}
 
 			led_yellow_off();
+
 			if (uart_field[0] && (uart_field[0] != 0xFF)) { uart_puts_P(PSTR("\n\r")); }
 
 			SREG = temp_sreg;
@@ -647,7 +682,9 @@ int main(void) {
 			timer1_off();
 
 			changes = configprog(ig_or_notrans);
+
 			if (changes) { flags.b.reset_device = 1; }
+
 			changes = 0;
 			SREG = temp_sreg;
 		}
@@ -665,6 +702,7 @@ int main(void) {
 
 			changes = 0;
 			changes = remote_config(tx_field);
+
 			if (changes) {
 				// If the numbers are those of the connected device
 				if (tx_field[1] == unique_id && tx_field[2] == slave_id) {
@@ -677,8 +715,10 @@ int main(void) {
 					uart_puts_P(PSTR("\n\rID-Konfigurationsbefehl wird gesendet!\n\r"));
 					flags.b.transmit = 1;
 				}
+
 				uart_puts_P(PSTR("\n\n\r"));
 			}
+
 			SREG = temp_sreg;
 		}
 
@@ -718,15 +758,19 @@ int main(void) {
 					inp = uart_field[0];
 					break;
 				}
+
 				default: {
 					uart_puts_P(PSTR("\n\rModus(f/i/t): "));
+
 					while (!inp) {
 						inp = uart_getc() | 0x20;
 					}
+
 					uart_putc(inp);
 					break;
 				}
 			}
+
 			tx_field[0] = inp;
 
 			if (tx_field[0] == FIRE || tx_field[0] == IDENT || tx_field[0] == TEMPERATURE) {
@@ -739,16 +783,21 @@ int main(void) {
 						for (uint8_t round = 1; round < 3; round++) { // Loop twice
 							nr = 0;
 							uart_puts_P(round < 2 ? PSTR("Slave-ID:\t") : PSTR("\n\rKanal:  \t")); // First for slave-id, then for channel
+
 							for (i = 0; i < 2; i++) { // Get the user to assign the numbers with 2 digits
 								inp = 0;
+
 								while (!inp) {
 									inp = uart_getc();
 								}
+
 								uart_putc(inp);
 								nr *= 10;
 								nr += (inp - '0');
 							}
+
 							uart_puts_P(PSTR(" = "));
+
 							if (nr > 0 && nr < ((round < 2) ? 31 : 17)) { // Slave-ID has to be 1-30, Channel 1-16
 								uart_shownum(nr, 'd');
 								tx_field[round] = nr;
@@ -759,18 +808,22 @@ int main(void) {
 								round = 3;
 							}
 						}
+
 						break;
 					}
+
 					case IDENT: {
 						tx_field[0] = IDENT;
 						tx_field[1] = 'd';
 						tx_field[2] = '0';
 						break;
 					}
+
 					case TEMPERATURE: {
 						temperature = tempmeas(tempsenstype);
 
 						uart_puts_P(PSTR("Temperatur: "));
+
 						if (temperature == -128) {
 							uart_puts_P(PSTR("n.a."));
 						}
@@ -786,6 +839,7 @@ int main(void) {
 						tx_field[3] = 'p';
 						break;
 					}
+
 					default: {
 						break;
 					}
@@ -797,6 +851,7 @@ int main(void) {
 			// Take action after proper command
 			if (tmp) {
 				flags.b.transmit = 1;
+
 				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1]) && !channel_fired[tx_field[2] - 1]) {
 					rx_field[2] = tx_field[2];
 					flags.b.fire = 1;
@@ -835,12 +890,15 @@ int main(void) {
 		// Software-Reset via Watchdog
 		if (flags.b.reset_device) {
 			cli();
+
 			if (TRANSMITTER) {
 				lcd_clear();
 				lcd_puts("Resetting device!");
 			}
+
 			wdt_enable(6);
 			terminal_reset();
+
 			while (1)
 				;
 		}
@@ -855,6 +913,7 @@ int main(void) {
 			flags.b.clear_list = 0;
 
 			iderrors = 0;
+
 			for (i = 0; i < 30; i++) {
 				slaveid_char[i] = 0;
 				quantity[i] = 0;
@@ -896,21 +955,25 @@ int main(void) {
 					tmp = FIRE_LENGTH - 1;
 					break;
 				}
+
 				case CHANGE: {
 					loopcount = CHANGE_REPEATS;
 					tmp = CHANGE_LENGTH - 1;
 					break;
 				}
+
 				case IDENT: {
 					loopcount = IDENT_REPEATS;
 					tmp = IDENT_LENGTH - 1;
 					break;
 				}
+
 				case TEMPERATURE: {
 					loopcount = TEMPERATURE_REPEATS;
 					tmp = TEMPERATURE_LENGTH - 1;
 					break;
 				}
+
 				case PARAMETERS: {
 					loopcount = PARAMETERS_REPEATS;
 					tmp = PARAMETERS_LENGTH - 1;
@@ -923,6 +986,7 @@ int main(void) {
 					break;
 				}
 			}
+
 			tx_field[tmp] = loopcount;
 			tx_field[tmp + 1] = '\0';
 			tx_length = tmp + 1;
@@ -942,6 +1006,7 @@ int main(void) {
 				timer1_reset();
 				TIMSK1 &= ~(1 << TOIE1);
 			}
+
 			transmit_flag = 0;
 
 			rfm_rxon();
@@ -967,10 +1032,13 @@ int main(void) {
 				leds_on();
 
 				scheme = 0;                                             // Set mask-variable to zero
+
 				for (uint8_t i = 16; i; i--) {
 					scheme <<= 1;                                       // Left-shift mask-variable
+
 					if (i == tmp) { scheme |= 1; }              // Set LSB if loop variable equals channel number
 				}
+
 				sr_shiftout(scheme);                                    // Write pattern to shift-register
 
 				/*
@@ -1000,6 +1068,7 @@ int main(void) {
 
 		// Receive
 		flags.b.receive = rfm_receiving();
+
 		if (flags.b.receive) {
 			temp_sreg = SREG;
 			cli();
@@ -1025,10 +1094,12 @@ int main(void) {
 
 						if (armed && (rx_field[1] == slave_id) && !TRANSMITTER) {
 							tmp = rx_field[2] - 1;
+
 							if (!(channel_fired[tmp]) && !flags.b.fire) {
 								flags.b.fire = 1;
 							}
 						}
+
 						break;
 					}
 
@@ -1038,6 +1109,7 @@ int main(void) {
 						for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1; i; i--) {
 							_delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
 						}
+
 						temperature = tempmeas(tempsenstype);
 						break;
 					}
@@ -1090,6 +1162,7 @@ int main(void) {
 							temps[tmp] = rx_field[5];
 							rssis[tmp] = rssi;
 						}
+
 						break;
 					}
 
@@ -1112,6 +1185,7 @@ int main(void) {
 								flags.b.reset_device = 1;
 							}
 						}
+
 						break;
 					}
 
@@ -1120,9 +1194,11 @@ int main(void) {
 						break;
 					}
 				}
+
 				flags.b.lcd_update = 1;
 				flags.b.rx_post = 1;
 			}
+
 			rfm_rxon();
 			SREG = temp_sreg;
 		}
@@ -1138,6 +1214,7 @@ int main(void) {
 			if (clear_lcd_tx_flag > DEL_THRES) {
 				clear_lcd_tx_flag = 0;
 				lcd_cursorset(1, 1);
+
 				for (i = 0; i < 20; i++) {
 					lcd_puts(" ");
 				}
@@ -1146,6 +1223,7 @@ int main(void) {
 			if (clear_lcd_rx_flag > DEL_THRES) {
 				clear_lcd_rx_flag = 0;
 				lcd_cursorset(2, 1);
+
 				for (i = 0; i < 20; i++) {
 					lcd_puts(" ");
 				}
@@ -1154,9 +1232,11 @@ int main(void) {
 			if (hist_del_flag > (DEL_THRES * 3)) {
 				hist_del_flag = 0;
 				lcd_cursorset(3, 1);
+
 				for (i = 0; i < 20; i++) {
 					lcd_puts("  ");
 				}
+
 				anzzeile = 3;
 				anzspalte = 1;
 			}
@@ -1177,6 +1257,7 @@ int main(void) {
 			if (flags.b.tx_post) {
 				lcd_cursorset(1, 1);
 				lcd_puts("Tx:");
+
 				switch (tx_field[0]) {
 					case FIRE: {
 						if (tx_field[1] && (tx_field[1] < 31) && tx_field[2] && (tx_field[2] < 17)) {
@@ -1204,9 +1285,11 @@ int main(void) {
 								hist_del_flag = 1;
 							}
 						}
+
 						flags.b.show_only = 0;
 						break;
 					}
+
 					case IDENT: {
 						lcd_puts("Identify         ");
 
@@ -1219,9 +1302,11 @@ int main(void) {
 							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
 							hist_del_flag = 1;
 						}
+
 						flags.b.show_only = 0;
 						break;
 					}
+
 					case PARAMETERS: {
 						lcd_puts("U");                              // Unique-ID
 						lcd_arrize(tx_field[1], lcd_array, 2, 0);
@@ -1230,7 +1315,9 @@ int main(void) {
 						lcd_arrize(tx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
+
 						if (tx_field[3] < 100) { lcd_puts(" "); }
+
 						lcd_arrize((tx_field[3] / 10), lcd_array, 1, 0); // Battery voltage
 						lcd_puts(lcd_array);
 						lcd_puts(".");
@@ -1241,6 +1328,7 @@ int main(void) {
 						lcd_puts("    ");
 						break;
 					}
+
 					case TEMPERATURE: {
 						lcd_puts("Temperature      ");
 
@@ -1253,10 +1341,12 @@ int main(void) {
 							cursor_x_shift(&lastzeile, &lastspalte, &anzzeile, &anzspalte);
 							hist_del_flag = 1;
 						}
+
 						flags.b.show_only = 0;
 
 						break;
 					}
+
 					case CHANGE: {
 						lcd_puts("U");                          // Old Unique-ID
 						lcd_arrize(tx_field[1], lcd_array, 2, 0);
@@ -1273,9 +1363,11 @@ int main(void) {
 						lcd_puts(" ");
 						break;
 					}
+
 					default:
 						break;
 				}
+
 				flags.b.tx_post = 0;
 				clear_lcd_tx_flag = 1;
 			}
@@ -1284,6 +1376,7 @@ int main(void) {
 			if (flags.b.rx_post) {
 				lcd_cursorset(2, 1);
 				lcd_puts("Rx:");
+
 				switch (rx_field[0]) {
 					case FIRE: {
 						if (rx_field[1] && (rx_field[1] < 31) && rx_field[2] && (rx_field[2] < 17)) {
@@ -1296,12 +1389,15 @@ int main(void) {
 							lcd_puts(lcd_array);
 							lcd_puts("        ");
 						}
+
 						break;
 					}
+
 					case IDENT: {
 						lcd_puts("Identify         ");
 						break;
 					}
+
 					case PARAMETERS: {
 						lcd_puts("U");
 						lcd_arrize(rx_field[1], lcd_array, 2, 0);
@@ -1310,7 +1406,9 @@ int main(void) {
 						lcd_arrize(rx_field[2], lcd_array, 2, 0);
 						lcd_puts(lcd_array);
 						lcd_puts(" ");
+
 						if (rx_field[3] < 100) { lcd_puts(" "); }
+
 						lcd_arrize(rx_field[3] / 10, lcd_array, 1, 0);
 						lcd_puts(lcd_array);
 						lcd_puts(".");
@@ -1319,6 +1417,7 @@ int main(void) {
 						lcd_puts(" ");
 						lcd_send(rx_field[4] ? 'j' : 'n', 1);
 						lcd_puts(" -");
+
 						if (!rssi) {
 							lcd_puts("--");
 						}
@@ -1326,6 +1425,7 @@ int main(void) {
 							lcd_arrize(((rssi > 99) ? 99 : rssi), lcd_array, 2, 0);
 							lcd_puts(lcd_array);
 						}
+
 						break;
 					}
 
@@ -1346,6 +1446,7 @@ int main(void) {
 							lcd_puts(lcd_array);
 							lcd_puts(" ");
 						}
+
 						break;
 					}
 
@@ -1357,14 +1458,17 @@ int main(void) {
 					default:
 						break;
 				}
+
 				flags.b.rx_post = 0;
 				clear_lcd_rx_flag = 1;
 			}
+
 			SREG = temp_sreg;
 		}
 
 		// -------------------------------------------------------------------------------------------------------
 	}
+
 	return 0;
 }
 
@@ -1375,10 +1479,15 @@ ISR(TIMER1_OVF_vect) {
 
 ISR(TIMER0_OVF_vect) {
 	if (clear_lcd_tx_flag) { clear_lcd_tx_flag++; }
+
 	if (clear_lcd_rx_flag) { clear_lcd_rx_flag++; }
+
 	if (hist_del_flag) { hist_del_flag++; }
+
 	if (clear_lcd_tx_flag > (DEL_THRES + 2)) { clear_lcd_tx_flag = 0; }
+
 	if (clear_lcd_rx_flag > (DEL_THRES + 2)) { clear_lcd_rx_flag = 0; }
+
 	if (hist_del_flag > 10000) { hist_del_flag = 0; }
 }
 

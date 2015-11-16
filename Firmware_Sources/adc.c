@@ -33,6 +33,7 @@ void adc_init(void) {
 	// Wait for end of dummy conversion
 	while (ADCSRA & (1 << ADSC))
 		;
+
 	nosense = ADCW;
 
 	_delay_ms(250);
@@ -42,10 +43,13 @@ void adc_init(void) {
 
 	for (uint8_t i = 8; i; i--) {
 		ADCSRA |= 1 << ADSC;
+
 		while (ADCSRA & (1 << ADSC))
 			;
+
 		nosense += ADCW;
 	}
+
 	nosense >>= 3;
 
 	// Switch reference if "wrong" reference selection is detected
@@ -55,8 +59,10 @@ void adc_init(void) {
 		_delay_ms(250);
 
 		ADCSRA |= 1 << ADSC;
+
 		while (ADCSRA & (1 << ADSC))
 			;
+
 		nosense = ADCW;
 	}
 }
@@ -74,8 +80,10 @@ uint8_t adc_read(uint8_t channel) {
 	// 10 or 11 measurements (reference-dependent), summing up
 	for (uint8_t i = imax; i; i--) {
 		ADCSRA |= 1 << ADSC;
+
 		while (ADCSRA & (1 << ADSC))
 			;
+
 		result += ADCW;
 	}
 

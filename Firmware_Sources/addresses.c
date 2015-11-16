@@ -45,6 +45,7 @@ uint8_t address_valid(uint8_t uniqueid, uint8_t slaveid) {
 		if ((mem_unique == uniqueid) && (mem_slave == slaveid) && (mem_sum == sum) && (mem_ucrc == ucrc)
 		    && (mem_scrc == scrc) && (mem_bothcrc == bothcrc)) { return 1; }
 	}
+
 	// Return 0 if all 3 tries have failed
 	return 0;
 }
@@ -70,6 +71,7 @@ uint8_t addresses_load(uint8_t *uniqueid, uint8_t *slaveid) {
 
 		if (address_valid(uid_local, sid_local)) {          // If valid numbers are found
 			if (ID_MESS) { addresses_save(uid_local, sid_local); } // Check if all storage positions are correct, rewrite if not
+
 			*uniqueid = uid_local;
 			*slaveid = sid_local;
 			return 1;
@@ -81,6 +83,7 @@ uint8_t addresses_load(uint8_t *uniqueid, uint8_t *slaveid) {
 			return 0;
 		}
 	}
+
 	return 0;
 }
 
@@ -91,8 +94,8 @@ void addresses_save(uint8_t uniqueid, uint8_t slaveid) {
 	uint8_t scrc = crc8(CRC_ID_STORAGE, slaveid); // CRC8-Wert of Slave-ID with seed 16
 	uint8_t bothcrc = crc8(ucrc, slaveid); // CRC8-Wert of Unique-ID and Slave-ID with seed 16
 
-	for (uint8_t i = START_ADDRESS_ID_STORAGE; i < (START_ADDRESS_ID_STORAGE + 3 * STEP_ID_STORAGE); i +=
-	       STEP_ID_STORAGE) {
+	for (uint8_t i = START_ADDRESS_ID_STORAGE; i < (START_ADDRESS_ID_STORAGE + 3 * STEP_ID_STORAGE);
+	     i += STEP_ID_STORAGE) {
 		eewrite(uniqueid, i);
 		eewrite(slaveid, i + 1);
 		eewrite(sum, i + 2);

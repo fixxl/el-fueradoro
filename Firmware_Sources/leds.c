@@ -73,8 +73,11 @@ uint8_t leds_status(void) {
 	uint8_t status = 0;
 
 	if (LED_YELLOW_PIN & (1 << LED_YELLOW_POS)) { status |= 1; }
+
 	if (LED_GREEN_PIN & (1 << LED_GREEN_POS)) { status |= 2; }
+
 	if (LED_ORANGE_PIN & (1 << LED_ORANGE_POS)) { status |= 4; }
+
 	if (LED_RED_PIN & (1 << LED_RED_POS)) { status |= 8; }
 
 	return status;
