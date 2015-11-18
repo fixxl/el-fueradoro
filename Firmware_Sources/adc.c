@@ -9,7 +9,7 @@
 
 // De-Initialisation
 void adc_deinit(void) {
-	ADMUX = 0;
+	ADMUX  = 0;
 	ADCSRA = 0;
 }
 
@@ -31,8 +31,7 @@ void adc_init(void) {
 	ADCSRA |= 1 << ADSC;
 
 	// Wait for end of dummy conversion
-	while (ADCSRA & (1 << ADSC))
-		;
+	while (ADCSRA & (1 << ADSC)) ;
 
 	nosense = ADCW;
 
@@ -44,8 +43,7 @@ void adc_init(void) {
 	for (uint8_t i = 8; i; i--) {
 		ADCSRA |= 1 << ADSC;
 
-		while (ADCSRA & (1 << ADSC))
-			;
+		while (ADCSRA & (1 << ADSC)) ;
 
 		nosense += ADCW;
 	}
@@ -60,8 +58,7 @@ void adc_init(void) {
 
 		ADCSRA |= 1 << ADSC;
 
-		while (ADCSRA & (1 << ADSC))
-			;
+		while (ADCSRA & (1 << ADSC)) ;
 
 		nosense = ADCW;
 	}
@@ -70,19 +67,18 @@ void adc_init(void) {
 // Calculation of battery voltage
 uint8_t adc_read(uint8_t channel) {
 	uint32_t result = 0;
-	uint8_t imax = 10;
+	uint8_t imax    = 10;
 
 	ADMUX &= ~(0x07);
 	ADMUX |= channel;
 
-	if (ADMUX & (1 << REFS1)) { imax = 11; }
+	if (ADMUX & (1 << REFS1)) imax = 11;
 
 	// 10 or 11 measurements (reference-dependent), summing up
 	for (uint8_t i = imax; i; i--) {
 		ADCSRA |= 1 << ADSC;
 
-		while (ADCSRA & (1 << ADSC))
-			;
+		while (ADCSRA & (1 << ADSC)) ;
 
 		result += ADCW;
 	}
@@ -103,5 +99,5 @@ uint8_t adc_read(uint8_t channel) {
 	//
 	result = (result + 32) >> 6;
 
-	return (uint8_t) result;
+	return (uint8_t)result;
 }

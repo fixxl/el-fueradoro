@@ -9,9 +9,8 @@
 #define PORTMAKROS_H_
 
 // Definitions for IO-Port-Makros
-#define   CONCAT(x,y)   x##y
-#define   DDR(x)      CONCAT(DDR,x)
-#define   PORT(x)     CONCAT(PORT,x)
-#define   PIN(x)      CONCAT(PIN,x)
-
+#define   CONCAT(x, y)    x ## y
+#define   DDR(x)          CONCAT(DDR, x)
+#define   PORT(x)         CONCAT(PORT, x)
+#define   PIN(x)          CONCAT(PIN, x)
 #endif /* PORTMAKROS_H_ */

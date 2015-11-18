@@ -12,10 +12,10 @@ uint16_t crc16(uint16_t crc, uint8_t data) {
 	crc ^= (data << 8);
 
 	for (uint8_t i = 8; i; i--) {
-		data = ((crc & 0x8000) && 1); // Wird durch && entweder 0 oder 1
+		data  = ((crc & 0x8000) && 1); // Wird durch && entweder 0 oder 1
 		crc <<= 1;
 
-		if (data) { crc ^= 0x1021; } // 0x1021 due to polynom x^16+x^12+x^5+1 and MSB first
+		if (data) crc ^= 0x1021; // 0x1021 due to polynom x^16+x^12+x^5+1 and MSB first
 	}
 
 	return crc;
@@ -26,10 +26,10 @@ uint8_t crc8(uint8_t crc, uint8_t data) {
 	crc ^= data;
 
 	for (uint8_t i = 8; i; i--) {
-		data = (crc & 0x01);
+		data  = (crc & 0x01);
 		crc >>= 1;
 
-		if (data) { crc ^= 0x8C; } // 0x8C due to polynom x^8+x^5+x^4+1 and LSB first
+		if (data) crc ^= 0x8C; // 0x8C due to polynom x^8+x^5+x^4+1 and LSB first
 	}
 
 	return crc;

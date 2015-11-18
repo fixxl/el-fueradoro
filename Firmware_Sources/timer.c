@@ -22,4 +22,3 @@ inline void timer1_reset(void) {
 	TIFR1 = (1 << TOV1);
 	TCNT1 = 0;
 }
-

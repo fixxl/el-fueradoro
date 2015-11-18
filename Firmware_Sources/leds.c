@@ -57,28 +57,28 @@ void led_orange_off(void) {
 
 void leds_off(void) {
 	LED_ORANGE_PORT &= ~(1 << LED_ORANGE_POS);
-	LED_GREEN_PORT &= ~(1 << LED_GREEN_POS);
-	LED_RED_PORT &= ~(1 << LED_RED_POS);
+	LED_GREEN_PORT  &= ~(1 << LED_GREEN_POS);
+	LED_RED_PORT    &= ~(1 << LED_RED_POS);
 	LED_YELLOW_PORT &= ~(1 << LED_YELLOW_POS);
 }
 
 void leds_on(void) {
 	LED_ORANGE_PORT |= (1 << LED_ORANGE_POS);
-	LED_GREEN_PORT |= (1 << LED_GREEN_POS);
-	LED_RED_PORT |= (1 << LED_RED_POS);
+	LED_GREEN_PORT  |= (1 << LED_GREEN_POS);
+	LED_RED_PORT    |= (1 << LED_RED_POS);
 	LED_YELLOW_PORT |= (1 << LED_YELLOW_POS);
 }
 
 uint8_t leds_status(void) {
 	uint8_t status = 0;
 
-	if (LED_YELLOW_PIN & (1 << LED_YELLOW_POS)) { status |= 1; }
+	if (LED_YELLOW_PIN & (1 << LED_YELLOW_POS)) status |= 1;
 
-	if (LED_GREEN_PIN & (1 << LED_GREEN_POS)) { status |= 2; }
+	if (LED_GREEN_PIN & (1 << LED_GREEN_POS)) status |= 2;
 
-	if (LED_ORANGE_PIN & (1 << LED_ORANGE_POS)) { status |= 4; }
+	if (LED_ORANGE_PIN & (1 << LED_ORANGE_POS)) status |= 4;
 
-	if (LED_RED_PIN & (1 << LED_RED_POS)) { status |= 8; }
+	if (LED_RED_PIN & (1 << LED_RED_POS)) status |= 8;
 
 	return status;
 }
