@@ -124,28 +124,28 @@ void lcd_send(uint8_t data, uint8_t dat) {
 
 		switch (posi) {
 			 case (COLUMNS): {
-				 lcd_cursorset(2, 1);
-				 break;
-			 }
+				  lcd_cursorset(2, 1);
+				  break;
+			  }
 
 			 case (64 + COLUMNS): {
-				 lcd_cursorset(3, 1);
-				 break;
-			 }
+				  lcd_cursorset(3, 1);
+				  break;
+			  }
 
 			 case (64): {
-				 lcd_cursorset(4, 1);
-				 break;
-			 }
+				  lcd_cursorset(4, 1);
+				  break;
+			  }
 
 			 case (64 + 2 * COLUMNS): {
-				 lcd_cursorset(1, 1);
-				 break;
-			 }
+				  lcd_cursorset(1, 1);
+				  break;
+			  }
 
 			 default: {
-				 break;
-			 }
+				  break;
+			  }
 		}
 	}
 }
@@ -232,9 +232,7 @@ uint8_t lcd_cursorread() {
 	BEFEHLSMODUS;
 	LESEN;
 
-	while (addr & (1 << 7)) {
-		addr = lcd_getaddr();
-	}
+	while (addr & (1 << 7)) addr = lcd_getaddr();
 
 	SCHREIBEN;
 
@@ -296,9 +294,7 @@ void lcd_cursorset(uint8_t zeile, uint8_t spalte) {
 
 // Display String
 void lcd_puts(char *strin) {
-	while (*strin) {
-		lcd_send(*strin++, 1);
-	}
+	while (*strin) lcd_send(*strin++, 1);
 }
 
 // Print number to array
@@ -309,15 +305,14 @@ void lcd_arrize(int32_t zahl, char *feld, uint8_t digits, uint8_t vorzeichen) {
 		vorzeichen = 1;
 		feld[0]    = (zahl < 0) ? '-' : '+';
 
-		if (zahl < 0) zahl = -zahl; }
+		if (zahl < 0) zahl = -zahl;
+	}
 
 	if (digits < 1) digits = 1;
 
 	int32_t zahlkopie = zahl;
 
-	while (zahlkopie /= 10) {
-		neededlength++;
-	}
+	while (zahlkopie /= 10) neededlength++;
 
 	if (neededlength < digits) neededlength = digits;
 
@@ -374,10 +369,10 @@ void lcd_init(void) {
 	lcd_enable();
 	lcd_busycheck();
 
-	// Aufrufe s. S.25 im Datenblatt HD44780
-	lcd_send((1 << 5 | 1 << 3), 0); // Function Set: 4-bit, 2 bzw. 4 Zeilen, 5*8
-	lcd_send((1 << 3 | 1 << 2), 0); // Display on/off control: Display ein, Cursor aus, Blinken aus
-	lcd_send((1 << 2 | 1 << 1), 0); // Entry mode set: Cursor inkrement, Cursorbewegung
+	// Commands according to p.25 in HD44780-datasheet
+	lcd_send((1 << 5 | 1 << 3), 0); // Function Set: 4-bit, 2 or 4 lines, 5*8
+	lcd_send((1 << 3 | 1 << 2), 0); // Display on/off control: display on, cursor on, blinking off
+	lcd_send((1 << 2 | 1 << 1), 0); // Entry mode set: Cursor increment, cursor movement
 
 	// Display löschen
 	lcd_clear();
