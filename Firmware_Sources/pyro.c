@@ -740,6 +740,7 @@ int main(void) {
 					  while (!inp) inp = uart_getc() | 0x20;
 
 					  uart_putc(inp);
+					  uart_puts_P(PSTR("\r\n"));
 					  break;
 				  }
 			}
