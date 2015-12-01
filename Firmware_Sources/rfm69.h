@@ -30,7 +30,7 @@
 #define SCK                 5
 
 /* Use Hardware-SPI if available? */
-#define USE_HARDWARE_SPI    1
+#define RFM69_USE_HARDWARE_SPI    1
 
 // Don't change anything from here
 #define XTALFREQ            32000000UL
@@ -97,7 +97,7 @@
 
 
 #define HARDWARE_SPI_69                                                                   \
-	(USE_HARDWARE_SPI && HASHARDSPI69 && (NSELPORT == SDOPORT) && (NSELPORT == SDIPORT) && \
+	(RFM69_USE_HARDWARE_SPI && HASHARDSPI69 && (NSELPORT == SDOPORT) && (NSELPORT == SDIPORT) && \
 	 (NSELPORT == SCKPORT) && (NSELPORT == B) && (SDI == 3) && (SDO == 4) && (SCK == 5))
 
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr);   // Immediate access to register

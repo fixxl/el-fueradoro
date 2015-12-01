@@ -24,7 +24,7 @@
 #define NIRQPORT            B
 #define NIRQ                9
 
-#define USE_HARDWARE_SPI    1
+#define RFM12_USE_HARDWARE_SPI    1
 
 // Don't change anything from here on
 
@@ -75,7 +75,7 @@
 
 
 #define HARDWARE_SPI_12                                                                   \
-	(USE_HARDWARE_SPI && HASHARDSPI12 && (NSELPORT == SDOPORT) && (NSELPORT == SDIPORT) && \
+	(RFM12_USE_HARDWARE_SPI && HASHARDSPI12 && (NSELPORT == SDOPORT) && (NSELPORT == SDIPORT) && \
 	 (NSELPORT == SCKPORT) && (NSELPORT == B) && (SDI == 3) && (SDO == 4) && (SCK == 5))
 
 uint16_t rfm_cmd(uint16_t command);                               // Immediate access to register
