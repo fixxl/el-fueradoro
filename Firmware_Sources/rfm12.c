@@ -153,23 +153,23 @@
 		switch (bitrate / 19200) {
 			 case 0:
 			 case 1: {
-				 bw      = 192;
-				 freqdev = 32;
-				 break;
-			 }
+				  bw      = 192;
+				  freqdev = 32;
+				  break;
+			  }
 
 			 case 2:
 			 case 3: {
-				 bw      = 160;
-				 freqdev = 80;
-				 break;
-			 }
+				  bw      = 160;
+				  freqdev = 80;
+				  break;
+			  }
 
 			 default: {
-				 bw      = 128;
-				 freqdev = 112;
-				 break;
-			 }
+				  bw      = 128;
+				  freqdev = 112;
+				  break;
+			  }
 		}
 
 		//Data Rate
@@ -276,15 +276,15 @@
 
 	// Transmit data
 	uint8_t rfm_transmit(char *data, uint8_t length) {
-		uint8_t error = 0;
-		uint16_t crc  = CRC16_SEED; // Set CRC-Seed
+		uint8_t  error = 0;
+		uint16_t crc   = CRC16_SEED; // Set CRC-Seed
 
-		rfm_rxoff();                // Turn off receiver
-		rfm_status();               // Query status to clear potential error flags
+		rfm_rxoff();                 // Turn off receiver
+		rfm_status();                // Query status to clear potential error flags
 
-		rfm_txon();                 // Turn on transmitter
+		rfm_txon();                  // Turn on transmitter
 
-		error += rfm_txbyte(0xAA);  // Send preamble of four 10101010-Bytes
+		error += rfm_txbyte(0xAA);   // Send preamble of four 10101010-Bytes
 		error += rfm_txbyte(0xAA);
 		error += rfm_txbyte(0xAA);
 		error += rfm_txbyte(0xAA);
@@ -318,7 +318,7 @@
 
 	// Receive data
 	uint8_t rfm_receive(char *data, uint8_t *length) {
-		uint8_t bytenum, length_local, error = 0;
+		uint8_t  bytenum, length_local, error = 0;
 		uint16_t crc_calc = CRC16_SEED;
 
 		rfm_status();                                 // Query status to clear potential error flags
@@ -335,7 +335,7 @@
 
 		data[length_local] = '\0';
 
-		crc_calc ^= 0xFFFF;         // Final XOR for CRC
+		crc_calc ^= 0xFFFF;     // Final XOR for CRC
 
 		crc_calc = crc16(crc_calc, rfm_rxbyte(&error));
 		crc_calc = crc16(crc_calc, rfm_rxbyte(&error));

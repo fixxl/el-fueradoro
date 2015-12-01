@@ -48,8 +48,8 @@
 #define NIRQ_DDR          DDR(NIRQPORT)
 #define NIRQ_PIN          PIN(NIRQPORT)
 
-#define ACTIVATE_RFM      NSEL_PORT &=  ~(1 << NSEL)
-#define DEACTIVATE_RFM    NSEL_PORT |=   (1 << NSEL)
+#define ACTIVATE_RFM      NSEL_PORT &= ~(1 << NSEL)
+#define DEACTIVATE_RFM    NSEL_PORT |= (1 << NSEL)
 
 #define DATARATE  \
 	(((((344828L - \

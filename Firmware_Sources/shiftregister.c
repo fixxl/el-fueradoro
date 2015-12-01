@@ -52,7 +52,7 @@ void sr_disable(void) {
 
 // Transfer 16 bit pattern to outputs
 void sr_shiftout(uint16_t scheme) {
-	uint8_t i;
+	uint8_t  i;
 	uint16_t mask = 1 << (SR_CHANNELS - 1);
 
 	SER_IN_PORT &= ~(1 << SER_IN);
@@ -70,6 +70,6 @@ void sr_shiftout(uint16_t scheme) {
 		mask       >>= 1;
 	}
 
-	RCLOCK_PIN = (1 << RCLOCK);    // Pin high after toggling
-	RCLOCK_PIN = (1 << RCLOCK);    // Pin low after toggling
+	RCLOCK_PIN = (1 << RCLOCK);  // Pin high after toggling
+	RCLOCK_PIN = (1 << RCLOCK);  // Pin low after toggling
 }

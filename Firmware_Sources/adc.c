@@ -67,7 +67,7 @@ void adc_init(void) {
 // Calculation of battery voltage
 uint8_t adc_read(uint8_t channel) {
 	uint32_t result = 0;
-	uint8_t imax    = 10;
+	uint8_t  imax   = 10;
 
 	ADMUX &= ~(0x07);
 	ADMUX |= channel;

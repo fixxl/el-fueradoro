@@ -64,7 +64,7 @@ static uint8_t changenumber(void) {
 // Remote configuration
 uint8_t remote_config(char *txf) {
 	uint8_t valid = 0;
-	char temporary[5];
+	char    temporary[5];
 
 	uart_puts_P(PSTR(TERM_COL_YELLOW));
 	uart_puts_P(PSTR("\n\nRemote-Konfigurationsprogramm\n\r=============================\n\r"));
@@ -169,7 +169,6 @@ uint8_t configprog(const uint8_t devicetype) {
 		}
 		else uart_puts_P(PSTR("FEHLER"));
 
-
 		uart_puts_P(PSTR("\n\r"));
 		uart_puts_P(PSTR(TERM_COL_WHITE));
 		uart_puts_P(PSTR("\n\n\n\r"));
@@ -188,32 +187,32 @@ uint8_t configprog(const uint8_t devicetype) {
 
 		switch (choice) {
 			 case 'i': {
-				 uart_puts_P(PSTR("Neue Unique-ID (01-30, ENTER = alter Wert): "));
-				 uart_puts_P(PSTR(TERM_COL_RED));
-				 uniqueid_old = uniqueid;
-				 uniqueid     = changenumber();
+				  uart_puts_P(PSTR("Neue Unique-ID (01-30, ENTER = alter Wert): "));
+				  uart_puts_P(PSTR(TERM_COL_RED));
+				  uniqueid_old = uniqueid;
+				  uniqueid     = changenumber();
 
-				 if (uniqueid == 255) uniqueid = uniqueid_old;
+				  if (uniqueid == 255) uniqueid = uniqueid_old;
 
-				 uart_puts_P(PSTR(TERM_COL_WHITE));
+				  uart_puts_P(PSTR(TERM_COL_WHITE));
 
-				 uart_puts_P(PSTR("\n\rNeue Slave-ID (01-30, ENTER = alter Wert):  "));
-				 uart_puts_P(PSTR(TERM_COL_RED));
-				 slaveid_old = slaveid;
-				 slaveid     = changenumber();
+				  uart_puts_P(PSTR("\n\rNeue Slave-ID (01-30, ENTER = alter Wert):  "));
+				  uart_puts_P(PSTR(TERM_COL_RED));
+				  slaveid_old = slaveid;
+				  slaveid     = changenumber();
 
-				 if (slaveid == 255) slaveid = slaveid_old;
+				  if (slaveid == 255) slaveid = slaveid_old;
 
-				 uart_puts_P(PSTR(TERM_COL_WHITE));
+				  uart_puts_P(PSTR(TERM_COL_WHITE));
 
-				 if (((uniqueid != uniqueid_old) || (slaveid != slaveid_old))) changes = 1;
+				  if (((uniqueid != uniqueid_old) || (slaveid != slaveid_old))) changes = 1;
 
-				 break;
-			 }
+				  break;
+			  }
 
 			 default: {
-				 break;
-			 }
+				  break;
+			  }
 		}
 
 		if (changes) {
@@ -326,14 +325,14 @@ void list_array(char *arr) {
 
 		switch (arr[i]) {
 			 case 0: {
-				 uart_puts_P(PSTR("---"));
-				 break;
-			 }
+				  uart_puts_P(PSTR("---"));
+				  break;
+			  }
 
 			 default: {
-				 fixedspace(arr[i], 'd', 3);
-				 break;
-			 }
+				  fixedspace(arr[i], 'd', 3);
+				  break;
+			  }
 		}
 
 		if ((i % 3) == 2) {

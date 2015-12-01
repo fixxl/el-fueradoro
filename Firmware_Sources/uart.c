@@ -44,7 +44,7 @@ void uart_init(uint32_t baud) {
 
 // Receive char
 uint8_t uart_getc(void) {
-	uint8_t udrcontent;
+	uint8_t  udrcontent;
 	uint32_t utimer = UART_TIMEOUTVAL;
 
 	while (!(UCSR0A & (1 << RXC0)) && --utimer) ; // wait until char available or timeout
@@ -59,8 +59,8 @@ uint8_t uart_getc(void) {
 
 // Receive string
 uint8_t uart_gets(char *s) {
-	uint8_t zeichen = 0;
-	char buchstabe  = 0xFE;
+	uint8_t zeichen   = 0;
+	char    buchstabe = 0xFE;
 
 	while (buchstabe && (zeichen < MAX_ARRAYSIZE - 1)) {
 		buchstabe = uart_getc();
@@ -107,43 +107,43 @@ uint8_t uart_putc(uint8_t c) {
 
 		switch (c) {
 			 case 'ä': {
-				 c = 228;
-				 break;
-			 }
+				  c = 228;
+				  break;
+			  }
 
 			 case 'Ä': {
-				 c = 196;
-				 break;
-			 }
+				  c = 196;
+				  break;
+			  }
 
 			 case 'ö': {
-				 c = 246;
-				 break;
-			 }
+				  c = 246;
+				  break;
+			  }
 
 			 case 'Ö': {
-				 c = 214;
-				 break;
-			 }
+				  c = 214;
+				  break;
+			  }
 
 			 case 'ü': {
-				 c = 252;
-				 break;
-			 }
+				  c = 252;
+				  break;
+			  }
 
 			 case 'Ü': {
-				 c = 220;
-				 break;
-			 }
+				  c = 220;
+				  break;
+			  }
 
 			 case 'ß': {
-				 c = 223;
-				 break;
-			 }
+				  c = 223;
+				  break;
+			  }
 
 			 default: {
-				 break;
-			 }
+				  break;
+			  }
 		}
 
 		UDR0 = c;
@@ -165,7 +165,7 @@ void uart_puts(char *s) {
 
 // Transmit string from flash memory (String constants)
 void uart_puts_P(const char *s) {
-	uint8_t overflow = 0;
+	uint8_t       overflow = 0;
 	unsigned char c;
 
 	while (!overflow) {
@@ -189,75 +189,75 @@ uint8_t uart_strings_equal(const char *string1, const char *string2) {
 
 // Print number in decimal, hexadecimal or binary format to console
 void uart_shownum(int32_t zahl, uint8_t type) {
-	uint8_t i                 = 0, lauf = 1;
-	uint32_t bits             = 1;
-	char zwischenspeicher[33] = { 0 };
+	uint8_t  i    = 0, lauf = 1;
+	uint32_t bits = 1;
+	char     zwischenspeicher[33] = { 0 };
 
 	switch (type) {
 		 // Binary
 		 case 'b':
 		 case 'B': {
-			 while (bits < zahl) {
-				 bits <<= 1;
-			 }
+			  while (bits < zahl) {
+				  bits <<= 1;
+			  }
 
-			 if (bits < 128) bits = 128; else if (bits < 32768) bits = 32768;
-			 else   bits = 2147483648;
+			  if (bits < 128) bits = 128; else if (bits < 32768) bits = 32768;
+			  else   bits = 2147483648;
 
-			 while (bits) {
-				 uart_putc((zahl & bits) ? '1' : '0');
-				 bits >>= 1;
-			 }
+			  while (bits) {
+				  uart_putc((zahl & bits) ? '1' : '0');
+				  bits >>= 1;
+			  }
 
-			 break;
-		 }
+			  break;
+		  }
 
 		 // Hex
 		 case 'h':
 		 case 'H': {
-			 while (zahl || !i) {
-				 zwischenspeicher[i++] = zahl & 0x0F;
-				 zahl                >>= 4;
-			 }
+			  while (zahl || !i) {
+				  zwischenspeicher[i++] = zahl & 0x0F;
+				  zahl >>= 4;
+			  }
 
-			 if (i % 2) i++;
+			  if (i % 2) i++;
 
-			 for (lauf = i; lauf; lauf--) {
-				 if (zwischenspeicher[lauf - 1] > 9) uart_putc((zwischenspeicher[lauf - 1] - 10) + 'A'); else uart_putc(
-					    zwischenspeicher[lauf - 1] + '0');
-			 }
+			  for (lauf = i; lauf; lauf--) {
+				  if (zwischenspeicher[lauf - 1] > 9) uart_putc((zwischenspeicher[lauf - 1] - 10) + 'A'); else uart_putc(
+					     zwischenspeicher[lauf - 1] + '0');
+			  }
 
-			 break;
-		 }
+			  break;
+		  }
 
 		 // Decimal
 		 default: {
-			 if (!zahl) {
-				 uart_puts_P(PSTR("0"));
-				 return;
-			 }
+			  if (!zahl) {
+				  uart_puts_P(PSTR("0"));
+				  return;
+			  }
 
-			 if (zahl < 0) {
-				 i    = 1;
-				 zahl = -zahl;
-			 }
+			  if (zahl < 0) {
+				  i    = 1;
+				  zahl = -zahl;
+			  }
 
-			 lauf = 0;
+			  lauf = 0;
 
-			 while (zahl && (lauf < 33)) {
-				 zwischenspeicher[lauf++] = zahl % 10;
-				 zahl                    /= 10;
-			 }
+			  while (zahl && (lauf < 33)) {
+				  zwischenspeicher[lauf++] = zahl % 10;
+				  zahl /= 10;
+			  }
 
-			 if (i) uart_puts_P(PSTR("-"));
+			  if (i) uart_puts_P(PSTR("-"));
 
-			 while (lauf) {
-				 uart_putc(zwischenspeicher[lauf - 1] + '0');
-				 lauf--;
-			 }
+			  while (lauf) {
+				  uart_putc(zwischenspeicher[lauf - 1] + '0');
+				  lauf--;
+			  }
 
-			 break;
-		 }
+			  break;
+		  }
 	}
 }
 

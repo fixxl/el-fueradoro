@@ -70,7 +70,7 @@ typedef union {
 		unsigned clear_list   : 1;
 		unsigned hw           : 1;
 		unsigned remote       : 1;
-	} b;
+	}        b;
 	uint16_t complete;
 } bitfeld_t;
 

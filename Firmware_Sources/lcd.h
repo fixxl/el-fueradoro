@@ -103,13 +103,13 @@
 
 // Makros
 #define   BEFEHLSMODUS    RSPORT &= ~(1 << RS)
-#define   DATENMODUS      RSPORT |=  (1 << RS)
+#define   DATENMODUS      RSPORT |= (1 << RS)
 
 #define   SCHREIBEN       RWPORT &= ~(1 << RW)
-#define   LESEN           RWPORT |=  (1 << RW)
+#define   LESEN           RWPORT |= (1 << RW)
 
 #define   E_LOW           ENPORT &= ~(1 << EN)
-#define   E_HIGH          ENPORT |=  (1 << EN)
+#define   E_HIGH          ENPORT |= (1 << EN)
 
 
 

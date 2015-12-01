@@ -28,7 +28,7 @@
 
 				spibyte <<= 1;
 				SCK_PIN   = (1 <<
-				             SCK); // Fast-toggling SCK-Pin by writing to PIN-Register. Some older AVRs don't get that, use "SCK_PORT ^= (1 << SCK);" instead!
+				           SCK); // Fast-toggling SCK-Pin by writing to PIN-Register. Some older AVRs don't get that, use "SCK_PORT ^= (1 << SCK);" instead!
 				__asm__ __volatile__ ("rjmp 1f\n 1:");
 
 				if (SDO_PIN & (1 << SDO)) spibyte |= 0x01; else   spibyte &= 0xFE;
@@ -187,29 +187,29 @@
 
 	// Bitrate config according to RFM12-recommendations
 	static inline void rfm_setbit(uint32_t bitrate) {
-		uint8_t bw;
+		uint8_t  bw;
 		uint16_t freqdev;
 
 		switch (bitrate / 19200) {
 			 case 0:
 			 case 1: {
-				 bw      = 0x03; // 62.5 kHz
-				 freqdev = 737;
-				 break;
-			 }
+				  bw      = 0x03; // 62.5 kHz
+				  freqdev = 737;
+				  break;
+			  }
 
 			 case 2:
 			 case 3: {
-				 bw      = 0x02; // 125 kHz
-				 freqdev = 1475;
-				 break;
-			 }
+				  bw      = 0x02; // 125 kHz
+				  freqdev = 1475;
+				  break;
+			  }
 
 			 default: {
-				 bw      = 0x09; // 200 kHz
-				 freqdev = 1966;
-				 break;
-			 }
+				  bw      = 0x09; // 200 kHz
+				  freqdev = 1966;
+				  break;
+			  }
 		}
 
 		//Frequency Deviation
@@ -291,7 +291,7 @@
 	// Transmit data stream
 	uint8_t rfm_transmit(char *data, uint8_t length) {
 		uint32_t utimer = RFM69_TIMEOUTVAL;
-		char fifoarray[MAX_ARRAYSIZE + 1];
+		char     fifoarray[MAX_ARRAYSIZE + 1];
 		// Turn off receiver, switch to Standby
 		rfm_rxoff();
 		// Clear FIFO
@@ -301,13 +301,13 @@
 		if (length > MAX_ARRAYSIZE - 1) length = MAX_ARRAYSIZE - 1;
 
 		// Write data to FIFO-array
-		fifoarray[0] = length;                  // Number of data bytes
+		fifoarray[0] = length;                 // Number of data bytes
 
-		for (uint8_t i = 0; i < length; i++) {  // Data bytes
+		for (uint8_t i = 0; i < length; i++) { // Data bytes
 			fifoarray[1 + i] = data[i];
 		}
 
-		fifoarray[length + 1] = '\0';               // Terminate string
+		fifoarray[length + 1] = '\0';           // Terminate string
 		// Write data to FIFO
 		rfm_fifo_wnr(fifoarray, 1);
 		// Turn on transmitter (Transmitting starts automatically if FIFO not empty)
@@ -323,7 +323,7 @@
 
 	// Receive data stream
 	uint8_t rfm_receive(char *data, uint8_t *length) {
-		char fifoarray[MAX_ARRAYSIZE + 1];
+		char    fifoarray[MAX_ARRAYSIZE + 1];
 		uint8_t length_local;
 
 		// Turn off receiver, switch to Standby
@@ -338,10 +338,10 @@
 		if (length_local > MAX_ARRAYSIZE - 1) length_local = MAX_ARRAYSIZE - 1;  // Limit length
 
 		for (uint8_t i = 0; i < length_local; i++) {
-			data[i] = fifoarray[i + 1];          // Data bytes
+			data[i] = fifoarray[i + 1];    // Data bytes
 		}
 
-		data[length_local] = '\0';                // Terminate string
+		data[length_local] = '\0';            // Terminate string
 
 		// Clear FIFO after readout (not necessary, FIFO is cleared anyway when switching from STANDBY to RX)
 		rfm_fifo_clear();
