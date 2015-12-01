@@ -55,14 +55,19 @@ void sr_shiftout(uint16_t scheme) {
 	SER_IN_PORT &= ~(1 << SER_IN);
 	SCLOCK_PORT &= ~(1 << SCLOCK);
 	RCLOCK_PORT &= ~(1 << RCLOCK);
-	
+
 	#if HARDWARE_SPI_SR
 		SPDR = (scheme >> 8) & 0xFF;
+
 		while (!(SPSR & (1 << SPIF))) ;
+
 		SPDR = scheme & 0xFF;
+
 		while (!(SPSR & (1 << SPIF))) ;
+
 	#else
 		uint16_t mask = 1 << (SR_CHANNELS - 1);
+
 		for (uint8_t i = SR_CHANNELS; i; i--) {
 			if (scheme & mask) {
 				SER_IN_PORT |= 1 << SER_IN;
@@ -74,6 +79,6 @@ void sr_shiftout(uint16_t scheme) {
 			mask       >>= 1;
 		}
 	#endif
-	RCLOCK_PIN = (1 << RCLOCK);  // Pin high after toggling
-	RCLOCK_PIN = (1 << RCLOCK);  // Pin low after toggling
+	RCLOCK_PIN = (1 << RCLOCK); // Pin high after toggling
+	RCLOCK_PIN = (1 << RCLOCK); // Pin low after toggling
 }
