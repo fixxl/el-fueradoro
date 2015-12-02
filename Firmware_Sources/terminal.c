@@ -107,15 +107,11 @@ uint8_t remote_config(char *txf) {
 		if ((valid | 0x20) == 'j') {
 			txf[0] = CHANGE;
 
-			for (uint8_t i = 0; i < 4; i++) {
-				txf[i + 1] = temporary[i];
-			}
+			for (uint8_t i = 0; i < 4; i++) txf[i + 1] = temporary[i];
 
 			valid = 1;
 		}
-		else {
-			valid = 0;
-		}
+		else valid = 0;
 	}
 
 	return valid;
@@ -175,9 +171,7 @@ uint8_t configprog(const uint8_t devicetype) {
 		uart_puts_P(PSTR("(I)Ds ändern, Abbruch mit beliebiger anderer Taste! "));
 
 		// Evaluate input
-		while (!choice) {
-			choice = uart_getc();
-		}
+		while (!choice) choice = uart_getc();
 
 		choice |= 0x20;
 		uart_putc(choice);
@@ -335,12 +329,8 @@ void list_array(char *arr) {
 			  }
 		}
 
-		if ((i % 3) == 2) {
-			uart_puts_P(PSTR("\n\r"));
-		}
-		else {
-			uart_puts_P(PSTR("\t \t \t \t"));
-		}
+		if ((i % 3) == 2) uart_puts_P(PSTR("\n\r"));
+		else uart_puts_P(PSTR("\t \t \t \t"));
 
 		i++;
 	}

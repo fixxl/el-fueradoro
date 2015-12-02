@@ -11,9 +11,7 @@
 void update_addresses(uint8_t *uniqueid, uint8_t *slaveid) {
 	uint8_t sid_local = *slaveid, uid_local = *uniqueid;
 
-	if (!addresses_load(&uid_local, &sid_local)) {
-		leds_on();
-	}
+	if (!addresses_load(&uid_local, &sid_local)) leds_on();
 
 	*slaveid  = sid_local;
 	*uniqueid = uid_local;
@@ -42,7 +40,8 @@ uint8_t address_valid(uint8_t uniqueid, uint8_t slaveid) {
 
 		// Compare values and return 1 if everything is fine
 		if ((mem_unique == uniqueid) && (mem_slave == slaveid) && (mem_sum == sum) && (mem_ucrc == ucrc) &&
-		    (mem_scrc == scrc) && (mem_bothcrc == bothcrc)) return 1; }
+		    (mem_scrc == scrc) && (mem_bothcrc == bothcrc)) return 1;
+	}
 
 	// Return 0 if all 3 tries have failed
 	return 0;

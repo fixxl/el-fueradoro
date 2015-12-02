@@ -74,12 +74,10 @@ void w1_command(uint8_t command, uint8_t *id) {
 		w1_byte_wr(MATCH_ROM); // to a single device
 		i = 8;
 
-		do
-			w1_byte_wr(*id++);
+		do w1_byte_wr(*id++);
 		while (--i);
 	}
-	else
-		w1_byte_wr(SKIP_ROM); // to all devices
+	else w1_byte_wr(SKIP_ROM); // to all devices
 
 	w1_byte_wr(command);
 }
@@ -92,37 +90,37 @@ uint8_t w1_rom_search(uint8_t last_discrepancy, uint8_t *id) {
 	while (crcw && tries--) {
 		crcw = 0;
 
-		if (w1_reset())
-			return PRESENCE_ERR;  // error, no device found
+		if (w1_reset()) return PRESENCE_ERR;  // error, no device found
 
-		w1_byte_wr(SEARCH_ROM);  // issue ROM search command
+		w1_byte_wr(SEARCH_ROM);               // issue ROM search command
 
-		last_zero = LAST_DEVICE; // set last position where zero was written to 0
+		last_zero = LAST_DEVICE;              // set last position where zero was written to 0
 
-		id_bit_number = 64;      // 8 bytes (64 bits)
+		id_bit_number = 64;                   // 8 bytes (64 bits)
 
 		while (id_bit_number) {
 			for (j = 8; j; j--) {         // 8 bits can be stored in 1 byte
 				id_bit     = w1_bit_io(1); // read bit
 				cmp_id_bit = w1_bit_io(1); // read complement bit
 
-				if (id_bit && cmp_id_bit)
-					return DATA_ERR;              // data error if bit AND complement are 1
+				// data error if bit AND complement are 1
+				if (id_bit && cmp_id_bit) return DATA_ERR;
 
-				if (!id_bit && !cmp_id_bit)      // Discrepancy if bit AND complement are 0
-					                              // Go the '1'-direction if last_discrepancy is bigger than id_bit_number.
-					                              // Go the '0'-direction if last_discrepancy is equal to id_bit_number.
-					                              // Go the same direction as last time if last_discrepancy is smaller than id_bit_number
+				/* Discrepancy if bit AND complement are 0
+				 * Go the '1'-direction if last_discrepancy is bigger than id_bit_number.
+				 * Go the '0'-direction if last_discrepancy is equal to id_bit_number.
+				 * Go the same direction as last time if last_discrepancy is smaller than id_bit_number */
+				if (!id_bit && !cmp_id_bit) {
 					if ((last_discrepancy > id_bit_number) || ((*id & 1) && (last_discrepancy != id_bit_number))) {
 						id_bit    = 1;             // now 1
 						last_zero = id_bit_number; // next pass 0
 					}
+				}
 
 				w1_bit_io(id_bit); // write bit
 				*id >>= 1;
 
-				if (id_bit)
-					*id |= 0x80; // store bit
+				if (id_bit) *id |= 0x80; // store bit
 
 				id_bit_number--;
 			}
@@ -182,8 +180,7 @@ uint16_t w1_read_temp(uint8_t *id) {
 			crcw          = crc8(crcw, value);
 		}
 
-		if (scratchpad[7] == 0xFF)
-			return DEVICE_REMOVED;
+		if (scratchpad[7] == 0xFF) return DEVICE_REMOVED;
 	}
 
 	return scratchpad[0] + (scratchpad[1] << 8);
@@ -193,13 +190,10 @@ uint16_t w1_read_temp(uint8_t *id) {
 int16_t w1_tempread_to_celsius(uint16_t temp, uint8_t digit) {
 	int16_t celsius = (temp & 0xF800) ? -1 : 1;
 
-	if (celsius < 0)
-		temp = -temp;
+	if (celsius < 0) temp = -temp;
 
-	if (digit)
-		celsius *= (((temp << 2) + temp + 4) >> 3);
-	else
-		celsius *= ((temp + 8) >> 4);
+	if (digit) celsius *= (((temp << 2) + temp + 4) >> 3);
+	else celsius *= ((temp + 8) >> 4);
 
 	return celsius;
 }
@@ -212,8 +206,7 @@ int16_t w1_tempmeas(uint8_t byten) {
 
 	w1_command(CONVERT_T, NULL);
 
-	while (!w1_bit_io(1)) {
-	}
+	while (!w1_bit_io(1)) ;
 
 	diff = SEARCH_FIRST;
 	diff = w1_rom_search(diff, id);
@@ -221,10 +214,8 @@ int16_t w1_tempmeas(uint8_t byten) {
 	temp_hex  = w1_byte_rd();
 	temp_hex += (w1_byte_rd()) << 8;
 
-	if (byten)
-		temp = w1_tempread_to_celsius(temp_hex, 1);
-	else
-		temp = w1_tempread_to_celsius(temp_hex, 0);
+	if (byten) temp = w1_tempread_to_celsius(temp_hex, 1);
+	else temp = w1_tempread_to_celsius(temp_hex, 0);
 
 	return temp;
 }
@@ -252,8 +243,7 @@ void w1_temp_to_array(int32_t tempmalzehn, char *tempfield, uint8_t signdigit) {
 
 	while (zahlkopie /= 10) neededlength++;
 
-	if ((signdigit & 0x02) && !fieldcntr)
-		tempfield[fieldcntr++] = '+';
+	if ((signdigit & 0x02) && !fieldcntr) tempfield[fieldcntr++] = '+';
 
 	for (uint8_t i = neededlength + fieldcntr; (i - fieldcntr); i--) {
 		tempfield[i - 1] = (temp_int_loc % 10) + 0x30;
@@ -265,6 +255,5 @@ void w1_temp_to_array(int32_t tempmalzehn, char *tempfield, uint8_t signdigit) {
 		tempfield[neededlength + fieldcntr + 1] = (temp_digit_loc % 10) + 0x30;
 		tempfield[neededlength + fieldcntr + 2] = '\0';
 	}
-	else
-		tempfield[neededlength + fieldcntr] = '\0';
+	else tempfield[neededlength + fieldcntr] = '\0';
 }
