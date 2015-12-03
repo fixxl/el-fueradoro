@@ -17,7 +17,9 @@
 #define RFM12COMP           1
 
 /* Output power in dBm (-18...13) */
-#define P_OUT_DBM           8 // Output power in dBm
+#ifndef P_OUT_DBM
+	#define P_OUT_DBM       8 // Output power in dBm
+#endif
 
 /* Pin assignment */
 #define NSELPORT            B
