@@ -11,7 +11,7 @@
 \usepackage{eurosym}
 \usepackage[intlimits]{amsmath}
 \usepackage[]{amsfonts, amssymb, array, tabularx}
-\usepackage[headsepline]{scrpage2}
+\usepackage[headsepline]{scrlayer-scrpage}
 \usepackage[tight, ugly]{units}
 \usepackage[inner=2cm, outer=3cm, top=3cm, bottom=4cm]{geometry}
 \usepackage[pdftex]{graphicx}
@@ -35,10 +35,13 @@
 %% Seitenstil-Einstellung
 \renewcommand{\chapterpagestyle}{plain}
 \pagestyle{scrheadings}
+\renewcommand*{\partmarkformat}{}
+\automark[part]{part}
 \clearscrheadings
 \clearscrplain
 \ohead[\pagemark]{\pagemark}
-\ihead[]{\anlage}
+\lohead[]{\textnormal\headmark}
+\rehead[]{\anlage}
 
 \hyphenation{Putty-tel}
 
@@ -272,7 +275,7 @@
 		\label{fig:puttytelstart}
 	\end{figure}
 
-	\texttt{Puttytel} kann per Doppelklick gestartet werden, woraufhin man zu einem Startbildschirm gelangt. Man wählt in der linken Spalte unten links \enquote{Serial} und stellt die Parameter -- analog zur Konfiguration des COM-Ports nach Tabelle~\ref{tab:seriell} -- wie in Abbildung~\ref{fig:puttytelstart} ein, ehe man die serielle Verbindung per Klick auf \enquote{Open} startet. Vor dem Start der Verbindung sollte man das verbundene Device mit Strom versorgen.
+	\texttt{Puttytel} kann per Doppelklick gestartet werden, woraufhin man zu einem Startbildschirm, der Kategorie \enquote{Session} gelangt. Man wählt in der linken Spalte unten links \enquote{Serial} und stellt die Parameter -- analog zur Konfiguration des COM-Ports nach Tabelle~\ref{tab:seriell} -- wie in Abbildung~\ref{fig:puttytelstart} ein. Anschließend muss man in der linken Spalte zurück auf \enquote{Session} gehen und dort im rechten Teil des Fensters \enquote{Serial} als \enquote{Connection Type} wählen, ehe man die serielle Verbindung per Klick auf \enquote{Open} starten kann. Vor dem Start der Verbindung sollte man zudem das verbundene Device mit Strom versorgen.
 
 	Um bei \texttt{Puttytel} nicht immer all diese Einstellungen per Hand vornehmen zu müssen, bietet sich an, unter Windows eine Verknüpfung auf \texttt{puttytel.exe} zu erstellen und in den Ver\-knüpf\-ungs\-eigen\-schaften als Ziel anzugeben:
 	\begin{center}
@@ -286,26 +289,26 @@
 
 	Um eine reibungslose Kommunikation zwischen {\pic} und {\anlage} sicherzustellen, muss in {\pic} als wesentliche Einstellung unter dem Menüpunkt \enquote{Einstellungen $\rightarrow$ Optionen} im Reiter \enquote{Output}~-- gezeigt in Abbildung~\ref{fig:pic-comport}~-- der richtige COM-Port eingestellt werden. Über \enquote{Einstellungen $\rightarrow$ Connect} wird die serielle Verbindung aufgebaut und in der untersten Leiste anzeigt, ob der Verbindungsaufbau erfolgreich war.
 
-	\begin{figure}
-		\centering
-		\includegraphics[width=.65\textwidth]{Bilder/pic-comport}
-		\caption{Einstellung des COM-Ports in {\pic}}
-		\label{fig:pic-comport}
-	\end{figure}
-
 	Zudem sollte im Reiter \enquote{Allgemein} die globale Verzögerung erfahrungsgemäß, wie Abbildung~\ref{fig:pic-delay} zeigt, auf etwa 0{,}07\,s eingestellt werden. Dies ist die Zeit, die aufgrund von Datenübertragungen und Rechenvorgängen zwischen dem Beginn des Sendens des Befehls vom PC zum Transmitter und dem Zünden des Kanals an der Zündbox vergeht.
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=.65\textwidth]{Bilder/pic-delay}
-		\caption{Einstellung des Global Delay in \pic}
-		\label{fig:pic-delay}
-	\end{figure}
 
 	Als minimale Zeitdauer zwischen zwei Zündungen sollte \unit[100]{ms} nicht unterschritten werden, das Scharfschalten vor Beginn der Show ist ebenfalls nicht zu vergessen!
 
 	\textbf{Anmerkung: Eine serielle Verbindung zu einem Device kann immer nur durch einen einzigen Client (\texttt{Putty\-tel, GUI, {\pic}, Firware-Updater}) bestehen. Man muss also immer die bestehende Verbindung trennen, bevor man mit einem anderen Programm eine neue aufbauen kann.}
 
+	\begin{figure}
+		\begin{subfigure}[t]{\textwidth}
+			\centering
+			\includegraphics[width=.75\textwidth]{Bilder/pic-comport}
+			\caption{Einstellung des COM-Ports in {\pic}}
+			\label{fig:pic-comport}
+		\end{subfigure} \\[50pt]
+		\begin{subfigure}[t]{\textwidth}
+			\centering
+			\includegraphics[width=.75\textwidth]{Bilder/pic-delay}
+			\caption{Einstellung des Global Delay in \pic}
+			\label{fig:pic-delay}
+		\end{subfigure}
+	\end{figure}
 
 	\chapter{Kommunikation zwischen PC und Devices}
 	\label{ch:kommunikationpc}
