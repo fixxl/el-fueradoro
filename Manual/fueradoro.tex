@@ -308,6 +308,7 @@
 			\caption{Einstellung des Global Delay in \pic}
 			\label{fig:pic-delay}
 		\end{subfigure}
+		\caption{Einstellungen in {\pic}}
 	\end{figure}
 
 	\chapter{Kommunikation zwischen PC und Devices}
@@ -381,7 +382,7 @@
 	\subsubsection{Ferngesteuert}
 	\label{subsec:remoteconf}
 
-	\begin{figure}[t]
+	\begin{figure}
 		\centering
 		\includegraphics[width=.8\textwidth]{Bilder/remote}
 		\caption{Beispiel einer ferngesteuerten ID-Zuweisung}
@@ -399,18 +400,18 @@
 
 	Mit \enquote{list} ist es möglich, sich die Systemübersicht entsprechend Abbildung~\ref{fig:list} anzeigen zu lassen. Es werden zwei Tabellen ausgegeben, wobei die obere nach Unique-ID geordnet anzeigt:
 	\begin{enumerate}
-		\item Welche Slave-ID der Unique-ID zugewiesen ist.
-		\item Welche Spannung die Batterie der Box mit der entsprechenden Unique-ID liefert.
-		\item Ist die Box mit der jeweiligen Unique-ID scharf geschaltet: (j)a oder (n)ein.
-		\item Temperatur im Inneren der Box, sofern die Box über einen eingebauten Temperatursensor verfügt.
-		\item Wie stark ist das von der Box empfangene Signal (RSSI = Received Signal Strength Indication).
+		\item Slave-ID, welcher der Unique-ID zugewiesen ist.
+		\item Spannung, welche die Batterie der Box mit der entsprechenden Unique-ID liefert.
+		\item Scharfschaltungsstatus der Box mit der jeweiligen Unique-ID: (j)a~(=scharf) oder (n)ein~(=nicht scharf).
+		\item Temperatur im Inneren der Box, sofern die Box über einen eingebauten Temperatursensor verfügt, ansonsten wird \enquote{n.a.}~(not available) angezeigt.
+		\item Stärke des von der Box empfangenen Antwortsignals (RSSI = Received Signal Strength Indicator) in dBm. Je größer der Wert ist~-- bei negativen Werten also umso näher er bei 0 liegt, umso besser und umso weniger störanfällig ist die Verbindung zwischen den Devices. Die theoretische Empfangsgrenze liegt bei etwa $\unit[-96]{dBm}$.
 	\end{enumerate}
 
 	Die untere Tabelle listet auf, wie viele Boxen mit der entsprechenden Slave-ID derzeit aktiv sind.
 
 	Zwischen den beiden Tabellen wird die Anzahl der fehlerhaften IDs aufgelistet. Dies kann entweder auf doppelte Zuweisung von Unique-IDs oder Fehler beim Auslesen der IDs (fehlerhafte Prüfsummen) zurückzuführen sein. Für normalen Betrieb sollte dieser Wert stets 0 betragen.
 
-	\begin{figure}[t]
+	\begin{figure}
 		\centering
 		\includegraphics[width=.8\textwidth]{Bilder/list}
 		\caption{Systemübersicht}
@@ -483,7 +484,7 @@
 
 	Zur Veranschaulichung soll hier die Abfrage der aktuell eingestellten Sendeleistung und eine anschließende Änderung derselben simuliert werden: Aus dem Datenblatt, dem die Bedeutungen aller Registeradressen und ihrer acht Registerbits zu entnehmen sind, kann die Registeradresse 0x11 als diejenige identifiziert werden, in der die Informationen zur Sendeleistung hinterlegt sind. Um nun den aktuellen Wert auszulesen, gibt man -- wie in Abbildung~\ref{fig:rfmread} gezeigt -- im Terminalprogramm \enquote{rfm} gefolgt von \enquote{ENTER} ein und anschließend die Zeichenfolge \enquote{11FF}, wobei die beiden hinteren Stellen wie erwähnt keine Rolle spielen.
 
-	\begin{figure}[b]
+	\begin{figure}
 		\centering
 		\includegraphics[width=.8\textwidth]{Bilder/rfmbefehl}
 		\caption{Auslesen der gesetzten Sendeleistung}
@@ -498,7 +499,7 @@
 
 	Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers wie im Abschnitt~\ref{subsec:readpower} sollte dann den eben eingeschriebenen Wert 0x98 zurückgeben.
 
-	\begin{figure}[!h]
+	\begin{figure}[b]
 		\centering
 		\includegraphics[width=.8\textwidth]{Bilder/rfmbefehl2}
 		\caption{Setzen der Sendeleistung mit anschließendem Auslesen}
