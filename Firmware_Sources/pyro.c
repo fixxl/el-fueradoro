@@ -1443,7 +1443,8 @@ ISR(TIMER0_OVF_vect) {
 
 	if (clear_lcd_rx_flag > (DEL_THRES + 2)) clear_lcd_rx_flag = 0;
 
-	if (hist_del_flag > 10000) hist_del_flag = 0; }
+	if (hist_del_flag > 10000) hist_del_flag = 0;
+}
 
 ISR(KEYINT) {
 	key_flag = 1;
