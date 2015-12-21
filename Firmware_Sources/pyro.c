@@ -296,10 +296,9 @@ int main(void) {
 	char   quantity[MAX_ARRAYSIZE + 1]             = { 0 };
 	char   battery_voltage_char[MAX_ARRAYSIZE + 1] = { 0 };
 	char   sharpness[MAX_ARRAYSIZE + 1]            = { 0 };
-	int8_t temps[MAX_ARRAYSIZE + 1]         = { 0 };
-	int8_t rssis[MAX_ARRAYSIZE + 1]         = { 0 };
-	char   channel_fired[MAX_ARRAYSIZE + 1] = { 0 };
-	char   lcd_array[MAX_ARRAYSIZE + 1]     = { 0 };
+	int8_t temps[MAX_ARRAYSIZE + 1]     = { 0 };
+	int8_t rssis[MAX_ARRAYSIZE + 1]     = { 0 };
+	char   lcd_array[MAX_ARRAYSIZE + 1] = { 0 };
 
 	/* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
 	 * gate pins of the MOSFETs and beware them from conducting directly after turning on the device.
@@ -354,11 +353,13 @@ int main(void) {
 			while (1) ;
 		}
 	}
-	else if (unique_id || slave_id) {
-		addresses_save(0, 0);
-		wdt_enable(6);
+	else {
+		if (unique_id || slave_id) {
+			addresses_save(0, 0);
+			wdt_enable(6);
 
-		while (1) ;
+			while (1) ;
+		}
 	}
 
 	led_green_on();
@@ -377,9 +378,7 @@ int main(void) {
 		slaveid_char[warten]         = 0;
 		battery_voltage_char[warten] = 0;
 		sharpness[warten]            = 0;
-		temps[warten]         = 0;
-		channel_fired[warten] = 0;
-		temps[warten]         = -128;
+		temps[warten] = -128;
 	}
 
 	led_green_off();
@@ -551,10 +550,6 @@ int main(void) {
 				flags.b.lcd_update = 1;
 			}
 
-			// "zero" deletes all "already fired channel"-flags
-			if (uart_strings_equal(uart_field, "zero") && !TRANSMITTER)
-				flags.b.reset_fired = 1;
-
 			// "cls" clears terminal screen
 			if (uart_strings_equal(uart_field, "cls"))
 				terminal_reset();
@@ -613,7 +608,7 @@ int main(void) {
 				if ((slave_id == uart_field[1]) && !TRANSMITTER) {
 					tmp = uart_field[2] - 1;
 
-					if (!(channel_fired[tmp]) && !flags.b.fire) {
+					if (!flags.b.fire) {
 						rx_field[2]  = uart_field[2];
 						flags.b.fire = 1;
 						loopcount    = 1;
@@ -695,19 +690,6 @@ int main(void) {
 
 				uart_puts_P(PSTR("\n\n\r"));
 			}
-
-			SREG = temp_sreg;
-		}
-
-		// -------------------------------------------------------------------------------------------------------
-
-		// Reset fired channels
-		if (flags.b.reset_fired) {
-			temp_sreg = SREG;
-			cli();
-			flags.b.reset_fired = 0;
-
-			for (i = 0; i < 16; i++) channel_fired[i] = 0;
 
 			SREG = temp_sreg;
 		}
@@ -823,7 +805,7 @@ int main(void) {
 			if (tmp) {
 				flags.b.transmit = 1;
 
-				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1]) && !channel_fired[tx_field[2] - 1]) {
+				if ((tx_field[0] == FIRE) && (slave_id == tx_field[1])) {
 					rx_field[2]  = tx_field[2];
 					flags.b.fire = 1;
 				}
@@ -1018,9 +1000,6 @@ int main(void) {
 				// Lock all MOSFETs
 				sr_shiftout(0);
 
-				// Mark fired channel as fired
-				channel_fired[rx_field[2] - 1] = 1;
-
 				// Turn all LEDs off
 				leds_off();
 				led_red_on();
@@ -1062,7 +1041,7 @@ int main(void) {
 						  if (armed && (rx_field[1] == slave_id) && !TRANSMITTER) {
 							  tmp = rx_field[2] - 1;
 
-							  if (!(channel_fired[tmp]) && !flags.b.fire) flags.b.fire = 1;
+							  if (!flags.b.fire) flags.b.fire = 1;
 						  }
 
 						  break;
@@ -1097,9 +1076,8 @@ int main(void) {
 						  TIMSK1       |= (1 << TOIE1); // Enable timer interrupt
 						  timer1_on();
 
-						  flags.b.transmit    = 1;
-						  flags.b.reset_fired = 1;
-						  flags.b.clear_list  = 1;
+						  flags.b.transmit   = 1;
+						  flags.b.clear_list = 1;
 
 						  break;
 					  }

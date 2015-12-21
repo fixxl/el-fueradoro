@@ -65,7 +65,6 @@ typedef union {
 		unsigned tx_post      : 1;
 		unsigned rx_post      : 1;
 		unsigned show_only    : 1;
-		unsigned reset_fired  : 1;
 		unsigned reset_device : 1;
 		unsigned clear_list   : 1;
 		unsigned hw           : 1;
