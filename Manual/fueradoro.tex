@@ -48,6 +48,13 @@
 
 \setuptoc{toc}{totoc}
 
+\hypersetup{pdfinfo={
+		Title=EL FUERADORO,
+		Author=Felix Pflaum,
+		Subject={User manual for remotely controlled firework ignition system},
+		Keywords={}}
+}
+
 \begin{document}
 	\begin{titlepage}
 		\thispagestyle{empty}
@@ -65,6 +72,7 @@
 	\end{titlepage}
 	%
 	\chapter*{Wichtige Hinweise}
+	\addcontentsline{toc}{chapter}{Wichtige Hinweise}
 
 	Vor Inbetriebnahme sollte in jedem Fall diese Anleitung gelesen und verstanden werden! Speziell die folgenden, weiter hinten in der Anleitung detaillierter ausgeführten Hinweise müssen beachtet werden, um Personenschäden oder Beschädigungen an den Geräten zu vermeiden:
 
@@ -78,29 +86,6 @@
 
 	Der Umgang mit Feuerwerkskörpern und explosivem Material unterliegt in Deutschland gesetzlichen Restriktionen, deren Einhaltung im Verantwortungsbereich des Anwenders liegt. {\anlage} darf nicht von Personen unter 18 Jahren bedient werden.
 	%
-
-	\chapter*{Danksagung}%
-
-	Vielen Dank an alle, die in irgendeiner Form zur Entwicklung und Verbesserung von {\anlage} beigetragen haben!
-
-	Ein ganz spezielles Dankeschön an:
-	\begin{itemize}
-		\item Marc Weissmann, der mit seinem Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE -- Feuerwerk im Röthelheimpark Erlangen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an immer voll vertraut hat. Sein mit {\anlage} gezündetes Silvesterfeuerwerk 2014/15 ist \underline{\href{https://vimeo.com/116115628}{hier}} zu sehen.
-		\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
-		\item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung.
-		\item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Erklärungen zum Thema elektrische Zündung und natürlich die Zündsoftware {\pic} von User \emph{pyrobla}.
-		\item \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat.
-		\item Der \texttt{Brauerei Loscher} für Club Mate, den Bastler-Treibstoff.
-		\item Die vielen tollen Open-Source- und Freeware-Lösungen, welche die Softwareentwicklung erst möglich gemacht haben:
-		      \begin{itemize}
-		      	\item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers.
-		      	\item Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}, Kees Bakker und Thomas Holland für die Erweiterung \texttt{AVREclipse} sowie Ben Gardner für \texttt{Uncrustify} und die damit verbundene Übersichtlichkeit des Quellcodes.
-		      	\item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}.
-		      	\item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{Git} und \texttt{GitHub}.
-		      	\item {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs.
-		      \end{itemize}
-	\end{itemize}
-
 
 	\tableofcontents
 	%
@@ -591,12 +576,33 @@
 
 	{\anlage} bietet die Möglichkeit, die Firmware via serielle Schnittstelle vom PC aus zu aktualisieren. Hierfür gibt es das Programm \emph{fwupdate.exe}, welches zunächst einen Reset auslöst, um den Bootloader des Devices zu aktivieren und anschließend die im iHex-Format vorliegende Firmware überträgt.
 
-	\emph{fwupdate.exe} muss über die Kommandozeile mit zwei Parametern gestartet werden, nämlich der Angabe der seriellen Schnittstelle und dem Namen der zu übertragenden Firmware-Datei. Da zu Beginn der Entwicklung von {\anlage} auch noch Vorgänger des \emph{ATmega328P} und des Funkmoduls \emph{RFM69CW} verwendet wurden, existieren auch hierfür noch Firmwareversionen, so dass sich insgesamt vier verschiedene Firmwaredateien im gleichen Ordner wie \emph{fwupdate.exe} befinden sollten.
+	\emph{fwupdate.exe} muss über die Kommandozeile mit zwei Parametern gestartet werden, nämlich der Angabe der seriellen Schnittstelle und dem Namen der zu übertragenden Firmware-Datei. Da zu Beginn der Entwicklung von {\anlage} auch noch Vorgänger des \emph{ATmega328P} und des Funkmoduls \emph{RFM69CW} verwendet wurden, existieren auch hierfür noch Firmwareversionen, zusätzlich gibt es auch noch eine \enquote{High Power}-Firmware, welche die Sendeleistung des Funkmoduls standardmäßig auf den Maximalwert setzt, so dass sich insgesamt fünf verschiedene Firmwaredateien gemäß Tabelle~\ref{tab:firmwareversions} im gleichen Ordner wie \emph{fwupdate.exe} befinden sollten.
+
+	\begin{table}
+		\centering
+		\begin{tabularx}{.925\textwidth}{Xccc}
+			\hline\hline
+			Firmware                        & Controller   & Funkmodul & Sendeleistung    \\ \hline
+			Pyro\_atmega328p\_RFM69.hex     & ATMEGA 328P  & RFM69CW   & $\unit[8]{dBm}$  \\
+			Pyro\_atmega328p\_RFM69\_HP.hex & ATMEGA 328P  & RFM69CW   & $\unit[13]{dBm}$ \\
+			Pyro\_atmega168p\_RFM69.hex     & ATMEGA 168PA & RFM69CW   & $\unit[8]{dBm}$  \\
+			Pyro\_atmega328p\_RFM12.hex     & ATMEGA 328P  & RFM12     & $\unit[4]{dBm}$  \\
+			Pyro\_atmega168p\_RFM12.hex     & ATMEGA 168PA & RFM12     & $\unit[4]{dBm}$  \\ \hline\hline
+		\end{tabularx}
+		\caption{Verfügbare Firmware-Versionen}
+		\label{tab:firmwareversions}
+	\end{table}
 
 	Um nun die neue Firmware zu übertragen, lautet das Kommando für ein Device am \emph{COM4} mit dem \emph{ATmega328P} und dem Funkmodul \emph{RFM69CW}:
 
 	\begin{center}
 		\emph{fwupdate.exe /c4 /fm:Pyro\_atmega328p\_RFM69.hex}
+	\end{center}
+
+	oder für die Firmware mit höherer Sendeleistung
+
+	\begin{center}
+		\emph{fwupdate.exe /c4 /fm:Pyro\_atmega328p\_RFM69\_HP.hex}
 	\end{center}
 
 	Die Angabe der Dateiendung \emph{.hex} kann hierbei -- ebenso wie das \emph{.exe} hinter \emph{fwupdate} -- auch weggelassen werden, die Firmware-Datei muss jedoch zwingend auf \emph{.hex} enden.
@@ -1029,7 +1035,7 @@
 
 	\begin{figure}
 		\centering
-		\includegraphics[angle=90,scale=1]{Bilder/Bohrschablone}
+		\includegraphics[angle=90,scale=1]{Bilder/Zuendboxbohrschablone}
 		\caption{Bohrschablone für Zündboxoberseite}
 		\label{fig:zuendboxbohren}
 	\end{figure}
@@ -1296,4 +1302,29 @@
 	\addtocontents{toc}{\bigskip}
 	\listoffigures
 	\listoftables
+
+	\chapter*{Danksagung}%
+	\addcontentsline{toc}{chapter}{Danksagung}
+
+	Vielen Dank an alle, die in irgendeiner Form zur Entwicklung und Verbesserung von {\anlage} beigetragen haben!
+
+	Ein ganz spezielles Dankeschön an:
+	\begin{itemize}
+		\item Marc Weissmann, der mit seinem Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE -- Feuerwerk im Röthelheimpark Erlangen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an immer voll vertraut hat. Sein mit {\anlage} gezündetes Silvesterfeuerwerk 2014/15 ist \underline{\href{https://vimeo.com/116115628}{hier}} zu sehen.
+		\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
+		\item Die \enquote{Nachbau-Pioniere} Matthias und Cedrik für Ideen, Vorschläge und wertvolle Hinweise.
+		\item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung.
+		\item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Erklärungen zum Thema elektrische Zündung und natürlich die Zündsoftware {\pic} von User \emph{pyrobla}.
+		\item \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat.
+		\item Der \texttt{Brauerei Loscher} für Club Mate, den Bastler-Treibstoff.
+		\item Die vielen tollen Open-Source- und Freeware-Lösungen, welche die Softwareentwicklung erst möglich gemacht haben:
+		      \begin{itemize}
+		      	\item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers.
+		      	\item Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}, Kees Bakker und Thomas Holland für die Erweiterung \texttt{AVREclipse} sowie Ben Gardner für \texttt{Uncrustify} und die damit verbundene Übersichtlichkeit des Quellcodes.
+		      	\item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}.
+		      	\item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{Git} und \texttt{GitHub}.
+		      	\item {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs.
+		      \end{itemize}
+	\end{itemize}
+
 \end{document}
