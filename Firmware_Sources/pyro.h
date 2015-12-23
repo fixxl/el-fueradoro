@@ -100,7 +100,10 @@ typedef union {
 
 // Temperatursensoren
 #define DS18B20    'o'
-#define DHT22      'd'
+
+#if (RFM==69)
+#define RFM_PWR_ADDRESS	5
+#endif
 
 // Funktionsprototypen
 void wdt_init(void) __attribute__((naked)) __attribute__((section(".init1")));
