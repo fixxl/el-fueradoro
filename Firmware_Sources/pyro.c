@@ -368,7 +368,7 @@ int main(void) {
 	// Initialise arrays and show slave-id by blinking!
 	for (uint8_t warten = 0; warten < MAX_ARRAYSIZE; warten++) {
 		if (warten < slave_id) {
-			led_green_toggle();
+			led_yellow_toggle();
 			led_orange_toggle();
 			_delay_ms(200);
 		}
@@ -382,7 +382,7 @@ int main(void) {
 		temps[warten] = -128;
 	}
 
-	led_green_off();
+	led_yellow_off();
 	led_orange_off();
 
 	// Initialise devices
@@ -402,7 +402,7 @@ int main(void) {
 	#if (RFM == 69)
 		uint8_t rfm_pwr = eeread(RFM_PWR_ADDRESS);
 
-		if (eeread(RFM_PWR_ADDRESS + 1) == crc8(0x11, rfm_pwr)) rfm_cmd((0x1180 | rfm_pwr), 1);
+		if ((eeread(RFM_PWR_ADDRESS + 1) == crc8(0x11, rfm_pwr)) && (rfm_pwr < 0x20)) rfm_cmd((0x1180 | rfm_pwr), 1);
 	#endif
 
 	if (TRANSMITTER) {

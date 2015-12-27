@@ -15,7 +15,7 @@
 \usepackage[tight, ugly]{units}
 \usepackage[inner=2cm, outer=3cm, top=3cm, bottom=4cm]{geometry}
 \usepackage[pdftex]{graphicx}
-\usepackage{datetime}
+\usepackage{datetime, upgreek}
 \usepackage{microtype}
 \usepackage[backend=biber, isbn=false, doi=false, eprint=false, url=true, safeinputenc, defernumbers=false]{biblatex}
 \usepackage[pdftex, colorlinks=false, breaklinks=true, pdfborder={0 0 0}]{hyperref}
@@ -173,7 +173,7 @@
 		\label{tab:statusleds}
 	\end{table}
 
-	Während des Bootvorgangs leuchten bei den Zündboxen die orange und grüne LED im Wechsel, wodurch dem Benutzer die aktuell eingestellte Slave-ID der Box visualisiert wird. Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
+	Während des Bootvorgangs leuchten bei den Zündboxen die orange und gelbe LED im Wechsel, wodurch dem Benutzer die aktuell eingestellte Slave-ID der Box visualisiert wird. Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
 
 	Bei einem Zündvorgang leuchten für die Dauer der Zündung (\unit[11]{ms}) alle vier LEDs.
 
@@ -418,11 +418,11 @@
 	\subsection{Funkmodul-Zugriff}
 	\label{sec:rfmzugriff}
 
-	Die zwingend für den Betrieb von {\anlage} notwendigen Zugriffe auf das Funkmodul werden von der Software automatisch getätigt, so dass diese Funktion in der Regel nicht gebraucht wird. Dennoch ist es möglich das verwendete Funkmodul \texttt{RFM69CW\footnote{Link zum Datenblatt auf Seite~\pageref{sec:datasheets}}} unmittelbar über das Terminalprogramm anzusprechen, um Werte aus den Registern zu lesen oder die Register für die aktuelle Sitzung neu zu beschreiben. Beim nächsten Neustart des Devices werden stets die Standardeinstellungen wiederhergestellt.
+	Die zwingend für den Betrieb von {\anlage} notwendigen Zugriffe auf das Funkmodul werden von der Software automatisch getätigt, so dass diese Funktion in der Regel nicht gebraucht wird. Dennoch ist es möglich das verwendete Funkmodul \texttt{RFM69CW\footnote{Link zum Datenblatt auf Seite~\pageref{sec:datasheets}}} unmittelbar über das Terminalprogramm anzusprechen, um Werte aus den Registern zu lesen oder die Register für die aktuelle Sitzung neu zu beschreiben. Beim nächsten Neustart des Devices werden stets die Standardeinstellungen wiederhergestellt, lediglich die Sendeleistung kann dauerhaft gespeichert werden.
 
 	Nach Eingabe von \enquote{rfm} und Bestätigung mit \emph{ENTER} erscheint eine Aufforderung zur Befehls\-eingabe. Diese hat im Hexadezimalformat als 16-Bit-Wert zu erfolgen, d.\,h. vierstellig mit den zulässigen Zeichen 0-9 und A-F bzw. a-f. Jedes eingegebene Zeichen symbolisiert dabei vier Bits, die Umrechnung ist in Tabelle~\ref{tab:zahlensysteme} gezeigt.
 
-	\begin{table}[t]
+	\begin{table}
 		\begin{center}
 			\begin{tabularx}{.8\textwidth}{X*{16}c}
 				\hline\hline
@@ -443,7 +443,7 @@
 
 	Es ist zu erkennen, dass das erste einzugebende Zeichen sowohl das Schreiben/Lesen-Bit enthält als auch die obersten drei Bit der Registeradresse. Die acht Datenbits sind lediglich für einen Schreibbefehl relevant, bei einem Lesezugriff kann als drittes und viertes Zeichen ohne Konsequenzen ein beliebiger Hexadezimalwert im Bereich von 0x00 bis 0xFF übertragen werden.
 
-	\begin{table}[hb]
+	\begin{table}
 		\begin{center}
 			\begin{tabularx}{.95\textwidth}{Xc|*{7}c|*{8}c}
 				\hline\hline
@@ -480,9 +480,11 @@
 
 	Will man die Sendeleistung nun auf $\unit[6]{dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\unit[6]{dBm}$ einzuschreiben, gibt man im Terminalprogramm -- wie in Abbildung~\ref{fig:rfmwrite} gezeigt -- \enquote{rfm} gefolgt von \enquote{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
 
-	Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers wie im Abschnitt~\ref{subsec:readpower} sollte dann den eben eingeschriebenen Wert 0x98 zurückgeben.
+	Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Anschließend erfolgt eine Nachfrage, ob die Sendeleistung dauerhaft gespeichert werden soll. Verneint man dies, wird beim nächsten Neustart des Device der Standardwert wiederhergestellt, andernfalls ist der gerade eingestellte Wert der neue Standardwert.
 
-	\begin{figure}[b]
+	Ein nochmaliges Auslesen des Registers, wie im Abschnitt~\ref{subsec:readpower} beschrieben, sollte nun den eben eingeschriebenen Wert 0x98 zurückgeben.
+
+	\begin{figure}
 		\centering
 		\includegraphics[width=.8\textwidth]{Bilder/rfmbefehl2}
 		\caption{Setzen der Sendeleistung mit anschließendem Auslesen}
@@ -519,7 +521,7 @@
 		\label{fig:gui-senden}
 	\end{figure}
 
-	Nach Herstellung der Verbindung sind auch die sonstigen Schaltflächen aktiv, Abbildung~\ref{fig:gui-senden} zeigt den Reiter \enquote{Senden} im aktiven Zustand. Hier kann per Klick eine Identifizierungsaufforderung verschickt, eine Temperaturmessung getriggert, ein Zündvorgang ausgelöst oder ein Befehl ans Funkmodul geschickt werden. Bei \enquote{Zünden} und \enquote{Funkmodul} ist darauf zu achten, dass beim Klick auf die Schaltfläche unmittelbar die aktuell in den Eingabefeldern stehenden Werte übertragen werden, man diese also vor dem Klicken anpassen muss. Bei Temperaturanfrage und Funkmodulzugriff wird im entsprechenden Anzeigefeld die Antwort des angeschlossenen Devices -- also die Temperatur in Grad Celsius oder die Antwort des Funkmoduls auf den aktuellen Registerzugriff als 8-bit-Hexadezimalwert -- ausgegeben.
+	Nach Herstellung der Verbindung sind auch die sonstigen Schaltflächen aktiv, Abbildung~\ref{fig:gui-senden} zeigt den Reiter \enquote{Senden} im aktiven Zustand. Hier kann per Klick eine Identifizierungsaufforderung verschickt, eine Temperaturmessung getriggert, ein Zündvorgang ausgelöst oder ein Befehl ans Funkmodul geschickt werden. Bei \enquote{Zünden} und \enquote{Funkmodul} ist darauf zu achten, dass beim Klick auf die Schaltfläche unmittelbar die aktuell in den Eingabefeldern stehenden Werte übertragen werden, man diese also vor dem Klicken anpassen muss. Bei Temperaturanfrage und Funkmodulzugriff wird im entsprechenden Anzeigefeld die Antwort des angeschlossenen Devices -- also die Temperatur in Grad Celsius oder die Antwort des Funkmoduls auf den aktuellen Registerzugriff als 8-bit-Hexadezimalwert -- ausgegeben. Das permanente Ändern der Sendeleistung ist in der GUI noch nicht implementiert.
 
 	Der Reiter \enquote{Netzwerk} (Abbildung~\ref{fig:gui-netzwerk}) dient einzig und allein der Darstellung der aktuell im System befindlichen Zündboxen mit ihren Parametern Unique-ID, Slave-ID, Batteriespannung, Scharf\-schaltungs-Status, Temperatur und gemessenem RSSI-Wert beim Empfang der Parameter.
 
@@ -1298,6 +1300,21 @@
 	\end{enumerate}
 
 	Der gesamte Ablauf kann transparent in der Datei \enquote{build\_hexfiles.bat} im Verzeichnis \enquote{Hexfiles} nachvollzogen werden.
+
+	\section{Umrechnung zwischen Watt und dBm}
+	Die Umrechnung zwischen den Einheiten Watt (linear) und dBm (logarithmisch) erfolgt nach folgenden Formeln:
+
+	\begin{center}
+		\begin{tabularx}{.6\textwidth}{c@{ $\rightarrow$ }c@{ :\hspace*{1cm}}c@{ = }X}
+			$\unit{dBm}$ & $\unit{W}$   & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                    \\[12pt]
+			$\unit{W}$   & $\unit{dBm}$ & $P_\text{dBm}$ & $10 {\cdot} \log_{10}\left( \frac{1000 {\cdot} P_\text{W}}{\unit[1]{W}} \right)$ \\
+		\end{tabularx}
+	\end{center}
+
+	Anhand der Formeln wird klar, dass die maximale Sendeleistung des \texttt{RFM69CW} 1250-mal höher als die Minimalleistung liegt: $\unit[-18]{dBm}$ entsprechen $\unit[16]{{\upmu}W}$, $\unit[13]{dBm}$ hingegen $\unit[20]{mW}$.
+
+	Addition und Subtraktion in der logarithmischen Einheit sind gleichbedeutend mit Multiplikation bzw. Division in der linearen. Erhöht (verringert) sich die Leistung um $\unit[3]{dB}$, verdoppelt (halbiert) sie sich im linearen Maßstab. Addition bzw. Subtraktion um $\unit[10]{dB}$ bedeuten eine Multiplikation mit bzw. Division durch 10.
+
 	\bookmarksetup{startatroot}
 	\addtocontents{toc}{\bigskip}
 	\listoffigures
@@ -1312,7 +1329,7 @@
 	\begin{itemize}
 		\item Marc Weissmann, der mit seinem Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE -- Feuerwerk im Röthelheimpark Erlangen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an immer voll vertraut hat. Sein mit {\anlage} gezündetes Silvesterfeuerwerk 2014/15 ist \underline{\href{https://vimeo.com/116115628}{hier}} zu sehen.
 		\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
-		\item Die \enquote{Nachbau-Pioniere} Matthias und Cedrik für Ideen, Vorschläge und wertvolle Hinweise.
+		\item Die \enquote{Nachbau-Pioniere} Matthias Pee und Cedrik Sikora für Ideen und wertvolle Hinweise.
 		\item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung.
 		\item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Erklärungen zum Thema elektrische Zündung und natürlich die Zündsoftware {\pic} von User \emph{pyrobla}.
 		\item \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat.
