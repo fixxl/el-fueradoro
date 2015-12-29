@@ -108,7 +108,7 @@ void create_symbols(void) {
 	lcd_cgwrite(10);
 	lcd_cgwrite(4);
 
-	// Symbol "°"
+	// Symbol "Â°"
 	lcd_cgwrite(2);
 	lcd_cgwrite(5);
 	lcd_cgwrite(2);
@@ -143,7 +143,7 @@ uint16_t rfmtalk(void) {
 	error = 0;
 
 	#if (RFM == 69)
-		uart_puts("\n\rKommando (16-Bit-Hex-Format, MSB zu 1 setzen für Schreibzugriff): 0x");
+		uart_puts("\n\rKommando (16-Bit-Hex-Format, MSB zu 1 setzen fÃ¼r Schreibzugriff): 0x");
 	#else
 		uart_puts("\n\rKommando (16-Bit-Hex-Format): 0x");
 	#endif
@@ -363,7 +363,7 @@ int main(void) {
 		}
 	}
 
-	led_green_on();
+	led_yellow_on();
 
 	// Initialise arrays and show slave-id by blinking!
 	for (uint8_t warten = 0; warten < MAX_ARRAYSIZE; warten++) {
@@ -661,7 +661,7 @@ int main(void) {
 			flags.b.hw = 0;
 
 			uart_puts_P(PSTR("\n\r"));
-			uart_puts(ig_or_notrans ? "Zündbox" : "Transmitter");
+			uart_puts(ig_or_notrans ? "ZÃ¼ndbox" : "Transmitter");
 			uart_puts_P(PSTR("\n\r"));
 			uart_puts_P(PSTR(STRINGIZE_VALUE_OF(MCU)));
 			uart_puts_P(PSTR("\n\rRFM"));
@@ -786,7 +786,7 @@ int main(void) {
 								  tx_field[round] = nr;
 							  }
 							  else {        // Otherwise the input's invalid
-								  uart_puts_P(PSTR("Ungültige Eingabe"));
+								  uart_puts_P(PSTR("UngÃ¼ltige Eingabe"));
 								  tmp   = 0; // Sending gets disallowed
 								  round = 3;
 							  }
@@ -811,7 +811,7 @@ int main(void) {
 							  uart_puts_P(PSTR("n.a."));
 						  else {
 							  fixedspace(temperature, 'd', 4);
-							  uart_puts_P(PSTR("°C"));
+							  uart_puts_P(PSTR("Â°C"));
 						  }
 
 						  // Request other devices to refresh temperature as well
