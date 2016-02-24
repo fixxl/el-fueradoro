@@ -811,7 +811,7 @@ int main(void) {
 							  uart_puts_P(PSTR("n.a."));
 						  else {
 							  fixedspace(temperature, 'd', 4);
-							  uart_puts_P(PSTR("Â°C"));
+							  uart_puts_P(PSTR("°C"));
 						  }
 
 						  // Request other devices to refresh temperature as well
