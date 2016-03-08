@@ -177,7 +177,7 @@
 		if (!rfm_cmd(0x6FFF, 0)) {
 			rfm_cmd(0x2301, 1);
 
-			while (!(rfm_cmd(0x23FF, 0) & (1 << 1)) && --utimer) ;
+			while (--utimer && !(rfm_cmd(0x23FF, 0) & (1 << 1))) ;
 		}
 
 		return rfm_cmd(0x24FF, 0) >> 1;
@@ -283,7 +283,7 @@
 		rfm_cmd(0x0A80, 1); // Start RC-Oscillator
 		utimer = RFM69_TIMEOUTVAL;
 
-		while (!(rfm_cmd(0x0A00, 0) & (1 << 6)) && --utimer) ; // Wait for RC-Oscillator
+		while (--utimer && !(rfm_cmd(0x0A00, 0) & (1 << 6))) ; // Wait for RC-Oscillator
 
 		rfm_rxon();
 	}
@@ -292,6 +292,7 @@
 	uint8_t rfm_transmit(char *data, uint8_t length) {
 		uint32_t utimer = RFM69_TIMEOUTVAL;
 		char     fifoarray[MAX_ARRAYSIZE + 1];
+
 		// Turn off receiver, switch to Standby
 		rfm_rxoff();
 		// Clear FIFO
@@ -307,15 +308,16 @@
 			fifoarray[1 + i] = data[i];
 		}
 
-		fifoarray[length + 1] = '\0';           // Terminate string
+		fifoarray[length + 1] = '\0';         // Terminate string
 		// Write data to FIFO
 		rfm_fifo_wnr(fifoarray, 1);
 		// Turn on transmitter (Transmitting starts automatically if FIFO not empty)
 		rfm_txon();
-		// Wait for Package Sent
-		utimer = RFM69_TIMEOUTVAL;
 
-		while (!(rfm_cmd(0x28FF, 0) & (1 << 3)) && --utimer) ;
+		// Wait for Package Sent
+		utimer = 96000;
+
+		while (--utimer && ((rfm_cmd(0x2800, 0) & 0x09) != 0x08)) ; // Check for package sent and module plugged in
 
 		rfm_txoff();
 		return utimer ? 0 : 1; // 0 : successful, 1 : error
@@ -338,10 +340,10 @@
 		if (length_local > MAX_ARRAYSIZE - 1) length_local = MAX_ARRAYSIZE - 1;  // Limit length
 
 		for (uint8_t i = 0; i < length_local; i++) {
-			data[i] = fifoarray[i + 1];    // Data bytes
+			data[i] = fifoarray[i + 1]; // Data bytes
 		}
 
-		data[length_local] = '\0';            // Terminate string
+		data[length_local] = '\0';          // Terminate string
 
 		// Clear FIFO after readout (not necessary, FIFO is cleared anyway when switching from STANDBY to RX)
 		rfm_fifo_clear();
