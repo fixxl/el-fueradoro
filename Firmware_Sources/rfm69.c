@@ -177,7 +177,7 @@
 		if (!rfm_cmd(0x6FFF, 0)) {
 			rfm_cmd(0x2301, 1);
 
-			while (!(rfm_cmd(0x23FF, 0) & (1 << 1)) && --utimer) ;
+			while (--utimer && !(rfm_cmd(0x23FF, 0) & (1 << 1))) ;
 		}
 
 		return rfm_cmd(0x24FF, 0) >> 1;
@@ -283,7 +283,7 @@
 		rfm_cmd(0x0A80, 1); // Start RC-Oscillator
 		utimer = RFM69_TIMEOUTVAL;
 
-		while (!(rfm_cmd(0x0A00, 0) & (1 << 6)) && --utimer) ; // Wait for RC-Oscillator
+		while (--utimer && !(rfm_cmd(0x0A00, 0) & (1 << 6))) ; // Wait for RC-Oscillator
 
 		rfm_rxon();
 	}
@@ -315,7 +315,7 @@
 		// Wait for Package Sent
 		utimer = RFM69_TIMEOUTVAL;
 
-		while (!(rfm_cmd(0x28FF, 0) & (1 << 3)) && --utimer) ;
+		while (--utimer && !(rfm_cmd(0x28FF, 0) & (1 << 3))) ;
 
 		rfm_txoff();
 		return utimer ? 0 : 1; // 0 : successful, 1 : error
