@@ -190,7 +190,7 @@ int8_t tempmeas(uint8_t type) {
 
 		utimer = F_CPU / 128;
 
-		while (!w1_bit_io(1) && --utimer) ;
+		while (--utimer && !w1_bit_io(1)) ;
 
 		w1_command(READ, NULL);
 		temp_hex    = w1_byte_rd();

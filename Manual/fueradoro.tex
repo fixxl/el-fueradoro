@@ -576,9 +576,9 @@
 
 	\section{Aktualisierung}
 
-	{\anlage} bietet die Möglichkeit, die Firmware via serielle Schnittstelle vom PC aus zu aktualisieren. Hierfür gibt es das Programm \emph{fwupdate.exe}, welches zunächst einen Reset auslöst, um den Bootloader des Devices zu aktivieren und anschließend die im iHex-Format vorliegende Firmware überträgt.
+	{\anlage} bietet die Möglichkeit, die Firmware via serielle Schnittstelle vom PC aus zu aktualisieren. Hierfür stehen das Kommandozeilentool \emph{fwupdate.exe} oder eine Windows-Oberfläche namens \texttt{UpdateLoader}, welche beide zunächst einen Reset auslösen, um den Bootloader des Devices zu aktivieren, und anschließend die im iHex-Format vorliegende Firmware überträgen.
 
-	\emph{fwupdate.exe} muss über die Kommandozeile mit zwei Parametern gestartet werden, nämlich der Angabe der seriellen Schnittstelle und dem Namen der zu übertragenden Firmware-Datei. Da zu Beginn der Entwicklung von {\anlage} auch noch Vorgänger des \emph{ATmega328P} und des Funkmoduls \emph{RFM69CW} verwendet wurden, existieren auch hierfür noch Firmwareversionen, zusätzlich gibt es auch noch eine \enquote{High Power}-Firmware, welche die Sendeleistung des Funkmoduls standardmäßig auf den Maximalwert setzt, so dass sich insgesamt fünf verschiedene Firmwaredateien gemäß Tabelle~\ref{tab:firmwareversions} im gleichen Ordner wie \emph{fwupdate.exe} befinden sollten.
+	 Da zu Beginn der Entwicklung von {\anlage} auch noch Vorgänger des \emph{ATmega328P} und des Funkmoduls \emph{RFM69CW} verwendet wurden, existieren auch hierfür noch Firmwareversionen, zusätzlich gibt es auch noch eine \enquote{High Power}-Firmware, welche die Sendeleistung des Funkmoduls standardmäßig auf den Maximalwert setzt, so dass sich insgesamt fünf verschiedene Firmwaredateien gemäß Tabelle~\ref{tab:firmwareversions} im gleichen Ordner wie \emph{fwupdate.exe} und \emph{UpdateLoader.exe} befinden.
 
 	\begin{table}
 		\centering
@@ -595,7 +595,9 @@
 		\label{tab:firmwareversions}
 	\end{table}
 
-	Um nun die neue Firmware zu übertragen, lautet das Kommando für ein Device am \emph{COM4} mit dem \emph{ATmega328P} und dem Funkmodul \emph{RFM69CW}:
+	\subsection{Kommandozeile}
+
+	\emph{fwupdate.exe} muss über die Kommandozeile mit zwei Parametern gestartet werden, nämlich der Angabe der seriellen Schnittstelle und dem Namen der zu übertragenden Firmware-Datei. Um nun die neue Firmware zu übertragen, lautet das Kommando für ein Device am \emph{COM4} mit dem \emph{ATmega328P} und dem Funkmodul \emph{RFM69CW}:
 
 	\begin{center}
 		\emph{fwupdate.exe /c4 /fm:Pyro\_atmega328p\_RFM69.hex}
@@ -616,6 +618,17 @@
 	\end{center}
 
 	Der Updater führt nach Übertragung der Daten einen CRC-Check durch. Sollte dieser fehlschlagen, wurde die Firmware nicht korrekt übertragen. Dies kann zufällig passieren oder auf ein Hardwareproblem, welches in der Regel beim USB-RS232-Adapter liegt, zurückzuführen sein. Für den Fall eines CRC-Fehlers sollte die Firmware erneut übertragen werden. Bleibt das Update beim Punkt \enquote{COMx at 9600 baud:} stehen, sollte die Stromversorgung des Device kurz unterbrochen und wieder aktiviert werden. Das Kabel für die serielle Verbindung bleibt währenddessen mit Device und PC verbunden.
+
+	\subsection{Windows-Oberfläche}
+	
+	Dank der Arbeit von Leo-Andres Hofmann\footnote{Seine Homepage findet sich unter: \url{https://luani.de}} existiert die in Abbildung~\ref{fig:updateloader} dargestellte Windows-Oberfläche zur einfachen Übertragung der Firmware via serielle Schnittstelle, der \texttt{UpdateLoader}. Hier kann man aus der Liste der verfügbaren COM-Ports den entsprechenden wählen sowie die zu übertragende Datei einstellen und die Dateiübertragung per Klick auf \enquote{Update starten} durchführen.
+	
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[width = .66\textwidth]{Bilder/updateloader.png}
+		\caption{Benutzeroberfläche \texttt{UpdateLoader}}
+		\label{fig:updateloader}
+	\end{figure}
 
 	\part{Dokumentation}
 	\label{part:dokumentation}
@@ -1339,6 +1352,7 @@
 		      	\item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers.
 		      	\item Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}, Kees Bakker und Thomas Holland für die Erweiterung \texttt{AVREclipse} sowie Ben Gardner für \texttt{Uncrustify} und die damit verbundene Übersichtlichkeit des Quellcodes.
 		      	\item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}.
+		      	\item Leo-Andres Hofmann für die schöne Windows-Oberfläche \texttt{UpdateLoader}.
 		      	\item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{Git} und \texttt{GitHub}.
 		      	\item {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs.
 		      \end{itemize}
