@@ -314,8 +314,8 @@
 		// Turn on transmitter (Transmitting starts automatically if FIFO not empty)
 		rfm_txon();
 
-		// Wait for Package Sent
-		utimer = 96000;
+		// Wait for Package Sent (150 Byte-Times)
+		utimer = ((75*F_CPU + BR * 8) / (16*BR));
 
 		while (--utimer && ((rfm_cmd(0x2800, 0) & 0x09) != 0x08)) ; // Check for package sent and module plugged in
 
