@@ -14925,10 +14925,10 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="P+12" library="supply1" deviceset="+3V3" device=""/>
 <part name="SV2" library="fp" deviceset="ML10" device=""/>
 <part name="X1" library="fp" deviceset="F09HPS" device=""/>
-<part name="USB+" library="solpad" deviceset="LSP10" device=""/>
-<part name="USB-" library="solpad" deviceset="LSP10" device=""/>
-<part name="USB+1" library="solpad" deviceset="LSP10" device=""/>
-<part name="USB+2" library="solpad" deviceset="LSP10" device=""/>
+<part name="+5V" library="solpad" deviceset="LSP10" device=""/>
+<part name="GND" library="solpad" deviceset="LSP10" device=""/>
+<part name="D+" library="solpad" deviceset="LSP10" device=""/>
+<part name="D-" library="solpad" deviceset="LSP10" device=""/>
 <part name="GND15" library="supply1" deviceset="GND" device=""/>
 <part name="IC3" library="linear" deviceset="78*" device="TV" technology="6" value="LM3940IT-3.3"/>
 <part name="C10" library="rcl" deviceset="C-EU" device="025-024X044" value="100n"/>
@@ -15058,10 +15058,10 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <instance part="X1" gate="-5" x="256.54" y="99.06"/>
 <instance part="X1" gate="-7" x="256.54" y="101.6"/>
 <instance part="X1" gate="-8" x="256.54" y="106.68"/>
-<instance part="USB+" gate="1" x="5.08" y="132.08" rot="R90"/>
-<instance part="USB-" gate="1" x="5.08" y="124.46" rot="R90"/>
-<instance part="USB+1" gate="1" x="5.08" y="139.7" rot="R90"/>
-<instance part="USB+2" gate="1" x="7.62" y="142.24" rot="R90"/>
+<instance part="+5V" gate="1" x="5.08" y="132.08" rot="R90"/>
+<instance part="GND" gate="1" x="5.08" y="124.46" rot="R90"/>
+<instance part="D+" gate="1" x="5.08" y="139.7" rot="R90"/>
+<instance part="D-" gate="1" x="7.62" y="142.24" rot="R90"/>
 <instance part="GND15" gate="1" x="220.98" y="139.7"/>
 <instance part="IC3" gate="A1" x="35.56" y="132.08"/>
 <instance part="C10" gate="G$1" x="17.78" y="129.54"/>
@@ -15231,8 +15231,8 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <segment>
 <pinref part="C11" gate="G$1" pin="-"/>
 <pinref part="GND17" gate="1" pin="GND"/>
-<pinref part="USB-" gate="1" pin="MP"/>
-<pinref part="USB-" gate="1" pin="MP"/>
+<pinref part="GND" gate="1" pin="MP"/>
+<pinref part="GND" gate="1" pin="MP"/>
 <junction x="7.62" y="124.46"/>
 </segment>
 <segment>
@@ -15630,7 +15630,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <pinref part="IC3" gate="A1" pin="VI"/>
 <wire x1="17.78" y1="132.08" x2="25.4" y2="132.08" width="0.1524" layer="91"/>
 <junction x="17.78" y="132.08"/>
-<pinref part="USB+" gate="1" pin="MP"/>
+<pinref part="+5V" gate="1" pin="MP"/>
 <junction x="7.62" y="132.08"/>
 </segment>
 </net>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.3">
+<eagle version="6.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="1.27" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="25" altunitdist="mil" altunit="mil"/>
+<grid distance="1.27" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="12.5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -373,58 +373,84 @@ design rules under a new name.</description>
 </pass>
 </autorouter>
 <elements>
-<element name="U$1" library="fp" package="RFM12_Z" value="RFM12_Z" x="15.24" y="12.7" rot="R270"/>
-<element name="CLK" library="solpad" package="SE13" value="SE13" x="2.54" y="10.16" rot="R270"/>
-<element name="DCLK" library="solpad" package="SE13" value="SE13" x="2.54" y="12.7" rot="R270"/>
-<element name="FSK" library="solpad" package="SE13" value="SE13" x="2.54" y="15.24" rot="R270"/>
-<element name="SDI" library="solpad" package="SE13" value="SE13" x="27.94" y="15.24" rot="R270"/>
-<element name="SDO" library="solpad" package="SE13" value="SE13" x="2.54" y="20.32" rot="R270"/>
-<element name="SCK" library="solpad" package="SE13" value="SE13" x="27.94" y="17.78" rot="R270"/>
-<element name="NSEL" library="solpad" package="SE13" value="SE13" x="27.94" y="20.32" rot="R270"/>
-<element name="GND" library="solpad" package="SE13" value="SE13" x="2.54" y="5.08" rot="R270"/>
-<element name="GND1" library="solpad" package="SE13" value="SE13" x="27.94" y="10.16" rot="R270"/>
-<element name="NRES" library="solpad" package="SE13" value="SE13" x="2.54" y="7.62" rot="R270"/>
-<element name="NIRQ" library="solpad" package="SE13" value="SE13" x="2.54" y="17.78" rot="R270"/>
-<element name="NINT" library="solpad" package="SE13" value="SE13" x="27.94" y="12.7" rot="R270"/>
-<element name="VDD" library="solpad" package="SE13" value="SE13" x="27.94" y="7.62" rot="R270"/>
-<element name="ANT+" library="testpad" package="TP20SQ" value="PTR1TP20SQ" x="22.885" y="2.54">
-<attribute name="TP_SIGNAL_NAME" value="" x="22.885" y="2.54" size="1.778" layer="27" display="off"/>
+<element name="U$1" library="fp" package="RFM12_Z" value="RFM12_Z" x="15.24" y="12.7" smashed="yes" rot="R270"/>
+<element name="IO5" library="solpad" package="SE13" value="SE13" x="2.54" y="10.16" smashed="yes" rot="R270">
+<attribute name="NAME" x="4.191" y="11.43" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
 </element>
-<element name="ANT_GND" library="testpad" package="TP20SQ" value="PTR1TP20SQ" x="18.635" y="2.54">
-<attribute name="TP_SIGNAL_NAME" value="" x="18.635" y="2.54" size="1.778" layer="27" display="off"/>
+<element name="IO1" library="solpad" package="SE13" value="SE13" x="2.54" y="12.7" smashed="yes" rot="R270">
+<attribute name="NAME" x="4.191" y="13.97" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
 </element>
-<element name="ANT_GND2" library="testpad" package="TP20SQ" value="PTR1TP20SQ" x="27.135" y="2.54">
-<attribute name="TP_SIGNAL_NAME" value="" x="27.135" y="2.54" size="1.778" layer="27" display="off"/>
+<element name="IO2" library="solpad" package="SE13" value="SE13" x="2.54" y="15.24" smashed="yes" rot="R270">
+<attribute name="NAME" x="4.191" y="16.51" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="MOSI" library="solpad" package="SE13" value="SE13" x="27.94" y="15.24" smashed="yes" rot="R270">
+<attribute name="NAME" x="29.591" y="16.51" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="MISO" library="solpad" package="SE13" value="SE13" x="2.54" y="20.32" smashed="yes" rot="R270">
+<attribute name="NAME" x="4.191" y="21.9075" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="SCK" library="solpad" package="SE13" value="SE13" x="27.94" y="17.78" smashed="yes" rot="R270">
+<attribute name="NAME" x="29.591" y="19.05" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="NSS" library="solpad" package="SE13" value="SE13" x="27.94" y="20.32" smashed="yes" rot="R270">
+<attribute name="NAME" x="29.591" y="21.59" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="GND" library="solpad" package="SE13" value="SE13" x="2.54" y="5.08" smashed="yes" rot="R270">
+<attribute name="NAME" x="5.0165" y="3.81" size="0.8" layer="25" font="vector" ratio="20" rot="R90"/>
+</element>
+<element name="AGND" library="solpad" package="SE13" value="SE13" x="27.94" y="10.16" smashed="yes" rot="R270">
+<attribute name="NAME" x="29.591" y="11.7475" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="RES" library="solpad" package="SE13" value="SE13" x="2.54" y="7.62" smashed="yes" rot="R270">
+<attribute name="NAME" x="4.191" y="8.89" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="IO0" library="solpad" package="SE13" value="SE13" x="2.54" y="17.78" smashed="yes" rot="R270">
+<attribute name="NAME" x="4.191" y="19.05" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="IO3" library="solpad" package="SE13" value="SE13" x="27.94" y="12.7" smashed="yes" rot="R270">
+<attribute name="NAME" x="29.591" y="13.6525" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="VDD" library="solpad" package="SE13" value="SE13" x="27.94" y="7.62" smashed="yes" rot="R270">
+<attribute name="NAME" x="29.591" y="8.5725" size="0.8" layer="25" font="vector" ratio="20" rot="R270"/>
+</element>
+<element name="ANT+" library="testpad" package="TP20SQ" value="PTR1TP20SQ" x="22.885" y="2.54" smashed="yes">
+<attribute name="TP_SIGNAL_NAME" value="" x="22.885" y="0" size="1" layer="37"/>
+</element>
+<element name="ANT_GND" library="testpad" package="TP20SQ" value="PTR1TP20SQ" x="18.635" y="2.54" smashed="yes">
+<attribute name="TP_SIGNAL_NAME" value="" x="18.635" y="0" size="1" layer="37"/>
+</element>
+<element name="ANT_GND2" library="testpad" package="TP20SQ" value="PTR1TP20SQ" x="27.135" y="2.54" smashed="yes">
+<attribute name="TP_SIGNAL_NAME" value="" x="27.135" y="0" size="1" layer="37"/>
 </element>
 </elements>
 <signals>
 <signal name="N$1">
 <contactref element="U$1" pad="CLK"/>
-<contactref element="CLK" pad="MP"/>
+<contactref element="IO5" pad="MP"/>
 <wire x1="2.54" y1="10.16" x2="3.08" y2="10.7" width="0.8128" layer="1"/>
 <wire x1="3.08" y1="10.7" x2="7.24" y2="10.7" width="0.8128" layer="1"/>
 </signal>
 <signal name="N$2">
 <contactref element="U$1" pad="DCLK"/>
-<contactref element="DCLK" pad="MP"/>
+<contactref element="IO1" pad="MP"/>
 <wire x1="2.54" y1="12.7" x2="7.24" y2="12.7" width="0.8128" layer="1"/>
 </signal>
 <signal name="N$3">
 <contactref element="U$1" pad="FSK"/>
-<contactref element="FSK" pad="MP"/>
+<contactref element="IO2" pad="MP"/>
 <wire x1="2.54" y1="15.24" x2="3.08" y2="14.7" width="0.8128" layer="1"/>
 <wire x1="3.08" y1="14.7" x2="7.24" y2="14.7" width="0.8128" layer="1"/>
 </signal>
 <signal name="N$4">
 <contactref element="U$1" pad="SDI"/>
-<contactref element="SDI" pad="MP"/>
+<contactref element="MOSI" pad="MP"/>
 <wire x1="27.94" y1="15.24" x2="27.4" y2="14.7" width="0.8128" layer="1"/>
 <wire x1="27.4" y1="14.7" x2="23.240003125" y2="14.7" width="0.8128" layer="1"/>
 <wire x1="23.240003125" y1="14.7" x2="23.24" y2="14.7" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$5">
 <contactref element="U$1" pad="SDO"/>
-<contactref element="SDO" pad="MP"/>
+<contactref element="MISO" pad="MP"/>
 <wire x1="2.54" y1="20.32" x2="5.62" y2="20.32" width="0.8128" layer="1"/>
 <wire x1="5.62" y1="20.32" x2="7.239996875" y2="18.700003125" width="0.8128" layer="1"/>
 <wire x1="7.239996875" y1="18.700003125" x2="7.24" y2="18.7" width="0" layer="19" extent="1-1"/>
@@ -439,7 +465,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="N$7">
 <contactref element="U$1" pad="NSEL"/>
-<contactref element="NSEL" pad="MP"/>
+<contactref element="NSS" pad="MP"/>
 <wire x1="27.94" y1="20.32" x2="24.86" y2="20.32" width="0.8128" layer="1"/>
 <wire x1="24.86" y1="20.32" x2="23.24" y2="18.7" width="0.8128" layer="1"/>
 </signal>
@@ -452,7 +478,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="N$11">
 <contactref element="U$1" pad="NRES"/>
-<contactref element="NRES" pad="MP"/>
+<contactref element="RES" pad="MP"/>
 <wire x1="2.54" y1="7.62" x2="4.159996875" y2="7.62" width="0.8128" layer="1"/>
 <wire x1="4.159996875" y1="7.62" x2="5.23999375" y2="8.699996875" width="0.8128" layer="1"/>
 <wire x1="5.23999375" y1="8.699996875" x2="7.239996875" y2="8.699996875" width="0.8128" layer="1"/>
@@ -460,7 +486,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="N$12">
 <contactref element="U$1" pad="NIRQ"/>
-<contactref element="NIRQ" pad="MP"/>
+<contactref element="IO0" pad="MP"/>
 <wire x1="2.54" y1="17.78" x2="4.159996875" y2="17.78" width="0.8128" layer="1"/>
 <wire x1="4.159996875" y1="17.78" x2="5.23999375" y2="16.700003125" width="0.8128" layer="1"/>
 <wire x1="5.23999375" y1="16.700003125" x2="7.239996875" y2="16.700003125" width="0.8128" layer="1"/>
@@ -468,7 +494,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="N$13">
 <contactref element="U$1" pad="NINT"/>
-<contactref element="NINT" pad="MP"/>
+<contactref element="IO3" pad="MP"/>
 <wire x1="27.94" y1="12.7" x2="23.24" y2="12.7" width="0.8128" layer="1"/>
 </signal>
 <signal name="VDD">
@@ -499,7 +525,7 @@ design rules under a new name.</description>
 <wire x1="2.54" y1="5.08" x2="5.62" y2="5.08" width="0.8128" layer="1"/>
 <wire x1="5.62" y1="5.08" x2="7.24" y2="6.7" width="0.8128" layer="1"/>
 <contactref element="U$1" pad="GND1"/>
-<contactref element="GND1" pad="MP"/>
+<contactref element="AGND" pad="MP"/>
 <wire x1="27.94" y1="10.16" x2="27.4" y2="10.7" width="0.8128" layer="1"/>
 <wire x1="27.4" y1="10.7" x2="23.24" y2="10.7" width="0.8128" layer="1"/>
 <contactref element="ANT_GND2" pad="TP"/>

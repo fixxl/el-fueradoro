@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.3">
+<eagle version="6.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -985,18 +985,18 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 </classes>
 <parts>
 <part name="U$1" library="fp" deviceset="RFM12_Z" device=""/>
-<part name="CLK" library="solpad" deviceset="SE13" device=""/>
-<part name="DCLK" library="solpad" deviceset="SE13" device=""/>
-<part name="FSK" library="solpad" deviceset="SE13" device=""/>
-<part name="SDI" library="solpad" deviceset="SE13" device=""/>
-<part name="SDO" library="solpad" deviceset="SE13" device=""/>
+<part name="IO5" library="solpad" deviceset="SE13" device=""/>
+<part name="IO1" library="solpad" deviceset="SE13" device=""/>
+<part name="IO2" library="solpad" deviceset="SE13" device=""/>
+<part name="MOSI" library="solpad" deviceset="SE13" device=""/>
+<part name="MISO" library="solpad" deviceset="SE13" device=""/>
 <part name="SCK" library="solpad" deviceset="SE13" device=""/>
-<part name="NSEL" library="solpad" deviceset="SE13" device=""/>
+<part name="NSS" library="solpad" deviceset="SE13" device=""/>
 <part name="GND" library="solpad" deviceset="SE13" device=""/>
-<part name="GND1" library="solpad" deviceset="SE13" device=""/>
-<part name="NRES" library="solpad" deviceset="SE13" device=""/>
-<part name="NIRQ" library="solpad" deviceset="SE13" device=""/>
-<part name="NINT" library="solpad" deviceset="SE13" device=""/>
+<part name="AGND" library="solpad" deviceset="SE13" device=""/>
+<part name="RES" library="solpad" deviceset="SE13" device=""/>
+<part name="IO0" library="solpad" deviceset="SE13" device=""/>
+<part name="IO3" library="solpad" deviceset="SE13" device=""/>
 <part name="VDD" library="solpad" deviceset="SE13" device=""/>
 <part name="ANT+" library="testpad" deviceset="PTR1" device="TP20SQ"/>
 <part name="ANT_GND" library="testpad" deviceset="PTR1" device="TP20SQ"/>
@@ -1012,18 +1012,18 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 </plain>
 <instances>
 <instance part="U$1" gate="G$1" x="71.12" y="48.26"/>
-<instance part="CLK" gate="1" x="48.26" y="43.18" rot="R90"/>
-<instance part="DCLK" gate="1" x="48.26" y="48.26" rot="R90"/>
-<instance part="FSK" gate="1" x="48.26" y="50.8" rot="R90"/>
-<instance part="SDI" gate="1" x="48.26" y="55.88" rot="R90"/>
-<instance part="SDO" gate="1" x="48.26" y="58.42" rot="R90"/>
+<instance part="IO5" gate="1" x="48.26" y="43.18" rot="R90"/>
+<instance part="IO1" gate="1" x="48.26" y="48.26" rot="R90"/>
+<instance part="IO2" gate="1" x="48.26" y="50.8" rot="R90"/>
+<instance part="MOSI" gate="1" x="48.26" y="55.88" rot="R90"/>
+<instance part="MISO" gate="1" x="48.26" y="58.42" rot="R90"/>
 <instance part="SCK" gate="1" x="48.26" y="60.96" rot="R90"/>
-<instance part="NSEL" gate="1" x="48.26" y="66.04" rot="R90"/>
+<instance part="NSS" gate="1" x="48.26" y="66.04" rot="R90"/>
 <instance part="GND" gate="1" x="66.04" y="27.94" rot="R90"/>
-<instance part="GND1" gate="1" x="76.2" y="27.94" rot="R270"/>
-<instance part="NRES" gate="1" x="96.52" y="58.42" rot="R270"/>
-<instance part="NIRQ" gate="1" x="96.52" y="63.5" rot="R270"/>
-<instance part="NINT" gate="1" x="96.52" y="66.04" rot="R270"/>
+<instance part="AGND" gate="1" x="76.2" y="27.94" rot="R270"/>
+<instance part="RES" gate="1" x="96.52" y="58.42" rot="R270"/>
+<instance part="IO0" gate="1" x="96.52" y="63.5" rot="R270"/>
+<instance part="IO3" gate="1" x="96.52" y="66.04" rot="R270"/>
 <instance part="VDD" gate="1" x="71.12" y="76.2"/>
 <instance part="ANT+" gate="G$1" x="93.98" y="40.64"/>
 <instance part="ANT_GND" gate="G$1" x="66.04" y="33.02" rot="R270"/>
@@ -1037,31 +1037,31 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <net name="N$1" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="CLK"/>
-<pinref part="CLK" gate="1" pin="MP"/>
+<pinref part="IO5" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="DCLK/CFIL/FFIT"/>
-<pinref part="DCLK" gate="1" pin="MP"/>
+<pinref part="IO1" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="FSK/DATA/NFFS"/>
-<pinref part="FSK" gate="1" pin="MP"/>
+<pinref part="IO2" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="N$4" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="SDI"/>
-<pinref part="SDI" gate="1" pin="MP"/>
+<pinref part="MOSI" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="N$5" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="SDO"/>
-<pinref part="SDO" gate="1" pin="MP"/>
+<pinref part="MISO" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="N$6" class="0">
@@ -1073,7 +1073,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <net name="N$7" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="NSEL/"/>
-<pinref part="NSEL" gate="1" pin="MP"/>
+<pinref part="NSS" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="ANT" class="0">
@@ -1087,19 +1087,19 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <net name="N$11" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="NRES"/>
-<pinref part="NRES" gate="1" pin="MP"/>
+<pinref part="RES" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="N$12" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="NIRQ"/>
-<pinref part="NIRQ" gate="1" pin="MP"/>
+<pinref part="IO0" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="N$13" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="NINT"/>
-<pinref part="NINT" gate="1" pin="MP"/>
+<pinref part="IO3" gate="1" pin="MP"/>
 </segment>
 </net>
 <net name="VDD" class="0">
@@ -1122,7 +1122,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="GND1"/>
-<pinref part="GND1" gate="1" pin="MP"/>
+<pinref part="AGND" gate="1" pin="MP"/>
 <pinref part="GND3" gate="1" pin="GND"/>
 <wire x1="73.66" y1="25.4" x2="73.66" y2="27.94" width="0.1524" layer="91"/>
 <junction x="73.66" y="27.94"/>
