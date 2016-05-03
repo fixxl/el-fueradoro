@@ -149,18 +149,4 @@ for %%a in (*) do if /I not %%~na==build_hexfiles del /q %%a
 echo Done
 echo.
 
-sleep 10
-a168p -DMCU=atmega168p -DF_CPU=9830400UL -MMD -MP -MF"uart.d" -MT"uart.d" -c -o "uart.o" "../Firmware_Sources/uart.c"
-
-avr-gcc -Wl,-Map,Pyro_atmega168p_RFM12.map -flto -Os -mmcu=atmega168p -o "Pyro_atmega168p_RFM12.elf" ./1wire.o ./adc.o ./addresses.o ./crcchk.o ./eeprom.o ./lcd.o ./leds.o ./pyro.o ./rfm12.o ./rfm69.o ./shiftregister.o ./terminal.o ./timer.o ./uart.o
-
-avr-size --format=avr --mcu=atmega168p Pyro_atmega168p_RFM12.elf
-
-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_atmega168p_RFM12.elf "Pyro_atmega168p_RFM12.hex"
-
-copy "Pyro_atmega168p_RFM12.hex" .\Updater > NUL
-for %%a in (*) do if /I not %%~na==build_hexfiles del /q %%a
-echo Done
-echo.
-
-sleep 10
+timeout /T 10  > nul
