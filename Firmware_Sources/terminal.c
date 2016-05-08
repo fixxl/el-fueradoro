@@ -290,8 +290,10 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t *temps, int8_t *
 
 		// Show RSSI-values
 		if (rssis[i]) {
-			if (rssis[i] < 100) uart_puts_P(PSTR(" -")); else   uart_puts_P(PSTR("-"));
+			if (rssis[i] < 100) uart_puts_P(PSTR(" "));
+			if (rssis[i] < 10) uart_puts_P(PSTR(" "));
 
+			uart_puts_P(PSTR("-"));
 			uart_shownum(rssis[i], 'd');
 		}
 		else   uart_puts_P(PSTR("----"));

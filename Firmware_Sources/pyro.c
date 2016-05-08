@@ -10,8 +10,8 @@
 #include "global.h"
 
 // Global Variables
-volatile static uint8_t  transmit_flag = 0, key_flag = 0, clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0;
-volatile static uint16_t hist_del_flag = 0;
+static volatile uint8_t  transmit_flag = 0, key_flag = 0, clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0;
+static volatile uint16_t hist_del_flag = 0;
 
 void wdt_init(void) {
 	MCUSR = 0;
@@ -1356,14 +1356,29 @@ int main(void) {
 							  lcd_puts(" CH");
 							  lcd_arrize(rx_field[2], lcd_array, 2, 0);
 							  lcd_puts(lcd_array);
-							  lcd_puts("        ");
+							  lcd_puts("    -");
+
+							  if (!rssi)
+								  lcd_puts("--");
+							  else {
+								  lcd_arrize(((rssi > 99) ? 99 : rssi), lcd_array, 2, 0);
+								  lcd_puts(lcd_array);
+							  }
 						  }
 
 						  break;
 					  }
 
 					 case IDENT: {
-						  lcd_puts("Identify         ");
+						  lcd_puts("Identify      -");
+
+						  if (!rssi)
+							  lcd_puts("--");
+						  else {
+							  lcd_arrize(((rssi > 99) ? 99 : rssi), lcd_array, 2, 0);
+							  lcd_puts(lcd_array);
+						  }
+
 						  break;
 					  }
 
@@ -1419,7 +1434,15 @@ int main(void) {
 					  }
 
 					 case TEMPERATURE: {
-						  lcd_puts("Temperature      ");
+						  lcd_puts("Temperature   -");
+
+						  if (!rssi)
+							  lcd_puts("--");
+						  else {
+							  lcd_arrize(((rssi > 99) ? 99 : rssi), lcd_array, 2, 0);
+							  lcd_puts(lcd_array);
+						  }
+
 						  break;
 					  }
 

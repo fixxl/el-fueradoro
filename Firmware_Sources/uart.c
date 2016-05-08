@@ -190,18 +190,15 @@ uint8_t uart_strings_equal(const char *string1, const char *string2) {
 // Print number in decimal, hexadecimal or binary format to console
 void uart_shownum(int32_t zahl, uint8_t type) {
 	uint8_t  i    = 0, lauf = 1;
-	uint32_t bits = 1;
+	uint32_t bits = 1, zahltemp = (zahl < 0) ? -zahl : zahl;
 	char     zwischenspeicher[33] = { 0 };
 
 	switch (type) {
 		 // Binary
 		 case 'b':
 		 case 'B': {
-			  while (bits < zahl) {
-				  bits <<= 1;
-			  }
-
-			  if (bits < 128) bits = 128; else if (bits < 32768) bits = 32768;
+			  if (zahltemp < 256) bits = 128;
+			  else if (zahltemp < 65535) bits = 32768;
 			  else   bits = 2147483648;
 
 			  while (bits) {
