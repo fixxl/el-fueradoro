@@ -414,7 +414,7 @@ int main(void) {
 		// Transmit something to make other devices adjust to frequency
 		for (uint8_t j = 5; j; j--) {
 			led_green_on();
-			rfm_transmit("UUUUUUUUUU", 10);
+			rfm_transmit("UUUUUUUUU\x01", 10);
 			led_green_off();
 			_delay_ms(500);
 		}
