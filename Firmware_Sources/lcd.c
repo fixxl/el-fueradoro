@@ -198,6 +198,7 @@ static uint8_t lcd_getaddr() {
 // Read current cursor position
 uint8_t lcd_cursorread() {
 	uint8_t addr = 0x80;
+	uint16_t utimer = 10000;
 
 	// Datenleitungswerte zwischenspeichern
 	uint8_t zwsp = 0;
@@ -232,7 +233,7 @@ uint8_t lcd_cursorread() {
 	BEFEHLSMODUS;
 	LESEN;
 
-	while (addr & (1 << 7)) addr = lcd_getaddr();
+	while (--utimer && (addr & (1 << 7))) addr = lcd_getaddr();
 
 	SCHREIBEN;
 
