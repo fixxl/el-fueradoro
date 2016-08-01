@@ -558,6 +558,18 @@ int main(void) {
 				flags.b.lcd_update = 1;
 			}
 
+			// "arm" arms transmitter
+			if (uart_strings_equal(uart_field, "arm") && TRANSMITTER) {
+				armed = 1;
+				led_red_on();
+			}
+
+			// "disarm" disarms transmitter
+			if (uart_strings_equal(uart_field, "disarm") && TRANSMITTER) {
+				armed = 0;
+				led_red_off();
+			}
+
 			// "cls" clears terminal screen
 			if (uart_strings_equal(uart_field, "cls"))
 				terminal_reset();
@@ -662,7 +674,7 @@ int main(void) {
 			flags.b.hw = 0;
 
 			uart_puts_P(PSTR("\n\r"));
-			uart_puts(ig_or_notrans ? "ZÃ¼ndbox" : "Transmitter");
+			uart_puts(ig_or_notrans ? "Zündbox" : "Transmitter");
 			uart_puts_P(PSTR("\n\r"));
 			uart_puts_P(PSTR(STRINGIZE_VALUE_OF(MCU)));
 			uart_puts_P(PSTR("\n\rRFM"));
@@ -971,13 +983,18 @@ int main(void) {
 			tx_field[tmp + 1] = '\0';
 			tx_length         = tmp + 1;
 
-			for (uint8_t i = loopcount; i; i--) {
-				led_green_on();
+			if ((tx_field[0] != FIRE) || armed) { // Only send 'FIRE' if sending device is armed
+				for (uint8_t i = loopcount; i; i--) {
+					led_green_on();
 
-				rfm_tx_error = rfm_transmit(tx_field, tx_length); // Transmit message
-				tx_field[tmp]--;
+					rfm_tx_error = rfm_transmit(tx_field, tx_length); // Transmit message
+					tx_field[tmp]--;
 
-				led_green_off();
+					led_green_off();
+				}
+
+				flags.b.lcd_update = 1;
+				flags.b.tx_post    = 1;
 			}
 
 			// If transmission was not a cyclical one but a triggered one, turn of timer and its interrupts
@@ -990,9 +1007,6 @@ int main(void) {
 			transmit_flag = 0;
 
 			rfm_rxon();
-
-			flags.b.lcd_update = 1;
-			flags.b.tx_post    = 1;
 
 			SREG = temp_sreg;
 		}
