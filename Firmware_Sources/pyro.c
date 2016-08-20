@@ -143,7 +143,7 @@ uint16_t rfmtalk(void) {
 	error = 0;
 
 	#if (RFM == 69)
-		uart_puts("\n\rKommando (16-Bit-Hex-Format, MSB zu 1 setzen fÃ¼r Schreibzugriff): 0x");
+		uart_puts("\n\rKommando (16-Bit-Hex-Format, MSB zu 1 setzen für Schreibzugriff): 0x");
 	#else
 		uart_puts("\n\rKommando (16-Bit-Hex-Format): 0x");
 	#endif
