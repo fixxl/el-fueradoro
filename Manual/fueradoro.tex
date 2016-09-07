@@ -1,4 +1,4 @@
-\documentclass[paper=a4, parskip, numbers=noenddot, toc=listof]{scrbook}
+\documentclass[paper=a4, parskip, numbers=noenddot, toc=listof, headsepline]{scrbook}
 
 \usepackage[hang]{caption}
 \usepackage{subcaption}
@@ -11,7 +11,7 @@
 \usepackage{polyglossia}
 \setdefaultlanguage[spelling=new]{german}
 \usepackage[autostyle]{csquotes}
-\usepackage[per-mode=fraction]{siunitx}
+\usepackage[per-mode=fraction, locale=DE, detect-all=true]{siunitx}
 \usepackage[inner=2cm, outer=3cm, top=3cm, bottom=4cm]{geometry}
 \usepackage{graphicx}
 \usepackage{datetime}
@@ -27,8 +27,10 @@
 \renewcommand\tabularxcolumn[1]{p{#1}}
 
 \setmainfont{Tex Gyre Termes}
-\setmainfont{Tex Gyre Termes Math}
+\setmathfont{Tex Gyre Termes Math}
 \setsansfont{Latin Modern Sans}[Scale=MatchLowercase]
+\setmonofont{LMMonoLt10-Bold}[Scale=MatchLowercase]
+
 
 \DeclareSIUnit{\mWs}{mWs}
 \newcommand{\pic}{\emph{Pyro Ignition Control}}
@@ -79,7 +81,7 @@
 
 	{\bfseries
 		\begin{enumerate}
-			\item Das Metallgehäuse des SMA-Antennenanschlusses an der Oberseite der Zündbox liegt auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \textbf{\SI{22,5}{V}}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden.
+			\item Das Metallgehäuse des SMA-Antennenanschlusses an der Oberseite der Zündbox liegt auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{V}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden.
 			\item Devices nie ohne angeschlossene Antenne einschalten, um Rückreflexionen an offenen Steckern/Buchsen zu vermeiden, welche die Sendeendstufe zerstören könnten.
 			\item Keine Softwareupdates an Zündboxen durchführen, solange Anzünder angeschlossen sind, da das Verhalten nach einem fehlgeschlagenen Update unvorhersehbar ist.
 		\end{enumerate}
@@ -595,14 +597,14 @@
 				{\anlage} ist für die Verwendung mit den Anzündertypen A (Auslösestrom $\SI{0,6}{A}$) und U (Auslösestrom $\SI{1,3}{A}$) ausgelegt. Der nötige Strom zum Auslösen eines HU-Anzünders (Auslösestrom $\SI{25}{A}$) kann nicht geliefert werden. Es ist zu berücksichtigen, dass in der Anlage ein Strombegrenzungswiderstand von $\SI{2,2}{\ohm}$ verbaut ist, der in Reihe zum angeschlossenen Anzünder-Netzwerk liegt. Mittels Formel~\eqref{eq:zuendkreisrmax} kann der maximal zulässige Widerstand (inklusive der $\SI{2,2}{\ohm}$) für einen gegebenen mittleren Strom $I$ ermittelt werden.
 
 				\begin{equation}
-					R_\text{max} = \frac{50}{47 {\cdot} \ln\left(\frac{423}{423 - 20 {\cdot} I}\right)}
+					R_\text{max} = \frac{50}{47 {\cdot} \ln\left(\frac{\SI{423}{\A}}{\SI{423}{\A} - 20 {\cdot} I}\right)}\si{\ohm}
 					\label{eq:zuendkreisrmax}
 				\end{equation}
 
 				Entsprechend resultiert für einen gegebenen Widerstand der mittlere Strom über eine Zeit von $\SI{10}{ms}$ aus Gleichung~\eqref{eq:zuendkreisi}.
 
 				\begin{equation}
-					I = 21,15  {\cdot} \left(1 - \mathrm{e}^{-\frac{50}{47 {\cdot} R}}\right)
+					I = \SI{21,15}{\A} {\cdot} \left(1 - \mathrm{e}^{-\frac{\SI{50}{\ohm}}{47 {\cdot} R}}\right)
 					\label{eq:zuendkreisi}
 				\end{equation}
 
@@ -636,9 +638,13 @@
 
 				Hinzu kommt bei gleichen Anzündern die Problematik, dass selbst bei einem rechnerisch ausreichend hohen Strom, dieser wahrscheinlich nicht über die notwendige Zeitspanne bei den U-Anzündern ankäme. Dies liegt am unterschiedlichen Zündimpuls (Einheit \si[per-mode=fraction]{\mWs\per\ohm}), hinter dem sich der bei Schmelzsicherungen als Schmelzintegral bekannte \enquote{I-Quadrat-t-Wert}, also das Produkt aus dem Quadrat des Stroms und der Zeit, verbirgt. Fließt derselbe Strom durch die Reihenschaltung eines Anzünders vom Typ A und einen Anzünder vom Typ U, löst der A-Anzünder aufgrund des geringeren notwendigen Zündimpulses zuerst aus. Durch das Auslösen wird in aller Regel der Stromkreis unmittelbar unterbrochen, so dass kein Strom mehr durch den U-Anzünder fließen kann, weshalb die ihn ihm umgesetzte Energie nicht zum Auslösen ausreicht.
 
-				Die Krux bei einer Parallelschaltung verschiedener Anzündertypen liegt darin, dass ein Auslösen des Anzünders nicht zwingend gleichbedeutend mit einer Unterbrechung des Stromkreises ist. Bei einer Parallelschaltung unterschiedlicher Widerstände wird zunächst der Ast mit dem geringsten Widerstand auslösen, allerdings kann nicht garantiert werden, dass dieser anschließend auch wirklich einen elektrischen Leerlauf darstellt. Sehr häufig ist auch nach dem Ansprechen noch eine elektrisch leitende Verbindung zwischen den Anzünderdrähten messbar, so dass ein Auslösen der weiteren Äste~-- gerade im Fall stark unterschiedlicher Widerstände~-- nicht gesichert ist.
+				Die Krux bei einer Parallelschaltung, welche gegenüber der Reihenschaltung ohnehin die schlechtere Alternative darstellt, verschiedener Anzündertypen liegt darin, dass ein Auslösen des Anzünders nicht zwingend gleichbedeutend mit einer Unterbrechung des Stromkreises ist. Bei einer Parallelschaltung unterschiedlicher Widerstände wird zunächst der Ast mit dem geringsten Widerstand auslösen, allerdings kann nicht garantiert werden, dass dieser anschließend auch wirklich einen elektrischen Leerlauf darstellt. Sehr häufig ist auch nach dem Ansprechen noch eine elektrisch leitende Verbindung zwischen den Anzünderdrähten messbar, so dass ein Auslösen der weiteren Äste~-- gerade im Fall stark unterschiedlicher Widerstände~-- nicht gesichert ist.
 
 				{\anlage} ermöglicht das Auslösen in so kurzen Zeitabständen, dass derartige Drahtseilakte durch eine Aufteilung auf zwei kurz hintereinander erfolgende Zündungen vermieden werden können.
+
+				\textbf{Dem Anwender wird empfohlen, bei gleichzeitigem Zünden mehrerer Anzünder (gleichen Typs!) eine Reihenschaltung zu verwenden}, da hierdurch die Fehleranfälligkeit und Ausfallwahrscheinlichkeit deutlich verringert wird.
+
+				Ein Leerlauf (kein Durchgang eines Anzünders oder schlechte Kabelverbindung) wird bei der Reihenschaltung unmittelbar durch die nicht-leuchtende Kanal-LED bemerkt, bei einem Kurzschluss eines Anzünders fällt lediglich der Effekt dieses einen Anzünders aus. Bei der Parallelschaltung sorgt der Kurzschluss eines Anzünders mit hoher Wahrscheinlichkeit dafür, dass alle parallel geschalteten Anzünder stromlos bleiben, auch wird ein Leerlauf aufgrund des über die anderen Anzünder geschlossenen Stromkreises vermutlich nicht bemerkt.
 
 
 			\subsection{Erstellung und Überprüfung des Zündplans}
@@ -701,7 +707,7 @@
 				\centering
 				\begin{tabularx}{.925\textwidth}{Xccc}
 					\hline\hline
-					Firmware                        & Controller   & Funkmodul & Sendeleistung    \\ \hline
+					Firmware                        & Controller   & Funkmodul & Sendeleistung  \\ \hline
 					Pyro\_atmega328p\_RFM69.hex     & ATMEGA 328P  & RFM69CW   & $\SI{8}{dBm}$  \\
 					Pyro\_atmega328p\_RFM69\_HP.hex & ATMEGA 328P  & RFM69CW   & $\SI{13}{dBm}$ \\
 					Pyro\_atmega168p\_RFM69.hex     & ATMEGA 168PA & RFM69CW   & $\SI{8}{dBm}$  \\
@@ -852,7 +858,7 @@
 			\begin{longtable}{p{1.2cm}cp{2.5cm}llllp{2.35cm}}
 			  \multicolumn{8}{c}{\textbf{Materialliste Transmitter}}\\
 			  \\ \hline
-			  Bauteil                        & Anz. & Beschreibung                         & Händler & Artikelnr.                                                & Einzel     & Ges.       & Bemerkung    \\
+			  Bauteil                        & Anz. & Beschreibung                         & Händler & Artikelnr.                                                & Einzel    & Ges.      & Bemerkung    \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Kondensatoren} \\
 			  C11, C13                       & 2    & Elektrolyt\-kon\-den\-sa\-tor, 100uF & Reichelt & RAD 105 100/35                                            & 0,04\,€ & 0,08\,€ &              \\
@@ -906,87 +912,87 @@
 			\begin{longtable}{p{1.2cm}cp{2.5cm}llllp{2.35cm}}
 			  \multicolumn{8}{c}{\textbf{Materialliste Zündbox}}\\
 			  \\
-			  Bauteil                                 & Anz. & Beschreibung                              & Händler   & Artikelnr.                                                                 & Einzel      & Ges.        & Bemerkung                  \\
+			  Bauteil                                 & Anz. & Beschreibung                              & Händler   & Artikelnr.                                                                 & Einzel     & Ges.       & Bemerkung                 \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Kondensatoren} \\
-			  C13, C27, C19                           & 3    & Elektrolyt\-kon\-den\-sa\-tor, 100uF      & Reichelt   & RAD 105 100/35                                                             & 0,04\,€  & 0,12\,€  &                            \\
-			  C14                                     & 1    & Elektrolyt\-kon\-den\-sa\-tor, 10uF       & Reichelt   & RAD 10/100                                                                 & 0,04\,€  & 0,04\,€  &                            \\
-			  C21, C22                                & 2    & Elektrolyt\-kon\-den\-sa\-tor, 4700uF 35V & Reichelt   & RAD 4.700/35                                                               & 0,45\,€  & 0,90\,€  &                            \\
-			  C1{\dots}7, C15, C16, C20, C23{\dots}26 & 14   & Keramik\-kondensator, 100nF               & Reichelt   & X7R-2,5 100N                                                               & 0,04\,€  & 0,56\,€  &                            \\
-			  C8, C9                                  & 2    & Keramik\-kondensator, 15pF                & Reichelt   & KERKO 15P                                                                  & 0,05\,€  & 0,10\,€  &                            \\
-			  C18                                     & 1    & Keramik\-kondensator, 220pF               & Reichelt   & KERKO 220P                                                                 & 0,05\,€  & 0,05\,€  &                            \\
+			  C13, C27, C19                           & 3    & Elektrolyt\-kon\-den\-sa\-tor, 100uF      & Reichelt   & RAD 105 100/35                                                             & 0,04\,€  & 0,12\,€  &                           \\
+			  C14                                     & 1    & Elektrolyt\-kon\-den\-sa\-tor, 10uF       & Reichelt   & RAD 10/100                                                                 & 0,04\,€  & 0,04\,€  &                           \\
+			  C21, C22                                & 2    & Elektrolyt\-kon\-den\-sa\-tor, 4700uF 35V & Reichelt   & RAD 4.700/35                                                               & 0,45\,€  & 0,90\,€  &                           \\
+			  C1{\dots}7, C15, C16, C20, C23{\dots}26 & 14   & Keramik\-kondensator, 100nF               & Reichelt   & X7R-2,5 100N                                                               & 0,04\,€  & 0,56\,€  &                           \\
+			  C8, C9                                  & 2    & Keramik\-kondensator, 15pF                & Reichelt   & KERKO 15P                                                                  & 0,05\,€  & 0,10\,€  &                           \\
+			  C18                                     & 1    & Keramik\-kondensator, 220pF               & Reichelt   & KERKO 220P                                                                 & 0,05\,€  & 0,05\,€  &                           \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Dioden} \\
-			  D3                                      & 1    & 1N4002                                    & Reichelt   & 1N 4002                                                                    & 0,02\,€  & 0,02\,€  &                            \\
-			  D2                                      & 1    & 1N5819                                    & Reichelt   & 1N 5819                                                                    & 0,06\,€  & 0,06\,€  &                            \\
+			  D3                                      & 1    & 1N4002                                    & Reichelt   & 1N 4002                                                                    & 0,02\,€  & 0,02\,€  &                           \\
+			  D2                                      & 1    & 1N5819                                    & Reichelt   & 1N 5819                                                                    & 0,06\,€  & 0,06\,€  &                           \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Integrierte Schaltungen} \\
-			  IC2                                     & 1    & ATMEGA 328P                               & Reichelt   & ATMEGA 328P-PU                                                             & 2,65\,€  & 2,65\,€  &                            \\
-			  IC4                                     & 1    & MC33063                                   & Reichelt   & MC 33063 AP1                                                               & 0,51\,€  & 0,51\,€  &                            \\
-			  IC1                                     & 1    & MAX202                                    & Reichelt   & MAX 202 ECPE                                                               & 1,40\,€  & 1,40\,€  &                            \\
-			  IC6, IC7                                & 2    & 74HC595                                   & Reichelt   & 74HC 595                                                                   & 0,36\,€  & 0,72\,€  &                            \\
-			  IC8                                     & 1    & LM1086                                    & Reichelt   & LM 1086 IT3,3                                                              & 1,25\,€  & 1,25\,€  &                            \\
-			  U\$4                                    & 1    & RFM69CW                                   & Pollin     & 810 303                                                                    & 4,60\,€  & 4,60\,€  &                            \\
-			  U\$2                                    & 1    & DS18B20                                   & Reichelt   & DS 18B20                                                                   & 1,60\,€  & 1,60\,€  &                            \\
+			  IC2                                     & 1    & ATMEGA 328P                               & Reichelt   & ATMEGA 328P-PU                                                             & 2,65\,€  & 2,65\,€  &                           \\
+			  IC4                                     & 1    & MC33063                                   & Reichelt   & MC 33063 AP1                                                               & 0,51\,€  & 0,51\,€  &                           \\
+			  IC1                                     & 1    & MAX202                                    & Reichelt   & MAX 202 ECPE                                                               & 1,40\,€  & 1,40\,€  &                           \\
+			  IC6, IC7                                & 2    & 74HC595                                   & Reichelt   & 74HC 595                                                                   & 0,36\,€  & 0,72\,€  &                           \\
+			  IC8                                     & 1    & LM1086                                    & Reichelt   & LM 1086 IT3,3                                                              & 1,25\,€  & 1,25\,€  &                           \\
+			  U\$4                                    & 1    & RFM69CW                                   & Pollin     & 810 303                                                                    & 4,60\,€  & 4,60\,€  &                           \\
+			  U\$2                                    & 1    & DS18B20                                   & Reichelt   & DS 18B20                                                                   & 1,60\,€  & 1,60\,€  &                           \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Induktivität} \\
-			  L1                                      & 1    & 68 uH, stehend                            & Reichelt   & L-07HCP 68$\mu$                                                            & 0,30\,€  & 0,30\,€  &                            \\
+			  L1                                      & 1    & 68 uH, stehend                            & Reichelt   & L-07HCP 68$\mu$                                                            & 0,30\,€  & 0,30\,€  &                           \\
 			  \\ \hline
 			  \multicolumn{8}{c}{LEDs} \\
-			  LED\_O                                  & 1    & LED, 5mm, orange                          & Reichelt   & LED 5MM R OR                                                               & 0,12\,€  & 0,12\,€  &                            \\
-			  LED\_R                                  & 1    & LED, 5mm, rot                             & Reichelt   & LED 5MM RT                                                                 & 0,06\,€  & 0,06\,€  &                            \\
-			  LED\_Y                                  & 1    & LED, 5mm, gelb                            & Reichelt   & LED 5MM GE                                                                 & 0,06\,€  & 0,06\,€  &                            \\
-			  LED\_G                                  & 1    & LED, 5mm, grün                           & Reichelt   & LED 5MM GN                                                                 & 0,06\,€  & 0,06\,€  &                            \\
-			  LED1{\dots}16                           & 16   & LED, 3mm, grün                           & Reichelt   & LED 3MM GN                                                                 & 0,06\,€  & 0,96\,€  &                            \\
+			  LED\_O                                  & 1    & LED, 5mm, orange                          & Reichelt   & LED 5MM R OR                                                               & 0,12\,€  & 0,12\,€  &                           \\
+			  LED\_R                                  & 1    & LED, 5mm, rot                             & Reichelt   & LED 5MM RT                                                                 & 0,06\,€  & 0,06\,€  &                           \\
+			  LED\_Y                                  & 1    & LED, 5mm, gelb                            & Reichelt   & LED 5MM GE                                                                 & 0,06\,€  & 0,06\,€  &                           \\
+			  LED\_G                                  & 1    & LED, 5mm, grün                           & Reichelt   & LED 5MM GN                                                                 & 0,06\,€  & 0,06\,€  &                           \\
+			  LED1{\dots}16                           & 16   & LED, 3mm, grün                           & Reichelt   & LED 3MM GN                                                                 & 0,06\,€  & 0,96\,€  &                           \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Quarz} \\
-			  Q1                                      & 1    & Standardquarz, Grundton, 9,8304 Mhz       & Reichelt   & 9,8304-HC49U-S                                                             & 0,15\,€  & 0,15\,€  &                            \\
+			  Q1                                      & 1    & Standardquarz, Grundton, 9,8304 Mhz       & Reichelt   & 9,8304-HC49U-S                                                             & 0,15\,€  & 0,15\,€  &                           \\
 			  \\  \hline
 			  \multicolumn{8}{c}{MOSFETs} \\
 			  Q2{\dots}Q17                            & 16   & IRF3708                                   & AliExpress & \href{http://www.aliexpress.com/item/IRF3708-to220/32271560711.html}{Link} & 0,29\,€  & 4,64\,€  & 50er-Pack für 14,32\,€ \\
 			  \\  \hline
 			  \multicolumn{8}{c}{Widerstände} \\
-			  R16                                     & 1    & 180                                       & Reichelt   & METALL 180                                                                 & 0,08\,€  & 0,08\,€  &                            \\
-			  R17                                     & 1    & 0R22                                      & eBay       & \href{http://www.ebay.com/itm/221583734560}{221583734560}                  & 1,00\,€  & 1,00\,€  & 100er-Pack\dots            \\
-			  R1{\dots}3, R7, R19, R20, R37           & 7    & 10k                                       & Reichelt   & METALL 10,0K                                                               & 0,08\,€  & 0,57\,€  & 10 billiger als 7!         \\
-			  R18                                     & 1    & 150k                                      & Reichelt   & METALL 150K                                                                & 0,08\,€  & 0,08\,€  &                            \\
-			  R4{\dots}6, R8{\dots}11                 & 7    & 1k                                        & Reichelt   & METALL 1,00K                                                               & 0,08\,€  & 0,57\,€  & 10 billiger als 7!         \\
-			  R\_Z                                    & 1    & 2R2-11W                                   & Reichelt   & 11W VERT. 2,2                                                              & 0,60\,€  & 0,60\,€  &                            \\
-			  R12, R14, R38                           & 3    & 3k3                                       & Reichelt   & METALL 3,30K                                                               & 0,08\,€  & 0,25\,€  &                            \\
-			  R15                                     & 1    & 56k                                       & Reichelt   & METALL 56K                                                                 & 0,08\,€  & 0,08\,€  &                            \\
-			  R21{\dots}36                            & 16   & 6k8                                       & Reichelt   & 1/4W 6,8K                                                                  & 0,03\,€  & 0,53\,€  &                            \\
-			  RN1, RN2                                & 2    & Network, 9Pin, 10k                        & Reichelt   & SIL 9-8 10K                                                                & 0,11\,€  & 0,22\,€  &                            \\
+			  R16                                     & 1    & 180                                       & Reichelt   & METALL 180                                                                 & 0,08\,€  & 0,08\,€  &                           \\
+			  R17                                     & 1    & 0R22                                      & eBay       & \href{http://www.ebay.com/itm/221583734560}{221583734560}                  & 1,00\,€  & 1,00\,€  & 100er-Pack\dots           \\
+			  R1{\dots}3, R7, R19, R20, R37           & 7    & 10k                                       & Reichelt   & METALL 10,0K                                                               & 0,08\,€  & 0,57\,€  & 10 billiger als 7!        \\
+			  R18                                     & 1    & 150k                                      & Reichelt   & METALL 150K                                                                & 0,08\,€  & 0,08\,€  &                           \\
+			  R4{\dots}6, R8{\dots}11                 & 7    & 1k                                        & Reichelt   & METALL 1,00K                                                               & 0,08\,€  & 0,57\,€  & 10 billiger als 7!        \\
+			  R\_Z                                    & 1    & 2R2-11W                                   & Reichelt   & 11W VERT. 2,2                                                              & 0,60\,€  & 0,60\,€  &                           \\
+			  R12, R14, R38                           & 3    & 3k3                                       & Reichelt   & METALL 3,30K                                                               & 0,08\,€  & 0,25\,€  &                           \\
+			  R15                                     & 1    & 56k                                       & Reichelt   & METALL 56K                                                                 & 0,08\,€  & 0,08\,€  &                           \\
+			  R21{\dots}36                            & 16   & 6k8                                       & Reichelt   & 1/4W 6,8K                                                                  & 0,03\,€  & 0,53\,€  &                           \\
+			  RN1, RN2                                & 2    & Network, 9Pin, 10k                        & Reichelt   & SIL 9-8 10K                                                                & 0,11\,€  & 0,22\,€  &                           \\
 			  \\ \hline
 			  \multicolumn{8}{c}{HF-Komponenten} \\
-			                                          & 1    & SMA-Kabel Funkmodul-Gehäuse              & eBay       & \href{http://www.ebay.com/itm/391039600954}{391039600954}                  & 2,04\,€  & 2,04\,€  &                            \\
-			                                          & 1    & SMA-Kabel Gehäuse-Antenne                & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}                  & 3,07\,€  & 3,07\,€  &                            \\
-			                                          & 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}                   & 4,24\,€  & 4,24\,€  &                            \\
-			                                          & 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                  & 1,17\,€  & 1,17\,€  &                            \\
+			                                          & 1    & SMA-Kabel Funkmodul-Gehäuse              & eBay       & \href{http://www.ebay.com/itm/391039600954}{391039600954}                  & 2,04\,€  & 2,04\,€  &                           \\
+			                                          & 1    & SMA-Kabel Gehäuse-Antenne                & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}                  & 3,07\,€  & 3,07\,€  &                           \\
+			                                          & 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}                   & 4,24\,€  & 4,24\,€  &                           \\
+			                                          & 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                  & 1,17\,€  & 1,17\,€  &                           \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Mechanische Bauteile} \\
-			  X1                                      & 1    & Sub-D-Buchse, 9-pol                       & Reichelt   & D-SUB BU 09US                                                              & 0,23\,€  & 0,23\,€  &                            \\
-			  SV2                                     & 1    & Wannenstecker, 10-pol                     & Reichelt   & WSL 10G                                                                    & 0,08\,€  & 0,08\,€  &                            \\
-			                                          & 1    & Wippschalter                              & Pollin     & 420 697                                                                    & 0,35\,€  & 0,35\,€  &                            \\
-			                                          & 1    & Miniatur-Schlüsselschalter               & Pollin     & 420 664                                                                    & 0,75\,€  & 0,75\,€  &                            \\
-			                                          & 1    & Kunststoffgehäuse 021-002-084            & Pollin     & 460 001                                                                    & 7,95\,€  & 7,95\,€  &                            \\
-			                                          & 8    & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                                     & 0,29\,€  & 2,32\,€  &                            \\
-			                                          & 1    & Koffer                                    & Amazon     & Bilora 545                                                                 & 19,89\,€ & 19,89\,€ &                            \\
-			                                          & 1    & Akku                                      & Reichelt   & WP 1,2-12                                                                  & 7,80\,€  & 7,80\,€  &                            \\
+			  X1                                      & 1    & Sub-D-Buchse, 9-pol                       & Reichelt   & D-SUB BU 09US                                                              & 0,23\,€  & 0,23\,€  &                           \\
+			  SV2                                     & 1    & Wannenstecker, 10-pol                     & Reichelt   & WSL 10G                                                                    & 0,08\,€  & 0,08\,€  &                           \\
+			                                          & 1    & Wippschalter                              & Pollin     & 420 697                                                                    & 0,35\,€  & 0,35\,€  &                           \\
+			                                          & 1    & Miniatur-Schlüsselschalter               & Pollin     & 420 664                                                                    & 0,75\,€  & 0,75\,€  &                           \\
+			                                          & 1    & Kunststoffgehäuse 021-002-084            & Pollin     & 460 001                                                                    & 7,95\,€  & 7,95\,€  &                           \\
+			                                          & 8    & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                                     & 0,29\,€  & 2,32\,€  &                           \\
+			                                          & 1    & Koffer                                    & Amazon     & Bilora 545                                                                 & 19,89\,€ & 19,89\,€ &                           \\
+			                                          & 1    & Akku                                      & Reichelt   & WP 1,2-12                                                                  & 7,80\,€  & 7,80\,€  &                           \\
 			                                          & 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                               & 0,01\,€  & 0,03\,€  & 200er-Pack für 1,70\,€ \\
 			                                          & 16   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                               & 0,02\,€  & 0,34\,€  & 50er-Pack für 1,05\,€  \\
 			                                          & 16   & Muttern M3                                & Reichelt   & SK-E M3-100                                                                & 0,02\,€  & 0,35\,€  & 100er-Pack für 2,20\,€ \\
-			                                          & 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                                & 0,14\,€  & 0,28\,€  &                            \\
-			                                          & 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                              & 0,15\,€  & 0,15\,€  & Benötigt werden 13        \\
-			                                          & 1    & Buchsenleiste mit 6 Plätzen              & Reichelt   & MPE 094-1-006                                                              & 0,25\,€  & 0,25\,€  &                            \\
-			                                          & 1    & Buchsenleiste mit 7 Plätzen              & Reichelt   & MPE 094-1-007                                                              & 0,31\,€  & 0,31\,€  &                            \\
+			                                          & 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                                & 0,14\,€  & 0,28\,€  &                           \\
+			                                          & 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                              & 0,15\,€  & 0,15\,€  & Benötigt werden 13       \\
+			                                          & 1    & Buchsenleiste mit 6 Plätzen              & Reichelt   & MPE 094-1-006                                                              & 0,25\,€  & 0,25\,€  &                           \\
+			                                          & 1    & Buchsenleiste mit 7 Plätzen              & Reichelt   & MPE 094-1-007                                                              & 0,31\,€  & 0,31\,€  &                           \\
 			                                          & 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                                    & 0,59\,€  & 0,59\,€  & 5er-Pack für 2,95\,€   \\
 			  \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Kabel} \\
-			                                          & 1    & Flachbandkabel für LED+Schlüsselsch.    & Reichelt   & AWG 28-10F 3M                                                              & 1,65\,€  & 1,65\,€  &                            \\
-			                                          & 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                                    & 6,25\,€  & 6,25\,€  &                            \\
-			                                          & 1    & Schrumpf\-schläu\-che 1,6mm              & Reichelt   & SDH 1,6 SW                                                                 & 0,25\,€  & 0,25\,€  &                            \\
-			                                          & 1    & Schrumpf\-schläu\-che 3,2mm              & Reichelt   & SDH 3,2 SW                                                                 & 0,26\,€  & 0,26\,€  &                            \\ \hline
+			                                          & 1    & Flachbandkabel für LED+Schlüsselsch.    & Reichelt   & AWG 28-10F 3M                                                              & 1,65\,€  & 1,65\,€  &                           \\
+			                                          & 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                                    & 6,25\,€  & 6,25\,€  &                           \\
+			                                          & 1    & Schrumpf\-schläu\-che 1,6mm              & Reichelt   & SDH 1,6 SW                                                                 & 0,25\,€  & 0,25\,€  &                           \\
+			                                          & 1    & Schrumpf\-schläu\-che 3,2mm              & Reichelt   & SDH 3,2 SW                                                                 & 0,26\,€  & 0,26\,€  &                           \\ \hline
 			  &   &                             &                       &              & 83,55\,€ & \\
 			  \caption{\normalsize Materialliste für die Zündbox}
 			  \label{tab:zuendboxbom}
@@ -1329,7 +1335,7 @@
 					\textbf{Fuse} & \textbf{Wert}     & \textbf{Bedeutung}                                                                                                                                                                               \\ \hline
 					Low Fuse      & 0xF7              & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle                                                                                                                       \\
 					High Fuse     & 0xD6              & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
-					Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{V}$                                                                                                                                        \\ \hline\hline
+					Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{V}$                                                                                                                                            \\ \hline\hline
 				\end{tabularx}
 				\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
 				\label{tab:fuses}
@@ -1436,7 +1442,7 @@
 
 			\begin{center}
 				\begin{tabularx}{.6\textwidth}{c@{ $\rightarrow$ }c@{ :\hspace*{1cm}}c@{ = }X}
-					$\si{dBm}$ & $\si{W}$   & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                    \\[12pt]
+					$\si{dBm}$ & $\si{W}$   & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                  \\[12pt]
 					$\si{W}$   & $\si{dBm}$ & $P_\text{dBm}$ & $10 {\cdot} \log_{10}\left( \frac{1000 {\cdot} P_\text{W}}{\SI{1}{W}} \right)$ \\
 				\end{tabularx}
 			\end{center}
