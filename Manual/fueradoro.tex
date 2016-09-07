@@ -1,35 +1,36 @@
-\documentclass[pdftex, parskip, numbers=noenddot, toc=listof]{scrbook}
+\documentclass[paper=a4, parskip, numbers=noenddot, toc=listof]{scrbook}
 
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage[ngerman]{babel}
-\usepackage[babel=true, german=quotes]{csquotes}
 \usepackage[hang]{caption}
 \usepackage{subcaption}
-\usepackage{lmodern}
-\usepackage[]{longtable}
-\usepackage{eurosym}
+\usepackage{microtype, textcomp}
+\usepackage{longtable}
 \usepackage[intlimits]{amsmath}
-\usepackage[]{amsfonts, amssymb, array, tabularx}
-\usepackage[headsepline]{scrlayer-scrpage}
-\usepackage[tight, ugly]{units}
+\usepackage{amsfonts, amssymb, array, tabularx, scrlayer-scrpage}
+\usepackage{fontspec}
+\usepackage{unicode-math, icomma}
+\usepackage{polyglossia}
+\setdefaultlanguage[spelling=new]{german}
+\usepackage[autostyle]{csquotes}
+\usepackage[per-mode=fraction]{siunitx}
 \usepackage[inner=2cm, outer=3cm, top=3cm, bottom=4cm]{geometry}
-\usepackage[pdftex]{graphicx}
-\usepackage{datetime, upgreek}
-\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{datetime}
 \usepackage[backend=biber, isbn=false, doi=false, eprint=false, url=true, safeinputenc, defernumbers=false]{biblatex}
-\usepackage[pdftex, colorlinks=false, breaklinks=true, pdfborder={0 0 0}]{hyperref}
+\usepackage[unicode=true, colorlinks=false, breaklinks=true, pdfborder={0 0 0}]{hyperref}
 \usepackage{bookmark}
-
-
-\renewcommand{\dateseparator}{.}
 
 \newcommand{\origttfamily}{}
 \let\origttfamily=\ttfamily
 \renewcommand{\ttfamily}{\origttfamily \hyphenchar\font=`\-}
-
+\defaultfontfeatures{Ligatures=TeX}
+\renewcommand{\dateseparator}{.}
 \renewcommand\tabularxcolumn[1]{p{#1}}
 
+\setmainfont{Tex Gyre Termes}
+\setmainfont{Tex Gyre Termes Math}
+\setsansfont{Latin Modern Sans}[Scale=MatchLowercase]
+
+\DeclareSIUnit{\mWs}{mWs}
 \newcommand{\pic}{\emph{Pyro Ignition Control}}
 \newcommand{\anlage}{\emph{El Fueradoro}}
 
@@ -78,7 +79,7 @@
 
 	{\bfseries
 		\begin{enumerate}
-			\item Das Metallgehäuse des SMA-Antennenanschlusses an der Oberseite der Zündbox liegt auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei $\unit[\textbf{22{,}5}]{\textbf{V}}$. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden.
+			\item Das Metallgehäuse des SMA-Antennenanschlusses an der Oberseite der Zündbox liegt auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \textbf{\SI{22,5}{V}}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden.
 			\item Devices nie ohne angeschlossene Antenne einschalten, um Rückreflexionen an offenen Steckern/Buchsen zu vermeiden, welche die Sendeendstufe zerstören könnten.
 			\item Keine Softwareupdates an Zündboxen durchführen, solange Anzünder angeschlossen sind, da das Verhalten nach einem fehlgeschlagenen Update unvorhersehbar ist.
 		\end{enumerate}
@@ -137,9 +138,9 @@
 				\caption{Die Devices von {\anlage}}
 			\end{figure}
 
-			Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das~-- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur~-- frei nutzbare Frequenzband um $\unit[868]{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
+			Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das~-- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur~-- frei nutzbare Frequenzband um $\SI{868}{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
 
-			Die Zündboxen, in Abbildung~\ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden zusammen einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\unit[22{,}5]{V}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16~n-Kanal-MOSFETs.
+			Die Zündboxen, in Abbildung~\ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden zusammen einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\SI{22,5}{V}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16~n-Kanal-MOSFETs.
 
 			Welches der beiden Kabel an welcher Klemme des Zündkanals angeschlossen wird, spielt keine Rolle, da es sich bei den Anzündern um passive elektrische Bauelemente handelt, die in beiden Richtungen gleichermaßen von Strom durchflossen werden können. Die Verdrahtung sollte aber stets im ausgeschalteten Zustand der Boxen erfolgen und aus Sicherheitsgründen immer in folgender Reihenfolge:
 			\begin{itemize}
@@ -148,13 +149,13 @@
 			\end{itemize}
 			Dies ist der Tatsache geschuldet, dass, wenn eine Seite des Zündkanals fest mit der Zündspannung, d.\,h. einer roten Klemme verbunden ist, ein frei baumelndes zweites Kabel durch Berührung eines Bauteils auf Massepotential, z.\,B. der Antennenbuchse oder der Überwurfmutter des gewinkelten SMA-Steckers, einen Kurzschluss und somit eine Zündung auslösen würde~-- selbst dann, wenn die Box nicht scharf geschaltet ist!
 
-			Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom durch den LED-Zweig auf unter \unit[5]{mA} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme~-- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen~-- verbunden ist, also ein geschlossener Strompfad von $\unit[22{,}5]{V}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen grünen LED signalisiert. Ein Leuchten der grünen LED ist dabei lediglich ein Indikator, dass \enquote{etwas} am jeweiligen Kanal angeschlossen ist, eine Aussage, ob der Widerstand des angeschlossenen Anzündernetzwerks gering genug ist, um eine Zündung auszulösen, wird durch die LED ausdrücklich nicht getroffen.
+			Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom durch den LED-Zweig auf unter \SI{5}{mA} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme~-- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen~-- verbunden ist, also ein geschlossener Strompfad von $\SI{22,5}{V}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen grünen LED signalisiert. Ein Leuchten der grünen LED ist dabei lediglich ein Indikator, dass \enquote{etwas} am jeweiligen Kanal angeschlossen ist, eine Aussage, ob der Widerstand des angeschlossenen Anzündernetzwerks gering genug ist, um eine Zündung auszulösen, wird durch die LED ausdrücklich nicht getroffen.
 
 		\section{Energieversorgung}
 
 			Die in unmittelbarer Nähe des zu steuernden PCs platzierte Transmitterbox bezieht ihre nötige elektrische Energie aus dem USB-Port eines PCs. Das fest mit der Transmitterbox verbundene USB-Kabel dient ausschließlich diesem Zweck. Sie verfügt über keinen Ein/Aus-Schalter, sondern ist eingeschaltet, solange sie mit dem USB-Port verbunden und der PC eingeschaltet ist. Da der USB-Port \enquote{angezapft} wird, ohne in der sonst üblichen Weise mit dem Controller zu kommunizieren, empfiehlt sich, die USB-Verbindung erst nach komplett abgeschlossenem Bootvorgang herzustellen und vor dem Herunterfahren des Rechners wieder zu trennen.
 
-			Aufgrund der anzunehmenden Platzierung der Zündboxen im freien Feld, abseits von Steckdosen und anderen Energiequellen werden sie über eine Batterie versorgt. \textbf{Um ordnungsgemäße Funktionalität zu garantieren und Schäden an der Schaltung zu vermeiden, muss die Batteriespannung zwischen \unit[8]{V} und \unit[15]{V} liegen!} Empfohlen wird die Verwendung eines Blei-Vlies-Akkus mit Nennspannung \unit[12]{V}, wie er auch in Abbildung~\ref{fig:zuendbox} über der Zündbox zu erahnen ist.
+			Aufgrund der anzunehmenden Platzierung der Zündboxen im freien Feld, abseits von Steckdosen und anderen Energiequellen werden sie über eine Batterie versorgt. \textbf{Um ordnungsgemäße Funktionalität zu garantieren und Schäden an der Schaltung zu vermeiden, muss die Batteriespannung zwischen \SI{8}{V} und \SI{15}{V} liegen!} Empfohlen wird die Verwendung eines Blei-Vlies-Akkus mit Nennspannung \SI{12}{V}, wie er auch in Abbildung~\ref{fig:zuendbox} über der Zündbox zu erahnen ist.
 
 		\section{Die Status-LEDs}
 			\label{ch:leds}
@@ -177,7 +178,7 @@
 
 			Während des Bootvorgangs leuchten bei den Zündboxen die orange und gelbe LED im Wechsel, wodurch dem Benutzer die aktuell eingestellte Slave-ID der Box visualisiert wird. Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
 
-			Bei einem Zündvorgang leuchten an der Zündbox für die Dauer der Zündung (\unit[11]{ms}) alle vier LEDs.
+			Bei einem Zündvorgang leuchten an der Zündbox für die Dauer der Zündung (\SI{11}{ms}) alle vier LEDs.
 
 		\section{Das LCD der Transmitterbox}
 
@@ -278,9 +279,9 @@
 
 			Um eine reibungslose Kommunikation zwischen {\pic} und {\anlage} sicherzustellen, muss in {\pic} als wesentliche Einstellung unter dem Menüpunkt \enquote{Einstellungen $\rightarrow$ Optionen} im Reiter \enquote{Output}~-- gezeigt in Abbildung~\ref{fig:pic-comport}~-- der richtige COM-Port eingestellt werden. Über \enquote{Einstellungen $\rightarrow$ Connect} wird die serielle Verbindung aufgebaut und in der untersten Leiste anzeigt, ob der Verbindungsaufbau erfolgreich war.
 
-			Zudem sollte im Reiter \enquote{Allgemein} die globale Verzögerung erfahrungsgemäß, wie Abbildung~\ref{fig:pic-delay} zeigt, auf etwa 0{,}07\,s eingestellt werden. Dies ist die Zeit, die aufgrund von Datenübertragungen und Rechenvorgängen zwischen dem Beginn des Sendens des Befehls vom PC zum Transmitter und dem Zünden des Kanals an der Zündbox vergeht.
+			Zudem sollte im Reiter \enquote{Allgemein} die globale Verzögerung erfahrungsgemäß, wie Abbildung~\ref{fig:pic-delay} zeigt, auf etwa 0,07\,s eingestellt werden. Dies ist die Zeit, die aufgrund von Datenübertragungen und Rechenvorgängen zwischen dem Beginn des Sendens des Befehls vom PC zum Transmitter und dem Zünden des Kanals an der Zündbox vergeht.
 
-			Als minimale Zeitdauer zwischen zwei Zündungen sollte \unit[100]{ms} nicht unterschritten werden, das Scharfschalten vor Beginn der Show ist ebenso nicht zu vergessen wie das Scharfschalten des Transmitters und sämtlicher Zündboxen!
+			Als minimale Zeitdauer zwischen zwei Zündungen sollte \SI{100}{ms} nicht unterschritten werden, das Scharfschalten vor Beginn der Show ist ebenso nicht zu vergessen wie das Scharfschalten des Transmitters und sämtlicher Zündboxen!
 
 			\textbf{Anmerkung: Eine serielle Verbindung zu einem Device kann immer nur durch einen einzigen Client (\texttt{Putty\-tel, GUI, {\pic}, Firware-Updater}) bestehen. Man muss also immer die bestehende Verbindung trennen, bevor man mit einem anderen Programm eine neue aufbauen kann.}
 
@@ -341,7 +342,7 @@
 
 				Diese können, sofern \texttt{Puttytel} die aktive Anwendung ist, direkt über die PC-Tastatur eingegeben werden und sollten zur unmittelbaren Ausführung mit Druck auf die Taste \emph{ENTER} abgeschlossen werden. Sobald das erste Zeichen eingegeben wurde, leuchtet die gelbe Status-LED am Device. Unbekannte Befehle werden ignoriert, sämtliche Buchstaben als Kleinbuchstaben interpretiert. Korrekturen sind unter Verwendung der \emph{BACKSPACE}-Taste möglich.
 
-				Aufgrund der eingebauten Timeout-Funktion, welche ein Hängenbleiben des Programms während einer Show verhindern soll, bricht die Firmware die Eingabe ab, wenn zwischen der Eingabe der einzelnen Buchstaben mehr als $\unit[3]{s}$ vergehen. Lässt man diese Zeit verstreichen, wird automatisch ein Drücken der \emph{ENTER}-Taste übermittelt, die Befehlseingabe also abgeschlossen und das Device ist unmittelbar bereit, einen neuen Befehl aufzunehmen. Wird also nach Eingabe eines gültigen Befehls die \emph{ENTER}-Taste nicht gedrückt, wird der Befehl durch den Timeout dennoch ausgelöst. Möchte man dies vermeiden, sollte man den Befehl vor Ausführung durch Eingabe weiterer Zeichen ungültig machen oder durch Entfernen aller Zeichen mittels \emph{BACKSPACE} löschen.
+				Aufgrund der eingebauten Timeout-Funktion, welche ein Hängenbleiben des Programms während einer Show verhindern soll, bricht die Firmware die Eingabe ab, wenn zwischen der Eingabe der einzelnen Buchstaben mehr als $\SI{3}{s}$ vergehen. Lässt man diese Zeit verstreichen, wird automatisch ein Drücken der \emph{ENTER}-Taste übermittelt, die Befehlseingabe also abgeschlossen und das Device ist unmittelbar bereit, einen neuen Befehl aufzunehmen. Wird also nach Eingabe eines gültigen Befehls die \emph{ENTER}-Taste nicht gedrückt, wird der Befehl durch den Timeout dennoch ausgelöst. Möchte man dies vermeiden, sollte man den Befehl vor Ausführung durch Eingabe weiterer Zeichen ungültig machen oder durch Entfernen aller Zeichen mittels \emph{BACKSPACE} löschen.
 
 				Von den in Tabelle~\ref{tab:commands} aufgeführten Befehlen funktioniert lediglich \enquote{orders} nicht bei allen Devices, sondern setzt voraus, dass das angeschlossene Device ein Transmitter ist.
 
@@ -398,7 +399,7 @@
 					\item Spannung, welche die Batterie der Box mit der entsprechenden Unique-ID liefert.
 					\item Scharfschaltungsstatus der Box mit der jeweiligen Unique-ID: (j)a (=scharf) oder (n)ein (=nicht scharf).
 					\item Temperatur im Inneren der Box, sofern die Box über einen eingebauten Temperatursensor verfügt, ansonsten wird \enquote{n.a.}~(not available) angezeigt.
-					\item Stärke des von der Box empfangenen Antwortsignals (RSSI = Received Signal Strength Indicator) in dBm. Je größer der Wert ist~-- bei negativen Werten also umso näher er bei 0 liegt, umso besser und umso weniger störanfällig ist die Verbindung zwischen den Devices. Die theoretische Empfangsgrenze liegt bei etwa $\unit[-96]{dBm}$.
+					\item Stärke des von der Box empfangenen Antwortsignals (RSSI = Received Signal Strength Indicator) in dBm. Je größer der Wert ist~-- bei negativen Werten also umso näher er bei 0 liegt, umso besser und umso weniger störanfällig ist die Verbindung zwischen den Devices. Die theoretische Empfangsgrenze liegt bei etwa $\SI{-96}{dBm}$.
 				\end{enumerate}
 
 				Die untere Tabelle listet auf, wie viele Boxen mit der entsprechenden Slave-ID derzeit aktiv sind.
@@ -482,11 +483,11 @@
 						\label{fig:rfmread}
 					\end{figure}
 
-					Das Modul antwortet nun mit einem 8-Bit-Wert, z.\,B. mit dem Wert 0x9A, welcher dem Binärwert 10011010 entspricht, dessen Bedeutung dem Datenblatt entnommen werden kann: Das oberste Bit signalisiert, dass die Verstärkerstufe PA0 aktiv ist, die beiden folgenden Bits sind 0, da PA1 und PA2 in der Variante \texttt{RFM69CW} nicht genutzt werden können. Die unteren fünf Bits schließlich stehen für die eingestellte Sendeleistung, wobei man vom aus den fünf Bits berechneten Wert noch 18 abziehen muss, um die Sendeleistung in dBm zu erhalten. Gesetzt sind die Bits 4, 3 und 1, was dem Wert 26 ($= 2^4 + 2^3 + 2^1$) entspricht, daraus resultiert eine eingestellte Sendeleistung von $\unit[8]{dBm}$.
+					Das Modul antwortet nun mit einem 8-Bit-Wert, z.\,B. mit dem Wert 0x9A, welcher dem Binärwert 10011010 entspricht, dessen Bedeutung dem Datenblatt entnommen werden kann: Das oberste Bit signalisiert, dass die Verstärkerstufe PA0 aktiv ist, die beiden folgenden Bits sind 0, da PA1 und PA2 in der Variante \texttt{RFM69CW} nicht genutzt werden können. Die unteren fünf Bits schließlich stehen für die eingestellte Sendeleistung, wobei man vom aus den fünf Bits berechneten Wert noch 18 abziehen muss, um die Sendeleistung in dBm zu erhalten. Gesetzt sind die Bits 4, 3 und 1, was dem Wert 26 ($= 2^4 + 2^3 + 2^1$) entspricht, daraus resultiert eine eingestellte Sendeleistung von $\SI{8}{dBm}$.
 
 				\subsubsection{Setzen der Sendeleistung}
 
-					Will man die Sendeleistung nun auf $\unit[6]{dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\unit[6]{dBm}$ einzuschreiben, gibt man im Terminalprogramm~-- wie in Abbildung~\ref{fig:rfmwrite} gezeigt~-- \enquote{rfm} gefolgt von \emph{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
+					Will man die Sendeleistung nun auf $\SI{6}{dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\SI{6}{dBm}$ einzuschreiben, gibt man im Terminalprogramm~-- wie in Abbildung~\ref{fig:rfmwrite} gezeigt~-- \enquote{rfm} gefolgt von \emph{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
 
 					Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Anschließend erfolgt eine Nachfrage, ob die Sendeleistung dauerhaft gespeichert werden soll. Verneint man dies, wird beim nächsten Neustart des Device der Standardwert wiederhergestellt, andernfalls ist der gerade eingestellte Wert der neue Standardwert.
 
@@ -585,23 +586,23 @@
 					{\Delta}t = 2 {\cdot} T_\text{neu} - T_\text{original}
 				\end{equation}
 
-				Soll also eine Batterie mit einer Laufzeit von $\unit[60]{s}$ in $\unit[40]{s}$ abgebrannt werden, muss die zweite Zündung $\unit[20]{s}$ nach der ersten ausgelöst werden. Hierbei kommt es natürlich auch zu einer Verdichtung der Effekte.
+				Soll also eine Batterie mit einer Laufzeit von $\SI{60}{s}$ in $\SI{40}{s}$ abgebrannt werden, muss die zweite Zündung $\SI{20}{s}$ nach der ersten ausgelöst werden. Hierbei kommt es natürlich auch zu einer Verdichtung der Effekte.
 
 			\subsection{Zündkreisauslegung}
 
 				An dieser Stelle soll kurz auf die Grenzen und Limits von {\anlage} eingegangen werden, die bei der Planung einer Show zu berücksichtigen sind. Die Charakteristika und Kennwerte der einzelnen Anzündertypen sind Anlage 2 der 1.\,SprengV zu entnehmen.
 
-				{\anlage} ist für die Verwendung mit den Anzündertypen A (Auslösestrom $\unit[0{,}6]{A}$) und U (Auslösestrom $\unit[1{,}3]{A}$) ausgelegt. Der nötige Strom zum Auslösen eines HU-Anzünders (Auslösestrom $\unit[25]{A}$) kann nicht geliefert werden. Es ist zu berücksichtigen, dass in der Anlage ein Strombegrenzungswiderstand von $\unit[2{,}2]{\Omega}$ verbaut ist, der in Reihe zum angeschlossenen Anzünder-Netzwerk liegt. Mittels Formel~\eqref{eq:zuendkreisrmax} kann der maximal zulässige Widerstand (inklusive der $\unit[2{,}2]{\Omega}$) für einen gegebenen mittleren Strom $I$ ermittelt werden.
+				{\anlage} ist für die Verwendung mit den Anzündertypen A (Auslösestrom $\SI{0,6}{A}$) und U (Auslösestrom $\SI{1,3}{A}$) ausgelegt. Der nötige Strom zum Auslösen eines HU-Anzünders (Auslösestrom $\SI{25}{A}$) kann nicht geliefert werden. Es ist zu berücksichtigen, dass in der Anlage ein Strombegrenzungswiderstand von $\SI{2,2}{\ohm}$ verbaut ist, der in Reihe zum angeschlossenen Anzünder-Netzwerk liegt. Mittels Formel~\eqref{eq:zuendkreisrmax} kann der maximal zulässige Widerstand (inklusive der $\SI{2,2}{\ohm}$) für einen gegebenen mittleren Strom $I$ ermittelt werden.
 
 				\begin{equation}
 					R_\text{max} = \frac{50}{47 {\cdot} \ln\left(\frac{423}{423 - 20 {\cdot} I}\right)}
 					\label{eq:zuendkreisrmax}
 				\end{equation}
 
-				Entsprechend resultiert für einen gegebenen Widerstand der mittlere Strom über eine Zeit von $\unit[10]{ms}$ aus Gleichung~\eqref{eq:zuendkreisi}.
+				Entsprechend resultiert für einen gegebenen Widerstand der mittlere Strom über eine Zeit von $\SI{10}{ms}$ aus Gleichung~\eqref{eq:zuendkreisi}.
 
 				\begin{equation}
-					I = 21{,}15  {\cdot} \left(1 - \mathrm{e}^{-\frac{50}{47 {\cdot} R}}\right)
+					I = 21,15  {\cdot} \left(1 - \mathrm{e}^{-\frac{50}{47 {\cdot} R}}\right)
 					\label{eq:zuendkreisi}
 				\end{equation}
 
@@ -625,15 +626,15 @@
 					\label{tab:r-vs-i}
 				\end{table}
 
-				Bei der Verwendung von Verschleißdraht mit einer Kupferseele mit Durchmesser $d = \unit[0{,}5]{mm}$ kann für Überschlagsrechnungen davon ausgegangen werden, dass je $\unit[10]{m}$ Kabel-Gesamtweg (also Hin- und Rückleitung addiert) ein zusätzlicher Reihenwiderstand von $\unit[1]{\Omega}$ im Zündkreis auftritt.
+				Bei der Verwendung von Verschleißdraht mit einer Kupferseele mit Durchmesser $d = \SI{0,5}{mm}$ kann für Überschlagsrechnungen davon ausgegangen werden, dass je $\SI{10}{m}$ Kabel-Gesamtweg (also Hin- und Rückleitung addiert) ein zusätzlicher Reihenwiderstand von $\SI{1}{\ohm}$ im Zündkreis auftritt.
 
-				Setzt man pro A-Anzünder einen Widerstand von $\unit[2]{\Omega}$ und pro U-Anzünder einen Widerstand von $\unit[0{,}8]{\Omega}$ an und geht von einem Gesamt-Kabelweg von $\unit[10]{m}$ aus, sollte die Anlage also im Stande sein, eine Reihe von 10\,A-Anzündern, wodurch sich $R_\text{ges} = \unit[23{,}2]{\Omega}$ ergibt, noch sicher auszulösen, da der mittlere Strom dann noch mehr als $\unit[50]{\%}$ über dem Auslösestrom eines A-Anzünders liegt. Bei den U-Anzündern ergibt sich unter sonst gleichen Bedingungen, was Stromüberhöhung und Kabellänge angeht, ebenso eine Maximalzahl von 10\,U-Anzündern in Reihe.
+				Setzt man pro A-Anzünder einen Widerstand von $\SI{2}{\ohm}$ und pro U-Anzünder einen Widerstand von $\SI{0,8}{\ohm}$ an und geht von einem Gesamt-Kabelweg von $\SI{10}{m}$ aus, sollte die Anlage also im Stande sein, eine Reihe von 10\,A-Anzündern, wodurch sich $R_\text{ges} = \SI{23,2}{\ohm}$ ergibt, noch sicher auszulösen, da der mittlere Strom dann noch mehr als $\SI{50}{\%}$ über dem Auslösestrom eines A-Anzünders liegt. Bei den U-Anzündern ergibt sich unter sonst gleichen Bedingungen, was Stromüberhöhung und Kabellänge angeht, ebenso eine Maximalzahl von 10\,U-Anzündern in Reihe.
 
 				\textbf{Es sei noch einmal deutlich darauf hingewiesen, dass aufgrund der unterschiedlichen Widerstände und Ansprechströme niemals verschiedene Anzündertypen zusammen in einem Zündkreis verwendet werden sollten~-- und zwar weder in Reihen- noch in Parallelschaltung!}
 
-				Eine Beispielrechnung macht dies klar: Würde man beispielsweise je fünf Anzünder jeder Kategorie zu einer Reihenschaltung von 10 Anzündern zusammenschalten, ergäbe sich $R_\text{ges} = \unit[17{,}2]{\Omega}$ und damit nach Formel \eqref{eq:zuendkreisi} ein Strom $I = \unit[1{,}27]{A}$, was bereits unterhalb des spezifizierten Auslösestroms eines U-Anzünders ($\unit[1{,}3]{A}$) liegt.
+				Eine Beispielrechnung macht dies klar: Würde man beispielsweise je fünf Anzünder jeder Kategorie zu einer Reihenschaltung von 10 Anzündern zusammenschalten, ergäbe sich $R_\text{ges} = \SI{17,2}{\ohm}$ und damit nach Formel \eqref{eq:zuendkreisi} ein Strom $I = \SI{1,27}{A}$, was bereits unterhalb des spezifizierten Auslösestroms eines U-Anzünders ($\SI{1,3}{A}$) liegt.
 
-				Hinzu kommt bei gleichen Anzündern die Problematik, dass selbst bei einem rechnerisch ausreichend hohen Strom, dieser wahrscheinlich nicht über die notwendige Zeitspanne bei den U-Anzündern ankäme. Dies liegt am unterschiedlichen Zündimpuls (Einheit $\unit{\frac{mWs}{\Omega}}$), hinter dem sich der bei Schmelzsicherungen als Schmelzintegral bekannte \enquote{I-Quadrat-t-Wert}, also das Produkt aus dem Quadrat des Stroms und der Zeit, verbirgt. Fließt derselbe Strom durch die Reihenschaltung eines Anzünders vom Typ A und einen Anzünder vom Typ U, löst der A-Anzünder aufgrund des geringeren notwendigen Zündimpulses zuerst aus. Durch das Auslösen wird in aller Regel der Stromkreis unmittelbar unterbrochen, so dass kein Strom mehr durch den U-Anzünder fließen kann, weshalb die ihn ihm umgesetzte Energie nicht zum Auslösen ausreicht.
+				Hinzu kommt bei gleichen Anzündern die Problematik, dass selbst bei einem rechnerisch ausreichend hohen Strom, dieser wahrscheinlich nicht über die notwendige Zeitspanne bei den U-Anzündern ankäme. Dies liegt am unterschiedlichen Zündimpuls (Einheit \si[per-mode=fraction]{\mWs\per\ohm}), hinter dem sich der bei Schmelzsicherungen als Schmelzintegral bekannte \enquote{I-Quadrat-t-Wert}, also das Produkt aus dem Quadrat des Stroms und der Zeit, verbirgt. Fließt derselbe Strom durch die Reihenschaltung eines Anzünders vom Typ A und einen Anzünder vom Typ U, löst der A-Anzünder aufgrund des geringeren notwendigen Zündimpulses zuerst aus. Durch das Auslösen wird in aller Regel der Stromkreis unmittelbar unterbrochen, so dass kein Strom mehr durch den U-Anzünder fließen kann, weshalb die ihn ihm umgesetzte Energie nicht zum Auslösen ausreicht.
 
 				Die Krux bei einer Parallelschaltung verschiedener Anzündertypen liegt darin, dass ein Auslösen des Anzünders nicht zwingend gleichbedeutend mit einer Unterbrechung des Stromkreises ist. Bei einer Parallelschaltung unterschiedlicher Widerstände wird zunächst der Ast mit dem geringsten Widerstand auslösen, allerdings kann nicht garantiert werden, dass dieser anschließend auch wirklich einen elektrischen Leerlauf darstellt. Sehr häufig ist auch nach dem Ansprechen noch eine elektrisch leitende Verbindung zwischen den Anzünderdrähten messbar, so dass ein Auslösen der weiteren Äste~-- gerade im Fall stark unterschiedlicher Widerstände~-- nicht gesichert ist.
 
@@ -649,7 +650,7 @@
 				\begin{itemize}
 					\item Verwenden einer Slave-ID außerhalb des Bereichs $1-31$
 					\item Ansprechen eines Kanals außerhalb des Bereichs $1-16$
-					\item Unterschreiten des minimalen Zündabstands von $\unit[100]{ms}$
+					\item Unterschreiten des minimalen Zündabstands von $\SI{100}{ms}$
 					\item Mehrfachzünden derselben Slave-Kanal-Kombination
 				\end{itemize}
 				Darüber hinaus werden auch alle angesprochenen Slave-IDs und die Gesamtzahl der Cues angezeigt.
@@ -701,11 +702,11 @@
 				\begin{tabularx}{.925\textwidth}{Xccc}
 					\hline\hline
 					Firmware                        & Controller   & Funkmodul & Sendeleistung    \\ \hline
-					Pyro\_atmega328p\_RFM69.hex     & ATMEGA 328P  & RFM69CW   & $\unit[8]{dBm}$  \\
-					Pyro\_atmega328p\_RFM69\_HP.hex & ATMEGA 328P  & RFM69CW   & $\unit[13]{dBm}$ \\
-					Pyro\_atmega168p\_RFM69.hex     & ATMEGA 168PA & RFM69CW   & $\unit[8]{dBm}$  \\
-					Pyro\_atmega328p\_RFM12.hex     & ATMEGA 328P  & RFM12     & $\unit[4]{dBm}$  \\
-					Pyro\_atmega168p\_RFM12.hex     & ATMEGA 168PA & RFM12     & $\unit[4]{dBm}$  \\ \hline\hline
+					Pyro\_atmega328p\_RFM69.hex     & ATMEGA 328P  & RFM69CW   & $\SI{8}{dBm}$  \\
+					Pyro\_atmega328p\_RFM69\_HP.hex & ATMEGA 328P  & RFM69CW   & $\SI{13}{dBm}$ \\
+					Pyro\_atmega168p\_RFM69.hex     & ATMEGA 168PA & RFM69CW   & $\SI{8}{dBm}$  \\
+					Pyro\_atmega328p\_RFM12.hex     & ATMEGA 328P  & RFM12     & $\SI{4}{dBm}$  \\
+					Pyro\_atmega168p\_RFM12.hex     & ATMEGA 168PA & RFM12     & $\SI{4}{dBm}$  \\ \hline\hline
 				\end{tabularx}
 				\caption{Verfügbare Firmware-Versionen}
 				\label{tab:firmwareversions}
@@ -804,7 +805,7 @@
 			\label{fig:pinout}
 		\end{figure}
 
-		Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er beim Starten der Firmware als Eingang geschaltet wird und aufgrund der dort anliegenden Spannung die sicherheitsrelevante Erkennung, um welchen Devicetyp es sich handelt, vorgenommen wird. Aufgrund eines internen Pullup-Widerstands im LCD werden bei angeschlossenem Transmitter stets $\unit[3{,}3]{V}$ an diesem Pin anliegen, bei Zündboxen bewegt sich die heruntergeteilte Spannung der Versorgungsbatterie im Bereich unterhalb von $\unit[1{,}1]{V}$.
+		Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er beim Starten der Firmware als Eingang geschaltet wird und aufgrund der dort anliegenden Spannung die sicherheitsrelevante Erkennung, um welchen Devicetyp es sich handelt, vorgenommen wird. Aufgrund eines internen Pullup-Widerstands im LCD werden bei angeschlossenem Transmitter stets $\SI{3,3}{V}$ an diesem Pin anliegen, bei Zündboxen bewegt sich die heruntergeteilte Spannung der Versorgungsbatterie im Bereich unterhalb von $\SI{1,1}{V}$.
 
 		Diese Unterscheidung ist wichtig, da der Programmablauf sich bei Transmittern (Unique-ID 0 und Slave-ID 0) anders gestaltet als bei Zündboxen und Controllerpins, wie in Abbildung~\ref{fig:pinout} zu sehen, bei Transmittern anders belegt sind und für eine andere Datenrichtung (Eingang/Ausgang) ausgelegt sind als bei Zündboxen.  Wie zu erkennen werden Controlleranschlüsse beim Transmitter als Steuerung des Displays verwendet, die bei der Zündbox den Zustand des Schlüsselschalters einlesen oder die Schieberegister zur Zündung der Kanäle ansteuern.
 
@@ -854,47 +855,47 @@
 			  Bauteil                        & Anz. & Beschreibung                         & Händler & Artikelnr.                                                & Einzel     & Ges.       & Bemerkung    \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Kondensatoren} \\
-			  C11, C13                       & 2    & Elektrolyt\-kon\-den\-sa\-tor, 100uF & Reichelt & RAD 105 100/35                                            & \EUR{0,04} & \EUR{0,08} &              \\
-			  C14                            & 1    & Elektrolyt\-kon\-den\-sa\-tor, 10uF  & Reichelt & RAD 10/100                                                & \EUR{0,04} & \EUR{0,04} &              \\
-			  C1{\dots}7, C10, C12, C15, C16 & 11   & Keramik\-kon\-den\-sator, 100nF      & Reichelt & X7R-2,5 100N                                              & \EUR{0,04} & \EUR{0,44} &              \\
-			  C8, C9                         & 2    & Keramik\-kon\-den\-sator, 15pF       & Reichelt & KERKO 15P                                                 & \EUR{0,05} & \EUR{0,10} &              \\
+			  C11, C13                       & 2    & Elektrolyt\-kon\-den\-sa\-tor, 100uF & Reichelt & RAD 105 100/35                                            & 0,04\,€ & 0,08\,€ &              \\
+			  C14                            & 1    & Elektrolyt\-kon\-den\-sa\-tor, 10uF  & Reichelt & RAD 10/100                                                & 0,04\,€ & 0,04\,€ &              \\
+			  C1{\dots}7, C10, C12, C15, C16 & 11   & Keramik\-kon\-den\-sator, 100nF      & Reichelt & X7R-2,5 100N                                              & 0,04\,€ & 0,44\,€ &              \\
+			  C8, C9                         & 2    & Keramik\-kon\-den\-sator, 15pF       & Reichelt & KERKO 15P                                                 & 0,05\,€ & 0,10\,€ &              \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Integrierte Schaltungen} \\
-			  IC2                            & 1    & ATMEGA 328P                          & Reichelt & ATMEGA 328P-PU                                            & \EUR{2,65} & \EUR{2,65} &              \\
-			  IC1                            & 1    & MAX202                               & Reichelt & MAX 202 ECPE                                              & \EUR{1,40} & \EUR{1,40} &              \\
-			  U\$4                           & 1    & RFM69CW                              & Pollin   & 810 303                                                   & \EUR{4,60} & \EUR{4,60} &              \\
-			  U\$2                           & 1    & DS18B20                              & Reichelt & DS 18B20                                                  & \EUR{1,60} & \EUR{1,60} &              \\
-			  IC8                            & 1    & LM3940-3,3                           & Reichelt & LM 3940 IT3,3                                             & \EUR{1,10} & \EUR{1,10} &              \\
+			  IC2                            & 1    & ATMEGA 328P                          & Reichelt & ATMEGA 328P-PU                                            & 2,65\,€ & 2,65\,€ &              \\
+			  IC1                            & 1    & MAX202                               & Reichelt & MAX 202 ECPE                                              & 1,40\,€ & 1,40\,€ &              \\
+			  U\$4                           & 1    & RFM69CW                              & Pollin   & 810 303                                                   & 4,60\,€ & 4,60\,€ &              \\
+			  U\$2                           & 1    & DS18B20                              & Reichelt & DS 18B20                                                  & 1,60\,€ & 1,60\,€ &              \\
+			  IC8                            & 1    & LM3940-3,3                           & Reichelt & LM 3940 IT3,3                                             & 1,10\,€ & 1,10\,€ &              \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Display} \\
-			                                 & 1    & LCD, 20x4 Zeichen, HD44780-komp.     & eBay     & \href{http://www.ebay.com/itm/400448319287}{400448319287} & \EUR{4,80} & \EUR{4,80} &              \\
+			                                 & 1    & LCD, 20x4 Zeichen, HD44780-komp.     & eBay     & \href{http://www.ebay.com/itm/400448319287}{400448319287} & 4,80\,€ & 4,80\,€ &              \\
 			  \\ \hline
 			  \multicolumn{8}{c}{LEDs} \\
-			  LED\_O                         & 1    & LED, 5mm, orange                     & Reichelt & LED 5MM R OR                                              & \EUR{0,12} & \EUR{0,12} &              \\
-			  LED\_R                         & 1    & LED, 5mm, rot                        & Reichelt & LED 5MM RT                                                & \EUR{0,06} & \EUR{0,06} &              \\
-			  LED\_Y                         & 1    & LED, 5mm, gelb                       & Reichelt & LED 5MM GE                                                & \EUR{0,06} & \EUR{0,06} &              \\
-			  LED\_G                         & 1    & LED, 5mm, grün                      & Reichelt & LED 5MM GN                                                & \EUR{0,06} & \EUR{0,06} &              \\
+			  LED\_O                         & 1    & LED, 5mm, orange                     & Reichelt & LED 5MM R OR                                              & 0,12\,€ & 0,12\,€ &              \\
+			  LED\_R                         & 1    & LED, 5mm, rot                        & Reichelt & LED 5MM RT                                                & 0,06\,€ & 0,06\,€ &              \\
+			  LED\_Y                         & 1    & LED, 5mm, gelb                       & Reichelt & LED 5MM GE                                                & 0,06\,€ & 0,06\,€ &              \\
+			  LED\_G                         & 1    & LED, 5mm, grün                      & Reichelt & LED 5MM GN                                                & 0,06\,€ & 0,06\,€ &              \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Quarz} \\
-			  Q1                             & 1    & Standardquarz, Grundton, 9,8304 Mhz  & Reichelt & 9,8304-HC49U-S                                            & \EUR{0,15} & \EUR{0,15} &              \\
+			  Q1                             & 1    & Standardquarz, Grundton, 9,8304 Mhz  & Reichelt & 9,8304-HC49U-S                                            & 0,15\,€ & 0,15\,€ &              \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Widerstände} \\
-			  R13                            & 1    & 6k8                                  & Reichelt & 1/4W 6,8K                                                 & \EUR{0,08} & \EUR{0,08} &              \\
-			  R12, R14                       & 2    & 3k3                                  & Reichelt & METALL 3,30K                                              & \EUR{0,08} & \EUR{0,16} &              \\
-			  R1, R2, R3, R7                 & 4    & 10k                                  & Reichelt & METALL 10,0K                                              & \EUR{0,08} & \EUR{0,33} &              \\
-			  R4{\dots}6, R8{\dots}11        & 7    & 1k0                                  & Reichelt & METALL 1,00K                                              & \EUR{0,08} & \EUR{0,57} & 10 billiger! \\
+			  R13                            & 1    & 6k8                                  & Reichelt & 1/4W 6,8K                                                 & 0,08\,€ & 0,08\,€ &              \\
+			  R12, R14                       & 2    & 3k3                                  & Reichelt & METALL 3,30K                                              & 0,08\,€ & 0,16\,€ &              \\
+			  R1, R2, R3, R7                 & 4    & 10k                                  & Reichelt & METALL 10,0K                                              & 0,08\,€ & 0,33\,€ &              \\
+			  R4{\dots}6, R8{\dots}11        & 7    & 1k0                                  & Reichelt & METALL 1,00K                                              & 0,08\,€ & 0,57\,€ & 10 billiger! \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Mechanische Bauteile} \\
-			  X1                             & 1    & Sub-D-Buchse, 9-pol                  & Reichelt & D-SUB BU 09US                                             & \EUR{0,23} & \EUR{0,23} &              \\
-			  SV2                            & 1    & Wannenstecker, 10-pol                & Reichelt & WSL 10G                                                   & \EUR{0,08} & \EUR{0,08} &              \\
-			                                 & 1    & Box                                  & Reichelt & GEH KS 50                                                 & \EUR{2,65} & \EUR{2,65} &              \\
-			                                 & 1    & USB-Kabel als Stromkabel             & Reichelt & AK 670/2-1,0                                              & \EUR{0,70} & \EUR{0,70} &              \\
+			  X1                             & 1    & Sub-D-Buchse, 9-pol                  & Reichelt & D-SUB BU 09US                                             & 0,23\,€ & 0,23\,€ &              \\
+			  SV2                            & 1    & Wannenstecker, 10-pol                & Reichelt & WSL 10G                                                   & 0,08\,€ & 0,08\,€ &              \\
+			                                 & 1    & Box                                  & Reichelt & GEH KS 50                                                 & 2,65\,€ & 2,65\,€ &              \\
+			                                 & 1    & USB-Kabel als Stromkabel             & Reichelt & AK 670/2-1,0                                              & 0,70\,€ & 0,70\,€ &              \\
 			  \\
 			  \multicolumn{8}{c}{HF-Komponenten} \\
-			                                 & 1    & SMA-Kabel Funkmodul-Gehäuse         & eBay     & \href{http://www.ebay.com/itm/161134814025}{161134814025} & \EUR{2,53} & \EUR{2,53} &              \\
-			                                 & 1    & Antenne 868 MHz                      & eBay     & \href{http://www.ebay.de/itm/380436601891}{380436601891}  & \EUR{4,24} & \EUR{4,24} &              \\
-			                                 & 1    & SMA-Platinenbuchse, 1,6mm            & eBay     & \href{http://www.ebay.com/itm/220952712009}{220952712009} & \EUR{1,17} & \EUR{1,17} &              \\ \hline
-			  & & & & & & \EUR{28,42} \\
+			                                 & 1    & SMA-Kabel Funkmodul-Gehäuse         & eBay     & \href{http://www.ebay.com/itm/161134814025}{161134814025} & 2,53\,€ & 2,53\,€ &              \\
+			                                 & 1    & Antenne 868 MHz                      & eBay     & \href{http://www.ebay.de/itm/380436601891}{380436601891}  & 4,24\,€ & 4,24\,€ &              \\
+			                                 & 1    & SMA-Platinenbuchse, 1,6mm            & eBay     & \href{http://www.ebay.com/itm/220952712009}{220952712009} & 1,17\,€ & 1,17\,€ &              \\ \hline
+			  & & & & & & 28,42\,€ \\
 			  \caption{\normalsize Materialliste für den Transmitter}
 			  \label{tab:transmitterbom}
 			\end{longtable}}
@@ -908,85 +909,85 @@
 			  Bauteil                                 & Anz. & Beschreibung                              & Händler   & Artikelnr.                                                                 & Einzel      & Ges.        & Bemerkung                  \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Kondensatoren} \\
-			  C13, C27, C19                           & 3    & Elektrolyt\-kon\-den\-sa\-tor, 100uF      & Reichelt   & RAD 105 100/35                                                             & \EUR{0,04}  & \EUR{0,12}  &                            \\
-			  C14                                     & 1    & Elektrolyt\-kon\-den\-sa\-tor, 10uF       & Reichelt   & RAD 10/100                                                                 & \EUR{0,04}  & \EUR{0,04}  &                            \\
-			  C21, C22                                & 2    & Elektrolyt\-kon\-den\-sa\-tor, 4700uF 35V & Reichelt   & RAD 4.700/35                                                               & \EUR{0,45}  & \EUR{0,90}  &                            \\
-			  C1{\dots}7, C15, C16, C20, C23{\dots}26 & 14   & Keramik\-kondensator, 100nF               & Reichelt   & X7R-2,5 100N                                                               & \EUR{0,04}  & \EUR{0,56}  &                            \\
-			  C8, C9                                  & 2    & Keramik\-kondensator, 15pF                & Reichelt   & KERKO 15P                                                                  & \EUR{0,05}  & \EUR{0,10}  &                            \\
-			  C18                                     & 1    & Keramik\-kondensator, 220pF               & Reichelt   & KERKO 220P                                                                 & \EUR{0,05}  & \EUR{0,05}  &                            \\
+			  C13, C27, C19                           & 3    & Elektrolyt\-kon\-den\-sa\-tor, 100uF      & Reichelt   & RAD 105 100/35                                                             & 0,04\,€  & 0,12\,€  &                            \\
+			  C14                                     & 1    & Elektrolyt\-kon\-den\-sa\-tor, 10uF       & Reichelt   & RAD 10/100                                                                 & 0,04\,€  & 0,04\,€  &                            \\
+			  C21, C22                                & 2    & Elektrolyt\-kon\-den\-sa\-tor, 4700uF 35V & Reichelt   & RAD 4.700/35                                                               & 0,45\,€  & 0,90\,€  &                            \\
+			  C1{\dots}7, C15, C16, C20, C23{\dots}26 & 14   & Keramik\-kondensator, 100nF               & Reichelt   & X7R-2,5 100N                                                               & 0,04\,€  & 0,56\,€  &                            \\
+			  C8, C9                                  & 2    & Keramik\-kondensator, 15pF                & Reichelt   & KERKO 15P                                                                  & 0,05\,€  & 0,10\,€  &                            \\
+			  C18                                     & 1    & Keramik\-kondensator, 220pF               & Reichelt   & KERKO 220P                                                                 & 0,05\,€  & 0,05\,€  &                            \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Dioden} \\
-			  D3                                      & 1    & 1N4002                                    & Reichelt   & 1N 4002                                                                    & \EUR{0,02}  & \EUR{0,02}  &                            \\
-			  D2                                      & 1    & 1N5819                                    & Reichelt   & 1N 5819                                                                    & \EUR{0,06}  & \EUR{0,06}  &                            \\
+			  D3                                      & 1    & 1N4002                                    & Reichelt   & 1N 4002                                                                    & 0,02\,€  & 0,02\,€  &                            \\
+			  D2                                      & 1    & 1N5819                                    & Reichelt   & 1N 5819                                                                    & 0,06\,€  & 0,06\,€  &                            \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Integrierte Schaltungen} \\
-			  IC2                                     & 1    & ATMEGA 328P                               & Reichelt   & ATMEGA 328P-PU                                                             & \EUR{2,65}  & \EUR{2,65}  &                            \\
-			  IC4                                     & 1    & MC33063                                   & Reichelt   & MC 33063 AP1                                                               & \EUR{0,51}  & \EUR{0,51}  &                            \\
-			  IC1                                     & 1    & MAX202                                    & Reichelt   & MAX 202 ECPE                                                               & \EUR{1,40}  & \EUR{1,40}  &                            \\
-			  IC6, IC7                                & 2    & 74HC595                                   & Reichelt   & 74HC 595                                                                   & \EUR{0,36}  & \EUR{0,72}  &                            \\
-			  IC8                                     & 1    & LM1086                                    & Reichelt   & LM 1086 IT3,3                                                              & \EUR{1,25}  & \EUR{1,25}  &                            \\
-			  U\$4                                    & 1    & RFM69CW                                   & Pollin     & 810 303                                                                    & \EUR{4,60}  & \EUR{4,60}  &                            \\
-			  U\$2                                    & 1    & DS18B20                                   & Reichelt   & DS 18B20                                                                   & \EUR{1,60}  & \EUR{1,60}  &                            \\
+			  IC2                                     & 1    & ATMEGA 328P                               & Reichelt   & ATMEGA 328P-PU                                                             & 2,65\,€  & 2,65\,€  &                            \\
+			  IC4                                     & 1    & MC33063                                   & Reichelt   & MC 33063 AP1                                                               & 0,51\,€  & 0,51\,€  &                            \\
+			  IC1                                     & 1    & MAX202                                    & Reichelt   & MAX 202 ECPE                                                               & 1,40\,€  & 1,40\,€  &                            \\
+			  IC6, IC7                                & 2    & 74HC595                                   & Reichelt   & 74HC 595                                                                   & 0,36\,€  & 0,72\,€  &                            \\
+			  IC8                                     & 1    & LM1086                                    & Reichelt   & LM 1086 IT3,3                                                              & 1,25\,€  & 1,25\,€  &                            \\
+			  U\$4                                    & 1    & RFM69CW                                   & Pollin     & 810 303                                                                    & 4,60\,€  & 4,60\,€  &                            \\
+			  U\$2                                    & 1    & DS18B20                                   & Reichelt   & DS 18B20                                                                   & 1,60\,€  & 1,60\,€  &                            \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Induktivität} \\
-			  L1                                      & 1    & 68 uH, stehend                            & Reichelt   & L-07HCP 68$\mu$                                                            & \EUR{0,30}  & \EUR{0,30}  &                            \\
+			  L1                                      & 1    & 68 uH, stehend                            & Reichelt   & L-07HCP 68$\mu$                                                            & 0,30\,€  & 0,30\,€  &                            \\
 			  \\ \hline
 			  \multicolumn{8}{c}{LEDs} \\
-			  LED\_O                                  & 1    & LED, 5mm, orange                          & Reichelt   & LED 5MM R OR                                                               & \EUR{0,12}  & \EUR{0,12}  &                            \\
-			  LED\_R                                  & 1    & LED, 5mm, rot                             & Reichelt   & LED 5MM RT                                                                 & \EUR{0,06}  & \EUR{0,06}  &                            \\
-			  LED\_Y                                  & 1    & LED, 5mm, gelb                            & Reichelt   & LED 5MM GE                                                                 & \EUR{0,06}  & \EUR{0,06}  &                            \\
-			  LED\_G                                  & 1    & LED, 5mm, grün                           & Reichelt   & LED 5MM GN                                                                 & \EUR{0,06}  & \EUR{0,06}  &                            \\
-			  LED1{\dots}16                           & 16   & LED, 3mm, grün                           & Reichelt   & LED 3MM GN                                                                 & \EUR{0,06}  & \EUR{0,96}  &                            \\
+			  LED\_O                                  & 1    & LED, 5mm, orange                          & Reichelt   & LED 5MM R OR                                                               & 0,12\,€  & 0,12\,€  &                            \\
+			  LED\_R                                  & 1    & LED, 5mm, rot                             & Reichelt   & LED 5MM RT                                                                 & 0,06\,€  & 0,06\,€  &                            \\
+			  LED\_Y                                  & 1    & LED, 5mm, gelb                            & Reichelt   & LED 5MM GE                                                                 & 0,06\,€  & 0,06\,€  &                            \\
+			  LED\_G                                  & 1    & LED, 5mm, grün                           & Reichelt   & LED 5MM GN                                                                 & 0,06\,€  & 0,06\,€  &                            \\
+			  LED1{\dots}16                           & 16   & LED, 3mm, grün                           & Reichelt   & LED 3MM GN                                                                 & 0,06\,€  & 0,96\,€  &                            \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Quarz} \\
-			  Q1                                      & 1    & Standardquarz, Grundton, 9,8304 Mhz       & Reichelt   & 9,8304-HC49U-S                                                             & \EUR{0,15}  & \EUR{0,15}  &                            \\
+			  Q1                                      & 1    & Standardquarz, Grundton, 9,8304 Mhz       & Reichelt   & 9,8304-HC49U-S                                                             & 0,15\,€  & 0,15\,€  &                            \\
 			  \\  \hline
 			  \multicolumn{8}{c}{MOSFETs} \\
-			  Q2{\dots}Q17                            & 16   & IRF3708                                   & AliExpress & \href{http://www.aliexpress.com/item/IRF3708-to220/32271560711.html}{Link} & \EUR{0,29}  & \EUR{4,64}  & 50er-Pack für \EUR{14,32} \\
+			  Q2{\dots}Q17                            & 16   & IRF3708                                   & AliExpress & \href{http://www.aliexpress.com/item/IRF3708-to220/32271560711.html}{Link} & 0,29\,€  & 4,64\,€  & 50er-Pack für 14,32\,€ \\
 			  \\  \hline
 			  \multicolumn{8}{c}{Widerstände} \\
-			  R16                                     & 1    & 180                                       & Reichelt   & METALL 180                                                                 & \EUR{0,08}  & \EUR{0,08}  &                            \\
-			  R17                                     & 1    & 0R22                                      & eBay       & \href{http://www.ebay.com/itm/221583734560}{221583734560}                  & \EUR{1,00}  & \EUR{1,00}  & 100er-Pack\dots            \\
-			  R1{\dots}3, R7, R19, R20, R37           & 7    & 10k                                       & Reichelt   & METALL 10,0K                                                               & \EUR{0,08}  & \EUR{0,57}  & 10 billiger als 7!         \\
-			  R18                                     & 1    & 150k                                      & Reichelt   & METALL 150K                                                                & \EUR{0,08}  & \EUR{0,08}  &                            \\
-			  R4{\dots}6, R8{\dots}11                 & 7    & 1k                                        & Reichelt   & METALL 1,00K                                                               & \EUR{0,08}  & \EUR{0,57}  & 10 billiger als 7!         \\
-			  R\_Z                                    & 1    & 2R2-11W                                   & Reichelt   & 11W VERT. 2,2                                                              & \EUR{0,60}  & \EUR{0,60}  &                            \\
-			  R12, R14, R38                           & 3    & 3k3                                       & Reichelt   & METALL 3,30K                                                               & \EUR{0,08}  & \EUR{0,25}  &                            \\
-			  R15                                     & 1    & 56k                                       & Reichelt   & METALL 56K                                                                 & \EUR{0,08}  & \EUR{0,08}  &                            \\
-			  R21{\dots}36                            & 16   & 6k8                                       & Reichelt   & 1/4W 6,8K                                                                  & \EUR{0,03}  & \EUR{0,53}  &                            \\
-			  RN1, RN2                                & 2    & Network, 9Pin, 10k                        & Reichelt   & SIL 9-8 10K                                                                & \EUR{0,11}  & \EUR{0,22}  &                            \\
+			  R16                                     & 1    & 180                                       & Reichelt   & METALL 180                                                                 & 0,08\,€  & 0,08\,€  &                            \\
+			  R17                                     & 1    & 0R22                                      & eBay       & \href{http://www.ebay.com/itm/221583734560}{221583734560}                  & 1,00\,€  & 1,00\,€  & 100er-Pack\dots            \\
+			  R1{\dots}3, R7, R19, R20, R37           & 7    & 10k                                       & Reichelt   & METALL 10,0K                                                               & 0,08\,€  & 0,57\,€  & 10 billiger als 7!         \\
+			  R18                                     & 1    & 150k                                      & Reichelt   & METALL 150K                                                                & 0,08\,€  & 0,08\,€  &                            \\
+			  R4{\dots}6, R8{\dots}11                 & 7    & 1k                                        & Reichelt   & METALL 1,00K                                                               & 0,08\,€  & 0,57\,€  & 10 billiger als 7!         \\
+			  R\_Z                                    & 1    & 2R2-11W                                   & Reichelt   & 11W VERT. 2,2                                                              & 0,60\,€  & 0,60\,€  &                            \\
+			  R12, R14, R38                           & 3    & 3k3                                       & Reichelt   & METALL 3,30K                                                               & 0,08\,€  & 0,25\,€  &                            \\
+			  R15                                     & 1    & 56k                                       & Reichelt   & METALL 56K                                                                 & 0,08\,€  & 0,08\,€  &                            \\
+			  R21{\dots}36                            & 16   & 6k8                                       & Reichelt   & 1/4W 6,8K                                                                  & 0,03\,€  & 0,53\,€  &                            \\
+			  RN1, RN2                                & 2    & Network, 9Pin, 10k                        & Reichelt   & SIL 9-8 10K                                                                & 0,11\,€  & 0,22\,€  &                            \\
 			  \\ \hline
 			  \multicolumn{8}{c}{HF-Komponenten} \\
-			                                          & 1    & SMA-Kabel Funkmodul-Gehäuse              & eBay       & \href{http://www.ebay.com/itm/391039600954}{391039600954}                  & \EUR{2,04}  & \EUR{2,04}  &                            \\
-			                                          & 1    & SMA-Kabel Gehäuse-Antenne                & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}                  & \EUR{3,07}  & \EUR{3,07}  &                            \\
-			                                          & 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}                   & \EUR{4,24}  & \EUR{4,24}  &                            \\
-			                                          & 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                  & \EUR{1,17}  & \EUR{1,17}  &                            \\
+			                                          & 1    & SMA-Kabel Funkmodul-Gehäuse              & eBay       & \href{http://www.ebay.com/itm/391039600954}{391039600954}                  & 2,04\,€  & 2,04\,€  &                            \\
+			                                          & 1    & SMA-Kabel Gehäuse-Antenne                & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}                  & 3,07\,€  & 3,07\,€  &                            \\
+			                                          & 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}                   & 4,24\,€  & 4,24\,€  &                            \\
+			                                          & 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                  & 1,17\,€  & 1,17\,€  &                            \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Mechanische Bauteile} \\
-			  X1                                      & 1    & Sub-D-Buchse, 9-pol                       & Reichelt   & D-SUB BU 09US                                                              & \EUR{0,23}  & \EUR{0,23}  &                            \\
-			  SV2                                     & 1    & Wannenstecker, 10-pol                     & Reichelt   & WSL 10G                                                                    & \EUR{0,08}  & \EUR{0,08}  &                            \\
-			                                          & 1    & Wippschalter                              & Pollin     & 420 697                                                                    & \EUR{0,35}  & \EUR{0,35}  &                            \\
-			                                          & 1    & Miniatur-Schlüsselschalter               & Pollin     & 420 664                                                                    & \EUR{0,75}  & \EUR{0,75}  &                            \\
-			                                          & 1    & Kunststoffgehäuse 021-002-084            & Pollin     & 460 001                                                                    & \EUR{7,95}  & \EUR{7,95}  &                            \\
-			                                          & 8    & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                                     & \EUR{0,29}  & \EUR{2,32}  &                            \\
-			                                          & 1    & Koffer                                    & Amazon     & Bilora 545                                                                 & \EUR{19,89} & \EUR{19,89} &                            \\
-			                                          & 1    & Akku                                      & Reichelt   & WP 1,2-12                                                                  & \EUR{7,80}  & \EUR{7,80}  &                            \\
-			                                          & 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                               & \EUR{0,01}  & \EUR{0,03}  & 200er-Pack für \EUR{1,70} \\
-			                                          & 16   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                               & \EUR{0,02}  & \EUR{0,34}  & 50er-Pack für \EUR{1,05}  \\
-			                                          & 16   & Muttern M3                                & Reichelt   & SK-E M3-100                                                                & \EUR{0,02}  & \EUR{0,35}  & 100er-Pack für \EUR{2,20} \\
-			                                          & 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                                & \EUR{0,14}  & \EUR{0,28}  &                            \\
-			                                          & 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                              & \EUR{0,15}  & \EUR{0,15}  & Benötigt werden 13        \\
-			                                          & 1    & Buchsenleiste mit 6 Plätzen              & Reichelt   & MPE 094-1-006                                                              & \EUR{0,25}  & \EUR{0,25}  &                            \\
-			                                          & 1    & Buchsenleiste mit 7 Plätzen              & Reichelt   & MPE 094-1-007                                                              & \EUR{0,31}  & \EUR{0,31}  &                            \\
-			                                          & 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                                    & \EUR{0,59}  & \EUR{0,59}  & 5er-Pack für \EUR{2,95}   \\
+			  X1                                      & 1    & Sub-D-Buchse, 9-pol                       & Reichelt   & D-SUB BU 09US                                                              & 0,23\,€  & 0,23\,€  &                            \\
+			  SV2                                     & 1    & Wannenstecker, 10-pol                     & Reichelt   & WSL 10G                                                                    & 0,08\,€  & 0,08\,€  &                            \\
+			                                          & 1    & Wippschalter                              & Pollin     & 420 697                                                                    & 0,35\,€  & 0,35\,€  &                            \\
+			                                          & 1    & Miniatur-Schlüsselschalter               & Pollin     & 420 664                                                                    & 0,75\,€  & 0,75\,€  &                            \\
+			                                          & 1    & Kunststoffgehäuse 021-002-084            & Pollin     & 460 001                                                                    & 7,95\,€  & 7,95\,€  &                            \\
+			                                          & 8    & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                                     & 0,29\,€  & 2,32\,€  &                            \\
+			                                          & 1    & Koffer                                    & Amazon     & Bilora 545                                                                 & 19,89\,€ & 19,89\,€ &                            \\
+			                                          & 1    & Akku                                      & Reichelt   & WP 1,2-12                                                                  & 7,80\,€  & 7,80\,€  &                            \\
+			                                          & 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                               & 0,01\,€  & 0,03\,€  & 200er-Pack für 1,70\,€ \\
+			                                          & 16   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                               & 0,02\,€  & 0,34\,€  & 50er-Pack für 1,05\,€  \\
+			                                          & 16   & Muttern M3                                & Reichelt   & SK-E M3-100                                                                & 0,02\,€  & 0,35\,€  & 100er-Pack für 2,20\,€ \\
+			                                          & 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                                & 0,14\,€  & 0,28\,€  &                            \\
+			                                          & 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                              & 0,15\,€  & 0,15\,€  & Benötigt werden 13        \\
+			                                          & 1    & Buchsenleiste mit 6 Plätzen              & Reichelt   & MPE 094-1-006                                                              & 0,25\,€  & 0,25\,€  &                            \\
+			                                          & 1    & Buchsenleiste mit 7 Plätzen              & Reichelt   & MPE 094-1-007                                                              & 0,31\,€  & 0,31\,€  &                            \\
+			                                          & 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                                    & 0,59\,€  & 0,59\,€  & 5er-Pack für 2,95\,€   \\
 			  \\
 			  \\ \hline
 			  \multicolumn{8}{c}{Kabel} \\
-			                                          & 1    & Flachbandkabel für LED+Schlüsselsch.    & Reichelt   & AWG 28-10F 3M                                                              & \EUR{1,65}  & \EUR{1,65}  &                            \\
-			                                          & 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                                    & \EUR{6,25}  & \EUR{6,25}  &                            \\
-			                                          & 1    & Schrumpf\-schläu\-che 1,6mm              & Reichelt   & SDH 1,6 SW                                                                 & \EUR{0,25}  & \EUR{0,25}  &                            \\
-			                                          & 1    & Schrumpf\-schläu\-che 3,2mm              & Reichelt   & SDH 3,2 SW                                                                 & \EUR{0,26}  & \EUR{0,26}  &                            \\ \hline
-			  &   &                             &                       &              & \EUR{83,55} & \\
+			                                          & 1    & Flachbandkabel für LED+Schlüsselsch.    & Reichelt   & AWG 28-10F 3M                                                              & 1,65\,€  & 1,65\,€  &                            \\
+			                                          & 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                                    & 6,25\,€  & 6,25\,€  &                            \\
+			                                          & 1    & Schrumpf\-schläu\-che 1,6mm              & Reichelt   & SDH 1,6 SW                                                                 & 0,25\,€  & 0,25\,€  &                            \\
+			                                          & 1    & Schrumpf\-schläu\-che 3,2mm              & Reichelt   & SDH 3,2 SW                                                                 & 0,26\,€  & 0,26\,€  &                            \\ \hline
+			  &   &                             &                       &              & 83,55\,€ & \\
 			  \caption{\normalsize Materialliste für die Zündbox}
 			  \label{tab:zuendboxbom}
 			\end{longtable}}
@@ -997,7 +998,7 @@
 	\chapter{Platinenherstellung}
 		\label{ch:platinenherstellung}
 
-		Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters (Platinenabmessungen: $\unit[91{,}44]{mm}\times\unit[66{,}04]{mm}$) als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage: In Abbildung~\ref{fig:zuendboxprint} die der Zündbox (Platinenabmessungen: $\unit[157{,}48]{mm}\times\unit[97{,}79]{mm}$) und in Abbildung~\ref{fig:rfmprint} die Adapterplatine zum Auflöten des Funkmoduls (Abmessungen einer einzelnen Adapterplatine: $\unit[31{,}75]{mm}\times\unit[22{,}86]{mm}$).
+		Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters (Platinenabmessungen: $\SI{91,44}{mm}\times\SI{66,04}{mm}$) als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage: In Abbildung~\ref{fig:zuendboxprint} die der Zündbox (Platinenabmessungen: $\SI{157,48}{mm}\times\SI{97,79}{mm}$) und in Abbildung~\ref{fig:rfmprint} die Adapterplatine zum Auflöten des Funkmoduls (Abmessungen einer einzelnen Adapterplatine: $\SI{31,75}{mm}\times\SI{22,86}{mm}$).
 
 		Die Oberseite ist hierbei jeweils schon gespiegelt, die Ausdrücke können für einen Tonertransfer also einfach ausgedruckt und im Zwischenraum gefaltet werden, wobei auf möglichst exakte Deckung zu achten ist.
 
@@ -1137,19 +1138,19 @@
 					\label{fig:lcddimensions}
 				\end{figure}
 
-				Die Vorderseite des Gehäuses muss zunächst mit einem Ausschnitt von $\unit[97]{mm}\,\times\,\unit[39{,}5]{mm}$ und vier $\unit[3]{mm}$-Bohrungen für die Anbringung des LCD versehen werden. Die Abstände zueinander sind in Abbildung~\ref{fig:lcddimensions} verdeutlicht. Wer nicht auf seine Messkünste vertrauen möchte oder ein LCD mit abweichenden Abmessungen besitzt, sollte zunächst einen passenden Ausschnitt für den Bildschirm mittig in der Fläche anbringen, anschließend können das LCD aufgelegt und die vier Bohrlöcher markiert und gebohrt werden.
+				Die Vorderseite des Gehäuses muss zunächst mit einem Ausschnitt von $\SI{97}{mm}\,\times\,\SI{39,5}{mm}$ und vier $\SI{3}{mm}$-Bohrungen für die Anbringung des LCD versehen werden. Die Abstände zueinander sind in Abbildung~\ref{fig:lcddimensions} verdeutlicht. Wer nicht auf seine Messkünste vertrauen möchte oder ein LCD mit abweichenden Abmessungen besitzt, sollte zunächst einen passenden Ausschnitt für den Bildschirm mittig in der Fläche anbringen, anschließend können das LCD aufgelegt und die vier Bohrlöcher markiert und gebohrt werden.
 
-				Bevor man das LCD einschraubt, muss noch eine Aussparung für den Sub-D-Anschluss, ein Loch für den Antennenanschluss ($\unit[6{,}5]{mm}$), vier Löcher für die Status-LEDs ($\unit[5]{mm}$)und eine Kerbe für die Versorgungskabeldurchführung in die Wand, welche später als Oberseite des Gehäuses dient, eingebracht werden.
+				Bevor man das LCD einschraubt, muss noch eine Aussparung für den Sub-D-Anschluss, ein Loch für den Antennenanschluss ($\SI{6,5}{mm}$), vier Löcher für die Status-LEDs ($\SI{5}{mm}$)und eine Kerbe für die Versorgungskabeldurchführung in die Wand, welche später als Oberseite des Gehäuses dient, eingebracht werden.
 
-				Hierfür sollte man zunächst die fertig bestückte Platine mittels zweier Schrauben in ihrer finalen Position festschrauben und das Oberteil so anlegen, dass die Position der Aussparung für die Sub-D-Buchse angezeichnet werden kann. Die Abmessung der Aussparung sollte $\unit[31]{mm}\,\times\,\unit[12{,}5]{mm}$ betragen. Die Positionen der restlichen Löcher sind aufgrund der Kabelverbindung mit der Platine unkritisch, die ungefähre Lage kann Abbildung~\ref{fig:transmitter} auf Seite \pageref{fig:transmitter} entnommen werden. Das Versorgungskabel mit USB-Stecker wird zwecks Zugentlastung zwischen den beiden zu verschraubenden Teilen eingeklemmt, die Kerbe sollte daher nicht allzu groß ausgeführt werden. Die Bohrarbeiten am Transmitter sind damit erledigt!
+				Hierfür sollte man zunächst die fertig bestückte Platine mittels zweier Schrauben in ihrer finalen Position festschrauben und das Oberteil so anlegen, dass die Position der Aussparung für die Sub-D-Buchse angezeichnet werden kann. Die Abmessung der Aussparung sollte $\SI{31}{mm}\,\times\,\SI{12,5}{mm}$ betragen. Die Positionen der restlichen Löcher sind aufgrund der Kabelverbindung mit der Platine unkritisch, die ungefähre Lage kann Abbildung~\ref{fig:transmitter} auf Seite \pageref{fig:transmitter} entnommen werden. Das Versorgungskabel mit USB-Stecker wird zwecks Zugentlastung zwischen den beiden zu verschraubenden Teilen eingeklemmt, die Kerbe sollte daher nicht allzu groß ausgeführt werden. Die Bohrarbeiten am Transmitter sind damit erledigt!
 
 				Nun müssen noch die elektrischen Verbindungen zwischen Platine und Peripherie hergestellt und die Peripherieteile anschließend befestigt werden~-- zuerst die vier Status-LEDs:
 
 				\begin{enumerate}\label{enum:leds}
-					\item Die Verbindung der Adern des Flachbandkabels auf einer Länge von etwa $\unit[35]{mm}$ auftrennen
-					\item Auf jede Ader einen dünnen Schrumpfschlauch der Länge $\unit[15]{mm}$ stecken (noch nicht erhitzen!)
-					\item Das kürzere Anschlussbein der LED (Kathode) mit dem Seitenschneider auf eine Länge von $\unit[8]{mm}$ trimmen und die mit GND verbundene Ader anlöten
-					\item Das längere Anschlussbein der LED (Anode) mit dem Seitenschneider auf eine Länge von $\unit[8]{mm}$ trimmen und die andere Ader anlöten
+					\item Die Verbindung der Adern des Flachbandkabels auf einer Länge von etwa $\SI{35}{mm}$ auftrennen
+					\item Auf jede Ader einen dünnen Schrumpfschlauch der Länge $\SI{15}{mm}$ stecken (noch nicht erhitzen!)
+					\item Das kürzere Anschlussbein der LED (Kathode) mit dem Seitenschneider auf eine Länge von $\SI{8}{mm}$ trimmen und die mit GND verbundene Ader anlöten
+					\item Das längere Anschlussbein der LED (Anode) mit dem Seitenschneider auf eine Länge von $\SI{8}{mm}$ trimmen und die andere Ader anlöten
 					\item Schrumpfschläuche bis ans LED-Gehäuse vorschieben und per Heißluft schrumpfen
 				\end{enumerate}
 
@@ -1173,13 +1174,13 @@
 
 				Es ist beim Bohren der Box auf die richtige Orientierung der Schablone zu achten, da die Befestigungsbohrungen für die Platine nicht symmetrisch sind (Schrauben auf der linken Seite, wo sich die serielle Schnittstelle befindet, sind enger zusammen als die auf der rechten Seite mit den MOSFETs und Kanal-LEDs) und die Gehäuseteile durch ein Nut-Feder-System nur in einer Kombination aufeinander gesteckt werden können. Man beachte hierzu Abbildung~\ref{fig:zuendboxdeckel}.
 
-				Damit die Löcher nicht mit Schraubenhalterungen in den Ecken interferieren, sollte zunächst im Gehäuseinneren der passende Ort für die Kanal-LEDs von Kanal 4 und 16 (äußerste grüne LEDs in der obersten und untersten Reihe, Abstand $\unit[75]{mm}$) gesucht, die beiden Löcher mit einem $\unit[3]{mm}$-Bohrer gebohrt und die Schablone auf der Oberseite in diesen beiden Bohrungen befestigt werden.
+				Damit die Löcher nicht mit Schraubenhalterungen in den Ecken interferieren, sollte zunächst im Gehäuseinneren der passende Ort für die Kanal-LEDs von Kanal 4 und 16 (äußerste grüne LEDs in der obersten und untersten Reihe, Abstand $\SI{75}{mm}$) gesucht, die beiden Löcher mit einem $\SI{3}{mm}$-Bohrer gebohrt und die Schablone auf der Oberseite in diesen beiden Bohrungen befestigt werden.
 
-				Die Bohrlöcher für die 16 Kanal-LEDs sollten mit einem 3-mm-Bohrer, die der vier Status-LEDs mit einem $\unit[5]{mm}$-Bohrer ausgeführt werden. Die LEDs werden später (nach dem Verkabeln und Festlöten des Kabels auf der Platine) seitlich mit Heißkleber bestrichen von unten bis zum Anschlag in diese Löcher eingeschoben.
+				Die Bohrlöcher für die 16 Kanal-LEDs sollten mit einem 3-mm-Bohrer, die der vier Status-LEDs mit einem $\SI{5}{mm}$-Bohrer ausgeführt werden. Die LEDs werden später (nach dem Verkabeln und Festlöten des Kabels auf der Platine) seitlich mit Heißkleber bestrichen von unten bis zum Anschlag in diese Löcher eingeschoben.
 
-				Da die Lautsprecherklemmen mit M3-Gewindeschrauben befestigt werden, wäre der ideale Bohrdurchmesser für die 16 Schraubenlöcher $\unit[3{,}2]{mm}$. Sollte dieser Durchmesser nicht vorhanden sein, kann aber auch mit $\unit[3{,}5]{mm}$ oder $\unit[3]{mm}$ gearbeitet werden. Für die Lötfahnen der Klemmen ist eine rechteckige Aussparung von $\unit[4{,}5]{mm}\,\times\,\unit[2]{mm}$ nötig, als schnelle Lösung kann auch jeweils ein $\unit[5]{mm}$-Loch durch den Mittelpunkt (Diagonalenschnittpunkt) dieser Flächen gebohrt werden.
+				Da die Lautsprecherklemmen mit M3-Gewindeschrauben befestigt werden, wäre der ideale Bohrdurchmesser für die 16 Schraubenlöcher $\SI{3,2}{mm}$. Sollte dieser Durchmesser nicht vorhanden sein, kann aber auch mit $\SI{3,5}{mm}$ oder $\SI{3}{mm}$ gearbeitet werden. Für die Lötfahnen der Klemmen ist eine rechteckige Aussparung von $\SI{4,5}{mm}\,\times\,\SI{2}{mm}$ nötig, als schnelle Lösung kann auch jeweils ein $\SI{5}{mm}$-Loch durch den Mittelpunkt (Diagonalenschnittpunkt) dieser Flächen gebohrt werden.
 
-				Die rechteckige Aussparung für den Netzschalter sollte die Größe $\unit[19]{mm}\,\times\,\unit[13]{mm}$ besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von $\unit[12]{mm}$ und der Durchsteckplatz für die SMA-Buchse sollte mit $\unit[6{,}5]{mm}$ vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt. Die Innenansicht des Zündboxdeckels (noch ohne SMA-Anschluss) ist in Abbildung~\ref{fig:zuendboxdeckel} dargestellt. Hierbei ist auch zu erkennen, wo sich die Nut (unten, bei den Status-LEDs) und wo die Feder (oben) beim Deckel befinden muss. Dementsprechend muss es bei der Unterseite andersherum sein.
+				Die rechteckige Aussparung für den Netzschalter sollte die Größe $\SI{19}{mm}\,\times\,\SI{13}{mm}$ besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von $\SI{12}{mm}$ und der Durchsteckplatz für die SMA-Buchse sollte mit $\SI{6,5}{mm}$ vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt. Die Innenansicht des Zündboxdeckels (noch ohne SMA-Anschluss) ist in Abbildung~\ref{fig:zuendboxdeckel} dargestellt. Hierbei ist auch zu erkennen, wo sich die Nut (unten, bei den Status-LEDs) und wo die Feder (oben) beim Deckel befinden muss. Dementsprechend muss es bei der Unterseite andersherum sein.
 
 				\begin{figure}
 					\centering
@@ -1190,9 +1191,9 @@
 
 				In die linke Einschub-Seitenwand muss, sofern noch nicht im Rahmen des Lötens geschehen, ein Loch für die Durchführung der Batteriekabel mit einer Größe je nach Kabeldurchmesser.
 
-				Um die Position der Sub-D-Buchse in der Wand des Unterteils, welche in der Nut endet, zu finnden, muss die Platine möglichst identisch zu ihrer späteren Position ins Gehäuse eingelegt werden, die Aussparung beträgt wie beim Transmitter $\unit[31]{mm}\,\times\,\unit[12{,}5]{mm}$. Wenn die Aussparung fertig ist, kann die Platine in ihre endgültige Position gebracht und mit vier Schrauben befestigt werden. Die linke Seitenwand bleibt noch ausgesteckt. Jetzt ist wieder der Lötkolben dran!
+				Um die Position der Sub-D-Buchse in der Wand des Unterteils, welche in der Nut endet, zu finnden, muss die Platine möglichst identisch zu ihrer späteren Position ins Gehäuse eingelegt werden, die Aussparung beträgt wie beim Transmitter $\SI{31}{mm}\,\times\,\SI{12,5}{mm}$. Wenn die Aussparung fertig ist, kann die Platine in ihre endgültige Position gebracht und mit vier Schrauben befestigt werden. Die linke Seitenwand bleibt noch ausgesteckt. Jetzt ist wieder der Lötkolben dran!
 
-				Zunächst vier Drahtstücke á $\unit[80]{mm}$ abschneiden und durch die übereinander liegenden Lötfahnen der roten Klemmen ziehen und mit den Lötfahnen verlöten.
+				Zunächst vier Drahtstücke á $\SI{80}{mm}$ abschneiden und durch die übereinander liegenden Lötfahnen der roten Klemmen ziehen und mit den Lötfahnen verlöten.
 
 				Die Kanal- und Status-LEDs wie auf Seite \pageref{enum:leds} beschrieben mit den zugehörigen Flachbandkabeln verbinden, anschließend den Schlüssel- und den Netzschalter mit den zugehörigen Anschlusskabeln.
 
@@ -1248,11 +1249,11 @@
 
 					Um die Antenne vom SMA-Anschluss an der Zündbox nach außen zu führen, wird ein zweiteiliger Adapter, der in Abbildung~\ref{fig:koffer-adapter-montiert} am Koffer montiert gezeigt ist, verwendet. So wird einerseits das Kabel geschützt, andererseits die Kabelführung stabilisiert. Die Halterung besteht aus zwei ineinander gesteckten Teilen:
 					\begin{itemize}
-						\item MDF-Platte: $\unit[85]{mm} \times \unit[35]{mm} \times \unit[3]{mm}$
-						\item PVC-Rohr, basierend auf einer Gardena-Micro-Drip-Verlängerung: $\oslash\unit[7{,}5]{mm} \times \unit[115]{mm}$
+						\item MDF-Platte: $\SI{85}{mm} \times \SI{35}{mm} \times \SI{3}{mm}$
+						\item PVC-Rohr, basierend auf einer Gardena-Micro-Drip-Verlängerung: $\oslash\SI{7,5}{mm} \times \SI{115}{mm}$
 					\end{itemize}
 
-					In die MDF-Platte wird $\unit[10]{mm}$ vom oberen Rand entfernt mehr oder weniger mittig ein $\unit[5]{mm}$-Loch gebohrt und ein Kanal senkrecht nach oben zum Rand eingebracht. Beim PVC-Rohr bringt man $\unit[7]{cm}$ vom Rand entfernt auf einer Länge von $\unit[3]{mm}$ zwei Einschnitte ein, um das Rohr an dieser Stelle auf die Breite des Kanals zu bringen. Die beiden Einzelteile sind in Abbildung~\ref{fig:koffer-adapter-einzeln}, der zusammengesteckte Adapter in Abbildung~\ref{fig:koffer-adapter-zusammen} abgebildet. Der Adapter wird vor dem Montieren der MDF-Platte am Koffer so ausgerichtet, dass die Rohröffnung genau auf die SMA-Buchse an der Zündbox zeigt.
+					In die MDF-Platte wird $\SI{10}{mm}$ vom oberen Rand entfernt mehr oder weniger mittig ein $\SI{5}{mm}$-Loch gebohrt und ein Kanal senkrecht nach oben zum Rand eingebracht. Beim PVC-Rohr bringt man $\SI{7}{cm}$ vom Rand entfernt auf einer Länge von $\SI{3}{mm}$ zwei Einschnitte ein, um das Rohr an dieser Stelle auf die Breite des Kanals zu bringen. Die beiden Einzelteile sind in Abbildung~\ref{fig:koffer-adapter-einzeln}, der zusammengesteckte Adapter in Abbildung~\ref{fig:koffer-adapter-zusammen} abgebildet. Der Adapter wird vor dem Montieren der MDF-Platte am Koffer so ausgerichtet, dass die Rohröffnung genau auf die SMA-Buchse an der Zündbox zeigt.
 
 					\begin{figure}
 						\begin{subfigure}[t]{0.5\textwidth}
@@ -1305,7 +1306,7 @@
 
 			Zum Brennen des Bootloaders gibt es ein Kommandozeilentool namens \emph{btldflsh.exe} für den \emph{AVRISP mkII}, welches auf \emph{AVRDUDE} basiert. Dem Tool muss als Parameter die iHex-Datei des controllertyp- und frequenzspezifischen Bootloaders übergeben werden.
 
-			Für einen \texttt{ATmega328P} mit einer Taktfrequenz von \unit[9{,}8304]{MHz} lautet das Kommando:
+			Für einen \texttt{ATmega328P} mit einer Taktfrequenz von \SI{9,8304}{MHz} lautet das Kommando:
 
 			\begin{center}
 				\emph{btldflsh.exe bootload\_m328p\_9830400.hex}
@@ -1328,7 +1329,7 @@
 					\textbf{Fuse} & \textbf{Wert}     & \textbf{Bedeutung}                                                                                                                                                                               \\ \hline
 					Low Fuse      & 0xF7              & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle                                                                                                                       \\
 					High Fuse     & 0xD6              & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
-					Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\unit[2{,}7]{V}$                                                                                                                                        \\ \hline\hline
+					Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{V}$                                                                                                                                        \\ \hline\hline
 				\end{tabularx}
 				\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
 				\label{tab:fuses}
@@ -1340,32 +1341,32 @@
 
 	\chapter{Tipps und Tricks}
 
-		\section[5V-LCD an 3,3V]{5\,V-LCD an 3{,}3\,V}
+		\section[5V-LCD an 3,3V]{5\,V-LCD an 3,3\,V}
 
-			Zwar gibt es inzwischen auch LCDs, welche sich von Haus aus für eine Versorgung mit $\unit[3{,}3]{V}$ eignen, viele Displays jedoch sind noch für $\unit[5]{V}$ ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
+			Zwar gibt es inzwischen auch LCDs, welche sich von Haus aus für eine Versorgung mit $\SI{3,3}{V}$ eignen, viele Displays jedoch sind noch für $\SI{5}{V}$ ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
 
-			Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall}~-- also bei Betrieb des Displays mit einer Versorgungsspannung von $\unit[5]{V}$~-- wird Pin~3 auf $\unit[0]{V}$ gelegt, so dass sich eine Kontrastspannung von $\unit[5]{V}$ entsteht. Liegen an Pin~2 nur $\unit[3{,}3]{V}$ an, muss Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
+			Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall}~-- also bei Betrieb des Displays mit einer Versorgungsspannung von $\SI{5}{V}$~-- wird Pin~3 auf $\SI{0}{V}$ gelegt, so dass sich eine Kontrastspannung von $\SI{5}{V}$ entsteht. Liegen an Pin~2 nur $\SI{3,3}{V}$ an, muss Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
 
-			Als Quelle der negativen Spannung dient der RS232-Treiberbaustein, der am Pin V- eine Spannung von $\unit[-5{,}5]{V}$ zur Verfügung stellt. Über einen Spannungsteiler~-- im Schaltplan auf Seite~\pageref{fig:transmitterschematic} von $R12 = \unit[3{,}3]{k\Omega}$ und $R13 = \unit[6{,}8]{k\Omega}$ gebildet~-- zwischen V- und GND wird daher Pin~3 des LCD auf $\unit[-1,8]{V}$ gelegt.
+			Als Quelle der negativen Spannung dient der RS232-Treiberbaustein, der am Pin V- eine Spannung von $\SI{-5,5}{V}$ zur Verfügung stellt. Über einen Spannungsteiler~-- im Schaltplan auf Seite~\pageref{fig:transmitterschematic} von $R12 = \SI{3,3}{k\Omega}$ und $R13 = \SI{6,8}{k\Omega}$ gebildet~-- zwischen V- und GND wird daher Pin~3 des LCD auf $\SI{-1,8}{V}$ gelegt.
 
 			Manche LCDs torpedieren diesen Versuch, indem Pin~3 relativ niederohmig mit GND verbunden wird. Man sollte also im abgeklemmten Zustand den Widerstand zwischen Pin 1 und Pin 3 messen und bei Bedarf den eventuell auf der LCD-Platine befindlichen Widerstand zwischen den beiden Pins auslöten.
 
-			Die Hintergrundbeleuchtung wird über die Pins~15 und 16 versorgt. Zwischen diesen Pins befindet sich in Reihe zu den LEDs in aller Regel noch ein Widerstand, welcher den Strom durch die LEDs begrenzt und für eine Spannung von $\unit[5]{V}$ zwischen den Pins ausgelegt ist. Bei $\unit[3{,}3]{V}$ zwischen Pin~15~\&~16 erscheint das LCD daher möglicherweise zu dunkel, so dass man den Widerstand durch einen kleineren Wert ersetzen kann, um die Spannungsdifferenz auszugleichen.
+			Die Hintergrundbeleuchtung wird über die Pins~15 und 16 versorgt. Zwischen diesen Pins befindet sich in Reihe zu den LEDs in aller Regel noch ein Widerstand, welcher den Strom durch die LEDs begrenzt und für eine Spannung von $\SI{5}{V}$ zwischen den Pins ausgelegt ist. Bei $\SI{3,3}{V}$ zwischen Pin~15~\&~16 erscheint das LCD daher möglicherweise zu dunkel, so dass man den Widerstand durch einen kleineren Wert ersetzen kann, um die Spannungsdifferenz auszugleichen.
 
-			Der ursprüngliche LED-Vorwärtsstrom sowie die Aufteilung der Spannung auf LED und Vorwiderstand können durch Anlegen von $\unit[5]{V}$ zwischen Pin~15~\&~16, Spannungsmessung über dem Original-Widerstand und anschließende Division durch den Widerstandswert (korrekt ablesen oder messen) ermittelt werden. Da der Spannungsabfall über den LEDs sich nicht ändert und der Strom gleich bleiben soll, muss der Wert des neuen Widerstands so verkleinert werden, dass bei identischem Stromfluss über ihm $\unit[1{,}7]{V}$ weniger abfallen als am Original-Widerstand.
+			Der ursprüngliche LED-Vorwärtsstrom sowie die Aufteilung der Spannung auf LED und Vorwiderstand können durch Anlegen von $\SI{5}{V}$ zwischen Pin~15~\&~16, Spannungsmessung über dem Original-Widerstand und anschließende Division durch den Widerstandswert (korrekt ablesen oder messen) ermittelt werden. Da der Spannungsabfall über den LEDs sich nicht ändert und der Strom gleich bleiben soll, muss der Wert des neuen Widerstands so verkleinert werden, dass bei identischem Stromfluss über ihm $\SI{1,7}{V}$ weniger abfallen als am Original-Widerstand.
 
-			Ist z.\,B. original ein Widerstand von $\unit[150]{\Omega}$ verbaut, über dem eine Spannung von $\unit[2]{V}$ anliegt (hieraus resultiert eine LED-Vorwärtsspannung von $\unit[3]{V}$), ergibt sich ein LED-Vorwärtsstrom von $\unit[13]{mA}$. Dementsprechend wäre bei einem Spannungsabfall von nur noch $\unit[0{,}3]{V}$ für den gleichen Strom ein Widerstand von $\unit[22]{\Omega}$ einzusetzen.
+			Ist z.\,B. original ein Widerstand von $\SI{150}{\ohm}$ verbaut, über dem eine Spannung von $\SI{2}{V}$ anliegt (hieraus resultiert eine LED-Vorwärtsspannung von $\SI{3}{V}$), ergibt sich ein LED-Vorwärtsstrom von $\SI{13}{mA}$. Dementsprechend wäre bei einem Spannungsabfall von nur noch $\SI{0,3}{V}$ für den gleichen Strom ein Widerstand von $\SI{22}{\ohm}$ einzusetzen.
 
 
 		\section{Antennenbau}
 
-			Antennen für die verwendete Übertragungsfrequenz von \unit[868]{MHz} gibt es in großer Auswahl zu kaufen, eine einfache, omnidirektionale Antenne, welche ein sehr gutes Stehwellenverhältnis von <1{,}3:1 erzielt, kann aber auch relativ schnell selbst gebaut werden. Auf möglichst exakte Einhaltung der Abmessungen ist dabei zu achten:
+			Antennen für die verwendete Übertragungsfrequenz von \SI{868}{MHz} gibt es in großer Auswahl zu kaufen, eine einfache, omnidirektionale Antenne, welche ein sehr gutes Stehwellenverhältnis von <1,3:1 erzielt, kann aber auch relativ schnell selbst gebaut werden. Auf möglichst exakte Einhaltung der Abmessungen ist dabei zu achten:
 			\begin{itemize}
 				\item Koaxialkabel RG316
 				\item SMA-Steckverbinder (üblicherweise männliche Ausführung)
-				\item Kupfer- oder Messingröhrchen mit 8\,mm Durchmesser und 66{,}5\,mm Länge
-				\item Distanzhülse aus Kunststoff mit 5\,mm Länge, 7\,mm Außendurchmesser und 3{,}6\,mm Innendurchmesser
-				\item Schrumpfschläuche mit 1{,}2\,mm, 2{,}4\,mm, 4{,}8\,mm und 9{,}5\,mm Durchmesser vor dem Schrumpfen
+				\item Kupfer- oder Messingröhrchen mit 8\,mm Durchmesser und 66,5\,mm Länge
+				\item Distanzhülse aus Kunststoff mit 5\,mm Länge, 7\,mm Außendurchmesser und 3,6\,mm Innendurchmesser
+				\item Schrumpfschläuche mit 1,2\,mm, 2,4\,mm, 4,8\,mm und 9,5\,mm Durchmesser vor dem Schrumpfen
 			\end{itemize}
 
 			\begin{figure}
@@ -1376,7 +1377,7 @@
 				\label{fig:antenne}
 			\end{figure}
 
-			Die Antenne wird als Sperrtopfantenne bezeichnet und besitzt den in Abbildung~\ref{fig:antenne} gezeigten Aufbau. Der oberste Teil ist 88\,mm lang und besteht aus dem Innenleiter des Koaxialkabels mit dem ihn umgebenden Dielektrikum. Im mittleren Teil befindet sich ein 66{,}5\,mm langes Röhrchen, welches an seinem oberen Ende mit möglichst kurzer Verbindung an das Schirmgeflecht des Koaxialkabels angelötet wird. Anschließend folgt eine beliebige Länge Koaxialkabel, am Ende schließlich der Steckverbinder zum Anschluss an das Funkmodul.
+			Die Antenne wird als Sperrtopfantenne bezeichnet und besitzt den in Abbildung~\ref{fig:antenne} gezeigten Aufbau. Der oberste Teil ist 88\,mm lang und besteht aus dem Innenleiter des Koaxialkabels mit dem ihn umgebenden Dielektrikum. Im mittleren Teil befindet sich ein 66,5\,mm langes Röhrchen, welches an seinem oberen Ende mit möglichst kurzer Verbindung an das Schirmgeflecht des Koaxialkabels angelötet wird. Anschließend folgt eine beliebige Länge Koaxialkabel, am Ende schließlich der Steckverbinder zum Anschluss an das Funkmodul.
 
 			\begin{figure}[t]
 				\centering
@@ -1391,24 +1392,24 @@
 				\item Entfernung des Kunststoffmantels auf einer Länge von 88\,mm
 				\item Entfernung des nun freiliegenden Schirmgeflechts auf einer Länge von 84\,mm, so dass noch 4\,mm des Schirmgeflechts verbleiben.
 				\item Auftrennen und Verdrillen des Schirmgeflechts
-				\item Verdicken des Koaxialkabels mit einem 10\,mm langen Stück Schrumpfschlauch, dessen Mitte 66{,}5\,mm vom oberen Ende der Ummantelung entfernt sein sollte.
+				\item Verdicken des Koaxialkabels mit einem 10\,mm langen Stück Schrumpfschlauch, dessen Mitte 66,5\,mm vom oberen Ende der Ummantelung entfernt sein sollte.
 				\item Aufschieben der Distanzhülse in die Mitte des soeben verstärkten Teils. Gegen Abrutschen nach unten ggf. mit weiterem Schrumpfschlauch unterhalb der Hülse sichern.
 				\item Großzügiges Vorverzinnen des Röhrchens an einer Stelle der Innenwand
 				\item Überstülpen des Röhrchens und Anlöten des verdrillten Schirmgeflechts an der Innenwand
 				\item Gesamte Konstruktion mit Schrumpfschlauch stabilisieren (nach jedem Schritt schrumpfen!):
 				      \begin{enumerate}
-				      	\item Ein 88\,mm langes Stück Schrumpfschlauch 1{,}2 über den obersten Teil der Antenne
-				      	\item Ein 90\,mm langes Stück Schrumpfschlauch 2{,}4 über den obersten Teil der Antenne, unmittelbar nach dem Schrumpfen die noch heißen oben überstehenden 2\,mm Schlauch durch Zusammendrücken verschmelzen
-				      	\item Ein 2{,}5\,mm langes Stück Schrumpfschlauch 9{,}5 über den aus dem Röhrchen herausstehenden Teil der Distanzhülse
-				      	\item Ein 80\,mm langes Stück Schrumpfschlauch 9{,}5 über Röhrchen und Distanzhülse, so dass auf beiden Seiten etwa 5\,mm überstehen
-				      	\item Mit einem 10\,mm langen Stück Schrumpfschlauch 4{,}8 den Übergang zwischen oberem Antennenteil und Röhrchen versiegeln
+				      	\item Ein 88\,mm langes Stück Schrumpfschlauch $1,2$ über den obersten Teil der Antenne
+				      	\item Ein 90\,mm langes Stück Schrumpfschlauch $2,4$ über den obersten Teil der Antenne, unmittelbar nach dem Schrumpfen die noch heißen oben überstehenden 2\,mm Schlauch durch Zusammendrücken verschmelzen
+				      	\item Ein 2,5\,mm langes Stück Schrumpfschlauch $9,5$ über den aus dem Röhrchen herausstehenden Teil der Distanzhülse
+				      	\item Ein 80\,mm langes Stück Schrumpfschlauch 9,5 über Röhrchen und Distanzhülse, so dass auf beiden Seiten etwa 5\,mm überstehen
+				      	\item Mit einem 10\,mm langen Stück Schrumpfschlauch $4,8$ den Übergang zwischen oberem Antennenteil und Röhrchen versiegeln
 				      \end{enumerate}
 				\item Falls nötig: Kabel in Endposition einfädeln, bevor SMA-Steckverbinder am intakten Ende angebracht wird
 			\end{enumerate}
 
-			Um den SMA-Steckverbinder anzubringen, müssen vom intakten Ende aus gemessen zunächst \unit[12]{mm} des Mantels entfernt werden, anschließend \unit[8]{mm} des Schirmgeflechts und zuletzt auch \unit[4]{mm} des Dielektrikums. Nun werden Schrumpfschlauch und Crimpröhrchen auf das Kabel geschoben, anschließend der kleine Stecker am Innenleiter angelötet. Das Schirmgeflecht wird aufgefächert, das Gehäuse aufs Kabel geschoben und das Crimpröhrchen aufgesteckt, vercrimpt und Schrumpfschlauch darüber angebracht. Wenn gewünscht kann~-- wie in~\ref{fig:antenne} rechts zu sehen~-- Schrumpfschlauch 9{,}5 als Witterungsschutz über dem gesamten Steckverbinder angebracht werden.
+			Um den SMA-Steckverbinder anzubringen, müssen vom intakten Ende aus gemessen zunächst \SI{12}{mm} des Mantels entfernt werden, anschließend \SI{8}{mm} des Schirmgeflechts und zuletzt auch \SI{4}{mm} des Dielektrikums. Nun werden Schrumpfschlauch und Crimpröhrchen auf das Kabel geschoben, anschließend der kleine Stecker am Innenleiter angelötet. Das Schirmgeflecht wird aufgefächert, das Gehäuse aufs Kabel geschoben und das Crimpröhrchen aufgesteckt, vercrimpt und Schrumpfschlauch darüber angebracht. Wenn gewünscht kann~-- wie in~\ref{fig:antenne} rechts zu sehen~-- Schrumpfschlauch 9,5 als Witterungsschutz über dem gesamten Steckverbinder angebracht werden.
 
-			Die in Abbildung~\ref{fig:vswrmessung} dargestellte Messung am Netzwerkanalysator zeigt eine sehr gute Anpassung dieser Antenne an \unit[50]{$\Omega$} im Bereich um \unit[868]{MHz}.
+			Die in Abbildung~\ref{fig:vswrmessung} dargestellte Messung am Netzwerkanalysator zeigt eine sehr gute Anpassung dieser Antenne an \SI{50}{\ohm} im Bereich um \SI{868}{MHz}.
 
 
 
@@ -1435,14 +1436,14 @@
 
 			\begin{center}
 				\begin{tabularx}{.6\textwidth}{c@{ $\rightarrow$ }c@{ :\hspace*{1cm}}c@{ = }X}
-					$\unit{dBm}$ & $\unit{W}$   & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                    \\[12pt]
-					$\unit{W}$   & $\unit{dBm}$ & $P_\text{dBm}$ & $10 {\cdot} \log_{10}\left( \frac{1000 {\cdot} P_\text{W}}{\unit[1]{W}} \right)$ \\
+					$\si{dBm}$ & $\si{W}$   & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                    \\[12pt]
+					$\si{W}$   & $\si{dBm}$ & $P_\text{dBm}$ & $10 {\cdot} \log_{10}\left( \frac{1000 {\cdot} P_\text{W}}{\SI{1}{W}} \right)$ \\
 				\end{tabularx}
 			\end{center}
 
-			Anhand der Formeln wird klar, dass die maximale Sendeleistung des \texttt{RFM69CW} 1250-mal höher als die Minimalleistung liegt: $\unit[-18]{dBm}$ entsprechen $\unit[16]{{\upmu}W}$, $\unit[13]{dBm}$ hingegen $\unit[20]{mW}$.
+			Anhand der Formeln wird klar, dass die maximale Sendeleistung des \texttt{RFM69CW} 1250-mal höher als die Minimalleistung liegt: $\SI{-18}{dBm}$ entsprechen $\SI{16}{µW}$, $\SI{13}{dBm}$ hingegen $\SI{20}{mW}$.
 
-			Addition und Subtraktion in der logarithmischen Einheit sind gleichbedeutend mit Multiplikation bzw. Division in der linearen. Erhöht (verringert) sich die Leistung um $\unit[3]{dB}$, verdoppelt (halbiert) sie sich im linearen Maßstab. Addition bzw. Subtraktion um $\unit[10]{dB}$ bedeuten eine Multiplikation mit bzw. Division durch 10.
+			Addition und Subtraktion in der logarithmischen Einheit sind gleichbedeutend mit Multiplikation bzw. Division in der linearen. Erhöht (verringert) sich die Leistung um $\SI{3}{dB}$, verdoppelt (halbiert) sie sich im linearen Maßstab. Addition bzw. Subtraktion um $\SI{10}{dB}$ bedeuten eine Multiplikation mit bzw. Division durch 10.
 
 			\bookmarksetup{startatroot}
 			\addtocontents{toc}{\bigskip}
