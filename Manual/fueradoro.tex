@@ -12,7 +12,7 @@
 \setdefaultlanguage[spelling=new]{german}
 \usepackage[autostyle]{csquotes}
 \usepackage[per-mode=fraction, locale=DE, detect-all=true]{siunitx}
-\usepackage[inner=2cm, outer=3cm, top=3cm, bottom=4cm]{geometry}
+\usepackage[scale=.73]{geometry}
 \usepackage{graphicx}
 \usepackage{datetime}
 \usepackage[backend=biber, isbn=false, doi=false, eprint=false, url=true, safeinputenc, defernumbers=false]{biblatex}
@@ -57,6 +57,7 @@
 		Subject={User manual for remotely controlled firework ignition system},
 		Keywords={}}
 }
+
 
 \begin{document}
 	\begin{titlepage}
@@ -612,23 +613,52 @@
 
 				\begin{table}
 					\centering
-					\begin{tabular}{ccc}
-						Strom (A) & Widerstand gesamt ($\Omega$) & Widerstand Anzünder + Kabel ($\Omega$) \\ \hline\hline
-						0,6       & 37,0                         & 34,8                                    \\
-						0,75      & 29,5                         & 27,3                                    \\
-						0,9       & 24,5                         & 22,3                                    \\
-						1         & 22,0                         & 19,8                                    \\
-						1,2       & 18,2                         & 16,0                                    \\
-						1,5       & 14,5                         & 12,3                                    \\
-						1,75      & 12,3                         & 10,1                                    \\
-						2         & 10,7                         & 8,5                                     \\
-						2,5       & 8,5                          & 6,3                                     \\ \hline
+					\begin{tabular}{SSS}
+						\hline\hline
+						{Strom (A)} & {Widerstand gesamt ($\Omega$)} & {Widerstand Anzünder + Kabel ($\Omega$)} \\ \hline
+						0,6         & 37,0                           & 34,8                                      \\
+						0,75        & 29,5                           & 27,3                                      \\
+						0,9         & 24,5                           & 22,3                                      \\
+						1,0         & 22,0                           & 19,8                                      \\
+						1,2         & 18,2                           & 16,0                                      \\
+						1,5         & 14,5                           & 12,3                                      \\
+						1,75        & 12,3                           & 10,1                                      \\
+						2           & 10,7                           & 8,5                                       \\
+						2,5         & 8,5                            & 6,3                                       \\ \hline\hline
 					\end{tabular}
 					\caption{Widerstandswerte für Zündkreise bei gegebenem Strom}
 					\label{tab:r-vs-i}
 				\end{table}
 
-				Bei der Verwendung von Verschleißdraht mit einer Kupferseele mit Durchmesser $d = \SI{0,5}{mm}$ kann für Überschlagsrechnungen davon ausgegangen werden, dass je $\SI{10}{m}$ Kabel-Gesamtweg (also Hin- und Rückleitung addiert) ein zusätzlicher Reihenwiderstand von $\SI{1}{\ohm}$ im Zündkreis auftritt.
+				Der Kabelwiderstand kann unter Kenntnis von Querschnittsfläche $A$ und/oder Durchmesser $d$, Material (mit spezifischem Widerstand $\rho$) und Kabellänge $l$ berechnet werden:
+
+				\begin{equation*}
+					\begin{split}
+						R_\text{Kabel} &= \frac{\rho {\cdot} l}{A}	\\
+						& \text{bzw.} \\
+						R_\text{Kabel} &= \frac{4 {\cdot} \rho {\cdot} l}{d^2  {\cdot} {\symup\pi}}
+					\end{split}
+				\end{equation*}
+
+				Für einige typische Drahtmaterialien ist der spezifische Widerstand in Tabelle~\ref{tab:spezwiderstand} dargestellt. Je kleiner der spezifische Widerstand ausfällt, umso größer ist dementsprechend sein Kehrwert, die elektrische Leitfähigkeit.
+
+				\begin{table}
+					\centering
+					\begin{tabular}{lS}
+						\hline \hline
+						Material  & {$\rho \left(\si{\ohm\square\milli\metre\per\metre}\right)$} \\ \hline
+						Silber    & 0,0159                                                     \\
+						Kupfer    & 0,0175                                                     \\
+						Aluminium & 0,0265                                                     \\
+						Eisen     & 0,15                                                       \\
+						Stahl     & 0,2                                                        \\ \hline\hline
+					\end{tabular}
+					\caption{Spezifischer Widerstand verschiedener Leitermaterialien}
+					\label{tab:spezwiderstand}
+				\end{table}
+
+
+				Bei der Verwendung von Verschleißdraht mit einer Kupferseele mit Durchmesser $d = \SI{0,5}{mm}$ kann für Überschlagsrechnungen also davon ausgegangen werden, dass je $\SI{10}{m}$ Kabel-Gesamtweg (also Hin- und Rückleitung addiert) ein zusätzlicher Reihenwiderstand von $\SI{1}{\ohm}$ im Zündkreis auftritt.
 
 				Setzt man pro A-Anzünder einen Widerstand von $\SI{2}{\ohm}$ und pro U-Anzünder einen Widerstand von $\SI{0,8}{\ohm}$ an und geht von einem Gesamt-Kabelweg von $\SI{10}{m}$ aus, sollte die Anlage also im Stande sein, eine Reihe von 10\,A-Anzündern, wodurch sich $R_\text{ges} = \SI{23,2}{\ohm}$ ergibt, noch sicher auszulösen, da der mittlere Strom dann noch mehr als $\SI{50}{\%}$ über dem Auslösestrom eines A-Anzünders liegt. Bei den U-Anzündern ergibt sich unter sonst gleichen Bedingungen, was Stromüberhöhung und Kabellänge angeht, ebenso eine Maximalzahl von 10\,U-Anzündern in Reihe.
 
@@ -858,7 +888,7 @@
 			\begin{longtable}{p{1.2cm}cp{2.5cm}llSSp{2.35cm}}
 			  \multicolumn{8}{c}{\textbf{Materialliste Transmitter}}\\
 			  \\ \hline
-			  Bauteil                        & Anz. & Beschreibung                         & Händler & Artikelnr.                                                & {Einzel}    & {Ges.}      & Bemerkung    \\ [8pt]
+			  Bauteil                        & Anz. & Beschreibung                         & Händler & Artikelnr.                                                & {Einzel}  & {Ges.}    & Bemerkung    \\ [8pt]
 			  \hline
 			  \multicolumn{8}{c}{Kondensatoren} \\
 			  C11, C13                       & 2    & Elektrolyt\-kon\-den\-sa\-tor, 100uF & Reichelt & RAD 105 100/35                                            & 0,04\,€ & 0,08\,€ &              \\
@@ -912,7 +942,7 @@
 			\begin{longtable}{p{1.2cm}cp{2.5cm}llSSp{2.35cm}}
 			  \multicolumn{8}{c}{\textbf{Materialliste Zündbox}}\\
 			  \\
-			  Bauteil                                 & Anz. & Beschreibung                              & Händler   & Artikelnr.                                                                 & {Einzel}     & {Ges.}       & Bemerkung                 \\
+			  Bauteil                                 & Anz. & Beschreibung                              & Händler   & Artikelnr.                                                                 & {Einzel}   & {Ges.}     & Bemerkung                 \\
 			  \hline
 			  \multicolumn{8}{c}{Kondensatoren} \\
 			  C13, C27, C19                           & 3    & Elektrolyt\-kon\-den\-sa\-tor, 100uF      & Reichelt   & RAD 105 100/35                                                             & 0,04\,€  & 0,12\,€  &                           \\
@@ -934,7 +964,7 @@
 			  IC8                                     & 1    & LM1086                                    & Reichelt   & LM 1086 IT3,3                                                              & 1,25\,€  & 1,25\,€  &                           \\
 			  U\$4                                    & 1    & RFM69CW                                   & Pollin     & 810 303                                                                    & 4,60\,€  & 4,60\,€  &                           \\
 			  U\$2                                    & 1    & DS18B20                                   & Reichelt   & DS 18B20                                                                   & 1,60\,€  & 1,60\,€  &                           \\ [8pt]
-			   \hline
+			  \hline
 			  \multicolumn{8}{c}{Induktivität} \\
 			  L1                                      & 1    & 68 uH, stehend                            & Reichelt   & L-07HCP 68$\mu$                                                            & 0,30\,€  & 0,30\,€  &                           \\ [8pt]
 			  \hline
