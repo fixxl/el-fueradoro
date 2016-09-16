@@ -32,7 +32,6 @@
 \setmonofont{LMMonoLt10-Bold}[Scale=MatchLowercase]
 
 
-\DeclareSIUnit{\mWs}{mWs}
 \newcommand{\pic}{\emph{Pyro Ignition Control}}
 \newcommand{\anlage}{\emph{El Fueradoro}}
 
@@ -58,6 +57,11 @@
 		Keywords={}}
 }
 
+\usepackage{remreset}
+\makeatletter
+\@removefromreset{footnote}{part}
+\@removefromreset{footnote}{chapter}
+\makeatother
 
 \begin{document}
 	\begin{titlepage}
@@ -666,7 +670,7 @@
 
 				Eine Beispielrechnung macht dies klar: Würde man beispielsweise je fünf Anzünder jeder Kategorie zu einer Reihenschaltung von 10 Anzündern zusammenschalten, ergäbe sich $R_\text{ges} = \SI{17,2}{\ohm}$ und damit nach Formel \eqref{eq:zuendkreisi} ein Strom $I = \SI{1,27}{A}$, was bereits unterhalb des spezifizierten Auslösestroms eines U-Anzünders ($\SI{1,3}{A}$) liegt.
 
-				Hinzu kommt bei gleichen Anzündern die Problematik, dass selbst bei einem rechnerisch ausreichend hohen Strom, dieser wahrscheinlich nicht über die notwendige Zeitspanne bei den U-Anzündern ankäme. Dies liegt am unterschiedlichen Zündimpuls (Einheit \si[per-mode=fraction]{\mWs\per\ohm}), hinter dem sich der bei Schmelzsicherungen als Schmelzintegral bekannte \enquote{I-Quadrat-t-Wert}, also das Produkt aus dem Quadrat des Stroms und der Zeit, verbirgt. Fließt derselbe Strom durch die Reihenschaltung eines Anzünders vom Typ A und einen Anzünder vom Typ U, löst der A-Anzünder aufgrund des geringeren notwendigen Zündimpulses zuerst aus. Durch das Auslösen wird in aller Regel der Stromkreis unmittelbar unterbrochen, so dass kein Strom mehr durch den U-Anzünder fließen kann, weshalb die ihn ihm umgesetzte Energie nicht zum Auslösen ausreicht.
+				Hinzu kommt bei gleichen Anzündern die Problematik, dass selbst bei einem rechnerisch ausreichend hohen Strom, dieser wahrscheinlich nicht über die notwendige Zeitspanne bei den U-Anzündern ankäme. Dies liegt am unterschiedlichen Zündimpuls (Einheit \si{\milli\watt\second\per\ohm}), hinter dem sich der bei Schmelzsicherungen als Schmelzintegral bekannte \enquote{I-Quadrat-t-Wert}, also das Produkt aus dem Quadrat des Stroms und der Zeit, verbirgt\footnote{$\si{\watt} = \si{\volt\ampere}$ und $\si{\ohm} = \si{\volt\per\ampere}$ $\Rightarrow$ $\si{\watt\per\ohm} = \si{\square\ampere}$}. Fließt derselbe Strom durch die Reihenschaltung eines Anzünders vom Typ A und einen Anzünder vom Typ U, löst der A-Anzünder aufgrund des geringeren notwendigen Zündimpulses zuerst aus. Durch das Auslösen wird in aller Regel der Stromkreis unmittelbar unterbrochen, so dass kein Strom mehr durch den U-Anzünder fließen kann, weshalb die ihn ihm umgesetzte Energie nicht zum Auslösen ausreicht.
 
 				Die Krux bei einer Parallelschaltung, welche gegenüber der Reihenschaltung ohnehin die schlechtere Alternative darstellt, verschiedener Anzündertypen liegt darin, dass ein Auslösen des Anzünders nicht zwingend gleichbedeutend mit einer Unterbrechung des Stromkreises ist. Bei einer Parallelschaltung unterschiedlicher Widerstände wird zunächst der Ast mit dem geringsten Widerstand auslösen, allerdings kann nicht garantiert werden, dass dieser anschließend auch wirklich einen elektrischen Leerlauf darstellt. Sehr häufig ist auch nach dem Ansprechen noch eine elektrisch leitende Verbindung zwischen den Anzünderdrähten messbar, so dass ein Auslösen der weiteren Äste~-- gerade im Fall stark unterschiedlicher Widerstände~-- nicht gesichert ist.
 
@@ -684,7 +688,7 @@
 
 				Wenig ist ärgerlicher, als dass eine sorgfältig geplante Show an Flüchtigkeitsfehlern scheitert. Ein falscher Klick bei der Erstellung des Zündplans kann dafür sorgen, dass die Highlightbatterie nicht angesprochen wird und statt buntem Lichterzauber nur schwarze Nacht am Himmel zu sehen ist. Aus diesem Grund existiert das auf {\anlage} zugeschnittene Tool \texttt{schemecheck.exe}, welches folgende Dinge im Zündplan erkennen kann und hinweist auf:
 				\begin{itemize}
-					\item Verwenden einer Slave-ID außerhalb des Bereichs $1-31$
+					\item Verwenden einer Slave-ID außerhalb des Bereichs $1-30$
 					\item Ansprechen eines Kanals außerhalb des Bereichs $1-16$
 					\item Unterschreiten des minimalen Zündabstands von $\SI{100}{ms}$
 					\item Mehrfachzünden derselben Slave-Kanal-Kombination
