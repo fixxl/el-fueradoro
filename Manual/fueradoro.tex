@@ -35,6 +35,7 @@
 \newcommand{\pic}{\emph{Pyro Ignition Control}}
 \newcommand{\anlage}{\emph{El Fueradoro}}
 
+
 %% Seitenstil-Einstellung
 \renewcommand{\chapterpagestyle}{plain}
 \pagestyle{scrheadings}
@@ -63,6 +64,8 @@
 \@removefromreset{footnote}{chapter}
 \makeatother
 
+\DeclareSIUnit{\dBm}{dBm}
+
 \begin{document}
 	\begin{titlepage}
 		\thispagestyle{empty}
@@ -86,7 +89,7 @@
 
 	{\bfseries
 		\begin{enumerate}
-			\item Das Metallgehäuse des SMA-Antennenanschlusses an der Oberseite der Zündbox liegt auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{V}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden.
+			\item Das Metallgehäuse des SMA-Antennenanschlusses an der Oberseite der Zündbox liegt auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{\volt}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden.
 			\item Devices nie ohne angeschlossene Antenne einschalten, um Rückreflexionen an offenen Steckern/Buchsen zu vermeiden, welche die Sendeendstufe zerstören könnten.
 			\item Keine Softwareupdates an Zündboxen durchführen, solange Anzünder angeschlossen sind, da das Verhalten nach einem fehlgeschlagenen Update unvorhersehbar ist.
 		\end{enumerate}
@@ -145,9 +148,9 @@
 				\caption{Die Devices von {\anlage}}
 			\end{figure}
 
-			Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das~-- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur~-- frei nutzbare Frequenzband um $\SI{868}{MHz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
+			Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das~-- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur~-- frei nutzbare Frequenzband um $\SI{868}{\mega\hertz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
 
-			Die Zündboxen, in Abbildung~\ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden zusammen einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\SI{22,5}{V}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16~n-Kanal-MOSFETs.
+			Die Zündboxen, in Abbildung~\ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Jede Zündbox verfügt über 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden zusammen einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\SI{22,5}{\volt}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16~n-Kanal-MOSFETs.
 
 			Welches der beiden Kabel an welcher Klemme des Zündkanals angeschlossen wird, spielt keine Rolle, da es sich bei den Anzündern um passive elektrische Bauelemente handelt, die in beiden Richtungen gleichermaßen von Strom durchflossen werden können. Die Verdrahtung sollte aber stets im ausgeschalteten Zustand der Boxen erfolgen und aus Sicherheitsgründen immer in folgender Reihenfolge:
 			\begin{itemize}
@@ -156,13 +159,13 @@
 			\end{itemize}
 			Dies ist der Tatsache geschuldet, dass, wenn eine Seite des Zündkanals fest mit der Zündspannung, d.\,h. einer roten Klemme verbunden ist, ein frei baumelndes zweites Kabel durch Berührung eines Bauteils auf Massepotential, z.\,B. der Antennenbuchse oder der Überwurfmutter des gewinkelten SMA-Steckers, einen Kurzschluss und somit eine Zündung auslösen würde~-- selbst dann, wenn die Box nicht scharf geschaltet ist!
 
-			Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom durch den LED-Zweig auf unter \SI{5}{mA} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme~-- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen~-- verbunden ist, also ein geschlossener Strompfad von $\SI{22,5}{V}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen grünen LED signalisiert. Ein Leuchten der grünen LED ist dabei lediglich ein Indikator, dass \enquote{etwas} am jeweiligen Kanal angeschlossen ist, eine Aussage, ob der Widerstand des angeschlossenen Anzündernetzwerks gering genug ist, um eine Zündung auszulösen, wird durch die LED ausdrücklich nicht getroffen.
+			Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom durch den LED-Zweig auf unter \SI{5}{\milli\ampere} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme~-- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen~-- verbunden ist, also ein geschlossener Strompfad von $\SI{22,5}{\volt}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen grünen LED signalisiert. Ein Leuchten der grünen LED ist dabei lediglich ein Indikator, dass \enquote{etwas} am jeweiligen Kanal angeschlossen ist, eine Aussage, ob der Widerstand des angeschlossenen Anzündernetzwerks gering genug ist, um eine Zündung auszulösen, wird durch die LED ausdrücklich nicht getroffen.
 
 		\section{Energieversorgung}
 
 			Die in unmittelbarer Nähe des zu steuernden PCs platzierte Transmitterbox bezieht ihre nötige elektrische Energie aus dem USB-Port eines PCs. Das fest mit der Transmitterbox verbundene USB-Kabel dient ausschließlich diesem Zweck. Sie verfügt über keinen Ein/Aus-Schalter, sondern ist eingeschaltet, solange sie mit dem USB-Port verbunden und der PC eingeschaltet ist. Da der USB-Port \enquote{angezapft} wird, ohne in der sonst üblichen Weise mit dem Controller zu kommunizieren, empfiehlt sich, die USB-Verbindung erst nach komplett abgeschlossenem Bootvorgang herzustellen und vor dem Herunterfahren des Rechners wieder zu trennen.
 
-			Aufgrund der anzunehmenden Platzierung der Zündboxen im freien Feld, abseits von Steckdosen und anderen Energiequellen werden sie über eine Batterie versorgt. \textbf{Um ordnungsgemäße Funktionalität zu garantieren und Schäden an der Schaltung zu vermeiden, muss die Batteriespannung zwischen \SI{8}{V} und \SI{15}{V} liegen!} Empfohlen wird die Verwendung eines Blei-Vlies-Akkus mit Nennspannung \SI{12}{V}, wie er auch in Abbildung~\ref{fig:zuendbox} über der Zündbox zu erahnen ist.
+			Aufgrund der anzunehmenden Platzierung der Zündboxen im freien Feld, abseits von Steckdosen und anderen Energiequellen werden sie über eine Batterie versorgt. \textbf{Um ordnungsgemäße Funktionalität zu garantieren und Schäden an der Schaltung zu vermeiden, muss die Batteriespannung zwischen \SI{8}{\volt} und \SI{15}{\volt} liegen!} Empfohlen wird die Verwendung eines Blei-Vlies-Akkus mit Nennspannung \SI{12}{\volt}, wie er auch in Abbildung~\ref{fig:zuendbox} über der Zündbox zu erahnen ist.
 
 		\section{Die Status-LEDs}
 			\label{ch:leds}
@@ -185,7 +188,7 @@
 
 			Während des Bootvorgangs leuchten bei den Zündboxen die orange und gelbe LED im Wechsel, wodurch dem Benutzer die aktuell eingestellte Slave-ID der Box visualisiert wird. Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
 
-			Bei einem Zündvorgang leuchten an der Zündbox für die Dauer der Zündung (\SI{11}{ms}) alle vier LEDs.
+			Bei einem Zündvorgang leuchten an der Zündbox für die Dauer der Zündung (\SI{11}{\milli\second}) alle vier LEDs.
 
 		\section{Das LCD der Transmitterbox}
 
@@ -288,7 +291,7 @@
 
 			Zudem sollte im Reiter \enquote{Allgemein} die globale Verzögerung erfahrungsgemäß, wie Abbildung~\ref{fig:pic-delay} zeigt, auf etwa 0,07\,s eingestellt werden. Dies ist die Zeit, die aufgrund von Datenübertragungen und Rechenvorgängen zwischen dem Beginn des Sendens des Befehls vom PC zum Transmitter und dem Zünden des Kanals an der Zündbox vergeht.
 
-			Als minimale Zeitdauer zwischen zwei Zündungen sollte \SI{100}{ms} nicht unterschritten werden, das Scharfschalten vor Beginn der Show ist ebenso nicht zu vergessen wie das Scharfschalten des Transmitters und sämtlicher Zündboxen!
+			Als minimale Zeitdauer zwischen zwei Zündungen sollte \SI{100}{\milli\second} nicht unterschritten werden, das Scharfschalten vor Beginn der Show ist ebenso nicht zu vergessen wie das Scharfschalten des Transmitters und sämtlicher Zündboxen!
 
 			\textbf{Anmerkung: Eine serielle Verbindung zu einem Device kann immer nur durch einen einzigen Client (\texttt{Putty\-tel, GUI, {\pic}, Firware-Updater}) bestehen. Man muss also immer die bestehende Verbindung trennen, bevor man mit einem anderen Programm eine neue aufbauen kann.}
 
@@ -349,7 +352,7 @@
 
 				Diese können, sofern \texttt{Puttytel} die aktive Anwendung ist, direkt über die PC-Tastatur eingegeben werden und sollten zur unmittelbaren Ausführung mit Druck auf die Taste \emph{ENTER} abgeschlossen werden. Sobald das erste Zeichen eingegeben wurde, leuchtet die gelbe Status-LED am Device. Unbekannte Befehle werden ignoriert, sämtliche Buchstaben als Kleinbuchstaben interpretiert. Korrekturen sind unter Verwendung der \emph{BACKSPACE}-Taste möglich.
 
-				Aufgrund der eingebauten Timeout-Funktion, welche ein Hängenbleiben des Programms während einer Show verhindern soll, bricht die Firmware die Eingabe ab, wenn zwischen der Eingabe der einzelnen Buchstaben mehr als $\SI{3}{s}$ vergehen. Lässt man diese Zeit verstreichen, wird automatisch ein Drücken der \emph{ENTER}-Taste übermittelt, die Befehlseingabe also abgeschlossen und das Device ist unmittelbar bereit, einen neuen Befehl aufzunehmen. Wird also nach Eingabe eines gültigen Befehls die \emph{ENTER}-Taste nicht gedrückt, wird der Befehl durch den Timeout dennoch ausgelöst. Möchte man dies vermeiden, sollte man den Befehl vor Ausführung durch Eingabe weiterer Zeichen ungültig machen oder durch Entfernen aller Zeichen mittels \emph{BACKSPACE} löschen.
+				Aufgrund der eingebauten Timeout-Funktion, welche ein Hängenbleiben des Programms während einer Show verhindern soll, bricht die Firmware die Eingabe ab, wenn zwischen der Eingabe der einzelnen Buchstaben mehr als $\SI{3}{\second}$ vergehen. Lässt man diese Zeit verstreichen, wird automatisch ein Drücken der \emph{ENTER}-Taste übermittelt, die Befehlseingabe also abgeschlossen und das Device ist unmittelbar bereit, einen neuen Befehl aufzunehmen. Wird also nach Eingabe eines gültigen Befehls die \emph{ENTER}-Taste nicht gedrückt, wird der Befehl durch den Timeout dennoch ausgelöst. Möchte man dies vermeiden, sollte man den Befehl vor Ausführung durch Eingabe weiterer Zeichen ungültig machen oder durch Entfernen aller Zeichen mittels \emph{BACKSPACE} löschen.
 
 				Von den in Tabelle~\ref{tab:commands} aufgeführten Befehlen funktioniert lediglich \enquote{orders} nicht bei allen Devices, sondern setzt voraus, dass das angeschlossene Device ein Transmitter ist.
 
@@ -406,7 +409,7 @@
 					\item Spannung, welche die Batterie der Box mit der entsprechenden Unique-ID liefert.
 					\item Scharfschaltungsstatus der Box mit der jeweiligen Unique-ID: (j)a (=scharf) oder (n)ein (=nicht scharf).
 					\item Temperatur im Inneren der Box, sofern die Box über einen eingebauten Temperatursensor verfügt, ansonsten wird \enquote{n.a.}~(not available) angezeigt.
-					\item Stärke des von der Box empfangenen Antwortsignals (RSSI = Received Signal Strength Indicator) in dBm. Je größer der Wert ist~-- bei negativen Werten also umso näher er bei 0 liegt, umso besser und umso weniger störanfällig ist die Verbindung zwischen den Devices. Die theoretische Empfangsgrenze liegt bei etwa $\SI{-96}{dBm}$.
+					\item Stärke des von der Box empfangenen Antwortsignals (RSSI = Received Signal Strength Indicator) in dBm. Je größer der Wert ist~-- bei negativen Werten also umso näher er bei 0 liegt, umso besser und umso weniger störanfällig ist die Verbindung zwischen den Devices. Die theoretische Empfangsgrenze liegt bei etwa $\SI{-96}{\dBm}$.
 				\end{enumerate}
 
 				Die untere Tabelle listet auf, wie viele Boxen mit der entsprechenden Slave-ID derzeit aktiv sind.
@@ -490,11 +493,11 @@
 						\label{fig:rfmread}
 					\end{figure}
 
-					Das Modul antwortet nun mit einem 8-Bit-Wert, z.\,B. mit dem Wert 0x9A, welcher dem Binärwert 10011010 entspricht, dessen Bedeutung dem Datenblatt entnommen werden kann: Das oberste Bit signalisiert, dass die Verstärkerstufe PA0 aktiv ist, die beiden folgenden Bits sind 0, da PA1 und PA2 in der Variante \texttt{RFM69CW} nicht genutzt werden können. Die unteren fünf Bits schließlich stehen für die eingestellte Sendeleistung, wobei man vom aus den fünf Bits berechneten Wert noch 18 abziehen muss, um die Sendeleistung in dBm zu erhalten. Gesetzt sind die Bits 4, 3 und 1, was dem Wert 26 ($= 2^4 + 2^3 + 2^1$) entspricht, daraus resultiert eine eingestellte Sendeleistung von $\SI{8}{dBm}$.
+					Das Modul antwortet nun mit einem 8-Bit-Wert, z.\,B. mit dem Wert 0x9A, welcher dem Binärwert 10011010 entspricht, dessen Bedeutung dem Datenblatt entnommen werden kann: Das oberste Bit signalisiert, dass die Verstärkerstufe PA0 aktiv ist, die beiden folgenden Bits sind 0, da PA1 und PA2 in der Variante \texttt{RFM69CW} nicht genutzt werden können. Die unteren fünf Bits schließlich stehen für die eingestellte Sendeleistung, wobei man vom aus den fünf Bits berechneten Wert noch 18 abziehen muss, um die Sendeleistung in dBm zu erhalten. Gesetzt sind die Bits 4, 3 und 1, was dem Wert 26 ($= 2^4 + 2^3 + 2^1$) entspricht, daraus resultiert eine eingestellte Sendeleistung von $\SI{8}{\dBm}$.
 
 				\subsubsection{Setzen der Sendeleistung}
 
-					Will man die Sendeleistung nun auf $\SI{6}{dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\SI{6}{dBm}$ einzuschreiben, gibt man im Terminalprogramm~-- wie in Abbildung~\ref{fig:rfmwrite} gezeigt~-- \enquote{rfm} gefolgt von \emph{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
+					Will man die Sendeleistung nun auf $\SI{6}{\dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\SI{6}{\dBm}$ einzuschreiben, gibt man im Terminalprogramm~-- wie in Abbildung~\ref{fig:rfmwrite} gezeigt~-- \enquote{rfm} gefolgt von \emph{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
 
 					Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Anschließend erfolgt eine Nachfrage, ob die Sendeleistung dauerhaft gespeichert werden soll. Verneint man dies, wird beim nächsten Neustart des Device der Standardwert wiederhergestellt, andernfalls ist der gerade eingestellte Wert der neue Standardwert.
 
@@ -593,23 +596,23 @@
 					{\Delta}t = 2 {\cdot} T_\text{neu} - T_\text{original}
 				\end{equation}
 
-				Soll also eine Batterie mit einer Laufzeit von $\SI{60}{s}$ in $\SI{40}{s}$ abgebrannt werden, muss die zweite Zündung $\SI{20}{s}$ nach der ersten ausgelöst werden. Hierbei kommt es natürlich auch zu einer Verdichtung der Effekte.
+				Soll also eine Batterie mit einer Laufzeit von $\SI{60}{\second}$ in $\SI{40}{\second}$ abgebrannt werden, muss die zweite Zündung $\SI{20}{\second}$ nach der ersten ausgelöst werden. Hierbei kommt es natürlich auch zu einer Verdichtung der Effekte.
 
 			\subsection{Zündkreisauslegung}
 
 				An dieser Stelle soll kurz auf die Grenzen und Limits von {\anlage} eingegangen werden, die bei der Planung einer Show zu berücksichtigen sind. Die Charakteristika und Kennwerte der einzelnen Anzündertypen sind Anlage 2 der 1.\,SprengV zu entnehmen.
 
-				{\anlage} ist für die Verwendung mit den Anzündertypen A (Auslösestrom $\SI{0,6}{A}$) und U (Auslösestrom $\SI{1,3}{A}$) ausgelegt. Der nötige Strom zum Auslösen eines HU-Anzünders (Auslösestrom $\SI{25}{A}$) kann nicht geliefert werden. Es ist zu berücksichtigen, dass in der Anlage ein Strombegrenzungswiderstand von $\SI{2,2}{\ohm}$ verbaut ist, der in Reihe zum angeschlossenen Anzünder-Netzwerk liegt. Mittels Formel~\eqref{eq:zuendkreisrmax} kann der maximal zulässige Widerstand (inklusive der $\SI{2,2}{\ohm}$) für einen gegebenen mittleren Strom $I$ ermittelt werden.
+				{\anlage} ist für die Verwendung mit den Anzündertypen A (Auslösestrom $\SI{0,6}{\ampere}$) und U (Auslösestrom $\SI{1,3}{\ampere}$) ausgelegt. Der nötige Strom zum Auslösen eines HU-Anzünders (Auslösestrom $\SI{25}{\ampere}$) kann nicht geliefert werden. Es ist zu berücksichtigen, dass in der Anlage ein Strombegrenzungswiderstand von $\SI{2,2}{\ohm}$ verbaut ist, der in Reihe zum angeschlossenen Anzünder-Netzwerk liegt. Mittels Formel~\eqref{eq:zuendkreisrmax} kann der maximal zulässige Widerstand (inklusive der $\SI{2,2}{\ohm}$) für einen gegebenen mittleren Strom $I$ ermittelt werden.
 
 				\begin{equation}
-					R_\text{max} = \frac{50}{47 {\cdot} \ln\left(\frac{\SI{423}{\A}}{\SI{423}{\A} - 20 {\cdot} I}\right)}\si{\ohm}
+					R_\text{max} = \frac{50}{47 {\cdot} \ln\left(\frac{\SI{423}{\ampere}}{\SI{423}{\ampere} - 20 {\cdot} I}\right)}\si{\ohm}
 					\label{eq:zuendkreisrmax}
 				\end{equation}
 
-				Entsprechend resultiert für einen gegebenen Widerstand der mittlere Strom über eine Zeit von $\SI{10}{ms}$ aus Gleichung~\eqref{eq:zuendkreisi}.
+				Entsprechend resultiert für einen gegebenen Widerstand der mittlere Strom über eine Zeit von $\SI{10}{\milli\second}$ aus Gleichung~\eqref{eq:zuendkreisi}.
 
 				\begin{equation}
-					I = \SI{21,15}{\A} {\cdot} \left(1 - \mathrm{e}^{-\frac{\SI{50}{\ohm}}{47 {\cdot} R}}\right)
+					I = \SI{21,15}{\ampere} {\cdot} \left(1 - \mathrm{e}^{-\frac{\SI{50}{\ohm}}{47 {\cdot} R}}\right)
 					\label{eq:zuendkreisi}
 				\end{equation}
 
@@ -662,13 +665,13 @@
 				\end{table}
 
 
-				Bei der Verwendung von Verschleißdraht mit einer Kupferseele mit Durchmesser $d = \SI{0,5}{mm}$ kann für Überschlagsrechnungen also davon ausgegangen werden, dass je $\SI{10}{m}$ Kabel-Gesamtweg (also Hin- und Rückleitung addiert) ein zusätzlicher Reihenwiderstand von $\SI{1}{\ohm}$ im Zündkreis auftritt.
+				Bei der Verwendung von Verschleißdraht mit einer Kupferseele mit Durchmesser $d = \SI{0,5}{\milli\metre}$ kann für Überschlagsrechnungen also davon ausgegangen werden, dass je $\SI{10}{\metre}$ Kabel-Gesamtweg (also Hin- und Rückleitung addiert) ein zusätzlicher Reihenwiderstand von $\SI{1}{\ohm}$ im Zündkreis auftritt.
 
-				Setzt man pro A-Anzünder einen Widerstand von $\SI{2}{\ohm}$ und pro U-Anzünder einen Widerstand von $\SI{0,8}{\ohm}$ an und geht von einem Gesamt-Kabelweg von $\SI{10}{m}$ aus, sollte die Anlage also im Stande sein, eine Reihe von 10\,A-Anzündern, wodurch sich $R_\text{ges} = \SI{23,2}{\ohm}$ ergibt, noch sicher auszulösen, da der mittlere Strom dann noch mehr als $\SI{50}{\%}$ über dem Auslösestrom eines A-Anzünders liegt. Bei den U-Anzündern ergibt sich unter sonst gleichen Bedingungen, was Stromüberhöhung und Kabellänge angeht, ebenso eine Maximalzahl von 10\,U-Anzündern in Reihe.
+				Setzt man pro A-Anzünder einen Widerstand von $\SI{2}{\ohm}$ und pro U-Anzünder einen Widerstand von $\SI{0,8}{\ohm}$ an und geht von einem Gesamt-Kabelweg von $\SI{10}{\metre}$ aus, sollte die Anlage also im Stande sein, eine Reihe von 10\,A-Anzündern, wodurch sich $R_\text{ges} = \SI{23,2}{\ohm}$ ergibt, noch sicher auszulösen, da der mittlere Strom dann noch mehr als $\SI{50}{\%}$ über dem Auslösestrom eines A-Anzünders liegt. Bei den U-Anzündern ergibt sich unter sonst gleichen Bedingungen, was Stromüberhöhung und Kabellänge angeht, ebenso eine Maximalzahl von 10\,U-Anzündern in Reihe.
 
 				\textbf{Es sei noch einmal deutlich darauf hingewiesen, dass aufgrund der unterschiedlichen Widerstände und Ansprechströme niemals verschiedene Anzündertypen zusammen in einem Zündkreis verwendet werden sollten~-- und zwar weder in Reihen- noch in Parallelschaltung!}
 
-				Eine Beispielrechnung macht dies klar: Würde man beispielsweise je fünf Anzünder jeder Kategorie zu einer Reihenschaltung von 10 Anzündern zusammenschalten, ergäbe sich $R_\text{ges} = \SI{17,2}{\ohm}$ und damit nach Formel \eqref{eq:zuendkreisi} ein Strom $I = \SI{1,27}{A}$, was bereits unterhalb des spezifizierten Auslösestroms eines U-Anzünders ($\SI{1,3}{A}$) liegt.
+				Eine Beispielrechnung macht dies klar: Würde man beispielsweise je fünf Anzünder jeder Kategorie zu einer Reihenschaltung von 10 Anzündern zusammenschalten, ergäbe sich $R_\text{ges} = \SI{17,2}{\ohm}$ und damit nach Formel \eqref{eq:zuendkreisi} ein Strom $I = \SI{1,27}{\ampere}$, was bereits unterhalb des spezifizierten Auslösestroms eines U-Anzünders ($\SI{1,3}{\ampere}$) liegt.
 
 				Hinzu kommt bei gleichen Anzündern die Problematik, dass selbst bei einem rechnerisch ausreichend hohen Strom, dieser wahrscheinlich nicht über die notwendige Zeitspanne bei den U-Anzündern ankäme. Dies liegt am unterschiedlichen Zündimpuls (Einheit \si{\milli\watt\second\per\ohm}), hinter dem sich der bei Schmelzsicherungen als Schmelzintegral bekannte \enquote{I-Quadrat-t-Wert}, also das Produkt aus dem Quadrat des Stroms und der Zeit, verbirgt\footnote{$\si{\watt} = \si{\volt\ampere}$ und $\si{\ohm} = \si{\volt\per\ampere}$ $\Rightarrow$ $\si{\watt\per\ohm} = \si{\square\ampere}$}. Fließt derselbe Strom durch die Reihenschaltung eines Anzünders vom Typ A und einen Anzünder vom Typ U, löst der A-Anzünder aufgrund des geringeren notwendigen Zündimpulses zuerst aus. Durch das Auslösen wird in aller Regel der Stromkreis unmittelbar unterbrochen, so dass kein Strom mehr durch den U-Anzünder fließen kann, weshalb die ihn ihm umgesetzte Energie nicht zum Auslösen ausreicht.
 
@@ -685,7 +688,7 @@
 
 				Die Frage nach der Funkreichweite, also wie weit die Zündboxen bei {\anlage} vom Transmitter entfernt sein dürfen, um noch sicher auszulösen, kann pauschal nicht beantwortet werden, da dieser Wert sehr vielen Einflussgrößen unterliegt.
 				
-				Das theoretische Reichweiten-Maximum bei der verwendeten Frequenz von \SI{868}{MHz} und einer zulässigen Dämpfung von \SI{113}{\decibel} (Sendeleistung in dB minus niedrigste Empfangsleistung in dB) ergibt sich aus der Friis-Übertragungsgleichung zu mehreren Kilometern. Hierfür müssten die Antennen jedoch mehrere Meter über dem Erdboden angebracht sein, um ideale Wellenausbreitung durch die Luft und Entkopplung vom Boden zu ermöglichen, was in der Feuerwerks-Praxis meist nicht umsetzbar ist, und die Umgebung müsste so störungsfrei sein, dass der Empfänger das Signal auch bei sehr geringen Leistungen noch detektieren kann.
+				Das theoretische Reichweiten-Maximum bei der verwendeten Frequenz von \SI{868}{\mega\hertz} und einer zulässigen Dämpfung von \SI{113}{\decibel} (Sendeleistung in dB minus niedrigste Empfangsleistung in dB) ergibt sich aus der Friis-Übertragungsgleichung zu mehreren Kilometern. Hierfür müssten die Antennen jedoch mehrere Meter über dem Erdboden angebracht sein, um ideale Wellenausbreitung durch die Luft und Entkopplung vom Boden zu ermöglichen, was in der Feuerwerks-Praxis meist nicht umsetzbar ist, und die Umgebung müsste so störungsfrei sein, dass der Empfänger das Signal auch bei sehr geringen Leistungen noch detektieren kann.
 				
 				In Tests mit {\anlage} konnte für ein reales Szenario (Platzierung im Gras am Boden) eine Distanz von \SI{250}{\meter} zwischen Sender und Empfänger mit einer Reserve von über \SI{20}{\decibel} gegenüber der minimalen Empfänger\-empfindlichkeit überbrückt werden, was für die meisten Feuerwerke ausreichend sein dürfte. Wichtig ist hierbei jedoch eine Sichtverbindung zwischen den Devices. Bricht diese Sichtlinie ab, sinkt die Reichweite, da eine Verbindung über reflektierende und streuende Hindernisse in aller Regel stark verlustbehaftet ist.
 				
@@ -703,7 +706,7 @@
 				\begin{itemize}
 					\item Verwenden einer Slave-ID außerhalb des Bereichs $1-30$
 					\item Ansprechen eines Kanals außerhalb des Bereichs $1-16$
-					\item Unterschreiten des minimalen Zündabstands von $\SI{100}{ms}$
+					\item Unterschreiten des minimalen Zündabstands von $\SI{100}{\milli\second}$
 					\item Mehrfachzünden derselben Slave-Kanal-Kombination
 				\end{itemize}
 				Darüber hinaus werden auch alle angesprochenen Slave-IDs und die Gesamtzahl der Cues angezeigt.
@@ -756,11 +759,11 @@
 				\begin{tabularx}{.925\textwidth}{Xccc}
 					\hline\hline
 					Firmware                        & Controller   & Funkmodul & Sendeleistung  \\ \hline
-					Pyro\_atmega328p\_RFM69.hex     & ATMEGA 328P  & RFM69CW   & $\SI{8}{dBm}$  \\
-					Pyro\_atmega328p\_RFM69\_HP.hex & ATMEGA 328P  & RFM69CW   & $\SI{13}{dBm}$ \\
-					Pyro\_atmega168p\_RFM69.hex     & ATMEGA 168PA & RFM69CW   & $\SI{8}{dBm}$  \\
-					Pyro\_atmega328p\_RFM12.hex     & ATMEGA 328P  & RFM12     & $\SI{4}{dBm}$  \\
-					Pyro\_atmega168p\_RFM12.hex     & ATMEGA 168PA & RFM12     & $\SI{4}{dBm}$  \\ \hline\hline
+					Pyro\_atmega328p\_RFM69.hex     & ATMEGA 328P  & RFM69CW   & $\SI{8}{\dBm}$  \\
+					Pyro\_atmega328p\_RFM69\_HP.hex & ATMEGA 328P  & RFM69CW   & $\SI{13}{\dBm}$ \\
+					Pyro\_atmega168p\_RFM69.hex     & ATMEGA 168PA & RFM69CW   & $\SI{8}{\dBm}$  \\
+					Pyro\_atmega328p\_RFM12.hex     & ATMEGA 328P  & RFM12     & $\SI{4}{\dBm}$  \\
+					Pyro\_atmega168p\_RFM12.hex     & ATMEGA 168PA & RFM12     & $\SI{4}{\dBm}$  \\ \hline\hline
 				\end{tabularx}
 				\caption{Verfügbare Firmware-Versionen}
 				\label{tab:firmwareversions}
@@ -859,7 +862,7 @@
 			\label{fig:pinout}
 		\end{figure}
 
-		Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er beim Starten der Firmware als Eingang geschaltet wird und aufgrund der dort anliegenden Spannung die sicherheitsrelevante Erkennung, um welchen Devicetyp es sich handelt, vorgenommen wird. Aufgrund eines internen Pullup-Widerstands im LCD werden bei angeschlossenem Transmitter stets $\SI{3,3}{V}$ an diesem Pin anliegen, bei Zündboxen bewegt sich die heruntergeteilte Spannung der Versorgungsbatterie im Bereich unterhalb von $\SI{1,1}{V}$.
+		Besondere Bedeutung kommt dem Pin rechts oben (LCD-RW bzw. V\_BATT) zu, da er beim Starten der Firmware als Eingang geschaltet wird und aufgrund der dort anliegenden Spannung die sicherheitsrelevante Erkennung, um welchen Devicetyp es sich handelt, vorgenommen wird. Aufgrund eines internen Pullup-Widerstands im LCD werden bei angeschlossenem Transmitter stets $\SI{3,3}{\volt}$ an diesem Pin anliegen, bei Zündboxen bewegt sich die heruntergeteilte Spannung der Versorgungsbatterie im Bereich unterhalb von $\SI{1,1}{\volt}$.
 
 		Diese Unterscheidung ist wichtig, da der Programmablauf sich bei Transmittern (Unique-ID 0 und Slave-ID 0) anders gestaltet als bei Zündboxen und Controllerpins, wie in Abbildung~\ref{fig:pinout} zu sehen, bei Transmittern anders belegt sind und für eine andere Datenrichtung (Eingang/Ausgang) ausgelegt sind als bei Zündboxen.  Wie zu erkennen werden Controlleranschlüsse beim Transmitter als Steuerung des Displays verwendet, die bei der Zündbox den Zustand des Schlüsselschalters einlesen oder die Schieberegister zur Zündung der Kanäle ansteuern.
 
@@ -1052,7 +1055,7 @@
 	\chapter{Platinenherstellung}
 		\label{ch:platinenherstellung}
 
-		Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters (Platinenabmessungen: $\SI{91,44}{mm}\times\SI{66,04}{mm}$) als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage: In Abbildung~\ref{fig:zuendboxprint} die der Zündbox (Platinenabmessungen: $\SI{157,48}{mm}\times\SI{97,79}{mm}$) und in Abbildung~\ref{fig:rfmprint} die Adapterplatine zum Auflöten des Funkmoduls (Abmessungen einer einzelnen Adapterplatine: $\SI{31,75}{mm}\times\SI{22,86}{mm}$).
+		Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters (Platinenabmessungen: $\SI{91,44}{\milli\metre}\times\SI{66,04}{\milli\metre}$) als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage: In Abbildung~\ref{fig:zuendboxprint} die der Zündbox (Platinenabmessungen: $\SI{157,48}{\milli\metre}\times\SI{97,79}{\milli\metre}$) und in Abbildung~\ref{fig:rfmprint} die Adapterplatine zum Auflöten des Funkmoduls (Abmessungen einer einzelnen Adapterplatine: $\SI{31,75}{\milli\metre}\times\SI{22,86}{\milli\metre}$).
 
 		Die Oberseite ist hierbei jeweils schon gespiegelt, die Ausdrücke können für einen Tonertransfer also einfach ausgedruckt und im Zwischenraum gefaltet werden, wobei auf möglichst exakte Deckung zu achten ist.
 
@@ -1192,19 +1195,19 @@
 					\label{fig:lcddimensions}
 				\end{figure}
 
-				Die Vorderseite des Gehäuses muss zunächst mit einem Ausschnitt von $\SI{97}{mm}\,\times\,\SI{39,5}{mm}$ und vier $\SI{3}{mm}$-Bohrungen für die Anbringung des LCD versehen werden. Die Abstände zueinander sind in Abbildung~\ref{fig:lcddimensions} verdeutlicht. Wer nicht auf seine Messkünste vertrauen möchte oder ein LCD mit abweichenden Abmessungen besitzt, sollte zunächst einen passenden Ausschnitt für den Bildschirm mittig in der Fläche anbringen, anschließend können das LCD aufgelegt und die vier Bohrlöcher markiert und gebohrt werden.
+				Die Vorderseite des Gehäuses muss zunächst mit einem Ausschnitt von $\SI{97}{\milli\metre}\,\times\,\SI{39,5}{\milli\metre}$ und vier $\SI{3}{\milli\metre}$-Bohrungen für die Anbringung des LCD versehen werden. Die Abstände zueinander sind in Abbildung~\ref{fig:lcddimensions} verdeutlicht. Wer nicht auf seine Messkünste vertrauen möchte oder ein LCD mit abweichenden Abmessungen besitzt, sollte zunächst einen passenden Ausschnitt für den Bildschirm mittig in der Fläche anbringen, anschließend können das LCD aufgelegt und die vier Bohrlöcher markiert und gebohrt werden.
 
-				Bevor man das LCD einschraubt, muss noch eine Aussparung für den Sub-D-Anschluss, ein Loch für den Antennenanschluss ($\SI{6,5}{mm}$), vier Löcher für die Status-LEDs ($\SI{5}{mm}$)und eine Kerbe für die Versorgungskabeldurchführung in die Wand, welche später als Oberseite des Gehäuses dient, eingebracht werden.
+				Bevor man das LCD einschraubt, muss noch eine Aussparung für den Sub-D-Anschluss, ein Loch für den Antennenanschluss ($\SI{6,5}{\milli\metre}$), vier Löcher für die Status-LEDs ($\SI{5}{\milli\metre}$)und eine Kerbe für die Versorgungskabeldurchführung in die Wand, welche später als Oberseite des Gehäuses dient, eingebracht werden.
 
-				Hierfür sollte man zunächst die fertig bestückte Platine mittels zweier Schrauben in ihrer finalen Position festschrauben und das Oberteil so anlegen, dass die Position der Aussparung für die Sub-D-Buchse angezeichnet werden kann. Die Abmessung der Aussparung sollte $\SI{31}{mm}\,\times\,\SI{12,5}{mm}$ betragen. Die Positionen der restlichen Löcher sind aufgrund der Kabelverbindung mit der Platine unkritisch, die ungefähre Lage kann Abbildung~\ref{fig:transmitter} auf Seite \pageref{fig:transmitter} entnommen werden. Das Versorgungskabel mit USB-Stecker wird zwecks Zugentlastung zwischen den beiden zu verschraubenden Teilen eingeklemmt, die Kerbe sollte daher nicht allzu groß ausgeführt werden. Die Bohrarbeiten am Transmitter sind damit erledigt!
+				Hierfür sollte man zunächst die fertig bestückte Platine mittels zweier Schrauben in ihrer finalen Position festschrauben und das Oberteil so anlegen, dass die Position der Aussparung für die Sub-D-Buchse angezeichnet werden kann. Die Abmessung der Aussparung sollte $\SI{31}{\milli\metre}\,\times\,\SI{12,5}{\milli\metre}$ betragen. Die Positionen der restlichen Löcher sind aufgrund der Kabelverbindung mit der Platine unkritisch, die ungefähre Lage kann Abbildung~\ref{fig:transmitter} auf Seite \pageref{fig:transmitter} entnommen werden. Das Versorgungskabel mit USB-Stecker wird zwecks Zugentlastung zwischen den beiden zu verschraubenden Teilen eingeklemmt, die Kerbe sollte daher nicht allzu groß ausgeführt werden. Die Bohrarbeiten am Transmitter sind damit erledigt!
 
 				Nun müssen noch die elektrischen Verbindungen zwischen Platine und Peripherie hergestellt und die Peripherieteile anschließend befestigt werden~-- zuerst die vier Status-LEDs:
 
 				\begin{enumerate}\label{enum:leds}
-					\item Die Verbindung der Adern des Flachbandkabels auf einer Länge von etwa $\SI{35}{mm}$ auftrennen
-					\item Auf jede Ader einen dünnen Schrumpfschlauch der Länge $\SI{15}{mm}$ stecken (noch nicht erhitzen!)
-					\item Das kürzere Anschlussbein der LED (Kathode) mit dem Seitenschneider auf eine Länge von $\SI{8}{mm}$ trimmen und die mit GND verbundene Ader anlöten
-					\item Das längere Anschlussbein der LED (Anode) mit dem Seitenschneider auf eine Länge von $\SI{8}{mm}$ trimmen und die andere Ader anlöten
+					\item Die Verbindung der Adern des Flachbandkabels auf einer Länge von etwa $\SI{35}{\milli\metre}$ auftrennen
+					\item Auf jede Ader einen dünnen Schrumpfschlauch der Länge $\SI{15}{\milli\metre}$ stecken (noch nicht erhitzen!)
+					\item Das kürzere Anschlussbein der LED (Kathode) mit dem Seitenschneider auf eine Länge von $\SI{8}{\milli\metre}$ trimmen und die mit GND verbundene Ader anlöten
+					\item Das längere Anschlussbein der LED (Anode) mit dem Seitenschneider auf eine Länge von $\SI{8}{\milli\metre}$ trimmen und die andere Ader anlöten
 					\item Schrumpfschläuche bis ans LED-Gehäuse vorschieben und per Heißluft schrumpfen
 				\end{enumerate}
 
@@ -1228,13 +1231,13 @@
 
 				Es ist beim Bohren der Box auf die richtige Orientierung der Schablone zu achten, da die Befestigungsbohrungen für die Platine nicht symmetrisch sind (Schrauben auf der linken Seite, wo sich die serielle Schnittstelle befindet, sind enger zusammen als die auf der rechten Seite mit den MOSFETs und Kanal-LEDs) und die Gehäuseteile durch ein Nut-Feder-System nur in einer Kombination aufeinander gesteckt werden können. Man beachte hierzu Abbildung~\ref{fig:zuendboxdeckel}.
 
-				Damit die Löcher nicht mit Schraubenhalterungen in den Ecken interferieren, sollte zunächst im Gehäuseinneren der passende Ort für die Kanal-LEDs von Kanal 4 und 16 (äußerste grüne LEDs in der obersten und untersten Reihe, Abstand $\SI{75}{mm}$) gesucht, die beiden Löcher mit einem $\SI{3}{mm}$-Bohrer gebohrt und die Schablone auf der Oberseite in diesen beiden Bohrungen befestigt werden.
+				Damit die Löcher nicht mit Schraubenhalterungen in den Ecken interferieren, sollte zunächst im Gehäuseinneren der passende Ort für die Kanal-LEDs von Kanal 4 und 16 (äußerste grüne LEDs in der obersten und untersten Reihe, Abstand $\SI{75}{\milli\metre}$) gesucht, die beiden Löcher mit einem $\SI{3}{\milli\metre}$-Bohrer gebohrt und die Schablone auf der Oberseite in diesen beiden Bohrungen befestigt werden.
 
-				Die Bohrlöcher für die 16 Kanal-LEDs sollten mit einem 3-mm-Bohrer, die der vier Status-LEDs mit einem $\SI{5}{mm}$-Bohrer ausgeführt werden. Die LEDs werden später (nach dem Verkabeln und Festlöten des Kabels auf der Platine) seitlich mit Heißkleber bestrichen von unten bis zum Anschlag in diese Löcher eingeschoben.
+				Die Bohrlöcher für die 16 Kanal-LEDs sollten mit einem 3-mm-Bohrer, die der vier Status-LEDs mit einem $\SI{5}{\milli\metre}$-Bohrer ausgeführt werden. Die LEDs werden später (nach dem Verkabeln und Festlöten des Kabels auf der Platine) seitlich mit Heißkleber bestrichen von unten bis zum Anschlag in diese Löcher eingeschoben.
 
-				Da die Lautsprecherklemmen mit M3-Gewindeschrauben befestigt werden, wäre der ideale Bohrdurchmesser für die 16 Schraubenlöcher $\SI{3,2}{mm}$. Sollte dieser Durchmesser nicht vorhanden sein, kann aber auch mit $\SI{3,5}{mm}$ oder $\SI{3}{mm}$ gearbeitet werden. Für die Lötfahnen der Klemmen ist eine rechteckige Aussparung von $\SI{4,5}{mm}\,\times\,\SI{2}{mm}$ nötig, als schnelle Lösung kann auch jeweils ein $\SI{5}{mm}$-Loch durch den Mittelpunkt (Diagonalenschnittpunkt) dieser Flächen gebohrt werden.
+				Da die Lautsprecherklemmen mit M3-Gewindeschrauben befestigt werden, wäre der ideale Bohrdurchmesser für die 16 Schraubenlöcher $\SI{3,2}{\milli\metre}$. Sollte dieser Durchmesser nicht vorhanden sein, kann aber auch mit $\SI{3,5}{\milli\metre}$ oder $\SI{3}{\milli\metre}$ gearbeitet werden. Für die Lötfahnen der Klemmen ist eine rechteckige Aussparung von $\SI{4,5}{\milli\metre}\,\times\,\SI{2}{\milli\metre}$ nötig, als schnelle Lösung kann auch jeweils ein $\SI{5}{\milli\metre}$-Loch durch den Mittelpunkt (Diagonalenschnittpunkt) dieser Flächen gebohrt werden.
 
-				Die rechteckige Aussparung für den Netzschalter sollte die Größe $\SI{19}{mm}\,\times\,\SI{13}{mm}$ besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von $\SI{12}{mm}$ und der Durchsteckplatz für die SMA-Buchse sollte mit $\SI{6,5}{mm}$ vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt. Die Innenansicht des Zündboxdeckels (noch ohne SMA-Anschluss) ist in Abbildung~\ref{fig:zuendboxdeckel} dargestellt. Hierbei ist auch zu erkennen, wo sich die Nut (unten, bei den Status-LEDs) und wo die Feder (oben) beim Deckel befinden muss. Dementsprechend muss es bei der Unterseite andersherum sein.
+				Die rechteckige Aussparung für den Netzschalter sollte die Größe $\SI{19}{\milli\metre}\,\times\,\SI{13}{\milli\metre}$ besitzen, der Schlüsselschalter hat einen Einbaudurchmesser von $\SI{12}{\milli\metre}$ und der Durchsteckplatz für die SMA-Buchse sollte mit $\SI{6,5}{\milli\metre}$ vorgebohrt werden. Im nächsten Schritt werden Schlüsselschalter, Klemmen und Netzschalter am Gehäuse verschraubt bzw. eingeklickt. Die Innenansicht des Zündboxdeckels (noch ohne SMA-Anschluss) ist in Abbildung~\ref{fig:zuendboxdeckel} dargestellt. Hierbei ist auch zu erkennen, wo sich die Nut (unten, bei den Status-LEDs) und wo die Feder (oben) beim Deckel befinden muss. Dementsprechend muss es bei der Unterseite andersherum sein.
 
 				\begin{figure}
 					\centering
@@ -1245,9 +1248,9 @@
 
 				In die linke Einschub-Seitenwand muss, sofern noch nicht im Rahmen des Lötens geschehen, ein Loch für die Durchführung der Batteriekabel mit einer Größe je nach Kabeldurchmesser.
 
-				Um die Position der Sub-D-Buchse in der Wand des Unterteils, welche in der Nut endet, zu finnden, muss die Platine möglichst identisch zu ihrer späteren Position ins Gehäuse eingelegt werden, die Aussparung beträgt wie beim Transmitter $\SI{31}{mm}\,\times\,\SI{12,5}{mm}$. Wenn die Aussparung fertig ist, kann die Platine in ihre endgültige Position gebracht und mit vier Schrauben befestigt werden. Die linke Seitenwand bleibt noch ausgesteckt. Jetzt ist wieder der Lötkolben dran!
+				Um die Position der Sub-D-Buchse in der Wand des Unterteils, welche in der Nut endet, zu finnden, muss die Platine möglichst identisch zu ihrer späteren Position ins Gehäuse eingelegt werden, die Aussparung beträgt wie beim Transmitter $\SI{31}{\milli\metre}\,\times\,\SI{12,5}{\milli\metre}$. Wenn die Aussparung fertig ist, kann die Platine in ihre endgültige Position gebracht und mit vier Schrauben befestigt werden. Die linke Seitenwand bleibt noch ausgesteckt. Jetzt ist wieder der Lötkolben dran!
 
-				Zunächst vier Drahtstücke á $\SI{80}{mm}$ abschneiden und durch die übereinander liegenden Lötfahnen der roten Klemmen ziehen und mit den Lötfahnen verlöten.
+				Zunächst vier Drahtstücke á $\SI{80}{\milli\metre}$ abschneiden und durch die übereinander liegenden Lötfahnen der roten Klemmen ziehen und mit den Lötfahnen verlöten.
 
 				Die Kanal- und Status-LEDs wie auf Seite \pageref{enum:leds} beschrieben mit den zugehörigen Flachbandkabeln verbinden, anschließend den Schlüssel- und den Netzschalter mit den zugehörigen Anschlusskabeln.
 
@@ -1303,11 +1306,11 @@
 
 					Um die Antenne vom SMA-Anschluss an der Zündbox nach außen zu führen, wird ein zweiteiliger Adapter, der in Abbildung~\ref{fig:koffer-adapter-montiert} am Koffer montiert gezeigt ist, verwendet. So wird einerseits das Kabel geschützt, andererseits die Kabelführung stabilisiert. Die Halterung besteht aus zwei ineinander gesteckten Teilen:
 					\begin{itemize}
-						\item MDF-Platte: $\SI{85}{mm} \times \SI{35}{mm} \times \SI{3}{mm}$
-						\item PVC-Rohr, basierend auf einer Gardena-Micro-Drip-Verlängerung: $\oslash\SI{7,5}{mm} \times \SI{115}{mm}$
+						\item MDF-Platte: $\SI{85}{\milli\metre} \times \SI{35}{\milli\metre} \times \SI{3}{\milli\metre}$
+						\item PVC-Rohr, basierend auf einer Gardena-Micro-Drip-Verlängerung: $\oslash\SI{7,5}{\milli\metre} \times \SI{115}{\milli\metre}$
 					\end{itemize}
 
-					In die MDF-Platte wird $\SI{10}{mm}$ vom oberen Rand entfernt mehr oder weniger mittig ein $\SI{5}{mm}$-Loch gebohrt und ein Kanal senkrecht nach oben zum Rand eingebracht. Beim PVC-Rohr bringt man $\SI{7}{cm}$ vom Rand entfernt auf einer Länge von $\SI{3}{mm}$ zwei Einschnitte ein, um das Rohr an dieser Stelle auf die Breite des Kanals zu bringen. Die beiden Einzelteile sind in Abbildung~\ref{fig:koffer-adapter-einzeln}, der zusammengesteckte Adapter in Abbildung~\ref{fig:koffer-adapter-zusammen} abgebildet. Der Adapter wird vor dem Montieren der MDF-Platte am Koffer so ausgerichtet, dass die Rohröffnung genau auf die SMA-Buchse an der Zündbox zeigt.
+					In die MDF-Platte wird $\SI{10}{\milli\metre}$ vom oberen Rand entfernt mehr oder weniger mittig ein $\SI{5}{\milli\metre}$-Loch gebohrt und ein Kanal senkrecht nach oben zum Rand eingebracht. Beim PVC-Rohr bringt man $\SI{7}{\centi\metre}$ vom Rand entfernt auf einer Länge von $\SI{3}{\milli\metre}$ zwei Einschnitte ein, um das Rohr an dieser Stelle auf die Breite des Kanals zu bringen. Die beiden Einzelteile sind in Abbildung~\ref{fig:koffer-adapter-einzeln}, der zusammengesteckte Adapter in Abbildung~\ref{fig:koffer-adapter-zusammen} abgebildet. Der Adapter wird vor dem Montieren der MDF-Platte am Koffer so ausgerichtet, dass die Rohröffnung genau auf die SMA-Buchse an der Zündbox zeigt.
 
 					\begin{figure}
 						\begin{subfigure}[t]{0.5\textwidth}
@@ -1360,7 +1363,7 @@
 
 			Zum Brennen des Bootloaders gibt es ein Kommandozeilentool namens \emph{btldflsh.exe} für den \emph{AVRISP mkII}, welches auf \emph{AVRDUDE} basiert. Dem Tool muss als Parameter die iHex-Datei des controllertyp- und frequenzspezifischen Bootloaders übergeben werden.
 
-			Für einen \texttt{ATmega328P} mit einer Taktfrequenz von \SI{9,8304}{MHz} lautet das Kommando:
+			Für einen \texttt{ATmega328P} mit einer Taktfrequenz von \SI{9,8304}{\mega\hertz} lautet das Kommando:
 
 			\begin{center}
 				\emph{btldflsh.exe bootload\_m328p\_9830400.hex}
@@ -1383,7 +1386,7 @@
 					\textbf{Fuse} & \textbf{Wert}     & \textbf{Bedeutung}                                                                                                                                                                               \\ \hline
 					Low Fuse      & 0xF7              & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle                                                                                                                       \\
 					High Fuse     & 0xD6              & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
-					Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{V}$                                                                                                                                            \\ \hline\hline
+					Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{\volt}$                                                                                                                                            \\ \hline\hline
 				\end{tabularx}
 				\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
 				\label{tab:fuses}
@@ -1397,24 +1400,24 @@
 
 		\section[5V-LCD an 3,3V]{5\,V-LCD an 3,3\,V}
 
-			Zwar gibt es inzwischen auch LCDs, welche sich von Haus aus für eine Versorgung mit $\SI{3,3}{V}$ eignen, viele Displays jedoch sind noch für $\SI{5}{V}$ ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
+			Zwar gibt es inzwischen auch LCDs, welche sich von Haus aus für eine Versorgung mit $\SI{3,3}{\volt}$ eignen, viele Displays jedoch sind noch für $\SI{5}{\volt}$ ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
 
-			Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall}~-- also bei Betrieb des Displays mit einer Versorgungsspannung von $\SI{5}{V}$~-- wird Pin~3 auf $\SI{0}{V}$ gelegt, so dass sich eine Kontrastspannung von $\SI{5}{V}$ entsteht. Liegen an Pin~2 nur $\SI{3,3}{V}$ an, muss Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
+			Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall}~-- also bei Betrieb des Displays mit einer Versorgungsspannung von $\SI{5}{\volt}$~-- wird Pin~3 auf $\SI{0}{\volt}$ gelegt, so dass sich eine Kontrastspannung von $\SI{5}{\volt}$ entsteht. Liegen an Pin~2 nur $\SI{3,3}{\volt}$ an, muss Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
 
-			Als Quelle der negativen Spannung dient der RS232-Treiberbaustein, der am Pin V- eine Spannung von $\SI{-5,5}{V}$ zur Verfügung stellt. Über einen Spannungsteiler~-- im Schaltplan auf Seite~\pageref{fig:transmitterschematic} von $R12 = \SI{3,3}{k\Omega}$ und $R13 = \SI{6,8}{k\Omega}$ gebildet~-- zwischen V- und GND wird daher Pin~3 des LCD auf $\SI{-1,8}{V}$ gelegt.
+			Als Quelle der negativen Spannung dient der RS232-Treiberbaustein, der am Pin V- eine Spannung von $\SI{-5,5}{V}$ zur Verfügung stellt. Über einen Spannungsteiler~-- im Schaltplan auf Seite~\pageref{fig:transmitterschematic} von $R12 = \SI{3,3}{\kilo\ohm}$ und $R13 = \SI{6,8}{\kilo\ohm}$ gebildet~-- zwischen V- und GND wird daher Pin~3 des LCD auf $\SI{-1,8}{\volt}$ gelegt.
 
 			Manche LCDs torpedieren diesen Versuch, indem Pin~3 relativ niederohmig mit GND verbunden wird. Man sollte also im abgeklemmten Zustand den Widerstand zwischen Pin 1 und Pin 3 messen und bei Bedarf den eventuell auf der LCD-Platine befindlichen Widerstand zwischen den beiden Pins auslöten.
 
-			Die Hintergrundbeleuchtung wird über die Pins~15 und 16 versorgt. Zwischen diesen Pins befindet sich in Reihe zu den LEDs in aller Regel noch ein Widerstand, welcher den Strom durch die LEDs begrenzt und für eine Spannung von $\SI{5}{V}$ zwischen den Pins ausgelegt ist. Bei $\SI{3,3}{V}$ zwischen Pin~15~\&~16 erscheint das LCD daher möglicherweise zu dunkel, so dass man den Widerstand durch einen kleineren Wert ersetzen kann, um die Spannungsdifferenz auszugleichen.
+			Die Hintergrundbeleuchtung wird über die Pins~15 und 16 versorgt. Zwischen diesen Pins befindet sich in Reihe zu den LEDs in aller Regel noch ein Widerstand, welcher den Strom durch die LEDs begrenzt und für eine Spannung von $\SI{5}{\volt}$ zwischen den Pins ausgelegt ist. Bei $\SI{3,3}{\volt}$ zwischen Pin~15~\&~16 erscheint das LCD daher möglicherweise zu dunkel, so dass man den Widerstand durch einen kleineren Wert ersetzen kann, um die Spannungsdifferenz auszugleichen.
 
-			Der ursprüngliche LED-Vorwärtsstrom sowie die Aufteilung der Spannung auf LED und Vorwiderstand können durch Anlegen von $\SI{5}{V}$ zwischen Pin~15~\&~16, Spannungsmessung über dem Original-Widerstand und anschließende Division durch den Widerstandswert (korrekt ablesen oder messen) ermittelt werden. Da der Spannungsabfall über den LEDs sich nicht ändert und der Strom gleich bleiben soll, muss der Wert des neuen Widerstands so verkleinert werden, dass bei identischem Stromfluss über ihm $\SI{1,7}{V}$ weniger abfallen als am Original-Widerstand.
+			Der ursprüngliche LED-Vorwärtsstrom sowie die Aufteilung der Spannung auf LED und Vorwiderstand können durch Anlegen von $\SI{5}{\volt}$ zwischen Pin~15~\&~16, Spannungsmessung über dem Original-Widerstand und anschließende Division durch den Widerstandswert (korrekt ablesen oder messen) ermittelt werden. Da der Spannungsabfall über den LEDs sich nicht ändert und der Strom gleich bleiben soll, muss der Wert des neuen Widerstands so verkleinert werden, dass bei identischem Stromfluss über ihm $\SI{1,7}{\volt}$ weniger abfallen als am Original-Widerstand.
 
-			Ist z.\,B. original ein Widerstand von $\SI{150}{\ohm}$ verbaut, über dem eine Spannung von $\SI{2}{V}$ anliegt (hieraus resultiert eine LED-Vorwärtsspannung von $\SI{3}{V}$), ergibt sich ein LED-Vorwärtsstrom von $\SI{13}{mA}$. Dementsprechend wäre bei einem Spannungsabfall von nur noch $\SI{0,3}{V}$ für den gleichen Strom ein Widerstand von $\SI{22}{\ohm}$ einzusetzen.
+			Ist z.\,B. original ein Widerstand von $\SI{150}{\ohm}$ verbaut, über dem eine Spannung von $\SI{2}{\volt}$ anliegt (hieraus resultiert eine LED-Vorwärtsspannung von $\SI{3}{\volt}$), ergibt sich ein LED-Vorwärtsstrom von $\SI{13}{\milli\ampere}$. Dementsprechend wäre bei einem Spannungsabfall von nur noch $\SI{0,3}{\volt}$ für den gleichen Strom ein Widerstand von $\SI{22}{\ohm}$ einzusetzen.
 
 
 		\section{Antennenbau}
 
-			Antennen für die verwendete Übertragungsfrequenz von \SI{868}{MHz} gibt es in großer Auswahl zu kaufen, eine einfache, omnidirektionale Antenne, welche ein sehr gutes Stehwellenverhältnis von <1,3:1 erzielt, kann aber auch relativ schnell selbst gebaut werden. Auf möglichst exakte Einhaltung der Abmessungen ist dabei zu achten:
+			Antennen für die verwendete Übertragungsfrequenz von \SI{868}{\mega\hertz} gibt es in großer Auswahl zu kaufen, eine einfache, omnidirektionale Antenne, welche ein sehr gutes Stehwellenverhältnis von <1,3:1 erzielt, kann aber auch relativ schnell selbst gebaut werden. Auf möglichst exakte Einhaltung der Abmessungen ist dabei zu achten:
 			\begin{itemize}
 				\item Koaxialkabel RG316
 				\item SMA-Steckverbinder (üblicherweise männliche Ausführung)
@@ -1461,9 +1464,9 @@
 				\item Falls nötig: Kabel in Endposition einfädeln, bevor SMA-Steckverbinder am intakten Ende angebracht wird
 			\end{enumerate}
 
-			Um den SMA-Steckverbinder anzubringen, müssen vom intakten Ende aus gemessen zunächst \SI{12}{mm} des Mantels entfernt werden, anschließend \SI{8}{mm} des Schirmgeflechts und zuletzt auch \SI{4}{mm} des Dielektrikums. Nun werden Schrumpfschlauch und Crimpröhrchen auf das Kabel geschoben, anschließend der kleine Stecker am Innenleiter angelötet. Das Schirmgeflecht wird aufgefächert, das Gehäuse aufs Kabel geschoben und das Crimpröhrchen aufgesteckt, vercrimpt und Schrumpfschlauch darüber angebracht. Wenn gewünscht kann~-- wie in~\ref{fig:antenne} rechts zu sehen~-- Schrumpfschlauch 9,5 als Witterungsschutz über dem gesamten Steckverbinder angebracht werden.
+			Um den SMA-Steckverbinder anzubringen, müssen vom intakten Ende aus gemessen zunächst \SI{12}{\milli\metre} des Mantels entfernt werden, anschließend \SI{8}{\milli\metre} des Schirmgeflechts und zuletzt auch \SI{4}{\milli\metre} des Dielektrikums. Nun werden Schrumpfschlauch und Crimpröhrchen auf das Kabel geschoben, anschließend der kleine Stecker am Innenleiter angelötet. Das Schirmgeflecht wird aufgefächert, das Gehäuse aufs Kabel geschoben und das Crimpröhrchen aufgesteckt, vercrimpt und Schrumpfschlauch darüber angebracht. Wenn gewünscht kann~-- wie in~\ref{fig:antenne} rechts zu sehen~-- Schrumpfschlauch 9,5 als Witterungsschutz über dem gesamten Steckverbinder angebracht werden.
 
-			Die in Abbildung~\ref{fig:vswrmessung} dargestellte Messung am Netzwerkanalysator zeigt eine sehr gute Anpassung dieser Antenne an \SI{50}{\ohm} im Bereich um \SI{868}{MHz}.
+			Die in Abbildung~\ref{fig:vswrmessung} dargestellte Messung am Netzwerkanalysator zeigt eine sehr gute Anpassung dieser Antenne an \SI{50}{\ohm} im Bereich um \SI{868}{\mega\hertz}.
 
 
 
@@ -1490,14 +1493,14 @@
 
 			\begin{center}
 				\begin{tabularx}{.6\textwidth}{c@{ $\rightarrow$ }c@{ :\hspace*{1cm}}c@{ = }X}
-					$\si{dBm}$ & $\si{W}$   & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                  \\[12pt]
-					$\si{W}$   & $\si{dBm}$ & $P_\text{dBm}$ & $10 {\cdot} \log_{10}\left( \frac{1000 {\cdot} P_\text{W}}{\SI{1}{W}} \right)$ \\
+					$\si{\dBm}$ & $\si{W}$   & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                  \\[12pt]
+					$\si{\watt}$   & $\si{\dBm}$ & $P_\text{dBm}$ & $10 {\cdot} \log_{10}\left( \frac{1000 {\cdot} P_\text{W}}{\SI{1}{\watt}} \right)$ \\
 				\end{tabularx}
 			\end{center}
 
-			Anhand der Formeln wird klar, dass die maximale Sendeleistung des \texttt{RFM69CW} 1250-mal höher als die Minimalleistung liegt: $\SI{-18}{dBm}$ entsprechen $\SI{16}{µW}$, $\SI{13}{dBm}$ hingegen $\SI{20}{mW}$.
+			Anhand der Formeln wird klar, dass die maximale Sendeleistung des \texttt{RFM69CW} 1250-mal höher als die Minimalleistung liegt: $\SI{-18}{\dBm}$ entsprechen $\SI{16}{\micro\watt}$, $\SI{13}{\dBm}$ hingegen $\SI{20}{\milli\watt}$.
 
-			Addition und Subtraktion in der logarithmischen Einheit sind gleichbedeutend mit Multiplikation bzw. Division in der linearen. Erhöht (verringert) sich die Leistung um $\SI{3}{dB}$, verdoppelt (halbiert) sie sich im linearen Maßstab. Addition bzw. Subtraktion um $\SI{10}{dB}$ bedeuten eine Multiplikation mit bzw. Division durch 10.
+			Addition und Subtraktion in der logarithmischen Einheit sind gleichbedeutend mit Multiplikation bzw. Division in der linearen. Erhöht (verringert) sich die Leistung um $\SI{3}{\decibel}$, verdoppelt (halbiert) sie sich im linearen Maßstab. Addition bzw. Subtraktion um $\SI{10}{\decibel}$ bedeuten eine Multiplikation mit bzw. Division durch 10.
 
 			\bookmarksetup{startatroot}
 			\addtocontents{toc}{\bigskip}
