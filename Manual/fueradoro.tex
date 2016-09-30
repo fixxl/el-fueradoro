@@ -51,7 +51,7 @@
 \setuptoc{toc}{totoc}
 
 \hypersetup{pdfinfo={
-		Title=EL FUERADORO,
+		Title=\anlage,
 		Author=Felix Pflaum,
 		Subject={User manual for remotely controlled firework ignition system},
 		Keywords={}}
@@ -681,6 +681,19 @@
 				Ein Leerlauf (kein Durchgang eines Anzünders oder schlechte Kabelverbindung) wird bei der Reihenschaltung unmittelbar durch die nicht-leuchtende Kanal-LED bemerkt, bei einem Kurzschluss eines Anzünders fällt lediglich der Effekt dieses einen Anzünders aus. Bei der Parallelschaltung sorgt der Kurzschluss eines Anzünders mit hoher Wahrscheinlichkeit dafür, dass alle parallel geschalteten Anzünder stromlos bleiben, auch wird ein Leerlauf aufgrund des über die anderen Anzünder geschlossenen Stromkreises vermutlich nicht bemerkt.
 
 
+			\subsection{Funkreichweite}
+
+				Die Frage nach der Funkreichweite, also wie weit die Zündboxen bei {\anlage} vom Transmitter entfernt sein dürfen, um noch sicher auszulösen, kann pauschal nicht beantwortet werden, da dieser Wert sehr vielen Einflussgrößen unterliegt.
+				
+				Das theoretische Reichweiten-Maximum bei der verwendeten Frequenz von \SI{868}{MHz} und einer zulässigen Dämpfung von \SI{113}{\decibel} (Sendeleistung in dB minus niedrigste Empfangsleistung in dB) ergibt sich aus der Friis-Übertragungsgleichung zu mehreren Kilometern. Hierfür müssten die Antennen jedoch mehrere Meter über dem Erdboden angebracht sein, um ideale Wellenausbreitung durch die Luft und Entkopplung vom Boden zu ermöglichen, was in der Feuerwerks-Praxis meist nicht umsetzbar ist, und die Umgebung müsste so störungsfrei sein, dass der Empfänger das Signal auch bei sehr geringen Leistungen noch detektieren kann.
+				
+				In Tests mit {\anlage} konnte für ein reales Szenario (Platzierung im Gras am Boden) eine Distanz von \SI{250}{\meter} zwischen Sender und Empfänger mit einer Reserve von über \SI{20}{\decibel} gegenüber der minimalen Empfänger\-empfindlichkeit überbrückt werden, was für die meisten Feuerwerke ausreichend sein dürfte. Wichtig ist hierbei jedoch eine Sichtverbindung zwischen den Devices. Bricht diese Sichtlinie ab, sinkt die Reichweite, da eine Verbindung über reflektierende und streuende Hindernisse in aller Regel stark verlustbehaftet ist.
+				
+				Für eine möglichst hohe Reichweite sollte man die Devices daher mit möglichst ungestörter Sichtlinie zueinander und so weit wie möglich vom Boden entfernt platzieren. Die Antennen sollten möglichst parallel zueinander ausgerichtet sein.
+				
+				In der Systemübersicht, die in Abbildung~\ref{fig:list} auf Seite~\pageref{fig:list} zu sehen ist, wird dargestellt, wie stark die anderen Devices vom angeschlossenen Device empfangen werden.
+			
+
 			\subsection{Erstellung und Überprüfung des Zündplans}
 
 				{\pic} unterstützt den Ersteller einer Show, indem es sowohl den passenden Zündzeitpunkt aus den Angaben \enquote{Effektbeginn} und \enquote{Verzögerung} berechnet als auch anhand der angegebenen Effektdauer die Überlagerung der Effekte kalkuliert und veranschaulicht.
@@ -699,6 +712,7 @@
 				\begin{center}
 					\emph{schemecheck.exe fw.zpl}
 				\end{center}
+
 
 		\section{Durchführung}
 
