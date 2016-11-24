@@ -1111,7 +1111,7 @@ int main(void) {
 						  tx_field[1] = unique_id;
 						  tx_field[2] = slave_id;
 						  tx_field[3] = (TRANSMITTER ? 50 : adc_read(5));
-						  tx_field[4] = (TRANSMITTER ? 0 : armed);
+						  tx_field[4] = armed;
 						  tx_field[5] = temperature;
 
 						  transmission_allowed = 0;
