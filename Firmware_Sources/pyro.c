@@ -174,7 +174,11 @@ uint8_t tempident(void) {
 
 	// Type of temp. sensor is detected by return value
 	if (!checkup) return DS18B20;
-	else return 0;
+	else {
+		W1_DDR  &= ~(1 << W1);
+		W1_PORT |=  (1 << W1);
+		return 0;
+	}
 }
 
 // Temperature measurement
