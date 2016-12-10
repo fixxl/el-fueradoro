@@ -12,6 +12,10 @@
 #define KEY_PORT                 C
 #define KEY_NUM                  4
 
+//
+#define MOSSWITCH_PORT           D
+#define MOSSWITCH_NUM            4
+
 // Maximum ID
 #define MAX_ID                   30
 
@@ -73,19 +77,24 @@ typedef union {
 	uint16_t complete;
 } bitfeld_t;
 
-#define TRANSMITTER    (!ig_or_notrans)
+#define TRANSMITTER                 (!ig_or_notrans)
 
-#define KEYDDR         DDR(KEY_PORT)
-#define KEYPIN         PIN(KEY_PORT)
-#define KEYPORT        PORT(KEY_PORT)
-#define KEY            KEY_NUM
+#define KEYDDR                      DDR(KEY_PORT)
+#define KEYPIN                      PIN(KEY_PORT)
+#define KEYPORT                     PORT(KEY_PORT)
+#define KEY                         KEY_NUM
 #if (KEY_PORT == C)
- #define KEYINT        PCINT1_vect
+ #define KEYINT                     PCINT1_vect
 #elif (KEY_PORT == B)
- #define KEYINT        PCINT0_vect
+ #define KEYINT                     PCINT0_vect
 #else
- #define KEYINT        PCINT2_vect
+ #define KEYINT                     PCINT2_vect
 #endif
+
+#define MOSSWITCHDDR                DDR(MOSSWITCH_PORT)
+#define MOSSWITCHPIN                PIN(MOSSWITCH_PORT)
+#define MOSSWITCHPORT               PORT(MOSSWITCH_PORT)
+#define MOSSWITCH                   MOSSWITCH_NUM
 
 // ID storage settings for EEPROM
 #define START_ADDRESS_ID_STORAGE    24
@@ -99,10 +108,10 @@ typedef union {
 	(eeread(START_ADDRESS_ID_STORAGE + 1) == eeread(START_ADDRESS_ID_STORAGE + 1 + 2 * STEP_ID_STORAGE))
 
 // Temperatursensoren
-#define DS18B20    'o'
+#define DS18B20             'o'
 
-#if (RFM==69)
-#define RFM_PWR_ADDRESS	5
+#if (RFM == 69)
+ #define RFM_PWR_ADDRESS    5
 #endif
 
 // Funktionsprototypen

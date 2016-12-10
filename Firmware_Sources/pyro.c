@@ -39,6 +39,10 @@ void key_init(void) {
 		PCICR  |= (1 << PCIE1);
 		PCMSK1 |= (1 << KEY);
 	}
+
+	// Keep low-impedance path between ignition voltage and clamps closed
+	MOSSWITCHPORT &= ~(1 << MOSSWITCH);
+	MOSSWITCHDDR  |=  (1 << MOSSWITCH);
 }
 
 // Un-initialise Key-Switch (needed only if a device configured as ignition device gets configured as transmitter while on)
@@ -1037,16 +1041,18 @@ int main(void) {
 					if (i == tmp) scheme |= 1;  // Set LSB if loop variable equals channel number
 				}
 
+				MOSSWITCHPORT |= (1 << MOSSWITCH);
 				sr_shiftout(scheme); // Write pattern to shift-register
 
 				/*
 				 * To avoid demage to the MOSFET in case of a short circuit after ignition, the MOSFET is set to
-				 * blocking state again after 11ms. According to specification the detonator must have exploded by then.
+				 * blocking state again after 11ms. According to specification the electric match must have produced a spark by then.
 				 */
 				_delay_ms(11);
 
 				// Lock all MOSFETs
 				sr_shiftout(0);
+				MOSSWITCHPORT &= ~(1 << MOSSWITCH);
 
 				// Turn all LEDs off
 				leds_off();
