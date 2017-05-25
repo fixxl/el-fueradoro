@@ -96,7 +96,7 @@ uint8_t remote_config(char *txf) {
 	if (temporary[3] == 255) return 0;
 
 	if ((temporary[0] != temporary[2]) || (temporary[1] != temporary[3])) {
-		uart_puts_P(PSTR("ID-Wechsel mit j bestätigen, abbrechen mit anderer Taste! "));
+		uart_puts_P(PSTR("ID-Wechsel mit j bestÃ¤tigen, abbrechen mit anderer Taste! "));
 
 		while (!valid) {
 			valid = uart_getc();
@@ -119,7 +119,7 @@ uint8_t remote_config(char *txf) {
 
 // Configuration programme
 uint8_t configprog(const uint8_t devicetype) {
-	uint8_t changes = 0; // Merker, ob Änderungen vorgenommen wurden
+	uint8_t changes = 0; // Merker, ob Ã„nderungen vorgenommen wurden
 	uint8_t choice  = 0; // Tastatureingabe
 	uint8_t slaveid;     // Slave-
 	uint8_t uniqueid;    // und Unique-ID
@@ -131,7 +131,7 @@ uint8_t configprog(const uint8_t devicetype) {
 	uart_puts_P(PSTR(TERM_COL_YELLOW));
 	uart_puts_P(PSTR("\nKonfigurationsprogramm\n\r======================\n\r"));
 
-	if (!addresses_load(&uniqueid, &slaveid)) { // Bisherige Adressen aus dem Speicher holen und prüfen
+	if (!addresses_load(&uniqueid, &slaveid)) { // Bisherige Adressen aus dem Speicher holen und prÃ¼fen
 		uart_puts_P(PSTR(TERM_COL_RED));
 		uart_puts_P(PSTR("\n\rFehler beim ID-Laden\n\r"));
 		uart_puts_P(PSTR(TERM_COL_WHITE));
@@ -140,7 +140,7 @@ uint8_t configprog(const uint8_t devicetype) {
 	// Show current settings
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(PSTR("\n\rAngeschlossenes Device: "));
-	uart_puts(devicetype ? "Zündbox" : "Transmitter");
+	uart_puts(devicetype ? "ZÃ¼ndbox" : "Transmitter");
 
 	if (devicetype) {
 		uart_puts_P(PSTR("\n\n\rAktuelle Unique-ID: "));
@@ -168,7 +168,7 @@ uint8_t configprog(const uint8_t devicetype) {
 		uart_puts_P(PSTR("\n\r"));
 		uart_puts_P(PSTR(TERM_COL_WHITE));
 		uart_puts_P(PSTR("\n\n\n\r"));
-		uart_puts_P(PSTR("(I)Ds ändern, Abbruch mit beliebiger anderer Taste! "));
+		uart_puts_P(PSTR("(I)Ds Ã¤ndern, Abbruch mit beliebiger anderer Taste! "));
 
 		// Evaluate input
 		while (!choice) choice = uart_getc();
@@ -213,7 +213,7 @@ uint8_t configprog(const uint8_t devicetype) {
 			addresses_save(uniqueid, slaveid);
 
 			if (address_valid(uniqueid, slaveid)) {
-				uart_puts_P(PSTR("\n\n\rÄnderung erfolgreich!\n\r"));
+				uart_puts_P(PSTR("\n\n\rÃ„nderung erfolgreich!\n\r"));
 			}
 			else {
 				uart_puts_P(PSTR("Fehler! Bitte erneut versuchen!\n\r"));
@@ -222,11 +222,11 @@ uint8_t configprog(const uint8_t devicetype) {
 			uart_puts_P(PSTR("\n\rNeustart...\n\n\r"));
 		}
 		else {
-			uart_puts_P(PSTR("\n\rKeine Änderung vorgenommen\n\n\r"));
+			uart_puts_P(PSTR("\n\rKeine Ã„nderung vorgenommen\n\n\r"));
 		}
 	}
 	else {
-		uart_puts_P(PSTR("\n\rDevice ist Transmitter, IDs nicht änderbar!\n\n\r"));
+		uart_puts_P(PSTR("\n\rDevice ist Transmitter, IDs nicht Ã¤nderbar!\n\n\r"));
 	}
 
 	return changes;
@@ -238,12 +238,12 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t *temps, int8_t *
 
 	terminal_reset();
 	uart_puts_P(PSTR(TERM_COL_YELLOW));
-	uart_puts_P(PSTR("\n\rSystemübersicht\n\r"));
+	uart_puts_P(PSTR("\n\rSystemÃ¼bersicht\n\r"));
 	uart_puts_P(PSTR("===============\n\r"));
 
 	uart_puts_P(PSTR(TERM_COL_WHITE));
 	uart_puts_P(
-	   PSTR("\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r"));
+	   PSTR("\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (Â°C), RSSI (dBm)\n\r"));
 
 	while (i < 30) {
 		// Show Unique-ID

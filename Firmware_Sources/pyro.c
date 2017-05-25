@@ -42,7 +42,7 @@ void key_init(void) {
 
 	// Keep low-impedance path between ignition voltage and clamps closed
 	MOSSWITCHPORT &= ~(1 << MOSSWITCH);
-	MOSSWITCHDDR  |=  (1 << MOSSWITCH);
+	MOSSWITCHDDR  |= (1 << MOSSWITCH);
 }
 
 // Un-initialise Key-Switch (needed only if a device configured as ignition device gets configured as transmitter while on)
@@ -147,7 +147,7 @@ uint16_t rfmtalk(void) {
 	error = 0;
 
 	#if (RFM == 69)
-		uart_puts("\n\rKommando (16-Bit-Hex-Format, MSB zu 1 setzen für Schreibzugriff): 0x");
+		uart_puts("\n\rKommando (16-Bit-Hex-Format, MSB zu 1 setzen fÃ¼r Schreibzugriff): 0x");
 	#else
 		uart_puts("\n\rKommando (16-Bit-Hex-Format): 0x");
 	#endif
@@ -180,7 +180,7 @@ uint8_t tempident(void) {
 	if (!checkup) return DS18B20;
 	else {
 		W1_DDR  &= ~(1 << W1);
-		W1_PORT |=  (1 << W1);
+		W1_PORT |= (1 << W1);
 		return 0;
 	}
 }
@@ -682,7 +682,7 @@ int main(void) {
 			flags.b.hw = 0;
 
 			uart_puts_P(PSTR("\n\r"));
-			uart_puts(ig_or_notrans ? "Zündbox" : "Transmitter");
+			uart_puts(ig_or_notrans ? "ZÃ¼ndbox" : "Transmitter");
 			uart_puts_P(PSTR("\n\r"));
 			uart_puts_P(PSTR(STRINGIZE_VALUE_OF(MCU)));
 			uart_puts_P(PSTR("\n\rRFM"));
@@ -832,7 +832,7 @@ int main(void) {
 							  uart_puts_P(PSTR("n.a."));
 						  else {
 							  fixedspace(temperature, 'd', 4);
-							  uart_puts_P(PSTR("°C"));
+							  uart_puts_P(PSTR("Â°C"));
 						  }
 
 						  // Request other devices to refresh temperature as well

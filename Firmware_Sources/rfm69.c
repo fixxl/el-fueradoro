@@ -185,7 +185,7 @@
 
 	//------------------------------------------------------------------------------------------------------------------------
 
-	// Bitrate config according to RFM12-recommendations
+	// Bitrate config according to RFM12-recommendations (orthogonal frequencies)
 	static inline void rfm_setbit(uint32_t bitrate) {
 		uint8_t  bw;
 		uint16_t freqdev;
@@ -194,20 +194,20 @@
 			 case 0:
 			 case 1: {
 				  bw      = 0x03; // 62.5 kHz
-				  freqdev = 737;
+				  freqdev = ((((uint8_t)((90000UL + (bitrate/2))/bitrate))*(bitrate*128)) + 7812)/15625;
 				  break;
 			  }
 
 			 case 2:
 			 case 3: {
 				  bw      = 0x02; // 125 kHz
-				  freqdev = 1475;
+				  freqdev = ((((uint8_t)((180000UL + (bitrate/2))/bitrate))*(bitrate*128)) + 7812)/15625;
 				  break;
 			  }
 
 			 default: {
 				  bw      = 0x09; // 200 kHz
-				  freqdev = 1966;
+				  freqdev = ((((uint8_t)((240000UL + (bitrate/2))/bitrate))*(bitrate*128)) + 7812)/15625;
 				  break;
 			  }
 		}
@@ -246,9 +246,9 @@
 
 		for (uint8_t i = 10; i; i--) {
 			_delay_ms(4);
-			rfm_cmd(0x0200, 1); // FSK, Packet mode, No shaping
+			rfm_cmd(0x0202, 1); // FSK, Packet mode, BT=.5
 			//Bitrate + corresponding settings (Receiver bandwidth, frequency deviation)
-			rfm_setbit(BITRATE);
+			rfm_setbit(BR);
 			rfm_cmd(0x131B, 1); // OCP enabled, 100mA
 			// DIO-Mapping
 			rfm_cmd(0x2500, 1); // Clkout, FifoFull, FifoNotEmpty, FifoLevel, PacketSent/CrcOk
@@ -273,7 +273,7 @@
 			rfm_cmd(0x1800, 1);                  // LNA: 50 Ohm Input Impedance, Automatic Gain Control
 			rfm_cmd(0x582D, 1);                  // High sensitivity mode
 			rfm_cmd(0x6F30, 1);                  // Improved DAGC
-			rfm_cmd(0x29C8, 1);                  // RSSI mind. -100 dBm
+			rfm_cmd(0x29BE, 1);                  // RSSI mind. -95 dBm
 			rfm_cmd(0x1E2D, 1);                  // AFC auto on and clear
 			rfm_cmd(0x2A00, 1);                  // No Timeout after Rx-Start if no RSSI-Interrupt occurs
 			rfm_cmd(0x2B0F, 1);                  // Timeout after RSSI-Interrupt if no Payload-Ready-Interrupt occurs
