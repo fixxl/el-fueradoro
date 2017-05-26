@@ -88,7 +88,7 @@
 
 		{\bfseries
 		\begin{enumerate}
-			\item Bei den Zündboxen der ersten Generation liegt das Metallgehäuse des SMA-Antennenanschlusses an der Oberseite der Zündbox auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{\volt}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden. Bei den Zündboxen der zweiten Generation sind schaltungstechnische Maßnahmen getroffen, um den Strom im Kurzschlussfall zu begrenzen und ein Auslösen der Anzünder bei Verbindung zwischen roter Klemme und Antennenanschluss im nicht-scharfgeschalteten Zustand auszuschließen.
+			\item Bei den Zündboxen der ersten Generation liegt das Metallgehäuse des SMA-Antennen\-anschlusses an der Oberseite der Zündbox auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{\volt}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden. Bei den Zündboxen der zweiten Generation sind schaltungstechnische Maßnahmen getroffen, um den Strom im Kurzschlussfall zu begrenzen und ein Auslösen der Anzünder bei Verbindung zwischen roter Klemme und Antennenanschluss im nicht-scharfgeschalteten Zustand auszuschließen.
 			\item Devices nie ohne angeschlossene Antenne einschalten, um Rückreflexionen an offenen Steckern/Buchsen zu vermeiden, welche die Sendeendstufe zerstören könnten.
 			\item Keine Softwareupdates an Zündboxen durchführen, solange Anzünder angeschlossen sind, da das Verhalten nach einem fehlgeschlagenen Update unvorhersehbar ist.
 		\end{enumerate}
@@ -577,9 +577,9 @@
 
 		\chapter{Der Raspberry-Pi-Transmitter}
 
-			Als Alternative zur Kombination aus Laptop/PC und dem in den vorangegangenen Abschnitten beschriebenen Transmitter wurde ein Audio-Funksystem auf Basis des bekannten Einplatinencomputers Raspberry Pi entwickelt. Dieser übernimmt die Kontrolle der Show inklusive der Musikwiedergabe.
+			Als Alternative zur Kombination aus Laptop/PC und dem in den vorangegangenen Abschnitten beschriebenen Transmitter wurde in Zusammenarbeit mit einem Softwareentwickler ein Audio-Funksystem auf Basis des bekannten Einplatinencomputers Raspberry Pi entwickelt. Dieser übernimmt die Kontrolle der Show inklusive der Musikwiedergabe.
 
-			Neben einem Raspberry Pi werden für den Aufbau eine speziell für die Verwendung mit {\anlage} entwickelte Aufsteckplatine sowie ein Touchdisplay, eine USB-Soundkarte, zwei Taster, ein Schlüsselschalter und zwei LEDs benötigt. Eine Einkaufsliste findet sich im letzten Teil dieser Datei ab Seite \pageref{part:aufbauanleitung}.
+			Neben einem Raspberry Pi werden für den Aufbau eine speziell für die Verwendung mit {\anlage} entwickelte Aufsteckplatine sowie ein Touchdisplay, eine USB-Soundkarte, zwei Taster, ein Schlüsselschalter und zwei LEDs benötigt. Eine Einkaufsliste findet sich in Tabelle~\ref{tab:raspibom} ab Seite \pageref{tab:raspibom}.
 
 			Die Spannungsversorgung kann man entweder über den Micro-USB-Anschluss am Raspberry Pi oder über U\textsubscript{Force} an der linken Stiftleiste herstellen. Wird einer dieser beiden Anschlüsse mit einer Spannungsquelle verbunden, muss der jeweils andere offen bleiben!
 
@@ -904,7 +904,7 @@
 
 			\section{Raspberry-Pi-Aufsteckplatine}
 
-				Die in Abbildung~\ref{fig:piadapterlayout} gezeigte Platine verfügt über die in den Abbildungen~\ref{fig:piheader} und \ref{fig:piclamps} gezeigte Pinbelegung. Sie ist vom Formfaktor so konzipiert, dass sie mit einer nach unten gerichteten Buchsenleiste auf die Stiftleiste des Raspberry Pi aufgesteckt und an den vier Ecken über \SI{11}{\milli\metre} hohe Abstandshalter mit Gewindeschrauben M2,5 mit dem Einplatinencomputer verschraubt werden kann.
+				Die in Abbildung~\ref{fig:piadapterlayout} gezeigte Platine verfügt über die in den Abbildungen~\ref{fig:piheader} und \ref{fig:piclamps} gezeigte Pinbelegung. Sie ist vom Formfaktor so konzipiert, dass sie mit einer nach unten gerichteten Buchsenleiste auf die Stiftleiste des Raspberry Pi aufgesteckt und an den vier Ecken über insgesamt \SI{11}{\milli\metre} hohe Abstandshalter mit Gewindeschrauben M2,5 mit dem Einplatinencomputer verschraubt werden kann.
 
 				\begin{figure}
 					\centering
@@ -937,7 +937,7 @@
 
 				Die an den Seiten der Aufsteckplatine angebrachten Schraubklemmen dienen dem Anschluss der am Gehäuse verbauten Indikatoren (LEDs) und Schalterelemente. Welches Signal an welcher Stelle anzuklemmen ist, illustriert Abbildung~\ref{fig:piclamps}, welche eine Draufsicht auf die Oberseite der Aufsteckplatine zeigt.
 
-				Die 40-polige Buchsenleiste ist zeigt dabei in die Papierebene hinein, die Klemmen an der Seite aus der Papierebene heraus.
+				Die 40-polige Buchsenleiste zeigt dabei in die Papierebene hinein, die Klemmen an der Seite aus der Papierebene heraus.
 
 				\begin{figure}
 					\centering
@@ -1415,9 +1415,29 @@
 						\label{fig:platinenzwischenschritt}
 					\end{figure}
 
-			\section{Raspberry-Pi-Transmitter}
+			\section{Raspberry-Pi-Aufsteckplatine}
 
-				tbd
+				Das Einlöten der Bauteile erfolgt in bewährter Reihenfolge:
+				\begin{description}
+					\item[Widerstände] 
+					\item[Keramikkondensatoren]
+					\item[Einreihige Buchsenleisten] für Funkmoduladapter
+					\item[Schraubklemmen]
+					\item[Elektrolytkondensatoren] Polung beachten!
+					\item[Integrierte Schaltungen] mit korrekter Orientierung
+					\item[Zweireihige Buchsenleiste] ACHTUNG: Buchsenleiste befindet sich auf der Unterseite der Platine, Lötseite ist also hier ausnahmsweise die Oberseite
+					\item[Verbindungskabel] zwischen Spannungsmesspunkt und Klemmeneingang
+				\end{description}
+			
+				Die fertig bestückte Platine ist in Abbildung~\ref{fig:raspiextension} gezeigt.
+			
+				\begin{figure}
+					\centering
+					%\includegraphics[width=\textwidth]{bilder/raspiextension}
+					{\LARGE Bild folgt!}
+					\caption{Raspberry-Pi-Erweiterungsplatine}
+					\label{fig:raspiextension}
+				\end{figure}
 
 			\section{Funkmodul-Adapter}
 
@@ -1655,7 +1675,7 @@
 
 				Zwar gibt es inzwischen auch LCDs, welche sich von Haus aus für eine Versorgung mit $\SI{3,3}{\volt}$ eignen, viele Displays jedoch sind noch für $\SI{5}{\volt}$ ausgelegt. Der interne Controller funktioniert ohne Probleme auch bei geringerer Spannung, Knackpunkte sind jedoch die Kontrastspannung für das LCD sowie die Hintergrundbeleuchtung.
 
-				Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall}~-- also bei Betrieb des Displays mit einer Versorgungsspannung von $\SI{5}{\volt}$~-- wird Pin~3 auf $\SI{0}{\volt}$ gelegt, so dass sich eine Kontrastspannung von $\SI{5}{\volt}$ entsteht. Liegen an Pin~2 nur $\SI{3,3}{\volt}$ an, muss Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
+				Die Kontrastspannung wird zwischen Pin~2 und Pin~3 gemessen und ist verantwortlich für die Lesbarkeit der Schrift auf dem Display. Im \enquote{Normalfall}~-- also bei Betrieb des Displays mit einer Versorgungsspannung von $\SI{5}{\volt}$~-- wird Pin~3 auf $\SI{0}{\volt}$ gelegt, so dass sich eine Kontrastspannung von $\SI{5}{\volt}$ einstellt. Liegen an Pin~2 nur $\SI{3,3}{\volt}$ an, muss Pin~3 folglich mit einer negativen Spannung verbunden werden, um die nötige Kontrastspannung zu erreichen.
 
 				Als Quelle der negativen Spannung dient der RS232-Treiberbaustein, der am Pin V- eine Spannung von $\SI{-5,5}{V}$ zur Verfügung stellt. Über einen Spannungsteiler~-- im Schaltplan auf Seite~\pageref{fig:transmitterschematic} von $R12 = \SI{3,3}{\kilo\ohm}$ und $R13 = \SI{6,8}{\kilo\ohm}$ gebildet~-- zwischen V- und GND wird daher Pin~3 des LCD auf $\SI{-1,8}{\volt}$ gelegt.
 
@@ -1764,12 +1784,15 @@
 
 			Ein ganz spezielles Dankeschön an:
 			\begin{itemize}
-				\item Marc Weissmann, der mit seinem Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE~-- Feuerwerk im Röthelheimpark Erlangen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an immer voll vertraut hat. Videos:
+				\item Marc Weissmann, der mit ursprünglich seinem, mittlerweile unserem gemeinsamen Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE~-- Feuerwerk im Röthel\-heim\-park Er\-langen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an trotz einiger mittlerweile behobener \enquote{Kinderkrankheiten} immer voll vertraut hat. Videos unserer bisherigen mit {\anlage} geschossenen Feuerwerke:
 				      \begin{itemize}
 					      \item[*] \underline{\href{https://vimeo.com/116115628}{Silvesterfeuerwerk 2014/15}}
 					      \item[*] \underline{\href{https://vimeo.com/150594996}{Silvesterfeuerwerk 2015/16}}
+					      \item[*] \underline{\href{https://vimeo.com/198168273}{Silvesterfeuerwerk 2016/17}}
+					      \item[*] \underline{\href{https://www.youtube.com/watch?v=uPTW1dpsVoU}{Hochzeitsfeuerwerk 2017}}
 				      \end{itemize}
 				\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
+				\item Jens Nachtigal, dem Hauptprogrammierer und Anstoßgeber zur Entwicklung des Raspberry-Pi-Transmitters. 
 				\item Die \enquote{Nachbau-Pioniere} Matthias Pee und Cedrik Sikora für Ideen und wertvolle Hinweise.
 				\item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung.
 				\item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Erklärungen zum Thema elektrische Zündung und natürlich die Zündsoftware {\pic} von User \emph{pyrobla}.
