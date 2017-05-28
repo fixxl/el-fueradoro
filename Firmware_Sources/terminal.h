@@ -22,6 +22,7 @@ void fixedspace(int32_t zahl, uint8_t type, uint8_t space);
 
 uint8_t remote_config(char *txf);
 uint8_t configprog(const uint8_t devicetype);
+uint8_t aesconf(void);
 
 void list_complete(char *boxe, char *batt, char *sharpn, int8_t *temps, int8_t *rssis, uint8_t wrongids);
 void list_array(char *arr);

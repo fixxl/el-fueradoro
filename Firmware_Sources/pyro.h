@@ -114,9 +114,12 @@ typedef union {
  #define RFM_PWR_ADDRESS    5
 #endif
 
+#define START_ADDRESS_AESKEY_STORAGE 32
+
 // Funktionsprototypen
 void wdt_init(void) __attribute__((naked)) __attribute__((section(".init1")));
 void create_symbols(void);
+uint8_t asciihex(char inp);
 void key_init(void);
 void key_deinit(void);
 uint8_t debounce(volatile uint8_t *port, uint8_t pin);

@@ -232,6 +232,73 @@ uint8_t configprog(const uint8_t devicetype) {
 	return changes;
 }
 
+uint8_t aesconf(void) {
+	uint8_t choice = 0;
+	uint8_t current_byte_value, uinp, error;
+	uint8_t aesvalues[16] = {0};
+	char inp;
+
+	uart_puts_P(PSTR("\n\rKonfiguration der Verschlüsselung\n\r"));
+	uart_puts_P(PSTR("=================================\n\r"));
+	uart_puts_P(PSTR("\n\rAktuelle Einstellung: "));
+
+	if(rfm_cmd(0x3DFF, 0) & 1) {
+		uart_puts_P(PSTR("Verschlüsselung aktiviert! Schlüssel: "));
+		for(uint16_t regval = 0x3EFF; regval < 0x4E00; regval += 0x0100) {
+			uart_shownum(rfm_cmd(regval, 0), 'h');
+			uart_puts_P(PSTR(" "));
+		}
+		uart_puts_P(PSTR("\r\n\nNeuen (S)chlüssel eingeben, Abbruch mit beliebiger anderer Taste! "));
+
+		// Evaluate input
+		while (!choice) choice = uart_getc();
+
+		choice |= 0x20;
+		uart_putc(choice);
+		uart_puts_P(PSTR("\n\r"));
+
+		if(choice == 's') {
+			choice = 0;
+			uart_puts_P(PSTR("\r\n\nNeuer Schlüssel: "));
+			error = 0;
+			for (uint8_t byte = 0; byte < 16; byte++) {
+				current_byte_value = 0;
+				for (uint8_t i = 2; i; i--) {
+					current_byte_value <<= 4;
+					inp         = uart_getc();
+					uart_putc(inp);
+					uinp       = asciihex(inp);
+					error     += (uinp == 255);
+					current_byte_value |= uinp;
+				}
+				if(error) {
+					uart_puts_P(PSTR("\r\nAbbruch wegen unzulässiger Eingabe!\r\nKeine Änderungen gespeichert!\r\n\n"));
+					return 0;
+				}
+				uart_puts_P(PSTR(" "));
+				aesvalues[byte] = current_byte_value;
+			}
+			uart_puts_P(PSTR("\r\nDiesen Schlüssel speichern (j/n)? "));
+
+			// Evaluate input
+			while ((choice != 'j') && (choice != 'n')) choice = (uart_getc() | 0x20);
+
+			if(choice == 'j') {
+				for(uint8_t i = 0; i < 16; i++) {
+					eewrite(aesvalues[i], START_ADDRESS_AESKEY_STORAGE + i);
+				}
+				uart_puts_P(PSTR("\r\nErfolgreich gespeichert, Device startet neu!\r\n\n"));
+				return 1;
+			}
+			else uart_puts_P(PSTR("\r\nKeine Änderungen gespeichert!\r\n\n"));
+		}
+	}
+	else {
+		uart_puts_P(PSTR("Verschlüsselung nicht aktiviert!"));
+	}
+	return 0;
+}
+
 // List ignition devices
 void list_complete(char *slvs, char *batt, char *sharpn, int8_t *temps, int8_t *rssis, uint8_t wrongids) {
 	uint8_t i = 0, ganz, zehntel;

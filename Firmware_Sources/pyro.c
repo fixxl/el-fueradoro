@@ -408,6 +408,12 @@ int main(void) {
 	// Initialise radio
 	rfm_init();
 
+	// Set encryption active, read and transfer AES-Key
+	rfm_cmd(0x3DA1, 1);
+	for(uint8_t i = 0; i < 16; i++) {
+		rfm_cmd((0x3E00 + i*(0x0100)) | eeread(START_ADDRESS_AESKEY_STORAGE + i), 1);
+	}
+
 	#if (RFM == 69)
 		uint8_t rfm_pwr = eeread(RFM_PWR_ADDRESS);
 
@@ -627,6 +633,15 @@ int main(void) {
 				}
 
 				uart_puts("\n\n\r");
+			}
+
+			// "aeskey" displays the current key and allows to set a new one
+			if (uart_strings_equal(uart_field, "aeskey")) {
+				changes = aesconf();
+
+				if (changes) flags.b.reset_device = 1;
+
+				changes = 0;
 			}
 
 			// "int1" last transmitted command gets re-transmitted periodically
