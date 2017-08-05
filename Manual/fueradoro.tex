@@ -509,7 +509,9 @@
 
 					Zum sicheren Betrieb von {\anlage} werden die drahtlos zu übermittelnden Daten zwischen Sender und Empfänger verschlüsselt. Hierfür muss in den am Funkverkehr beteiligten Modulen ein Schlüssel mit einer Länge von 16~Bytes (128~Bit) hinterlegt werden, der für die Ver- und Entschlüsselung der Datenpakete genutzt wird. Dieser Schlüssel ist im internen Speicher des Mikrocontrollers hinterlegt und bleibt auch beim Trennen der Stromversorgung erhalten. Selbstredend muss in allen Controllern derselbe Schlüssel hinterlegt sein, damit diese miteinander kommunizieren können.
 
-					Nach Eingabe von \enquote{aeskey} im Terminalfenster kann der aktuell eingestellte Schlüssel eingesehen werden. Jede Taste außer \enquote{s} bringt den Benutzer anschließend ins Hauptmenü zurück.
+					Nach Eingabe von \enquote{aeskey} im Terminalfenster kann der aktuell eingestellte Schlüssel eingesehen werden. Hierzu wird der Schlüssel einmal aus dem Speicher des Controllers ausgelesen und einmal aus den Einstellungen des Funkmoduls. Diese beiden Zeilen sollten identische Werte anzeigen.
+					
+					Jede Taste außer \enquote{s} bringt den Benutzer anschließend ins Hauptmenü zurück.
 
 					Möchte man den Schlüssel ändern, muss die Taste \enquote{s} gedrückt und anschließend der komplette neue Schlüssel im hexadezimalen Zahlenformat eingegeben werden, wie beim Funkmodul-Zugriff sind also nur die Zeichen 0-9 und A-F bzw. a-f zulässig. Wurde ein gültiger Schlüssel eingegeben, erfolgt noch eine finale Nachfrage, ob dieser neue Schlüssel gespeichert werden soll, welche man mit \enquote{j} oder \enquote{n} beantworten kann.
 					\clearpage

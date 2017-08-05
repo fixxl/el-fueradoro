@@ -243,9 +243,14 @@ uint8_t aesconf(void) {
 	uart_puts_P(PSTR("\n\rAktuelle Einstellung: "));
 
 	if(rfm_cmd(0x3DFF, 0) & 1) {
-		uart_puts_P(PSTR("Verschlüsselung aktiviert! Schlüssel: "));
+		uart_puts_P(PSTR("Verschlüsselung aktiviert!\r\nSchlüssel lt. Funkmodul: "));
 		for(uint16_t regval = 0x3EFF; regval < 0x4E00; regval += 0x0100) {
 			uart_shownum(rfm_cmd(regval, 0), 'h');
+			uart_puts_P(PSTR(" "));
+		}
+		uart_puts_P(PSTR("\r\nSchlüssel lt. EEPROM:    "));
+		for(uint8_t i = 0; i < 16; i++) {
+			uart_shownum(eeread(START_ADDRESS_AESKEY_STORAGE + i), 'h');
 			uart_puts_P(PSTR(" "));
 		}
 		uart_puts_P(PSTR("\r\n\nNeuen (S)chlüssel eingeben, Abbruch mit beliebiger anderer Taste! "));
