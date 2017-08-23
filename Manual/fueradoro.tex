@@ -3,7 +3,7 @@
 \usepackage[hang]{caption}
 \usepackage{subcaption}
 \usepackage{microtype, textcomp}
-\usepackage{longtable}
+\usepackage{longtable, tabu}
 \usepackage[intlimits]{mathtools}
 \usepackage{amsfonts, amssymb, array, tabularx, scrlayer-scrpage, multirow}
 \usepackage{fontspec}
@@ -1016,7 +1016,7 @@
 			Leider ist es~-- schon alleine aufgrund der Währungsschwankungen, denen besonders die eBay-Artikel unterworfen sind~-- ein Ding der Unmöglichkeit, die Liste permanent tagesaktuell zu halten. Tote Links dürfen gerne gemeldet werden.
 
 			{\footnotesize
-			\begin{longtable}{p{1.2cm}cp{2.5cm}llSSp{2.35cm}}
+			\begin{longtabu}{p{1.2cm}cXllSSp{2.35cm}}
 				\multicolumn{8}{c}{\textbf{Materialliste Transmitter}}                                                                                                                                  \\
 				\\ \hline
 				Bauteil                        & Anz. & Beschreibung                         & Händler  & Artikelnr.                                                & {Einzel} & {Ges.}  & Bemerkung    \\ [8pt]
@@ -1064,13 +1064,13 @@
 				                               & 1    & SMA-Platinenbuchse, 1,6mm            & eBay     & \href{http://www.ebay.com/itm/220952712009}{220952712009} & 1,17\,€  & 1,17\,€ &              \\ \hline
 				\caption{\normalsize Materialliste für den Transmitter}
 				\label{tab:transmitterbom}
-			\end{longtable}
+			\end{longtabu}
 			}
 
 			\newpage
 
 			{\footnotesize
-				\begin{longtable}{p{1.2cm}cp{2.5cm}llSSp{2.35cm}}
+				\begin{longtabu}{p{1.2cm}cXllSSp{2.35cm}}
 					\multicolumn{8}{c}{\textbf{Materialliste Raspberry-Pi-Transmitter}}                                                                                                                                                                                                                                                          \\
 					\\ \hline
 					Bauteil           & Anz. & Beschreibung                                          & Händler    & Artikelnr.                                                                                                                                                  & {Einzel} & {Ges.}   & Bemerkung                                \\ [8pt]
@@ -1121,13 +1121,13 @@
 					                  & 1    & SMA-Platinenbuchse, 1,6mm                             & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                                                                                                   & 1,17\,€  & 1,17\,€  &                                          \\ \hline
 					\caption{\normalsize Materialliste für den Raspberry-Pi-Transmitter}
 					\label{tab:raspibom}
-				\end{longtable}
+				\end{longtabu}
 			}
 
 			\newpage
 
 			{\footnotesize
-				\begin{longtable}{p{1.2cm}cp{2.5cm}llSSp{2.35cm}}
+				\begin{longtabu}{p{1.2cm}cXllSSp{2.35cm}}
 					\multicolumn{8}{c}{\textbf{Materialliste Zündbox}}                                                                                                                                                                            \\
 					\\
 					Bauteil                                 & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           & {Einzel} & {Ges.}   & Bemerkung              \\
@@ -1213,13 +1213,13 @@
 					                                        & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           & 0,26\,€  & 0,26\,€  &                        \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (1. Generation)}
 					\label{tab:zuendbox1bom}
-				\end{longtable}
+				\end{longtabu}
 			}
 
 			\newpage
 
 			{\footnotesize
-				\begin{longtable}{p{1.2cm}cp{2.5cm}llSSp{2.35cm}}
+				\begin{longtabu}{p{1.2cm}cXllSSp{2.35cm}}
 					\multicolumn{8}{c}{\textbf{Materialliste Zündbox v2}}                                                                                                                                                                    \\
 					\\
 					Bauteil                            & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           & {Einzel} & {Ges.}   & Bemerkung              \\
@@ -1306,7 +1306,7 @@
 					                                   & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           & 0,26\,€  & 0,26\,€  &                        \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (2. Generation)}
 					\label{tab:zuendbox2bom}
-				\end{longtable}
+				\end{longtabu}
 			}
 
 			\normalsize
