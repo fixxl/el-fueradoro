@@ -25,6 +25,7 @@
 \defaultfontfeatures{Ligatures=TeX}
 \renewcommand{\dateseparator}{.}
 
+
 \setmainfont{Tex Gyre Termes}
 \setmathfont{Tex Gyre Termes Math}
 \setsansfont{Latin Modern Sans}[Scale=MatchLowercase]
@@ -464,16 +465,16 @@
 							\begin{tabu}
 								to .95\textwidth {Xc|*{7}c|*{8}c}
 								\hline\hline
-								Bit     & w/$\overline{\mbox{r}}$         & r6                              & r5                              & r4                            & r3 & r2 & r1 & r0                      & d7 & d6 & d5 & d4                      & d3 & d2 & d1 & d0                    \\
-								Wert    & 8                               & 4                               & 2                               & \multicolumn{1}{c||}{1}       & 8  & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c}{1} \\
+								Bit  & w/$\overline{\mbox{r}}$ & r6 & r5 & r4                      & r3 & r2 & r1 & r0                      & d7 & d6 & d5 & d4                      & d3 & d2 & d1 & d0                    \\
+								Wert & 8                       & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c}{1} \\
 								Zeichen & \multicolumn{4}{c||}{Zeichen 1} & \multicolumn{4}{c||}{Zeichen 2} & \multicolumn{4}{c||}{Zeichen 3} & \multicolumn{4}{c}{Zeichen 4}                                                                                                                          \\ ~ \\ \hline
 							\end{tabu}
 							\begin{tabu}
 								to .95\textwidth {p{2cm}cXp{2cm}}
 								~                                                                                                      \\
-								 & w/$\overline{\mbox{r}}$ & Schreib- oder Lesezugriff (0 = lesen, 1 = schreiben)                      \\
-								 & r6 {\dots} r0           & Registeradresse                                                           \\
-								 & d7 {\dots} d0           & Zu schreibender Registerwert (beliebig falls w/$\overline{\mbox{r}} = 0$) \\ \hline\hline
+								  & w/$\overline{\mbox{r}}$ & Schreib- oder Lesezugriff (0 = lesen, 1 = schreiben)                      \\
+								  & r6 {\dots} r0           & Registeradresse                                                           \\
+								  & d7 {\dots} d0           & Zu schreibender Registerwert (beliebig falls w/$\overline{\mbox{r}} = 0$) \\ \hline\hline
 							\end{tabu}
 						\end{center}
 						\caption{Struktur des \texttt{RFM69CW}-Befehls}
@@ -725,7 +726,7 @@
 
 				\subsection{Erstellung und Überprüfung des Zündplans}
 
-					{\pic} unterstützt den Ersteller einer Show, indem es sowohl den passenden Zündzeitpunkt aus den Angaben \enquote{Effektbeginn} und \enquote{Verzögerung} berechnet als auch anhand der angegebenen Effektdauer die Überlagerung der Effekte kalkuliert und veranschaulicht.
+						{\pic} unterstützt den Ersteller einer Show, indem es sowohl den passenden Zündzeitpunkt aus den Angaben \enquote{Effektbeginn} und \enquote{Verzögerung} berechnet als auch anhand der angegebenen Effektdauer die Überlagerung der Effekte kalkuliert und veranschaulicht.
 					\pic{} wird den eingegebenen Zündplan perfekt umsetzen, die Krux liegt jedoch darin, dass falsche Eingaben des Erstellers übernommen und nicht hinterfragt werden.
 
 					Wenig ist ärgerlicher, als dass eine sorgfältig geplante Show an Flüchtigkeitsfehlern scheitert. Ein falscher Klick bei der Erstellung des Zündplans kann dafür sorgen, dass die Highlightbatterie nicht angesprochen wird und statt buntem Lichterzauber nur schwarze Nacht am Himmel zu sehen ist. Aus diesem Grund existiert das auf {\anlage} zugeschnittene Tool \texttt{schemecheck.exe}, welches folgende Dinge im Zündplan erkennen kann und hinweist auf:
@@ -977,18 +978,18 @@
 					\begin{tabu}
 						to \textwidth {|r|clXrc|l|}
 						\cline{1-1}\cline{7-7}
-						1  & U+  & \multirow{2}{*}{U\textsubscript{Force}} &  & \multirow{2}{*}{U\textsubscript{Sense}} & U+     & 1  \\
-						2  & GND &                                         &  &                                         & GND    & 2  \\
-						3  & -   & \multirow{2}{*}{L5 (Pin 11)}            &  & \multirow{2}{*}{R5}                     & Pin 22 & 3  \\
-						4  & +   &                                         &  &                                         & GND    & 4  \\
-						5  & -   & \multirow{2}{*}{L4 (Pin 8) TX-LED}      &  & \multirow{2}{*}{R4}                     & Pin 16 & 5  \\
-						6  & +   &                                         &  &                                         & GND    & 6  \\
-						7  & -   & \multirow{2}{*}{L3 (Pin 7) RX-LED}      &  & \multirow{2}{*}{KEY-Sw. R3}             & Pin 15 & 7  \\
-						8  & +   &                                         &  &                                         & GND    & 8  \\
-						9  & -   & \multirow{2}{*}{L2 (Pin 10) ON/OFF-LED} &  & \multirow{2}{*}{ON/OFF-Bt. R2}          & Pin 5  & 9  \\
-						10 & +   &                                         &  &                                         & GND    & 10 \\
-						11 & -   & \multirow{2}{*}{L1 (Pin 12) FIRE-LED}   &  & \multirow{2}{*}{FIRE-Bt. R1}            & Pin 3  & 11 \\
-						12 & +   &                                         &  &                                         & GND    & 12 \\ \cline{1-1}\cline{7-7}
+						1  & U+  & \multirow{2}{*}{U\textsubscript{Force}} &   & \multirow{2}{*}{U\textsubscript{Sense}} & U+     & 1  \\
+						2  & GND &                                         &   &                                         & GND    & 2  \\
+						3  & -   & \multirow{2}{*}{L5 (Pin 11)}            &   & \multirow{2}{*}{R5}                     & Pin 22 & 3  \\
+						4  & +   &                                         &   &                                         & GND    & 4  \\
+						5  & -   & \multirow{2}{*}{L4 (Pin 8) TX-LED}      &   & \multirow{2}{*}{R4}                     & Pin 16 & 5  \\
+						6  & +   &                                         &   &                                         & GND    & 6  \\
+						7  & -   & \multirow{2}{*}{L3 (Pin 7) RX-LED}      &   & \multirow{2}{*}{KEY-Sw. R3}             & Pin 15 & 7  \\
+						8  & +   &                                         &   &                                         & GND    & 8  \\
+						9  & -   & \multirow{2}{*}{L2 (Pin 10) ON/OFF-LED} &   & \multirow{2}{*}{ON/OFF-Bt. R2}          & Pin 5  & 9  \\
+						10 & +   &                                         &   &                                         & GND    & 10 \\
+						11 & -   & \multirow{2}{*}{L1 (Pin 12) FIRE-LED}   &   & \multirow{2}{*}{FIRE-Bt. R1}            & Pin 3  & 11 \\
+						12 & +   &                                         &   &                                         & GND    & 12 \\ \cline{1-1}\cline{7-7}
 					\end{tabu}
 					\caption{Pinbelegung der Aufsteckplatine von oben gesehen}
 					\label{fig:piclamps}
@@ -1191,7 +1192,8 @@
 					\multicolumn{8}{c}{Widerstände}                                                                                                                                                                                               \\
 					R16                                     & 1    & 180                                       & Reichelt   & METALL 180                                                           & 0,08\,€  & 0,08\,€  &                        \\
 					R17                                     & 1    & 0R22                                      & eBay       & \href{http://www.ebay.com/itm/221583734560}{221583734560}            & 1,00\,€  & 1,00\,€  & 100er-Pack\dots        \\
-					R1{\dots}3, R7, R19, R20, R37           & 7    & 10k                                       & Reichelt   & METALL 10,0K                                                         & 0,08\,€  & 0,57\,€  & 10 billiger als 7!     \\
+					R1{\dots}3, R7, R20, R37                & 7    & 10k                                       & Reichelt   & METALL 10,0K                                                         & 0,08\,€  & 0,57\,€  & 10 billiger als 6!     \\
+					R19                                     & 1    & 100k                                      & Reichelt   & METALL 100K                                                          & 0,08\,€  & 0,08\,€  &                        \\
 					R18                                     & 1    & 150k                                      & Reichelt   & METALL 150K                                                          & 0,08\,€  & 0,08\,€  &                        \\
 					R4{\dots}6, R8{\dots}11                 & 7    & 1k                                        & Reichelt   & METALL 1,00K                                                         & 0,08\,€  & 0,57\,€  & 10 billiger als 7!     \\
 					R\_Z                                    & 1    & 2R2-11W                                   & Reichelt   & 11W VERT. 2,2                                                        & 0,60\,€  & 0,60\,€  &                        \\
@@ -1282,7 +1284,8 @@
 					T2                                 & 1    & BC327-40                                  & Reichelt   & BC 327-40                                                            & 0,04\,€  & 0,04\,€  &                        \\[8pt]
 					\hline
 					\multicolumn{8}{c}{Widerstände}                                                                                                                                                                                          \\
-					R1{\dots}3, R7, R16, R19, R20, R37 & 8    & 10k                                       & Reichelt   & METALL 10,0K                                                         & 0,08\,€  & 0,57\,€  & 10 billiger als 8!     \\
+					R1{\dots}3, R7, R16, R20, R37      & 7    & 10k                                       & Reichelt   & METALL 10,0K                                                         & 0,08\,€  & 0,57\,€  & 10 billiger als 7!     \\
+					R19                                & 1    & 100k                                      & Reichelt   & METALL 100K                                                          & 0,08\,€  & 0,08\,€  &                        \\
 					R18                                & 1    & 150k                                      & Reichelt   & METALL 150K                                                          & 0,08\,€  & 0,08\,€  &                        \\
 					R4{\dots}6, R8{\dots}11            & 7    & 1k                                        & Reichelt   & METALL 1,00K                                                         & 0,08\,€  & 0,57\,€  & 10 billiger als 7!     \\
 					R\_Z                               & 1    & 2R2-11W                                   & Reichelt   & 11W VERT. 2,2                                                        & 0,83\,€  & 0,83\,€  &                        \\
@@ -1376,7 +1379,7 @@
 					\begin{enumerate}
 						\item  Flachbandkabel bzw. Flachbandkabel-Adern zum Anschluss von LCD (außer Hintergrundbeleuchtung), LEDs und Schlüsselschalter
 						\item Litze mit einer Querschnittsfläche von mindestens 0,5\,mm$^2$, d.\,h. einem Mindestdurchmesser von 0,8\,mm, zum Anschluss von LCD-Hintergrundbeleuchtung, Netzschalter und
-								Zündklemmen
+						      Zündklemmen
 						\item 50\,$\Omega$-Koaxialkabel als Antennenkabel
 					\end{enumerate}
 
@@ -1429,9 +1432,9 @@
 						\item[Leistungswiderstand] R\_Z
 						\item[Temperatursensor] mit korrekter Orientierung
 						\item[Integrierte Schaltungen] mit korrekter Orientierung
-								\begin{center}
-									Der Stand bis zu diesem Punkt ist in Abbildung~\ref{fig:platinenzwischenschritt} dargestellt.
-								\end{center}
+						\begin{center}
+							Der Stand bis zu diesem Punkt ist in Abbildung~\ref{fig:platinenzwischenschritt} dargestellt.
+						\end{center}
 						\item[Anschluss-Kabel] für Klemmen (Zündbox) bzw. LCD (Transmitter)
 						\item[Schalterkabel] für Netz- und Schlüsselschalter
 						\item[LED-Kabel] für Status-LEDs und Kanal-LEDs. Um den Überblick zu behalten sollte dabei jeweils das Kabel für den GND-Anschluss vor dem Einlöten markiert werden
@@ -1758,13 +1761,13 @@
 					\item Großzügiges Vorverzinnen des Röhrchens an einer Stelle der Innenwand
 					\item Überstülpen des Röhrchens und Anlöten des verdrillten Schirmgeflechts an der Innenwand
 					\item Gesamte Konstruktion mit Schrumpfschlauch stabilisieren (nach jedem Schritt schrumpfen!):
-							\begin{enumerate}
-								\item Ein 88\,mm langes Stück Schrumpfschlauch $1,2$ über den obersten Teil der Antenne
-								\item Ein 90\,mm langes Stück Schrumpfschlauch $2,4$ über den obersten Teil der Antenne, unmittelbar nach dem Schrumpfen die noch heißen oben überstehenden 2\,mm Schlauch durch Zusammendrücken verschmelzen
-								\item Ein 2,5\,mm langes Stück Schrumpfschlauch $9,5$ über den aus dem Röhrchen herausstehenden Teil der Distanzhülse
-								\item Ein 80\,mm langes Stück Schrumpfschlauch 9,5 über Röhrchen und Distanzhülse, so dass auf beiden Seiten etwa 5\,mm überstehen
-								\item Mit einem 10\,mm langen Stück Schrumpfschlauch $4,8$ den Übergang zwischen oberem Antennenteil und Röhrchen versiegeln
-							\end{enumerate}
+					      \begin{enumerate}
+						      \item Ein 88\,mm langes Stück Schrumpfschlauch $1,2$ über den obersten Teil der Antenne
+						      \item Ein 90\,mm langes Stück Schrumpfschlauch $2,4$ über den obersten Teil der Antenne, unmittelbar nach dem Schrumpfen die noch heißen oben überstehenden 2\,mm Schlauch durch Zusammendrücken verschmelzen
+						      \item Ein 2,5\,mm langes Stück Schrumpfschlauch $9,5$ über den aus dem Röhrchen herausstehenden Teil der Distanzhülse
+						      \item Ein 80\,mm langes Stück Schrumpfschlauch 9,5 über Röhrchen und Distanzhülse, so dass auf beiden Seiten etwa 5\,mm überstehen
+						      \item Mit einem 10\,mm langen Stück Schrumpfschlauch $4,8$ den Übergang zwischen oberem Antennenteil und Röhrchen versiegeln
+					      \end{enumerate}
 					\item Falls nötig: Kabel in Endposition einfädeln, bevor SMA-Steckverbinder am intakten Ende angebracht wird
 				\end{enumerate}
 
@@ -1818,12 +1821,12 @@
 			Ein ganz spezielles Dankeschön an:
 			\begin{itemize}
 				\item Marc Weissmann, der mit ursprünglich seinem, mittlerweile unserem gemeinsamen Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE~-- Feuerwerk im Röthel\-heim\-park Er\-langen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an trotz einiger mittlerweile behobener \enquote{Kinderkrankheiten} immer voll vertraut hat. Videos unserer bisherigen mit {\anlage} geschossenen Feuerwerke:
-						\begin{itemize}
-							\item[*] \underline{\href{https://vimeo.com/116115628}{Silvesterfeuerwerk 2014/15}}
-							\item[*] \underline{\href{https://vimeo.com/150594996}{Silvesterfeuerwerk 2015/16}}
-							\item[*] \underline{\href{https://vimeo.com/198168273}{Silvesterfeuerwerk 2016/17}}
-							\item[*] \underline{\href{https://www.youtube.com/watch?v=uPTW1dpsVoU}{Hochzeitsfeuerwerk 2017}}
-						\end{itemize}
+				      \begin{itemize}
+					      \item[*] \underline{\href{https://vimeo.com/116115628}{Silvesterfeuerwerk 2014/15}}
+					      \item[*] \underline{\href{https://vimeo.com/150594996}{Silvesterfeuerwerk 2015/16}}
+					      \item[*] \underline{\href{https://vimeo.com/198168273}{Silvesterfeuerwerk 2016/17}}
+					      \item[*] \underline{\href{https://www.youtube.com/watch?v=uPTW1dpsVoU}{Hochzeitsfeuerwerk 2017}}
+				      \end{itemize}
 				\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
 				\item Jens Nachtigal, dem Hauptprogrammierer und Anstoßgeber zur Entwicklung des Raspberry-Pi-Transmitters.
 				\item Die \enquote{Nachbau-Pioniere} Matthias Pee und Cedrik Sikora für Ideen und wertvolle Hinweise.
@@ -1832,14 +1835,14 @@
 				\item \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat.
 				\item Der \texttt{Brauerei Loscher} für Club Mate, den Bastler-Treibstoff.
 				\item Die vielen tollen Open-Source- und Freeware-Lösungen, welche die Softwareentwicklung erst möglich gemacht haben:
-						\begin{itemize}
-							\item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers.
-							\item Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}, Kees Bakker und Thomas Holland für die Erweiterung \texttt{AVREclipse} sowie Ben Gardner für \texttt{Uncrustify} und die damit verbundene Übersichtlichkeit des Quellcodes.
-							\item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}.
-							\item Leo-Andres Hofmann für die schöne Windows-Oberfläche \texttt{UpdateLoader}.
-							\item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{Git} und \texttt{GitHub} für die unkomplizierte Versionsverwaltung.
-							\item {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs.
-						\end{itemize}
+				      \begin{itemize}
+					      \item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers.
+					      \item Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}, Kees Bakker und Thomas Holland für die Erweiterung \texttt{AVREclipse} sowie Ben Gardner für \texttt{Uncrustify} und die damit verbundene Übersichtlichkeit des Quellcodes.
+					      \item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}.
+					      \item Leo-Andres Hofmann für die schöne Windows-Oberfläche \texttt{UpdateLoader}.
+					      \item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{Git} und \texttt{GitHub} für die unkomplizierte Versionsverwaltung.
+					      \item {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs.
+				      \end{itemize}
 			\end{itemize}
 
 \end{document}
