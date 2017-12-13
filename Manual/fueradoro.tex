@@ -5,7 +5,7 @@
 \usepackage{microtype, textcomp}
 \usepackage{longtable, tabu}
 \usepackage[intlimits]{mathtools}
-\usepackage{amsfonts, amssymb, array, tabularx, scrlayer-scrpage, multirow}
+\usepackage{amsfonts, amssymb, array, scrlayer-scrpage, multirow}
 \usepackage{fontspec}
 \usepackage{unicode-math, icomma}
 \usepackage{polyglossia}
@@ -24,7 +24,6 @@
 \renewcommand{\ttfamily}{\origttfamily \hyphenchar\font=`\-}
 \defaultfontfeatures{Ligatures=TeX}
 \renewcommand{\dateseparator}{.}
-\renewcommand\tabularxcolumn[1]{p{#1}}
 
 \setmainfont{Tex Gyre Termes}
 \setmathfont{Tex Gyre Termes Math}
@@ -47,7 +46,7 @@
 \lohead[]{\textnormal\headmark}
 \rehead[]{\anlage}
 
-\hyphenation{Putty-tel}
+\hyphenation{Putty-tel, Fuera-doro}
 
 \setuptoc{toc}{totoc}
 
@@ -105,9 +104,9 @@
 
 		\chapter{Das System}
 
-				{\anlage} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich als Kofferwort aus den spanischen Wörtern \emph{fuego}, \emph{radio} und \emph{oro} her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
+			\anlage{} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich als Kofferwort aus den spanischen Wörtern \emph{fuego}, \emph{radio} und \emph{oro} her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
 
-			Es besteht aus einer mit dem PC verbundene Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen.
+			Es besteht aus einer mit dem PC verbundenen Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen.
 
 			\begin{figure}
 				\centering
@@ -172,14 +171,15 @@
 
 				\begin{table}
 					\centering
-					\begin{tabularx}{.7\textwidth}{Xl}
+					\begin{tabu}
+						to .7\textwidth [c]{Xl}
 						\hline\hline
 						\textbf{Farbe} & \textbf{Funktion}                           \\ \hline
 						orange         & Funkmodul empfängt                          \\
 						grün           & Funkmodul sendet                            \\
 						gelb           & Daten kommen über serielle Schnittstelle an \\
 						rot            & Device ist scharf geschaltet                \\ \hline\hline
-					\end{tabularx}
+					\end{tabu}
 					\caption{Farben und Funktionen der Status-LEDs}
 					\label{tab:statusleds}
 				\end{table}
@@ -244,14 +244,15 @@
 
 				\begin{table}[b]
 					\begin{center}
-						\begin{tabularx}{7cm}{Xl}
+						\begin{tabu}
+							to 7cm [c]{Xl}
 							\hline\hline
 							Bits pro Sekunde & 9600     \\
 							Datenbits        & 8        \\
 							Parität          & keine    \\
 							Stoppbits        & 1        \\
 							Flusssteuerung   & Hardware \\ \hline\hline
-						\end{tabularx}
+						\end{tabu}
 						\caption{Konfiguration der seriellen Schnittstelle}
 						\label{tab:seriell}
 					\end{center}
@@ -324,7 +325,8 @@
 
 					\begin{table}[bt]
 						\begin{center}
-							\begin{tabularx}{.9\textwidth}{lX}
+							\begin{tabu}
+								to .9\textwidth {lX}
 								\hline\hline
 								\textbf{Befehl}                       & \textbf{Wirkung}                                                                                                                                                                                                                   \\ \hline
 								arm                                   & Schaltet den Transmitter scharf, um Zündbefehle senden zu können                                                                                                                                                                   \\
@@ -341,7 +343,7 @@
 								orders                                & Gibt letztes gesendetes und empfangenes Pattern auf LCD aus                                                                                                                                                                        \\ \hline
 								cls                                   & Löscht den Terminal-Bildschirm                                                                                                                                                                                                     \\
 								kill                                  & Löst einen Neustart des Device aus                                                                                                                                                                                                 \\ \hline\hline
-							\end{tabularx}
+							\end{tabu}
 							\caption{Kommandos zur Konfiguration über die serielle Schnittstelle}
 							\label{tab:commands}
 						\end{center}
@@ -437,7 +439,8 @@
 
 					\begin{table}
 						\begin{center}
-							\begin{tabularx}{.8\textwidth}{X*{16}c}
+							\begin{tabu}
+								to .8\textwidth {X*{16}c}
 								\hline\hline
 								Hexadezimal & 0    & 1    & 2    & 3    & 4    & 5    & 6    & 7    \\
 								Dezimal     & 0    & 1    & 2    & 3    & 4    & 5    & 6    & 7    \\
@@ -446,7 +449,7 @@
 								Hexadezimal & 8    & 9    & A    & B    & C    & D    & E    & F    \\
 								Dezimal     & 8    & 9    & 10   & 11   & 12   & 13   & 14   & 15   \\
 								Binär       & 1000 & 1001 & 1010 & 1011 & 1100 & 1101 & 1110 & 1111 \\ \hline\hline
-							\end{tabularx}
+							\end{tabu}
 						\end{center}
 						\caption{Umrechnung Hexadezimal-, Dezimal- und Binärwerte}
 						\label{tab:zahlensysteme}
@@ -458,18 +461,20 @@
 
 					\begin{table}
 						\begin{center}
-							\begin{tabularx}{.95\textwidth}{Xc|*{7}c|*{8}c}
+							\begin{tabu}
+								to .95\textwidth {Xc|*{7}c|*{8}c}
 								\hline\hline
 								Bit     & w/$\overline{\mbox{r}}$         & r6                              & r5                              & r4                            & r3 & r2 & r1 & r0                      & d7 & d6 & d5 & d4                      & d3 & d2 & d1 & d0                    \\
 								Wert    & 8                               & 4                               & 2                               & \multicolumn{1}{c||}{1}       & 8  & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c}{1} \\
 								Zeichen & \multicolumn{4}{c||}{Zeichen 1} & \multicolumn{4}{c||}{Zeichen 2} & \multicolumn{4}{c||}{Zeichen 3} & \multicolumn{4}{c}{Zeichen 4}                                                                                                                          \\ ~ \\ \hline
-							\end{tabularx}
-							\begin{tabularx}{.95\textwidth}{p{2cm}cXp{2cm}}
+							\end{tabu}
+							\begin{tabu}
+								to .95\textwidth {p{2cm}cXp{2cm}}
 								~                                                                                                      \\
 								 & w/$\overline{\mbox{r}}$ & Schreib- oder Lesezugriff (0 = lesen, 1 = schreiben)                      \\
 								 & r6 {\dots} r0           & Registeradresse                                                           \\
 								 & d7 {\dots} d0           & Zu schreibender Registerwert (beliebig falls w/$\overline{\mbox{r}} = 0$) \\ \hline\hline
-							\end{tabularx}
+							\end{tabu}
 						\end{center}
 						\caption{Struktur des \texttt{RFM69CW}-Befehls}
 						\label{tab:rfmcommand}
@@ -493,10 +498,6 @@
 
 						Will man die Sendeleistung nun auf $\SI{6}{\dBm}$ anpassen, muss also ein Wert von 24 für die Aus\-gangs\-lei\-stungs-Bits gesetzt werden, dazu natürlich auch das oberste Bit für den PA0. Als Wert für die Registerbits ergibt sich damit $2^7 + 2^4 + 2^3 = 0x98$. Die Registeradresse bleibt gleich, jedoch muss dem Modul mitgeteilt werden, dass es sich um einen Schreibzugriff handelt, weshalb die erste Stelle um den Wert 8 erhöht werden muss. Um nun den neuen Wert von $\SI{6}{\dBm}$ einzuschreiben, gibt man im Terminalprogramm~-- wie in Abbildung~\ref{fig:rfmwrite} gezeigt~-- \enquote{rfm} gefolgt von \emph{ENTER} ein und anschließend die Zeichenfolge \enquote{9198}.
 
-						Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Anschließend erfolgt eine Nachfrage, ob die Sendeleistung dauerhaft gespeichert werden soll. Verneint man dies, wird beim nächsten Neustart des Device der Standardwert wiederhergestellt, andernfalls ist der gerade eingestellte Wert der neue Standardwert.
-
-						Ein nochmaliges Auslesen des Registers, wie im Abschnitt~\ref{subsec:readpower} beschrieben, sollte nun den eben eingeschriebenen Wert 0x98 zurückgeben.
-
 						\begin{figure}
 							\centering
 							\includegraphics[width=.8\textwidth]{Bilder/rfmbefehl2}
@@ -504,16 +505,27 @@
 							\label{fig:rfmwrite}
 						\end{figure}
 
+						Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Anschließend erfolgt eine Nachfrage, ob die Sendeleistung dauerhaft gespeichert werden soll. Verneint man dies, wird beim nächsten Neustart des Device der Standardwert wiederhergestellt, andernfalls ist der gerade eingestellte Wert der neue Standardwert.
+
+						Ein nochmaliges Auslesen des Registers, wie im Abschnitt~\ref{subsec:readpower} beschrieben, sollte nun den eben eingeschriebenen Wert 0x98 zurückgeben.
+
 				\subsection{AES-Verschlüsselung}
 					\label{sec:encryption}
 
 					Zum sicheren Betrieb von {\anlage} werden die drahtlos zu übermittelnden Daten zwischen Sender und Empfänger verschlüsselt. Hierfür muss in den am Funkverkehr beteiligten Modulen ein Schlüssel mit einer Länge von 16~Bytes (128~Bit) hinterlegt werden, der für die Ver- und Entschlüsselung der Datenpakete genutzt wird. Dieser Schlüssel ist im internen Speicher des Mikrocontrollers hinterlegt und bleibt auch beim Trennen der Stromversorgung erhalten. Selbstredend muss in allen Controllern derselbe Schlüssel hinterlegt sein, damit diese miteinander kommunizieren können.
 
 					Nach Eingabe von \enquote{aeskey} im Terminalfenster kann der aktuell eingestellte Schlüssel eingesehen werden. Hierzu wird der Schlüssel einmal aus dem Speicher des Controllers ausgelesen und einmal aus den Einstellungen des Funkmoduls. Diese beiden Zeilen sollten identische Werte anzeigen.
-					
+
 					Jede Taste außer \enquote{s} bringt den Benutzer anschließend ins Hauptmenü zurück.
 
-					Möchte man den Schlüssel ändern, muss die Taste \enquote{s} gedrückt und anschließend der komplette neue Schlüssel im hexadezimalen Zahlenformat eingegeben werden, wie beim Funkmodul-Zugriff sind also nur die Zeichen 0-9 und A-F bzw. a-f zulässig. Wurde ein gültiger Schlüssel eingegeben, erfolgt noch eine finale Nachfrage, ob dieser neue Schlüssel gespeichert werden soll, welche man mit \enquote{j} oder \enquote{n} beantworten kann.
+					Möchte man den Schlüssel ändern, muss die Taste \enquote{s} gedrückt und anschließend der komplette neue Schlüssel im hexadezimalen Zahlenformat eingegeben werden, wie beim Funkmodul-Zugriff sind also nur die Zeichen 0-9 und A-F bzw. a-f zulässig. Wurde ein gültiger Schlüssel eingegeben, erfolgt noch eine finale Nachfrage, ob dieser neue Schlüssel gespeichert werden soll, welche man mit \enquote{j} oder \enquote{n} beantworten kann. Abbildung~\ref{fig:aeskey} zeigt das Prozedere im Terminalfenster.
+					
+					\begin{figure}[!h]
+						\centering
+						\includegraphics[width=.8\textwidth]{Bilder/aeskey}
+						\caption{Auslesen und Neusetzen des AES-Schlüssels}
+						\label{fig:aeskey}
+					\end{figure}
 					\clearpage
 
 			\section{GUI}
@@ -773,12 +785,13 @@
 
 				\begin{table}
 					\centering
-					\begin{tabularx}{.925\textwidth}{Xccc}
+					\begin{tabu}
+						to .925\textwidth {Xccc}
 						\hline\hline
 						Firmware                        & Controller  & Funkmodul & Sendeleistung   \\ \hline
 						Pyro\_atmega328p\_RFM69.hex     & ATMEGA 328P & RFM69CW   & $\SI{8}{\dBm}$  \\
 						Pyro\_atmega328p\_RFM69\_HP.hex & ATMEGA 328P & RFM69CW   & $\SI{13}{\dBm}$ \\ \hline\hline
-					\end{tabularx}
+					\end{tabu}
 					\caption{Verfügbare Firmware-Versionen}
 					\label{tab:firmwareversions}
 				\end{table}
@@ -919,7 +932,8 @@
 
 				\begin{figure}
 					\centering
-					\begin{tabularx}{\textwidth}{Xc|cc|cX}
+					\begin{tabu}
+						to \textwidth {Xc|cc|cX}
 						\cline{3-4}
 						Supply            & 3V3  & 1  & 2  & 5V  & Supply             \\
 						In 1 (FIRE-Bt.)   & R1   & 3  & 4  & 5V  & Supply             \\
@@ -941,7 +955,7 @@
 						~                 &      & 35 & 36 &     &                    \\
 						~                 &      & 37 & 38 &     &                    \\
 						Supply            & GND  & 39 & 40 &     &                    \\ \cline{3-4}
-					\end{tabularx}
+					\end{tabu}
 					\caption{Belegung Verbindungsstiftleiste Pi-Aufsteckplatine}
 					\label{fig:piheader}
 				\end{figure}
@@ -952,14 +966,16 @@
 
 				\begin{figure}
 					\centering
-					\begin{tabularx}{.85\textwidth}{|*{20}{@{}>{\centering\arraybackslash}X@{}}|}
+					\begin{tabu}
+						to .85\textwidth {|*{20}{@{}>{\centering\arraybackslash}X@{}}|}
 						\hline
 						2 & 4 & 6 & 8 & 10 & 12 & 14 & 16 & 18 & 20 & 22 & 24 & 26 & 28 & 30 & 32 & 34 & 36 & 38 & 40 \\
 						1 & 3 & 5 & 7 & 9  & 11 & 13 & 15 & 17 & 19 & 21 & 23 & 25 & 27 & 29 & 31 & 33 & 35 & 37 & 39 \\ \hline
-					\end{tabularx}
+					\end{tabu}
 					\vspace{1cm}
 					\centering
-					\begin{tabularx}{\textwidth}{|r|clXrc|l|}
+					\begin{tabu}
+						to \textwidth {|r|clXrc|l|}
 						\cline{1-1}\cline{7-7}
 						1  & U+  & \multirow{2}{*}{U\textsubscript{Force}} &  & \multirow{2}{*}{U\textsubscript{Sense}} & U+     & 1  \\
 						2  & GND &                                         &  &                                         & GND    & 2  \\
@@ -973,7 +989,7 @@
 						10 & +   &                                         &  &                                         & GND    & 10 \\
 						11 & -   & \multirow{2}{*}{L1 (Pin 12) FIRE-LED}   &  & \multirow{2}{*}{FIRE-Bt. R1}            & Pin 3  & 11 \\
 						12 & +   &                                         &  &                                         & GND    & 12 \\ \cline{1-1}\cline{7-7}
-					\end{tabularx}
+					\end{tabu}
 					\caption{Pinbelegung der Aufsteckplatine von oben gesehen}
 					\label{fig:piclamps}
 				\end{figure}
@@ -1016,7 +1032,8 @@
 			Leider ist es~-- schon alleine aufgrund der Währungsschwankungen, denen besonders die eBay-Artikel unterworfen sind~-- ein Ding der Unmöglichkeit, die Liste permanent tagesaktuell zu halten. Tote Links dürfen gerne gemeldet werden.
 
 			{\footnotesize
-			\begin{longtabu}{p{1.2cm}cXllSSp{2.35cm}}
+			\begin{longtabu}
+				{p{1.2cm}cX[l]llSSp{2.35cm}}
 				\multicolumn{8}{c}{\textbf{Materialliste Transmitter}}                                                                                                                                  \\
 				\\ \hline
 				Bauteil                        & Anz. & Beschreibung                         & Händler  & Artikelnr.                                                & {Einzel} & {Ges.}  & Bemerkung    \\ [8pt]
@@ -1035,7 +1052,7 @@
 				IC8                            & 1    & LM3940-3,3                           & Reichelt & LM 3940 IT3,3                                             & 1,10\,€  & 1,10\,€ &              \\ [8pt]
 				\hline
 				\multicolumn{8}{c}{Display}                                                                                                                                                             \\
-				                               & 1    & LCD, 20x4 Zeichen, HD44780-komp.     & eBay     & \href{http://www.ebay.com/itm/291548935509}{291548935509} & 4,80\,€  & 4,80\,€ &              \\ [8pt]
+				& 1    & LCD, 20x4 Zeichen, HD44780-komp.     & eBay     & \href{http://www.ebay.com/itm/291548935509}{291548935509} & 4,80\,€  & 4,80\,€ &              \\ [8pt]
 				\hline
 				\multicolumn{8}{c}{LEDs}                                                                                                                                                                \\
 				LED\_O                         & 1    & LED, 5mm, orange                     & Reichelt & LED 5MM R OR                                              & 0,12\,€  & 0,12\,€ &              \\
@@ -1055,13 +1072,13 @@
 				\multicolumn{8}{c}{Mechanische Bauteile}                                                                                                                                                \\
 				X1                             & 1    & Sub-D-Buchse, 9-pol                  & Reichelt & D-SUB BU 09US                                             & 0,23\,€  & 0,23\,€ &              \\
 				SV2                            & 1    & Wannenstecker, 10-pol                & Reichelt & WSL 10G                                                   & 0,08\,€  & 0,08\,€ &              \\
-				                               & 1    & Box                                  & Reichelt & GEH KS 50                                                 & 2,65\,€  & 2,65\,€ &              \\
-				                               & 1    & USB-Kabel als Stromkabel             & Reichelt & AK 670/2-1,0                                              & 0,70\,€  & 0,70\,€ &              \\ [8pt]
+				& 1    & Box                                  & Reichelt & GEH KS 50                                                 & 2,65\,€  & 2,65\,€ &              \\
+				& 1    & USB-Kabel als Stromkabel             & Reichelt & AK 670/2-1,0                                              & 0,70\,€  & 0,70\,€ &              \\ [8pt]
 				\hline
 				\multicolumn{8}{c}{HF-Komponenten}                                                                                                                                                      \\
-				                               & 1    & SMA-Kabel Funkmodul-Gehäuse          & eBay     & \href{http://www.ebay.com/itm/161134814025}{161134814025} & 2,53\,€  & 2,53\,€ &              \\
-				                               & 1    & Antenne 868 MHz                      & eBay     & \href{http://www.ebay.de/itm/380436601891}{380436601891}  & 4,24\,€  & 4,24\,€ &              \\
-				                               & 1    & SMA-Platinenbuchse, 1,6mm            & eBay     & \href{http://www.ebay.com/itm/220952712009}{220952712009} & 1,17\,€  & 1,17\,€ &              \\ \hline
+				& 1    & SMA-Kabel Funkmodul-Gehäuse          & eBay     & \href{http://www.ebay.com/itm/161134814025}{161134814025} & 2,53\,€  & 2,53\,€ &              \\
+				& 1    & Antenne 868 MHz                      & eBay     & \href{http://www.ebay.de/itm/380436601891}{380436601891}  & 4,24\,€  & 4,24\,€ &              \\
+				& 1    & SMA-Platinenbuchse, 1,6mm            & eBay     & \href{http://www.ebay.com/itm/220952712009}{220952712009} & 1,17\,€  & 1,17\,€ &              \\ \hline
 				\caption{\normalsize Materialliste für den Transmitter}
 				\label{tab:transmitterbom}
 			\end{longtabu}
@@ -1070,7 +1087,8 @@
 			\newpage
 
 			{\footnotesize
-				\begin{longtabu}{p{1.2cm}cXllSSp{2.35cm}}
+				\begin{longtabu}
+					{p{1.2cm}cX[l]llSSp{2.35cm}}
 					\multicolumn{8}{c}{\textbf{Materialliste Raspberry-Pi-Transmitter}}                                                                                                                                                                                                                                                          \\
 					\\ \hline
 					Bauteil           & Anz. & Beschreibung                                          & Händler    & Artikelnr.                                                                                                                                                  & {Einzel} & {Ges.}   & Bemerkung                                \\ [8pt]
@@ -1083,15 +1101,15 @@
 					IC1               & 1    & LM3940-3,3                                            & Reichelt   & LM 3940 IT3,3                                                                                                                                               & 1,10\,€  & 1,10\,€  &                                          \\
 					IC2               & 1    & ULN2003A                                              & Reichelt   & ULN 2003A                                                                                                                                                   & 0,29\,€  & 0,29\,€  &                                          \\
 					IC3               & 1    & MCP3202-CI/P                                          & eBay       & \href{http://www.ebay.com/itm/250878853097}{250878853097}                                                                                                   & 4,20\,€  & 4,20\,€  &                                          \\
-					                  & 1    & RFM69CW                                               & Pollin     & 810 303                                                                                                                                                     & 4,60\,€  & 4,60\,€  &                                          \\ [8pt]
+					& 1    & RFM69CW                                               & Pollin     & 810 303                                                                                                                                                     & 4,60\,€  & 4,60\,€  &                                          \\ [8pt]
 					\hline
 					\multicolumn{8}{c}{Einplatinenrechner und Zubehör}                                                                                                                                                                                                                                                                           \\
-					                  & 1    & Raspberry Pi 3                                        & Reichelt   & RASPBERRY PI 3                                                                                                                                              & 37,50\,€ & 37,50\,€ &                                          \\
-					                  & 1    & Micro-SD-Speicherkarte, 16\,GB                        & Reichelt   & INTENSO 3433470                                                                                                                                             & 9,95\,€  & 9,95\,€  &                                          \\
-					                  & 1    & Waveshare 7 inch 1024*600 Capacitive Touch Screen LCD & Amazon     & \href{http://www.amazon.de/gp/product/B015E8EDYQ}{B015E8EDYQ}                                                                                               & 58,99\,€ & 58,99\,€ &                                          \\
-					                  & 1    & USB-Soundkarte                                        & Amazon     & \href{https://www.amazon.de/gp/product/B00C7LXUDY}{B00C7LXUDY}                                                                                              & 6,25\,€  & 6,25\,€  &                                          \\
-					                  & 1    & Powerbank                                             & Amazon     & \href{https://www.amazon.de/B01KPFC4B2}{B01KPFC4B2}                                                                                                         & 20,89\,€ & 20,89\,€ &                                          \\
-					                  & 1    & Waveshare 7 inch 1024*600 Capacitive Touch Screen LCD & Amazon     & \href{http://www.amazon.de/gp/product/B015E8EDYQ}{B015E8EDYQ}                                                                                               & 58,99\,€ & 58,99\,€ &                                          \\ [8pt]
+					& 1    & Raspberry Pi 3                                        & Reichelt   & RASPBERRY PI 3                                                                                                                                              & 37,50\,€ & 37,50\,€ &                                          \\
+					& 1    & Micro-SD-Speicherkarte, 16\,GB                        & Reichelt   & INTENSO 3433470                                                                                                                                             & 9,95\,€  & 9,95\,€  &                                          \\
+					& 1    & Waveshare 7 inch 1024*600 Capacitive Touch Screen LCD & Amazon     & \href{http://www.amazon.de/gp/product/B015E8EDYQ}{B015E8EDYQ}                                                                                               & 58,99\,€ & 58,99\,€ &                                          \\
+					& 1    & USB-Soundkarte                                        & Amazon     & \href{https://www.amazon.de/gp/product/B00C7LXUDY}{B00C7LXUDY}                                                                                              & 6,25\,€  & 6,25\,€  &                                          \\
+					& 1    & Powerbank                                             & Amazon     & \href{https://www.amazon.de/B01KPFC4B2}{B01KPFC4B2}                                                                                                         & 20,89\,€ & 20,89\,€ &                                          \\
+					& 1    & Waveshare 7 inch 1024*600 Capacitive Touch Screen LCD & Amazon     & \href{http://www.amazon.de/gp/product/B015E8EDYQ}{B015E8EDYQ}                                                                                               & 58,99\,€ & 58,99\,€ &                                          \\ [8pt]
 					\hline
 					\multicolumn{8}{c}{LEDs}                                                                                                                                                                                                                                                                                                     \\
 					LED\_O            & 1    & LED, 5mm, orange                                      & Reichelt   & LED 5MM R OR                                                                                                                                                & 0,12\,€  & 0,12\,€  &                                          \\
@@ -1107,18 +1125,18 @@
 					R\_7, R\_8, R\_11 & 3    & 1k0                                                   & Reichelt   & METALL 1,00K                                                                                                                                                & 0,08\,€  & 0,24\,€  &                                          \\ [8pt]
 					\hline
 					\multicolumn{8}{c}{Mechanische Bauteile}                                                                                                                                                                                                                                                                                     \\
-					                  & 4    & Schraubklemme, 6-pol                                  & Reichelt   & AKL 059-06                                                                                                                                                  & 0,72\,€  & 2,88\,€  &                                          \\
-					                  & 1    & Buchsenleiste, 2x20-pol                               & Pollin     & 451 358                                                                                                                                                     & 0,55\,€  & 0,55\,€  &                                          \\
-					                  & 1    & Buchsenleiste mit 6 Plätzen                           & Reichelt   & MPE 094-1-006                                                                                                                                               & 0,25\,€  & 0,25\,€  &                                          \\
-					                  & 1    & Buchsenleiste mit 7 Plätzen                           & Reichelt   & MPE 094-1-007                                                                                                                                               & 0,31\,€  & 0,31\,€  &                                          \\
-					                  & 1    & Micro-USB-Kabel Powerbank-Pi                          & Reichelt   & DELOCK 83897                                                                                                                                                & 1,25\,€  & 1,25\,€  &                                          \\
-					                  & 1    & Micro-USB-Kabel Pi-Touchscreen                        & AliExpress & \href{http://www.aliexpress.com/item/Up-Angled-90-Degree-Micro-USB-Male-to-USB-Data-Charge-Cable-for-I9500-9300-N7100/32266663376.html}{Link}               & 2,53\,€  & 2,53\,€  & Umsetzungs\-abhängig                     \\
-					                  & 1    & HDMI-Kabel Pi-Touchscreen                             & eBay       & \href{http://www.ebay.de/itm/361031629625}{361031629625}                                                                                                    & 4,99\,€  & 4,99\,€  & Umsetzungs\-abhängig                     \\ [8pt]
+					& 4    & Schraubklemme, 6-pol                                  & Reichelt   & AKL 059-06                                                                                                                                                  & 0,72\,€  & 2,88\,€  &                                          \\
+					& 1    & Buchsenleiste, 2x20-pol                               & Pollin     & 451 358                                                                                                                                                     & 0,55\,€  & 0,55\,€  &                                          \\
+					& 1    & Buchsenleiste mit 6 Plätzen                           & Reichelt   & MPE 094-1-006                                                                                                                                               & 0,25\,€  & 0,25\,€  &                                          \\
+					& 1    & Buchsenleiste mit 7 Plätzen                           & Reichelt   & MPE 094-1-007                                                                                                                                               & 0,31\,€  & 0,31\,€  &                                          \\
+					& 1    & Micro-USB-Kabel Powerbank-Pi                          & Reichelt   & DELOCK 83897                                                                                                                                                & 1,25\,€  & 1,25\,€  &                                          \\
+					& 1    & Micro-USB-Kabel Pi-Touchscreen                        & AliExpress & \href{http://www.aliexpress.com/item/Up-Angled-90-Degree-Micro-USB-Male-to-USB-Data-Charge-Cable-for-I9500-9300-N7100/32266663376.html}{Link}               & 2,53\,€  & 2,53\,€  & Umsetzungs\-abhängig                     \\
+					& 1    & HDMI-Kabel Pi-Touchscreen                             & eBay       & \href{http://www.ebay.de/itm/361031629625}{361031629625}                                                                                                    & 4,99\,€  & 4,99\,€  & Umsetzungs\-abhängig                     \\ [8pt]
 					\hline
 					\multicolumn{8}{c}{HF-Komponenten}                                                                                                                                                                                                                                                                                           \\
-					                  & 1    & SMA-Kabel Funkmodul-Gehäuse                           & eBay       & \href{http://www.ebay.com/itm/161134814025}{161134814025}                                                                                                   & 2,53\,€  & 2,53\,€  &                                          \\
-					                  & 1    & Antenne 868 MHz                                       & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}                                                                                                    & 4,24\,€  & 4,24\,€  &                                          \\
-					                  & 1    & SMA-Platinenbuchse, 1,6mm                             & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                                                                                                   & 1,17\,€  & 1,17\,€  &                                          \\ \hline
+					& 1    & SMA-Kabel Funkmodul-Gehäuse                           & eBay       & \href{http://www.ebay.com/itm/161134814025}{161134814025}                                                                                                   & 2,53\,€  & 2,53\,€  &                                          \\
+					& 1    & Antenne 868 MHz                                       & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}                                                                                                    & 4,24\,€  & 4,24\,€  &                                          \\
+					& 1    & SMA-Platinenbuchse, 1,6mm                             & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                                                                                                   & 1,17\,€  & 1,17\,€  &                                          \\ \hline
 					\caption{\normalsize Materialliste für den Raspberry-Pi-Transmitter}
 					\label{tab:raspibom}
 				\end{longtabu}
@@ -1127,7 +1145,8 @@
 			\newpage
 
 			{\footnotesize
-				\begin{longtabu}{p{1.2cm}cXllSSp{2.35cm}}
+				\begin{longtabu}
+					{p{1.2cm}cX[l]llSSp{2.35cm}}
 					\multicolumn{8}{c}{\textbf{Materialliste Zündbox}}                                                                                                                                                                            \\
 					\\
 					Bauteil                                 & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           & {Einzel} & {Ges.}   & Bemerkung              \\
@@ -1182,35 +1201,35 @@
 					RN1, RN2                                & 2    & Network, 9Pin, 10k                        & Reichelt   & SIL 9-8 10K                                                          & 0,11\,€  & 0,22\,€  &                        \\ [8pt]
 					\hline
 					\multicolumn{8}{c}{HF-Komponenten}                                                                                                                                                                                            \\
-					                                        & 1    & SMA-Kabel Funkmodul-Gehäuse               & eBay       & \href{http://www.ebay.com/itm/291548738413}{291548738413}            & 2,04\,€  & 2,04\,€  &                        \\
-					                                        & 1    & SMA-Kabel Gehäuse-Antenne                 & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}            & 3,07\,€  & 3,07\,€  &                        \\
-					                                        & 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}             & 4,24\,€  & 4,24\,€  &                        \\
-					                                        & 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}            & 1,17\,€  & 1,17\,€  &                        \\ [8pt]
+					& 1    & SMA-Kabel Funkmodul-Gehäuse               & eBay       & \href{http://www.ebay.com/itm/291548738413}{291548738413}            & 2,04\,€  & 2,04\,€  &                        \\
+					& 1    & SMA-Kabel Gehäuse-Antenne                 & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}            & 3,07\,€  & 3,07\,€  &                        \\
+					& 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}             & 4,24\,€  & 4,24\,€  &                        \\
+					& 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}            & 1,17\,€  & 1,17\,€  &                        \\ [8pt]
 					\hline
 					\multicolumn{8}{c}{Mechanische Bauteile}                                                                                                                                                                                      \\
 					X1                                      & 1    & Sub-D-Buchse, 9-pol                       & Reichelt   & D-SUB BU 09US                                                        & 0,23\,€  & 0,23\,€  &                        \\
 					SV2                                     & 1    & Wannenstecker, 10-pol                     & Reichelt   & WSL 10G                                                              & 0,08\,€  & 0,08\,€  &                        \\
-					                                        & 1    & Wippschalter                              & Pollin     & 420 697                                                              & 0,35\,€  & 0,35\,€  &                        \\
-					                                        & 1    & Miniatur-Schlüsselschalter                & Pollin     & 420 664                                                              & 0,75\,€  & 0,75\,€  &                        \\
-					                                        & 1    & Kunststoffgehäuse 021-002-084             & Pollin     & 460 001                                                              & 7,95\,€  & 7,95\,€  &                        \\
-					                                        & 8    & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                               & 0,29\,€  & 2,32\,€  &                        \\
-					                                        & 1    & Koffer                                    & Amazon     & Bilora 545                                                           & 19,89\,€ & 19,89\,€ &                        \\
-					                                        & 1    & Akku                                      & Reichelt   & WP 1,2-12                                                            & 7,80\,€  & 7,80\,€  &                        \\
-					                                        & 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                         & 0,01\,€  & 0,03\,€  & 200er-Pack für 1,70\,€ \\
-					                                        & 16   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                         & 0,02\,€  & 0,34\,€  & 50er-Pack für 1,05\,€  \\
-					                                        & 16   & Muttern M3                                & Reichelt   & SK-E M3-100                                                          & 0,02\,€  & 0,35\,€  & 100er-Pack für 2,20\,€ \\
-					                                        & 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                          & 0,14\,€  & 0,28\,€  &                        \\
-					                                        & 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                        & 0,15\,€  & 0,15\,€  & Benötigt werden 13     \\
-					                                        & 1    & Buchsenleiste mit 6 Plätzen               & Reichelt   & MPE 094-1-006                                                        & 0,25\,€  & 0,25\,€  &                        \\
-					                                        & 1    & Buchsenleiste mit 7 Plätzen               & Reichelt   & MPE 094-1-007                                                        & 0,31\,€  & 0,31\,€  &                        \\
-					                                        & 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                              & 0,59\,€  & 0,59\,€  & 5er-Pack für 2,95\,€   \\
+					& 1    & Wippschalter                              & Pollin     & 420 697                                                              & 0,35\,€  & 0,35\,€  &                        \\
+					& 1    & Miniatur-Schlüsselschalter                & Pollin     & 420 664                                                              & 0,75\,€  & 0,75\,€  &                        \\
+					& 1    & Kunststoffgehäuse 021-002-084             & Pollin     & 460 001                                                              & 7,95\,€  & 7,95\,€  &                        \\
+					& 8    & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                               & 0,29\,€  & 2,32\,€  &                        \\
+					& 1    & Koffer                                    & Amazon     & Bilora 545                                                           & 19,89\,€ & 19,89\,€ &                        \\
+					& 1    & Akku                                      & Reichelt   & WP 1,2-12                                                            & 7,80\,€  & 7,80\,€  &                        \\
+					& 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                         & 0,01\,€  & 0,03\,€  & 200er-Pack für 1,70\,€ \\
+					& 16   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                         & 0,02\,€  & 0,34\,€  & 50er-Pack für 1,05\,€  \\
+					& 16   & Muttern M3                                & Reichelt   & SK-E M3-100                                                          & 0,02\,€  & 0,35\,€  & 100er-Pack für 2,20\,€ \\
+					& 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                          & 0,14\,€  & 0,28\,€  &                        \\
+					& 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                        & 0,15\,€  & 0,15\,€  & Benötigt werden 13     \\
+					& 1    & Buchsenleiste mit 6 Plätzen               & Reichelt   & MPE 094-1-006                                                        & 0,25\,€  & 0,25\,€  &                        \\
+					& 1    & Buchsenleiste mit 7 Plätzen               & Reichelt   & MPE 094-1-007                                                        & 0,31\,€  & 0,31\,€  &                        \\
+					& 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                              & 0,59\,€  & 0,59\,€  & 5er-Pack für 2,95\,€   \\
 					\\ [8pt]
 					\hline
 					\multicolumn{8}{c}{Kabel}                                                                                                                                                                                                     \\
-					                                        & 1    & Flachbandkabel für LED+Schlüsselsch.      & Reichelt   & AWG 28-10F 3M                                                        & 1,65\,€  & 1,65\,€  &                        \\
-					                                        & 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                              & 6,25\,€  & 6,25\,€  &                        \\
-					                                        & 1    & Schrumpf\-schläu\-che 1,6mm               & Reichelt   & SDH 1,6 SW                                                           & 0,25\,€  & 0,25\,€  &                        \\
-					                                        & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           & 0,26\,€  & 0,26\,€  &                        \\ \hline
+					& 1    & Flachbandkabel für LED+Schlüsselsch.      & Reichelt   & AWG 28-10F 3M                                                        & 1,65\,€  & 1,65\,€  &                        \\
+					& 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                              & 6,25\,€  & 6,25\,€  &                        \\
+					& 1    & Schrumpf\-schläu\-che 1,6mm               & Reichelt   & SDH 1,6 SW                                                           & 0,25\,€  & 0,25\,€  &                        \\
+					& 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           & 0,26\,€  & 0,26\,€  &                        \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (1. Generation)}
 					\label{tab:zuendbox1bom}
 				\end{longtabu}
@@ -1219,7 +1238,8 @@
 			\newpage
 
 			{\footnotesize
-				\begin{longtabu}{p{1.2cm}cXllSSp{2.35cm}}
+				\begin{longtabu}
+					{p{1.2cm}cX[l]llSSp{2.35cm}}
 					\multicolumn{8}{c}{\textbf{Materialliste Zündbox v2}}                                                                                                                                                                    \\
 					\\
 					Bauteil                            & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           & {Einzel} & {Ges.}   & Bemerkung              \\
@@ -1274,35 +1294,35 @@
 					RN1, RN2                           & 2    & Network, 9Pin, 10k                        & Reichelt   & SIL 9-8 10K                                                          & 0,11\,€  & 0,22\,€  &                        \\ [8pt]
 					\hline
 					\multicolumn{8}{c}{HF-Komponenten}                                                                                                                                                                                       \\
-					                                   & 1    & SMA-Kabel Funkmodul-Gehäuse               & eBay       & \href{http://www.ebay.com/itm/291548738413}{291548738413}            & 2,04\,€  & 2,04\,€  &                        \\
-					                                   & 1    & SMA-Kabel Gehäuse-Antenne                 & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}            & 3,07\,€  & 3,07\,€  &                        \\
-					                                   & 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}             & 4,24\,€  & 4,24\,€  &                        \\
-					                                   & 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}            & 1,17\,€  & 1,17\,€  &                        \\ [8pt]
+					& 1    & SMA-Kabel Funkmodul-Gehäuse               & eBay       & \href{http://www.ebay.com/itm/291548738413}{291548738413}            & 2,04\,€  & 2,04\,€  &                        \\
+					& 1    & SMA-Kabel Gehäuse-Antenne                 & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}            & 3,07\,€  & 3,07\,€  &                        \\
+					& 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}             & 4,24\,€  & 4,24\,€  &                        \\
+					& 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}            & 1,17\,€  & 1,17\,€  &                        \\ [8pt]
 					\hline
 					\multicolumn{8}{c}{Mechanische Bauteile}                                                                                                                                                                                 \\
 					X1                                 & 1    & Sub-D-Buchse, 9-pol                       & Reichelt   & D-SUB BU 09US                                                        & 0,23\,€  & 0,23\,€  &                        \\
 					SV2                                & 1    & Wannenstecker, 10-pol                     & Reichelt   & WSL 10G                                                              & 0,08\,€  & 0,08\,€  &                        \\
-					                                   & 1    & Wippschalter                              & Pollin     & 420 697                                                              & 0,35\,€  & 0,35\,€  &                        \\
-					                                   & 1    & Miniatur-Schlüsselschalter                & Pollin     & 420 664                                                              & 0,75\,€  & 0,75\,€  &                        \\
-					                                   & 1    & Kunststoffgehäuse 021-002-084             & Pollin     & 460 001                                                              & 7,95\,€  & 7,95\,€  &                        \\
-					                                   & 8    & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                               & 0,29\,€  & 2,32\,€  &                        \\
-					                                   & 1    & Koffer                                    & Amazon     & Bilora 545                                                           & 19,89\,€ & 19,89\,€ &                        \\
-					                                   & 1    & Akku                                      & Reichelt   & WP 1,2-12                                                            & 7,80\,€  & 7,80\,€  &                        \\
-					                                   & 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                         & 0,01\,€  & 0,03\,€  & 200er-Pack für 1,70\,€ \\
-					                                   & 16   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                         & 0,02\,€  & 0,34\,€  & 50er-Pack für 1,05\,€  \\
-					                                   & 16   & Muttern M3                                & Reichelt   & SK-E M3-100                                                          & 0,02\,€  & 0,35\,€  & 100er-Pack für 2,20\,€ \\
-					                                   & 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                          & 0,14\,€  & 0,28\,€  &                        \\
-					                                   & 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                        & 0,15\,€  & 0,15\,€  & Benötigt werden 17     \\
-					                                   & 1    & Buchsenleiste mit 6 Plätzen               & Reichelt   & MPE 094-1-006                                                        & 0,25\,€  & 0,25\,€  &                        \\
-					                                   & 1    & Buchsenleiste mit 7 Plätzen               & Reichelt   & MPE 094-1-007                                                        & 0,31\,€  & 0,31\,€  &                        \\
-					                                   & 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                              & 0,59\,€  & 0,59\,€  & 5er-Pack für 2,95\,€   \\
+					& 1    & Wippschalter                              & Pollin     & 420 697                                                              & 0,35\,€  & 0,35\,€  &                        \\
+					& 1    & Miniatur-Schlüsselschalter                & Pollin     & 420 664                                                              & 0,75\,€  & 0,75\,€  &                        \\
+					& 1    & Kunststoffgehäuse 021-002-084             & Pollin     & 460 001                                                              & 7,95\,€  & 7,95\,€  &                        \\
+					& 8    & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                               & 0,29\,€  & 2,32\,€  &                        \\
+					& 1    & Koffer                                    & Amazon     & Bilora 545                                                           & 19,89\,€ & 19,89\,€ &                        \\
+					& 1    & Akku                                      & Reichelt   & WP 1,2-12                                                            & 7,80\,€  & 7,80\,€  &                        \\
+					& 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                         & 0,01\,€  & 0,03\,€  & 200er-Pack für 1,70\,€ \\
+					& 16   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                         & 0,02\,€  & 0,34\,€  & 50er-Pack für 1,05\,€  \\
+					& 16   & Muttern M3                                & Reichelt   & SK-E M3-100                                                          & 0,02\,€  & 0,35\,€  & 100er-Pack für 2,20\,€ \\
+					& 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                          & 0,14\,€  & 0,28\,€  &                        \\
+					& 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                        & 0,15\,€  & 0,15\,€  & Benötigt werden 17     \\
+					& 1    & Buchsenleiste mit 6 Plätzen               & Reichelt   & MPE 094-1-006                                                        & 0,25\,€  & 0,25\,€  &                        \\
+					& 1    & Buchsenleiste mit 7 Plätzen               & Reichelt   & MPE 094-1-007                                                        & 0,31\,€  & 0,31\,€  &                        \\
+					& 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                              & 0,59\,€  & 0,59\,€  & 5er-Pack für 2,95\,€   \\
 					\\ [8pt]
 					\hline
 					\multicolumn{8}{c}{Kabel}                                                                                                                                                                                                \\ \nopagebreak
-					                                   & 1    & Flachbandkabel für LED+Schlüsselsch.      & Reichelt   & AWG 28-10F 3M                                                        & 1,65\,€  & 1,65\,€  &                        \\
-					                                   & 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                              & 6,25\,€  & 6,25\,€  &                        \\
-					                                   & 1    & Schrumpf\-schläu\-che 1,6mm               & Reichelt   & SDH 1,6 SW                                                           & 0,25\,€  & 0,25\,€  &                        \\
-					                                   & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           & 0,26\,€  & 0,26\,€  &                        \\ \hline
+					& 1    & Flachbandkabel für LED+Schlüsselsch.      & Reichelt   & AWG 28-10F 3M                                                        & 1,65\,€  & 1,65\,€  &                        \\
+					& 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                              & 6,25\,€  & 6,25\,€  &                        \\
+					& 1    & Schrumpf\-schläu\-che 1,6mm               & Reichelt   & SDH 1,6 SW                                                           & 0,25\,€  & 0,25\,€  &                        \\
+					& 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           & 0,26\,€  & 0,26\,€  &                        \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (2. Generation)}
 					\label{tab:zuendbox2bom}
 				\end{longtabu}
@@ -1364,7 +1384,8 @@
 
 					\begin{table}
 						\centering
-						\begin{tabularx}{\textwidth}{cccccX}
+						\begin{tabu}
+							to \textwidth {cccccX}
 							\hline\hline
 							Device (T/Z) & Art       & Adern & Länge  & Anzahl & Verwendungszweck              \\
 							Z            & Litze     & ~--   & 210 mm & 4      & Rote Klemmen (spaltenweise)   \\
@@ -1377,7 +1398,7 @@
 							T            & Litze     & ~--   & 100 mm & 2      & LCD-Hintergrundbeleuchtung    \\
 							T            & Flachband & 2     & 100 mm & 4      & Status-LEDs                   \\
 							T            & Flachband & 10    & 100 mm & 1      & LCD                           \\ \hline\hline
-						\end{tabularx}
+						\end{tabu}
 						\caption{Übersicht über benötigte Kabelverbindungen}
 						\label{tab:kabel}
 					\end{table}
@@ -1665,13 +1686,14 @@
 
 				\begin{table}[h]
 					\centering
-					\begin{tabularx}{.9\textwidth}{llX}
+					\begin{tabu}
+						to .9\textwidth {llX}
 						\hline\hline
 						\textbf{Fuse} & \textbf{Wert}     & \textbf{Bedeutung}                                                                                                                                                                             \\ \hline
 						Low Fuse      & 0xF7              & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle                                                                                                                     \\
 						High Fuse     & 0xD6              & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
 						Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{\volt}$                                                                                                                                      \\ \hline\hline
-					\end{tabularx}
+					\end{tabu}
 					\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
 					\label{tab:fuses}
 				\end{table}
@@ -1772,10 +1794,11 @@
 				Die Umrechnung zwischen den Einheiten Watt (linear) und dBm (logarithmisch) erfolgt nach folgenden Formeln:
 
 				\begin{center}
-					\begin{tabularx}{.6\textwidth}{c@{ $\rightarrow$ }c@{ :\hspace*{1cm}}c@{ = }X}
+					\begin{tabu}
+						to .6\textwidth {c@{ $\rightarrow$ }c@{ :\hspace*{1cm}}c@{ = }X}
 						$\si{\dBm}$  & $\si{W}$    & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                      \\[12pt]
 						$\si{\watt}$ & $\si{\dBm}$ & $P_\text{dBm}$ & $10 {\cdot} \log_{10}\left( \frac{1000 {\cdot} P_\text{W}}{\SI{1}{\watt}} \right)$ \\
-					\end{tabularx}
+					\end{tabu}
 				\end{center}
 
 				Anhand der Formeln wird klar, dass die maximale Sendeleistung des \texttt{RFM69CW} 1250-mal höher als die Minimalleistung liegt: $\SI{-18}{\dBm}$ entsprechen $\SI{16}{\micro\watt}$, $\SI{13}{\dBm}$ hingegen $\SI{20}{\milli\watt}$.
