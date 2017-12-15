@@ -34,6 +34,7 @@
 
 \newcommand{\pic}{\emph{Pyro Ignition Control}}
 \newcommand{\anlage}{\emph{El Fueradoro}}
+\newcommand{\REF}{\emph{raspEasyFire}}
 
 
 %% Seitenstil-Einstellung
@@ -107,7 +108,7 @@
 
 			\anlage{} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich als Kofferwort aus den spanischen Wörtern \emph{fuego}, \emph{radio} und \emph{oro} her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
 
-			Es besteht aus einer mit dem PC verbundenen Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen.
+			Es besteht aus einer mit dem PC verbundenen Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen. Als Standalone-Lösung ohne PC/Laptop wurde zudem der Transmitter {\REF} zur Steuerung und Musikwiedergabe auf Basis eines Raspberry Pi entwickelt, welcher die in {\pic} entworfenen Showfiles umsetzt.
 
 			\begin{figure}
 				\centering
@@ -609,7 +610,7 @@
 			Die Spannungsversorgung kann man entweder über den Micro-USB-Anschluss am Raspberry Pi oder über U\textsubscript{Force} an der linken Stiftleiste herstellen. Wird einer dieser beiden Anschlüsse mit einer Spannungsquelle verbunden, muss der jeweils andere offen bleiben!
 
 		\chapter{Show}
-
+			In diesem Kapitel gibt es einige Hinweise zur Planung und Umsetzung eines choreographierten Feuerwerks.
 			\section{Vorbereitung}
 
 				\subsection{Beidseitiges Zünden}
@@ -630,7 +631,7 @@
 
 				\subsection{Zündkreisauslegung}
 
-					An dieser Stelle soll kurz auf die Grenzen und Limits von {\anlage} eingegangen werden, die bei der Planung einer Show zu berücksichtigen sind. Die Charakteristika und Kennwerte der einzelnen Anzündertypen sind Anlage 2 der 1.\,SprengV zu entnehmen.
+					An dieser Stelle soll kurz auf die Grenzen und Limits von {\anlage} hinsichtlich der Zündkreise eingegangen werden, die bei der Planung einer Show zu berücksichtigen sind. Die Charakteristika und Kennwerte der einzelnen Anzündertypen sind Anlage 2 der 1.\,SprengV zu entnehmen.
 
 					{\anlage} ist für die Verwendung mit den Anzündertypen A (Auslösestrom $\SI{0,6}{\ampere}$) und U (Auslösestrom $\SI{1,3}{\ampere}$) ausgelegt. Der nötige Strom zum Auslösen eines HU-Anzünders (Auslösestrom $\SI{25}{\ampere}$) kann nicht geliefert werden. Es ist zu berücksichtigen, dass in der Anlage ein Strombegrenzungswiderstand von $\SI{2,2}{\ohm}$ verbaut ist, der in Reihe zum angeschlossenen Anzünder-Netzwerk liegt. Mittels Formel~\eqref{eq:zuendkreisrmax} kann der maximal zulässige Widerstand (inklusive der $\SI{2,2}{\ohm}$) für einen gegebenen mittleren Strom $I$ ermittelt werden.
 
@@ -702,7 +703,7 @@
 
 					Eine Beispielrechnung macht dies klar: Würde man beispielsweise je fünf Anzünder jeder Kategorie zu einer Reihenschaltung von 10 Anzündern zusammenschalten, ergäbe sich $R_\text{ges} = \SI{17,2}{\ohm}$ und damit nach Formel \eqref{eq:zuendkreisi} ein Strom $I = \SI{1,27}{\ampere}$, was bereits unterhalb des spezifizierten Auslösestroms eines U-Anzünders ($\SI{1,3}{\ampere}$) liegt.
 
-					Hinzu kommt bei gleichen Anzündern die Problematik, dass selbst bei einem rechnerisch ausreichend hohen Strom, dieser wahrscheinlich nicht über die notwendige Zeitspanne bei den U-Anzündern ankäme. Dies liegt am unterschiedlichen Zündimpuls (Einheit \si{\milli\watt\second\per\ohm}), hinter dem sich der bei Schmelzsicherungen als Schmelzintegral bekannte \enquote{I-Quadrat-t-Wert}, also das Produkt aus dem Quadrat des Stroms und der Zeit, verbirgt\footnote{$\si{\watt} = \si{\volt\ampere}$ und $\si{\ohm} = \si{\volt\per\ampere}$ $\Rightarrow$ $\si{\watt\per\ohm} = \si{\square\ampere}$}. Fließt derselbe Strom durch die Reihenschaltung eines Anzünders vom Typ A und einen Anzünder vom Typ U, löst der A-Anzünder aufgrund des geringeren notwendigen Zündimpulses zuerst aus. Durch das Auslösen wird in aller Regel der Stromkreis unmittelbar unterbrochen, so dass kein Strom mehr durch den U-Anzünder fließen kann, weshalb die ihn ihm umgesetzte Energie nicht zum Auslösen ausreicht.
+					Hinzu kommt die Problematik, dass selbst bei einem rechnerisch ausreichend hohen Strom dieser in einer \enquote{Mischschaltung} wahrscheinlich nicht über die notwendige Zeitspanne bei den U-Anzündern ankäme. Dies liegt am unterschiedlichen Zündimpuls (Einheit \si{\milli\watt\second\per\ohm}), hinter dem sich der bei Schmelzsicherungen als Schmelzintegral bekannte \enquote{I-Quadrat-t-Wert}, also das Produkt aus dem Quadrat des Stroms und der Zeit, verbirgt\footnote{$\si{\watt} = \si{\volt\ampere}$ und $\si{\ohm} = \si{\volt\per\ampere}$ $\Rightarrow$ $\si{\watt\per\ohm} = \si{\square\ampere}$}. Fließt ein Strom $I = \SI{1,3}{\ampere}$ durch die Reihenschaltung eines Anzünders vom Typ A und eines Anzünders vom Typ U, löst der A-Anzünder aufgrund des geringeren notwendigen Zündimpulses zuerst aus. Durch das Auslösen wird in aller Regel der Stromkreis unmittelbar unterbrochen, so dass kein Strom mehr durch den U-Anzünder fließen kann, weshalb die ihn ihm umgesetzte Energie möglicherweise nicht zum Auslösen ausreicht.
 
 					Die Krux bei einer Parallelschaltung, welche gegenüber der Reihenschaltung ohnehin die schlechtere Alternative darstellt, verschiedener Anzündertypen liegt darin, dass ein Auslösen des Anzünders nicht zwingend gleichbedeutend mit einer Unterbrechung des Stromkreises ist. Bei einer Parallelschaltung unterschiedlicher Widerstände wird zunächst der Ast mit dem geringsten Widerstand auslösen, allerdings kann nicht garantiert werden, dass dieser anschließend auch wirklich einen elektrischen Leerlauf darstellt. Sehr häufig ist auch nach dem Ansprechen noch eine elektrisch leitende Verbindung zwischen den Anzünderdrähten messbar, so dass ein Auslösen der weiteren Äste~-- gerade im Fall stark unterschiedlicher Widerstände~-- nicht gesichert ist.
 
@@ -1825,10 +1826,11 @@
 					      \item[*] \underline{\href{https://vimeo.com/116115628}{Silvesterfeuerwerk 2014/15}}
 					      \item[*] \underline{\href{https://vimeo.com/150594996}{Silvesterfeuerwerk 2015/16}}
 					      \item[*] \underline{\href{https://vimeo.com/198168273}{Silvesterfeuerwerk 2016/17}}
-					      \item[*] \underline{\href{https://www.youtube.com/watch?v=uPTW1dpsVoU}{Hochzeitsfeuerwerk 2017}}
+					      \item[*] \underline{\href{https://www.youtube.com/watch?v=uPTW1dpsVoU}{Hochzeitsfeuerwerk April 2017}}
+					      \item[*] \underline{\href{https://www.youtube.com/watch?v=q-nfOxinUgU}{Hochzeitsfeuerwerk August 2017}}
 				      \end{itemize}
 				\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
-				\item Jens Nachtigal, dem Hauptprogrammierer und Anstoßgeber zur Entwicklung des Raspberry-Pi-Transmitters.
+				\item Jens Nachtigal, den Hauptprogrammierer und Anstoßgeber zur Entwicklung des Raspberry-Pi-Transmitters.
 				\item Die \enquote{Nachbau-Pioniere} Matthias Pee und Cedrik Sikora für Ideen und wertvolle Hinweise.
 				\item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung.
 				\item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Erklärungen zum Thema elektrische Zündung und natürlich die Zündsoftware {\pic} von User \emph{pyrobla}.
