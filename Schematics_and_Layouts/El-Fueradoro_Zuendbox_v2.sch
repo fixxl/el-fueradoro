@@ -15577,24 +15577,23 @@ Distrib. RS Component</description>
 <package name="KH214R-8">
 <description>&lt;b&gt;POWER RESISTOR&lt;/b&gt;&lt;p&gt;
 9W, grid 5,08 mm</description>
-<wire x1="-6.35" y1="-4.445" x2="1.27" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="1.27" y1="4.445" x2="-6.35" y2="4.445" width="0.1524" layer="21"/>
-<wire x1="-6.985" y1="3.81" x2="-6.985" y2="-3.81" width="0.1524" layer="21"/>
-<wire x1="1.905" y1="-3.81" x2="1.905" y2="-0.889" width="0.1524" layer="21"/>
-<wire x1="3.175" y1="0" x2="1.524" y2="0" width="0.8128" layer="51"/>
-<wire x1="1.27" y1="0" x2="-0.635" y2="0" width="0.8128" layer="21"/>
-<wire x1="1.905" y1="0.889" x2="1.905" y2="3.81" width="0.1524" layer="21"/>
-<wire x1="-1.016" y1="0" x2="-2.54" y2="0" width="0.8128" layer="51"/>
-<wire x1="1.905" y1="-0.889" x2="1.905" y2="0.889" width="0.1524" layer="51"/>
-<wire x1="1.27" y1="-4.445" x2="1.905" y2="-3.81" width="0.1524" layer="21" curve="90"/>
-<wire x1="1.27" y1="4.445" x2="1.905" y2="3.81" width="0.1524" layer="21" curve="-90"/>
-<wire x1="-6.985" y1="3.81" x2="-6.35" y2="4.445" width="0.1524" layer="21" curve="-90"/>
-<wire x1="-6.985" y1="-3.81" x2="-6.35" y2="-4.445" width="0.1524" layer="21" curve="90"/>
-<pad name="1" x="-2.54" y="0" drill="1.016" diameter="2.54" shape="octagon"/>
-<pad name="2" x="3.175" y="0" drill="1.016" diameter="2.54" shape="octagon"/>
-<text x="-6.985" y="4.826" size="1.778" layer="25" ratio="10">&gt;NAME</text>
-<text x="-6.35" y="2.032" size="1.778" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-6.477" y="-3.937" size="1.778" layer="21" ratio="10">9W</text>
+<wire x1="-3.81" y1="-4.445" x2="3.81" y2="-4.445" width="0.1524" layer="21"/>
+<wire x1="3.81" y1="4.445" x2="-3.81" y2="4.445" width="0.1524" layer="21"/>
+<wire x1="-4.445" y1="3.81" x2="-4.445" y2="-3.81" width="0.1524" layer="21"/>
+<wire x1="4.445" y1="-3.81" x2="4.445" y2="-0.889" width="0.1524" layer="21"/>
+<wire x1="3.5" y1="0" x2="1.905" y2="0" width="0.8128" layer="21"/>
+<wire x1="4.445" y1="0.889" x2="4.445" y2="3.81" width="0.1524" layer="21"/>
+<wire x1="1.524" y1="0" x2="0" y2="0" width="0.8128" layer="51"/>
+<wire x1="4.445" y1="-0.889" x2="4.445" y2="0.889" width="0.1524" layer="51"/>
+<wire x1="3.81" y1="-4.445" x2="4.445" y2="-3.81" width="0.1524" layer="21" curve="90"/>
+<wire x1="3.81" y1="4.445" x2="4.445" y2="3.81" width="0.1524" layer="21" curve="-90"/>
+<wire x1="-4.445" y1="3.81" x2="-3.81" y2="4.445" width="0.1524" layer="21" curve="-90"/>
+<wire x1="-4.445" y1="-3.81" x2="-3.81" y2="-4.445" width="0.1524" layer="21" curve="90"/>
+<pad name="1" x="0" y="0" drill="1.016" diameter="2.54" shape="octagon"/>
+<pad name="2" x="3.5" y="0" drill="1.016" diameter="2.54" shape="octagon"/>
+<text x="-4.445" y="4.826" size="1.778" layer="25" ratio="10">&gt;NAME</text>
+<text x="-3.81" y="2.032" size="1.778" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-3.937" y="-3.937" size="1.778" layer="21" ratio="10">9W</text>
 </package>
 <package name="KH216-8">
 <description>&lt;b&gt;POWER RESISTOR&lt;/b&gt;&lt;p&gt;
@@ -18820,9 +18819,9 @@ Source: http://www.st.com/stonline/products/literature/ds/7194/ld1117axx.pdf</de
 <part name="R1" library="rcl" deviceset="R-EU_" device="0207/10" value="10k"/>
 <part name="P+3" library="supply1" deviceset="+3V3" device=""/>
 <part name="P+7" library="supply1" deviceset="+3V3" device=""/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="0207/10" value="2k2"/>
-<part name="R5" library="rcl" deviceset="R-EU_" device="0207/10" value="2k2"/>
-<part name="R6" library="rcl" deviceset="R-EU_" device="0207/10" value="2k2"/>
+<part name="R4" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
+<part name="R5" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
+<part name="R6" library="rcl" deviceset="R-EU_" device="0207/10" value="1k"/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="P+4" library="supply1" deviceset="+3V3" device=""/>
@@ -19005,7 +19004,7 @@ Source: http://www.st.com/stonline/products/literature/ds/7194/ld1117axx.pdf</de
 <part name="GND77" library="supply1" deviceset="GND" device=""/>
 <part name="GND78" library="supply1" deviceset="GND" device=""/>
 <part name="+3V1" library="supply1" deviceset="+3V3" device=""/>
-<part name="D3" library="diode" deviceset="1N4004" device=""/>
+<part name="D3" library="diode" deviceset="1N4004" device="" value="1N4002"/>
 <part name="U$2" library="fp" deviceset="DS18B20" device=""/>
 <part name="R38" library="rcl" deviceset="R-EU_" device="0207/10" value="3k3"/>
 <part name="P+19" library="supply1" deviceset="+3V3" device=""/>

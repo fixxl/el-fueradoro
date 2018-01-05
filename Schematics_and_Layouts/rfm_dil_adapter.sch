@@ -67,6 +67,7 @@
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="116" name="centerDrill" color="7" fill="1" visible="no" active="yes"/>
 </layers>
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
 <libraries>
@@ -111,7 +112,7 @@
 <smd name="GND1" x="2" y="8" dx="1.5" dy="3" layer="1"/>
 <smd name="VDD" x="4" y="8" dx="1.5" dy="3" layer="1"/>
 <smd name="ANT" x="6" y="8" dx="1.5" dy="3" layer="1"/>
-<text x="3" y="-2" size="1.27" layer="21" rot="R180">RFM12</text>
+<text x="4.27" y="-2" size="1.27" layer="21" rot="R180">RFM69CW</text>
 <text x="-5.5" y="-6.23" size="0.6096" layer="21" rot="R90">SDO</text>
 <text x="-4" y="-6.23" size="0.6096" layer="21" rot="R90">nIRQ</text>
 <text x="-1.5" y="-6.23" size="0.6096" layer="21" rot="R90">FSK</text>
@@ -126,6 +127,40 @@
 <text x="2.5" y="4.865" size="0.6096" layer="21" rot="R90">GND</text>
 <text x="4.5" y="4.865" size="0.6096" layer="21" rot="R90">Vdd</text>
 <text x="6.5" y="4.865" size="0.6096" layer="21" rot="R90">ANT</text>
+</package>
+<package name="RFM12_AD">
+<pad name="SDO" x="2.54" y="20.32" drill="1" diameter="1.85"/>
+<pad name="NIRQ" x="2.54" y="17.78" drill="1" diameter="1.85"/>
+<pad name="FSK" x="2.54" y="15.24" drill="1" diameter="1.85"/>
+<pad name="DCLK" x="2.54" y="12.7" drill="1" diameter="1.85"/>
+<pad name="CLK" x="2.54" y="10.16" drill="1" diameter="1.85"/>
+<pad name="NRES" x="2.54" y="7.62" drill="1" diameter="1.85"/>
+<pad name="GND" x="2.54" y="5.08" drill="1" diameter="1.85"/>
+<pad name="ANT" x="27.94" y="5.08" drill="1" diameter="1.85"/>
+<pad name="VDD" x="27.94" y="7.62" drill="1" diameter="1.85"/>
+<pad name="GND1" x="27.94" y="10.16" drill="1" diameter="1.85"/>
+<pad name="NINT" x="27.94" y="12.7" drill="1" diameter="1.85"/>
+<pad name="SDI" x="27.94" y="15.24" drill="1" diameter="1.85"/>
+<pad name="SCK" x="27.94" y="17.78" drill="1" diameter="1.85"/>
+<pad name="NSEL" x="27.94" y="20.32" drill="1" diameter="1.85"/>
+<wire x1="0" y1="22.86" x2="0" y2="2.54" width="0.127" layer="21"/>
+<text x="5.08" y="20.32" size="1.27" layer="25">RFM12</text>
+<wire x1="5.08" y1="17.78" x2="10.16" y2="17.78" width="0.127" layer="21" curve="-151.927513"/>
+<wire x1="10.16" y1="7.62" x2="5.08" y2="7.62" width="0.127" layer="21" curve="-151.927513"/>
+<wire x1="5.08" y1="17.78" x2="5.08" y2="7.62" width="0.127" layer="21"/>
+<wire x1="10.16" y1="17.78" x2="10.16" y2="7.62" width="0.127" layer="21"/>
+<wire x1="6.35" y1="17.78" x2="8.89" y2="17.78" width="0.127" layer="21" curve="-180"/>
+<wire x1="8.89" y1="7.62" x2="6.35" y2="7.62" width="0.127" layer="21" curve="-180"/>
+<wire x1="6.35" y1="17.78" x2="6.35" y2="7.62" width="0.127" layer="21"/>
+<wire x1="8.89" y1="7.62" x2="8.89" y2="17.78" width="0.127" layer="21"/>
+<circle x="19.05" y="16.51" radius="3.5921" width="0.127" layer="21"/>
+<wire x1="0" y1="22.86" x2="0" y2="0" width="0.127" layer="21"/>
+<wire x1="0" y1="0" x2="31.75" y2="0" width="0.127" layer="21"/>
+<wire x1="31.75" y1="0" x2="31.75" y2="22.86" width="0.127" layer="21"/>
+<wire x1="31.75" y1="22.86" x2="0" y2="22.86" width="0.127" layer="21"/>
+<rectangle x1="21.59" y1="1.27" x2="24.13" y2="3.81" layer="21"/>
+<rectangle x1="17.365" y1="1.27" x2="19.905" y2="3.81" layer="21"/>
+<rectangle x1="25.865" y1="1.27" x2="28.405" y2="3.81" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -158,7 +193,28 @@
 <gate name="G$1" symbol="RFM12" x="-2.54" y="-5.08"/>
 </gates>
 <devices>
-<device name="" package="RFM12_Z">
+<device name="SMD" package="RFM12_Z">
+<connects>
+<connect gate="G$1" pin="ANT" pad="ANT"/>
+<connect gate="G$1" pin="CLK" pad="CLK"/>
+<connect gate="G$1" pin="DCLK/CFIL/FFIT" pad="DCLK"/>
+<connect gate="G$1" pin="FSK/DATA/NFFS" pad="FSK"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="GND1" pad="GND1"/>
+<connect gate="G$1" pin="NINT" pad="NINT"/>
+<connect gate="G$1" pin="NIRQ" pad="NIRQ"/>
+<connect gate="G$1" pin="NRES" pad="NRES"/>
+<connect gate="G$1" pin="NSEL/" pad="NSEL"/>
+<connect gate="G$1" pin="SCK" pad="SCK"/>
+<connect gate="G$1" pin="SDI" pad="SDI"/>
+<connect gate="G$1" pin="SDO" pad="SDO"/>
+<connect gate="G$1" pin="VDD" pad="VDD"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="THT" package="RFM12_AD">
 <connects>
 <connect gate="G$1" pin="ANT" pad="ANT"/>
 <connect gate="G$1" pin="CLK" pad="CLK"/>
@@ -187,22 +243,26 @@
 <description>&lt;b&gt;Solder Pads/Test Points&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
-<package name="SE13">
+<package name="LSP10">
 <description>&lt;b&gt;SOLDER PAD&lt;/b&gt;&lt;p&gt;
-drill 1.3 mm</description>
-<wire x1="-1.397" y1="0.508" x2="-1.397" y2="-0.508" width="0.1524" layer="21"/>
-<wire x1="0.508" y1="-1.397" x2="1.397" y2="-0.508" width="0.1524" layer="21"/>
-<wire x1="0.508" y1="1.397" x2="1.397" y2="0.508" width="0.1524" layer="21"/>
-<wire x1="1.397" y1="0.508" x2="1.397" y2="-0.508" width="0.1524" layer="21"/>
-<wire x1="-1.397" y1="0.508" x2="-0.508" y2="1.397" width="0.1524" layer="21"/>
-<wire x1="-0.508" y1="1.397" x2="0.508" y2="1.397" width="0.1524" layer="21"/>
-<wire x1="-0.508" y1="-1.397" x2="-1.397" y2="-0.508" width="0.1524" layer="21"/>
-<wire x1="0.508" y1="-1.397" x2="-0.508" y2="-1.397" width="0.1524" layer="21"/>
-<circle x="0" y="0" radius="0.762" width="0.1524" layer="51"/>
-<circle x="0" y="0" radius="0.381" width="0.254" layer="51"/>
-<pad name="MP" x="0" y="0" drill="1.3208" diameter="2.159" shape="octagon"/>
-<text x="-1.27" y="1.651" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="0" y="0.381" size="0.0254" layer="27">&gt;VALUE</text>
+drill 1.0 mm</description>
+<wire x1="-1.27" y1="0.254" x2="-1.27" y2="-0.254" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="0.254" x2="1.27" y2="-0.254" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="0.254" x2="1.143" y2="0.254" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="-0.254" x2="1.143" y2="-0.254" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="-0.254" x2="-1.143" y2="-0.254" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="0.254" x2="-1.143" y2="0.254" width="0.1524" layer="21"/>
+<wire x1="1.143" y1="0.254" x2="0.635" y2="0.254" width="0.1524" layer="51"/>
+<wire x1="-1.143" y1="-0.254" x2="-0.635" y2="-0.254" width="0.1524" layer="51"/>
+<wire x1="0.635" y1="0.254" x2="0.635" y2="-0.254" width="0.1524" layer="51"/>
+<wire x1="0.635" y1="0.254" x2="-0.635" y2="0.254" width="0.1524" layer="51"/>
+<wire x1="0.635" y1="-0.254" x2="1.143" y2="-0.254" width="0.1524" layer="51"/>
+<wire x1="-0.635" y1="0.254" x2="-0.635" y2="-0.254" width="0.1524" layer="51"/>
+<wire x1="-0.635" y1="0.254" x2="-1.143" y2="0.254" width="0.1524" layer="51"/>
+<wire x1="-0.635" y1="-0.254" x2="0.635" y2="-0.254" width="0.1524" layer="51"/>
+<pad name="MP" x="0" y="0" drill="1.016" diameter="2.159" shape="octagon"/>
+<text x="-1.27" y="1.27" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="0" y="0.254" size="0.0254" layer="27">&gt;VALUE</text>
 </package>
 </packages>
 <symbols>
@@ -215,13 +275,13 @@ drill 1.3 mm</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="SE13" prefix="LSP">
-<description>&lt;b&gt;SOLDER PAD&lt;/b&gt;&lt;p&gt; E1542,  drill 1,3mm, distributor Buerklin, 07F815</description>
+<deviceset name="LSP10" prefix="LSP">
+<description>&lt;b&gt;SOLDER PAD&lt;/b&gt;&lt;p&gt; drill 1.0 mm, distributor Buerklin, 12H555</description>
 <gates>
 <gate name="1" symbol="LSP" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="SE13">
+<device name="" package="LSP10">
 <connects>
 <connect gate="1" pin="MP" pad="MP"/>
 </connects>
@@ -984,20 +1044,20 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 </class>
 </classes>
 <parts>
-<part name="U$1" library="fp" deviceset="RFM12_Z" device=""/>
-<part name="IO5" library="solpad" deviceset="SE13" device=""/>
-<part name="IO1" library="solpad" deviceset="SE13" device=""/>
-<part name="IO2" library="solpad" deviceset="SE13" device=""/>
-<part name="MOSI" library="solpad" deviceset="SE13" device=""/>
-<part name="MISO" library="solpad" deviceset="SE13" device=""/>
-<part name="SCK" library="solpad" deviceset="SE13" device=""/>
-<part name="NSS" library="solpad" deviceset="SE13" device=""/>
-<part name="GND" library="solpad" deviceset="SE13" device=""/>
-<part name="AGND" library="solpad" deviceset="SE13" device=""/>
-<part name="RES" library="solpad" deviceset="SE13" device=""/>
-<part name="IO0" library="solpad" deviceset="SE13" device=""/>
-<part name="IO3" library="solpad" deviceset="SE13" device=""/>
-<part name="VDD" library="solpad" deviceset="SE13" device=""/>
+<part name="U$1" library="fp" deviceset="RFM12_Z" device="SMD"/>
+<part name="IO5" library="solpad" deviceset="LSP10" device=""/>
+<part name="IO1" library="solpad" deviceset="LSP10" device=""/>
+<part name="IO2" library="solpad" deviceset="LSP10" device=""/>
+<part name="MOSI" library="solpad" deviceset="LSP10" device=""/>
+<part name="MISO" library="solpad" deviceset="LSP10" device=""/>
+<part name="SCK" library="solpad" deviceset="LSP10" device=""/>
+<part name="NSS" library="solpad" deviceset="LSP10" device=""/>
+<part name="GND" library="solpad" deviceset="LSP10" device=""/>
+<part name="AGND" library="solpad" deviceset="LSP10" device=""/>
+<part name="RES" library="solpad" deviceset="LSP10" device=""/>
+<part name="IO0" library="solpad" deviceset="LSP10" device=""/>
+<part name="IO3" library="solpad" deviceset="LSP10" device=""/>
+<part name="VDD" library="solpad" deviceset="LSP10" device=""/>
 <part name="ANT+" library="testpad" deviceset="PTR1" device="TP20SQ"/>
 <part name="ANT_GND" library="testpad" deviceset="PTR1" device="TP20SQ"/>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
@@ -1005,6 +1065,10 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="ANT_GND2" library="testpad" deviceset="PTR1" device="TP20SQ">
 <attribute name="TP_SIGNAL_NAME" value=""/>
 </part>
+<part name="ANT_GND1" library="testpad" deviceset="PTR1" device="TP20SQ"/>
+<part name="ANT_GND3" library="testpad" deviceset="PTR1" device="TP20SQ"/>
+<part name="GND1" library="supply1" deviceset="GND" device=""/>
+<part name="GND4" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1030,6 +1094,10 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <instance part="GND2" gate="1" x="68.58" y="22.86"/>
 <instance part="GND3" gate="1" x="73.66" y="22.86"/>
 <instance part="ANT_GND2" gate="G$1" x="76.2" y="33.02" rot="R90"/>
+<instance part="ANT_GND1" gate="G$1" x="48.26" y="30.48" rot="R270"/>
+<instance part="ANT_GND3" gate="G$1" x="43.18" y="25.4" rot="R90"/>
+<instance part="GND1" gate="1" x="40.64" y="22.86"/>
+<instance part="GND4" gate="1" x="50.8" y="27.94"/>
 </instances>
 <busses>
 </busses>
@@ -1129,6 +1197,14 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <wire x1="73.66" y1="27.94" x2="73.66" y2="33.02" width="0.1524" layer="91"/>
 <junction x="73.66" y="33.02"/>
 <pinref part="ANT_GND2" gate="G$1" pin="TP"/>
+</segment>
+<segment>
+<pinref part="ANT_GND3" gate="G$1" pin="TP"/>
+<pinref part="GND1" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="ANT_GND1" gate="G$1" pin="TP"/>
+<pinref part="GND4" gate="1" pin="GND"/>
 </segment>
 </net>
 </nets>

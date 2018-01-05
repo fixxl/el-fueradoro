@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="2.54" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="12.5" altunitdist="mil" altunit="mil"/>
+<grid distance="2.54" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="0.0125" altunitdist="mm" altunit="mm"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -795,24 +795,23 @@ grid 2.54 mm</description>
 <package name="KH214R-8">
 <description>&lt;b&gt;POWER RESISTOR&lt;/b&gt;&lt;p&gt;
 9W, grid 5,08 mm</description>
-<wire x1="-6.35" y1="-4.445" x2="1.27" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="1.27" y1="4.445" x2="-6.35" y2="4.445" width="0.1524" layer="21"/>
-<wire x1="-6.985" y1="3.81" x2="-6.985" y2="-3.81" width="0.1524" layer="21"/>
-<wire x1="1.905" y1="-3.81" x2="1.905" y2="-0.889" width="0.1524" layer="21"/>
-<wire x1="3.175" y1="0" x2="1.524" y2="0" width="0.8128" layer="51"/>
-<wire x1="1.27" y1="0" x2="-0.635" y2="0" width="0.8128" layer="21"/>
-<wire x1="1.905" y1="0.889" x2="1.905" y2="3.81" width="0.1524" layer="21"/>
-<wire x1="-1.016" y1="0" x2="-2.54" y2="0" width="0.8128" layer="51"/>
-<wire x1="1.905" y1="-0.889" x2="1.905" y2="0.889" width="0.1524" layer="51"/>
-<wire x1="1.27" y1="-4.445" x2="1.905" y2="-3.81" width="0.1524" layer="21" curve="90"/>
-<wire x1="1.27" y1="4.445" x2="1.905" y2="3.81" width="0.1524" layer="21" curve="-90"/>
-<wire x1="-6.985" y1="3.81" x2="-6.35" y2="4.445" width="0.1524" layer="21" curve="-90"/>
-<wire x1="-6.985" y1="-3.81" x2="-6.35" y2="-4.445" width="0.1524" layer="21" curve="90"/>
-<pad name="1" x="-2.54" y="0" drill="1.016" diameter="2.54" shape="octagon"/>
-<pad name="2" x="3.175" y="0" drill="1.016" diameter="2.54" shape="octagon"/>
-<text x="-6.985" y="4.826" size="1.778" layer="25" ratio="10">&gt;NAME</text>
-<text x="-6.35" y="2.032" size="1.778" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-6.477" y="-3.937" size="1.778" layer="21" ratio="10">9W</text>
+<wire x1="-3.81" y1="-4.445" x2="3.81" y2="-4.445" width="0.1524" layer="21"/>
+<wire x1="3.81" y1="4.445" x2="-3.81" y2="4.445" width="0.1524" layer="21"/>
+<wire x1="-4.445" y1="3.81" x2="-4.445" y2="-3.81" width="0.1524" layer="21"/>
+<wire x1="4.445" y1="-3.81" x2="4.445" y2="-0.889" width="0.1524" layer="21"/>
+<wire x1="3.5" y1="0" x2="1.905" y2="0" width="0.8128" layer="21"/>
+<wire x1="4.445" y1="0.889" x2="4.445" y2="3.81" width="0.1524" layer="21"/>
+<wire x1="1.524" y1="0" x2="0" y2="0" width="0.8128" layer="51"/>
+<wire x1="4.445" y1="-0.889" x2="4.445" y2="0.889" width="0.1524" layer="51"/>
+<wire x1="3.81" y1="-4.445" x2="4.445" y2="-3.81" width="0.1524" layer="21" curve="90"/>
+<wire x1="3.81" y1="4.445" x2="4.445" y2="3.81" width="0.1524" layer="21" curve="-90"/>
+<wire x1="-4.445" y1="3.81" x2="-3.81" y2="4.445" width="0.1524" layer="21" curve="-90"/>
+<wire x1="-4.445" y1="-3.81" x2="-3.81" y2="-4.445" width="0.1524" layer="21" curve="90"/>
+<pad name="1" x="0" y="0" drill="1.016" diameter="2.54" shape="octagon"/>
+<pad name="2" x="3.5" y="0" drill="1.016" diameter="2.54" shape="octagon"/>
+<text x="-4.445" y="4.826" size="1.778" layer="25" ratio="10">&gt;NAME</text>
+<text x="-3.81" y="2.032" size="1.778" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-3.937" y="-3.937" size="1.778" layer="21" ratio="10">9W</text>
 </package>
 </packages>
 </library>
@@ -949,34 +948,43 @@ grid 2.54 mm</description>
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
-<designrules name="Bilex DRU *">
+<designrules name="Elecrow_2-layer_PCB_eagle_rule">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
+&lt;p&gt;
+Die Standard-Design-Rules sind so gewählt, dass sie für 
+die meisten Anwendungen passen. Sollte ihre Platine 
+besondere Anforderungen haben, treffen Sie die erforderlichen
+Einstellungen hier und speichern die Design Rules unter 
+einem neuen Namen ab.</description>
+<description language="en">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
 The default Design Rules have been set to cover
 a wide range of applications. Your particular design
 may have different requirements, so please make the
 necessary adjustments and save your customized
 design rules under a new name.</description>
+<description language="zh">&lt;b&gt;Elecrow PCB EAGLE Design Rules&lt;/b&gt;
+</description>
 <param name="layerSetup" value="(1*16)"/>
 <param name="mtCopper" value="0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm"/>
-<param name="mtIsolate" value="1.5mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm"/>
-<param name="mdWireWire" value="10mil"/>
-<param name="mdWirePad" value="10mil"/>
-<param name="mdWireVia" value="10mil"/>
-<param name="mdPadPad" value="10mil"/>
-<param name="mdPadVia" value="10mil"/>
-<param name="mdViaVia" value="10mil"/>
-<param name="mdSmdPad" value="10mil"/>
-<param name="mdSmdVia" value="10mil"/>
-<param name="mdSmdSmd" value="10mil"/>
+<param name="mtIsolate" value="1.6mm 1.2mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm"/>
+<param name="mdWireWire" value="6mil"/>
+<param name="mdWirePad" value="6mil"/>
+<param name="mdWireVia" value="6mil"/>
+<param name="mdPadPad" value="6mil"/>
+<param name="mdPadVia" value="6mil"/>
+<param name="mdViaVia" value="8mil"/>
+<param name="mdSmdPad" value="0mil"/>
+<param name="mdSmdVia" value="0mil"/>
+<param name="mdSmdSmd" value="0mil"/>
 <param name="mdViaViaSameLayer" value="8mil"/>
 <param name="mnLayersViaInSmd" value="2"/>
-<param name="mdCopperDimension" value="40mil"/>
-<param name="mdDrill" value="8mil"/>
+<param name="mdCopperDimension" value="20mil"/>
+<param name="mdDrill" value="10mil"/>
 <param name="mdSmdStop" value="0mil"/>
-<param name="msWidth" value="10mil"/>
+<param name="msWidth" value="6mil"/>
 <param name="msDrill" value="12mil"/>
-<param name="msMicroVia" value="9.99mm"/>
+<param name="msMicroVia" value="12mil"/>
 <param name="msBlindViaRatio" value="0.5"/>
 <param name="rvPadTop" value="0.25"/>
 <param name="rvPadInner" value="0.25"/>
@@ -985,15 +993,15 @@ design rules under a new name.</description>
 <param name="rvViaInner" value="0.25"/>
 <param name="rvMicroViaOuter" value="0.25"/>
 <param name="rvMicroViaInner" value="0.25"/>
-<param name="rlMinPadTop" value="10mil"/>
+<param name="rlMinPadTop" value="6mil"/>
 <param name="rlMaxPadTop" value="20mil"/>
-<param name="rlMinPadInner" value="10mil"/>
+<param name="rlMinPadInner" value="6mil"/>
 <param name="rlMaxPadInner" value="20mil"/>
-<param name="rlMinPadBottom" value="10mil"/>
+<param name="rlMinPadBottom" value="6mil"/>
 <param name="rlMaxPadBottom" value="20mil"/>
-<param name="rlMinViaOuter" value="8mil"/>
+<param name="rlMinViaOuter" value="6mil"/>
 <param name="rlMaxViaOuter" value="20mil"/>
-<param name="rlMinViaInner" value="8mil"/>
+<param name="rlMinViaInner" value="6mil"/>
 <param name="rlMaxViaInner" value="20mil"/>
 <param name="rlMinMicroViaOuter" value="4mil"/>
 <param name="rlMaxMicroViaOuter" value="20mil"/>
@@ -1001,16 +1009,16 @@ design rules under a new name.</description>
 <param name="rlMaxMicroViaInner" value="20mil"/>
 <param name="psTop" value="-1"/>
 <param name="psBottom" value="-1"/>
-<param name="psFirst" value="-1"/>
+<param name="psFirst" value="0"/>
 <param name="psElongationLong" value="100"/>
 <param name="psElongationOffset" value="100"/>
 <param name="mvStopFrame" value="1"/>
 <param name="mvCreamFrame" value="0"/>
-<param name="mlMinStopFrame" value="4mil"/>
-<param name="mlMaxStopFrame" value="4mil"/>
+<param name="mlMinStopFrame" value="0mil"/>
+<param name="mlMaxStopFrame" value="0mil"/>
 <param name="mlMinCreamFrame" value="0mil"/>
 <param name="mlMaxCreamFrame" value="0mil"/>
-<param name="mlViaStopLimit" value="0mil"/>
+<param name="mlViaStopLimit" value="100mil"/>
 <param name="srRoundness" value="0"/>
 <param name="srMinRoundness" value="0mil"/>
 <param name="srMaxRoundness" value="0mil"/>
@@ -1021,7 +1029,7 @@ design rules under a new name.</description>
 <param name="checkGrid" value="0"/>
 <param name="checkAngle" value="0"/>
 <param name="checkFont" value="1"/>
-<param name="checkRestrict" value="1"/>
+<param name="checkRestrict" value="0"/>
 <param name="useDiameter" value="13"/>
 <param name="maxErrors" value="50"/>
 </designrules>
@@ -1167,15 +1175,15 @@ design rules under a new name.</description>
 <attribute name="NAME" x="42.418" y="56.261" size="0.8" layer="25" font="vector" ratio="20" rot="R180"/>
 <attribute name="VALUE" x="45.4406" y="56.1975" size="0.8" layer="27" font="vector" ratio="20" rot="R180"/>
 </element>
-<element name="R4" library="rcl" package="0207/10" value="2k2" x="78.74" y="22.86" smashed="yes">
+<element name="R4" library="rcl" package="0207/10" value="1k" x="78.74" y="22.86" smashed="yes">
 <attribute name="NAME" x="76.962" y="22.479" size="0.8" layer="25" font="vector" ratio="20"/>
 <attribute name="VALUE" x="79.0194" y="22.5425" size="0.8" layer="27" font="vector" ratio="20"/>
 </element>
-<element name="R5" library="rcl" package="0207/10" value="2k2" x="78.74" y="20.32" smashed="yes">
+<element name="R5" library="rcl" package="0207/10" value="1k" x="78.74" y="20.32" smashed="yes">
 <attribute name="NAME" x="76.962" y="19.939" size="0.8" layer="25" font="vector" ratio="20"/>
 <attribute name="VALUE" x="79.0194" y="20.0025" size="0.8" layer="27" font="vector" ratio="20"/>
 </element>
-<element name="R6" library="rcl" package="0207/10" value="2k2" x="78.74" y="17.78" smashed="yes">
+<element name="R6" library="rcl" package="0207/10" value="1k" x="78.74" y="17.78" smashed="yes">
 <attribute name="NAME" x="76.962" y="17.399" size="0.8" layer="25" font="vector" ratio="20"/>
 <attribute name="VALUE" x="79.0194" y="17.4625" size="0.8" layer="27" font="vector" ratio="20"/>
 </element>
@@ -1593,13 +1601,13 @@ design rules under a new name.</description>
 <attribute name="NAME" x="110.1725" y="71.4375" size="0.8" layer="25" font="vector" ratio="20" rot="R180"/>
 <attribute name="VALUE" x="110.49" y="62.23" size="1.27" layer="27" ratio="10" rot="R270"/>
 </element>
-<element name="R_Z" library="resistor-power" package="KH214R-8" value="2R2" x="129.54" y="84.1375" smashed="yes" rot="R90">
-<attribute name="OC_NEWARK" value="unknown" x="129.54" y="84.1375" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MPN" value="" x="129.54" y="84.1375" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MF" value="" x="129.54" y="84.1375" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="OC_FARNELL" value="unknown" x="129.54" y="84.1375" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="NAME" x="133.35" y="85.6615" size="0.8" layer="25" font="vector" ratio="20" rot="R180"/>
-<attribute name="VALUE" x="133.35" y="84.328" size="0.8" layer="27" font="vector" ratio="20" rot="R180"/>
+<element name="R_Z" library="resistor-power" package="KH214R-8" value="2R2" x="129.54" y="83.82" smashed="yes" rot="R90">
+<attribute name="OC_NEWARK" value="unknown" x="129.54" y="83.82" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="MPN" value="" x="129.54" y="83.82" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="MF" value="" x="129.54" y="83.82" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="129.54" y="83.82" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="NAME" x="133.35" y="85.344" size="0.8" layer="25" font="vector" ratio="20" rot="R180"/>
+<attribute name="VALUE" x="133.35" y="84.0105" size="0.8" layer="27" font="vector" ratio="20" rot="R180"/>
 </element>
 <element name="C25" library="rcl" package="C025-024X044" value="100n" x="34.29" y="74.93" smashed="yes" rot="R90">
 <attribute name="NAME" x="32.893" y="77.6605" size="0.8" layer="25" font="vector" ratio="20" rot="R180"/>
@@ -1613,9 +1621,9 @@ design rules under a new name.</description>
 <attribute name="NAME" x="36.195" y="73.66" size="0.8" layer="25" font="vector" ratio="20"/>
 <attribute name="VALUE" x="41.656" y="69.4055" size="0.8" layer="27" font="vector" ratio="20" rot="R90"/>
 </element>
-<element name="D3" library="diode" package="DO41-10" value="1N4004" x="45.72" y="74.93" smashed="yes" rot="R90">
+<element name="D3" library="diode" package="DO41-10" value="1N4002" x="45.72" y="74.93" smashed="yes" rot="R90">
 <attribute name="NAME" x="45.212" y="78.0415" size="0.8" layer="25" font="vector" ratio="20" rot="R180"/>
-<attribute name="VALUE" x="50.6095" y="78.0415" size="0.8" layer="27" font="vector" ratio="20" rot="R180"/>
+<attribute name="VALUE" x="43.2435" y="77.2795" size="0.8" layer="27" font="vector" ratio="20" rot="R270"/>
 </element>
 <element name="U$2" library="fp" package="TO92-LINE" value="DS18B20" x="80.01" y="10.16" smashed="yes" rot="R90">
 <attribute name="NAME" x="76.962" y="7.62" size="0.8" layer="25" font="vector" ratio="20" rot="R90"/>
@@ -1651,13 +1659,13 @@ design rules under a new name.</description>
 <attribute name="NAME" x="106.68" y="73.6473" size="0.8" layer="25" font="vector" ratio="20"/>
 <attribute name="VALUE" x="104.14" y="72.39" size="0.8" layer="27" font="vector" ratio="20"/>
 </element>
-<element name="R_Z1" library="resistor-power" package="KH214R-8" value="150R" x="116.5225" y="84.1375" smashed="yes" rot="R90">
-<attribute name="OC_NEWARK" value="unknown" x="116.5225" y="84.1375" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MPN" value="" x="116.5225" y="84.1375" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MF" value="" x="116.5225" y="84.1375" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="OC_FARNELL" value="unknown" x="116.5225" y="84.1375" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="NAME" x="113.284" y="77.7875" size="0.8" layer="25" font="vector" ratio="20" rot="R90"/>
-<attribute name="VALUE" x="114.4905" y="77.7875" size="0.8" layer="27" font="vector" ratio="20" rot="R90"/>
+<element name="R_Z1" library="resistor-power" package="KH214R-8" value="150R" x="116.5225" y="83.82" smashed="yes" rot="R90">
+<attribute name="OC_NEWARK" value="unknown" x="116.5225" y="83.82" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="MPN" value="" x="116.5225" y="83.82" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="MF" value="" x="116.5225" y="83.82" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="116.5225" y="83.82" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="NAME" x="113.284" y="77.47" size="0.8" layer="25" font="vector" ratio="20" rot="R90"/>
+<attribute name="VALUE" x="114.4905" y="77.47" size="0.8" layer="27" font="vector" ratio="20" rot="R90"/>
 </element>
 <element name="R17" library="rcl" package="0207/10" value="dnp" x="81.28" y="50.8" smashed="yes">
 <attribute name="NAME" x="78.5495" y="50.419" size="0.8" layer="25" font="vector" ratio="20"/>
@@ -1860,7 +1868,6 @@ design rules under a new name.</description>
 <via x="31.75" y="50.8" extent="1-16" drill="0.4" shape="square"/>
 <via x="55.88" y="50.8" extent="1-16" drill="0.4" shape="square"/>
 <via x="125.095" y="86.0425" extent="1-16" drill="0.4" shape="square"/>
-<via x="119.38" y="83.82" extent="1-16" drill="0.4" shape="square"/>
 <via x="45.72" y="21.59" extent="1-16" drill="0.4" shape="square"/>
 <via x="45.72" y="24.13" extent="1-16" drill="0.4" shape="square"/>
 <via x="45.72" y="19.05" extent="1-16" drill="0.4" shape="square"/>
@@ -1895,8 +1902,7 @@ design rules under a new name.</description>
 <via x="121.92" y="25.0825" extent="1-16" drill="0.4" shape="square"/>
 <via x="121.92" y="32.7025" extent="1-16" drill="0.4" shape="square"/>
 <via x="121.92" y="40.3225" extent="1-16" drill="0.4" shape="square"/>
-<via x="121.92" y="47.9425" extent="1-16" drill="0.4" shape="square"/>
-<via x="121.92" y="47.9425" extent="1-16" drill="0.4" shape="square"/>
+<via x="121.92" y="47.8675" extent="1-16" drill="0.4" shape="square"/>
 <via x="121.92" y="55.5625" extent="1-16" drill="0.4" shape="square"/>
 <via x="121.92" y="63.1825" extent="1-16" drill="0.4" shape="square"/>
 <via x="119.38" y="70.8025" extent="1-16" drill="0.4" shape="square"/>
@@ -2617,22 +2623,21 @@ design rules under a new name.</description>
 <wire x1="96.52" y1="81.28" x2="101.6" y2="86.36" width="1.016" layer="16"/>
 <contactref element="Q19" pad="S"/>
 <contactref element="R_Z1" pad="2"/>
-<wire x1="101.6" y1="86.36" x2="102.5525" y2="87.3125" width="1.4224" layer="16"/>
-<wire x1="102.5525" y1="87.3125" x2="116.5225" y2="87.3125" width="1.4224" layer="16"/>
-<wire x1="116.5225" y1="87.3125" x2="122.8725" y2="87.3125" width="1.4224" layer="16"/>
-<wire x1="122.8725" y1="87.3125" x2="123.19" y2="87.63" width="1.27" layer="16"/>
-<wire x1="123.19" y1="87.63" x2="126.365" y2="90.805" width="1.4224" layer="16"/>
-<wire x1="126.365" y1="90.805" x2="132.3975" y2="90.805" width="1.4224" layer="16"/>
 <wire x1="132.3975" y1="90.805" x2="136.8425" y2="86.36" width="1.4224" layer="16"/>
 <wire x1="136.8425" y1="86.36" x2="144.78" y2="86.36" width="1.4224" layer="16"/>
 <wire x1="116.84" y1="73.66" x2="116.84" y2="76.2" width="1.4224" layer="16"/>
 <wire x1="116.84" y1="76.2" x2="121.92" y2="81.28" width="1.4224" layer="16"/>
-<wire x1="121.92" y1="81.28" x2="121.92" y2="86.36" width="1.4224" layer="16"/>
-<wire x1="121.92" y1="86.36" x2="122.8725" y2="87.3125" width="1.27" layer="16"/>
+<wire x1="121.92" y1="81.28" x2="121.92" y2="87.3125" width="1.4224" layer="16"/>
 <contactref element="T1" pad="3"/>
 <wire x1="73.66" y1="86.36" x2="83.82" y2="86.36" width="1.27" layer="16"/>
 <wire x1="83.82" y1="86.36" x2="88.9" y2="81.28" width="1.27" layer="16"/>
 <wire x1="83.82" y1="82.55" x2="83.82" y2="86.36" width="1.016" layer="16"/>
+<wire x1="132.3975" y1="90.805" x2="125.4125" y2="90.805" width="1.4224" layer="16"/>
+<wire x1="125.4125" y1="90.805" x2="121.92" y2="87.3125" width="1.4224" layer="16"/>
+<wire x1="101.6" y1="86.36" x2="102.56" y2="87.32" width="1.4224" layer="16"/>
+<wire x1="102.56" y1="87.32" x2="116.5225" y2="87.32" width="1.4224" layer="16"/>
+<wire x1="116.5225" y1="87.32" x2="121.92" y2="87.32" width="1.4224" layer="16"/>
+<wire x1="121.92" y1="87.32" x2="121.92" y2="87.3125" width="1.4224" layer="16"/>
 </signal>
 <signal name="N$1">
 <contactref element="PWR_SW1" pad="MP"/>
@@ -2859,18 +2864,17 @@ design rules under a new name.</description>
 <wire x1="125.73" y1="73.66" x2="128.27" y2="73.66" width="1.4224" layer="16"/>
 <wire x1="128.27" y1="73.66" x2="129.54" y2="73.66" width="1.4224" layer="16"/>
 <wire x1="129.54" y1="73.66" x2="130.81" y2="73.66" width="1.4224" layer="16"/>
-<wire x1="129.54" y1="81.5975" x2="129.54" y2="73.66" width="1.4224" layer="16"/>
+<wire x1="129.54" y1="83.82" x2="129.54" y2="73.66" width="1.4224" layer="16"/>
 </signal>
 <signal name="N$8">
 <contactref element="Q19" pad="D"/>
 <contactref element="R_Z" pad="2"/>
 <contactref element="R_Z1" pad="1"/>
-<wire x1="116.5225" y1="81.5975" x2="116.84" y2="81.28" width="1.27" layer="16"/>
-<wire x1="116.84" y1="81.28" x2="123.5075" y2="81.28" width="1.27" layer="1"/>
-<wire x1="123.5075" y1="81.28" x2="129.54" y2="87.3125" width="1.27" layer="1"/>
+<wire x1="126.0475" y1="83.82" x2="129.54" y2="87.32" width="1.27" layer="1"/>
 <wire x1="114.3" y1="73.66" x2="114.3" y2="79.375" width="1.4224" layer="1"/>
-<wire x1="114.3" y1="79.375" x2="116.5225" y2="81.5975" width="1.4224" layer="1"/>
-<via x="116.84" y="81.28" extent="1-16" drill="0.4" shape="square"/>
+<wire x1="126.0475" y1="83.82" x2="116.5225" y2="83.82" width="1.27" layer="1"/>
+<wire x1="116.5225" y1="83.82" x2="116.5225" y2="81.5975" width="1.27" layer="1"/>
+<wire x1="116.5225" y1="81.5975" x2="114.3" y2="79.375" width="1.27" layer="1"/>
 </signal>
 <signal name="N$4">
 <contactref element="Q18" pad="1"/>
