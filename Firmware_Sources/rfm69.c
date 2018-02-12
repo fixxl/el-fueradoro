@@ -278,7 +278,7 @@
 			rfm_cmd(0x1E2D, 1);                        // AFC auto on and clear
 			rfm_cmd(0x2A00, 1);                        // No Timeout after Rx-Start if no RSSI-Interrupt occurs
 
-			timeoutval = MAX_ARRAYSIZE + rfm_cmd(0x2DFF, 0) + 4;
+			timeoutval = MAX_ARRAYSIZE + rfm_cmd(0x2DFF, 0) + (((rfm_cmd(0x2EFF, 0) & 0x38) >> 3) + 1) + 4; // Max. Arraysize + Preamble length + Sync Word length + CRC + Length + 1 Byte Spare
 
 			rfm_cmd(0x2B00 | (timeoutval >> 1), 1);    // Timeout after RSSI-Interrupt if no Payload-Ready-Interrupt occurs
 			rfm_cmd(0x1180 | (P_OUT & 0x1F), 1);       // Set Output Power
