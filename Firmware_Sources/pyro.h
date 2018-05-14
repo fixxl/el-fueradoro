@@ -9,8 +9,8 @@
 #define PYRO_H_
 
 // Key switch location
-#define KEY_PORT                 C
-#define KEY_NUM                  4
+#define KEYPORT                 C
+#define KEYNUM                  4
 
 //
 #define MOSSWITCH_PORT           D
@@ -79,13 +79,14 @@ typedef union {
 
 #define TRANSMITTER                 (!ig_or_notrans)
 
-#define KEYDDR                      DDR(KEY_PORT)
-#define KEYPIN                      PIN(KEY_PORT)
-#define KEYPORT                     PORT(KEY_PORT)
-#define KEY                         KEY_NUM
-#if (KEY_PORT == C)
+#define KEY_DDR                      DDR(KEYPORT)
+#define KEY_PIN                      PIN(KEYPORT)
+#define KEY_PORT                     PORT(KEYPORT)
+#define KEY_NUMERIC					NUMPORT(KEYPORT)
+#define KEY                         KEYNUM
+#if (KEY_NUMERIC == 2)
  #define KEYINT                     PCINT1_vect
-#elif (KEY_PORT == B)
+#elif (KEY_NUMERIC == 1)
  #define KEYINT                     PCINT0_vect
 #else
  #define KEYINT                     PCINT2_vect

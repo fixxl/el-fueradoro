@@ -40,6 +40,11 @@ void sr_init(void) {
 
 	// Now outputs are all low and can be activated!
 	OE_PORT &= ~(1 << OE);
+
+	#if HARDWARE_SPI_SR
+		// Activate and configure hardware SPI at F_CPU/16
+		SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
+	#endif
 }
 
 void sr_enable(void) {

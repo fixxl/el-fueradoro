@@ -39,6 +39,9 @@ void uart_init(uint32_t baud) {
 	/* Set frame format: 8data, 1stop bit */
 	UCSR0C = (1 << UCSZ01 | 1 << UCSZ00);
 
+    // Enable pullup on RX-line to avoid floating
+    RXD_PORT |= (1 << RXD);
+    
 	SREG = sreg;
 }
 

@@ -1,6 +1,6 @@
 /*
  * shiftregister.h
- * Einstellungen und Funktionen für die Schieberegister
+ * Einstellungen und Funktionen fï¿½r die Schieberegister
  */
 
 #ifndef SHIFTREGISTER_H_
@@ -35,18 +35,25 @@ void sr_shiftout(uint16_t scheme);
 #define SER_IN_PORT      PORT(SER_IN_P)
 #define SER_IN_PIN       PIN(SER_IN_P)
 #define SER_IN_DDR       DDR(SER_IN_P)
+#define SER_IN_NUMERIC	 NUMPORT(SER_IN_P)
 #define SER_IN           SER_IN_NUM
+
 #define OE_PORT          PORT(OE_P)
 #define OE_PIN           PIN(OE_P)
 #define OE_DDR           DDR(OE_P)
+#define OE_NUMERIC		 NUMPORT(OE_P)
 #define OE               OE_NUM
+
 #define RCLOCK_PORT      PORT(RCLOCK_P)
 #define RCLOCK_PIN       PIN(RCLOCK_P)
 #define RCLOCK_DDR       DDR(RCLOCK_P)
+#define RCLOCK_NUMERIC	 NUMPORT(RCLOCK_P)
 #define RCLOCK           RCLOCK_NUM
+
 #define SCLOCK_PORT      PORT(SCLOCK_P)
 #define SCLOCK_PIN       PIN(SCLOCK_P)
 #define SCLOCK_DDR       DDR(SCLOCK_P)
+#define SCLOCK_NUMERIC	 NUMPORT(SCLOCK_P)
 #define SCLOCK           SCLOCK_NUM
 
 #ifdef SPDR
@@ -56,6 +63,6 @@ void sr_shiftout(uint16_t scheme);
 #endif
 
 #define HARDWARE_SPI_SR                                                                 \
-	(SR_USE_HARDWARE_SPI && HASHARDSPISR && (SER_IN_P == SCLOCK_P) && (SCLOCK_P == B) && \
+	(SR_USE_HARDWARE_SPI && HASHARDSPISR && (SER_IN_NUMERIC == SCLOCK_NUMERIC) && (SCLOCK_NUMERIC == 1) && \
 	 (SER_IN == 3) && (SCLOCK == 5))
 #endif

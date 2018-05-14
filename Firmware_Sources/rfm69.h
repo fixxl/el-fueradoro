@@ -40,18 +40,22 @@
 #define NSEL_PORT           PORT(NSELPORT)
 #define NSEL_DDR            DDR(NSELPORT)
 #define NSEL_PIN            PIN(NSELPORT)
+#define NSEL_NUMERIC		NUMPORT(NSELPORT)
 
 #define SDI_PORT            PORT(SDIPORT)
 #define SDI_DDR             DDR(SDIPORT)
 #define SDI_PIN             PIN(SDIPORT)
+#define SDI_NUMERIC			NUMPORT(SDIPORT)
 
 #define SDO_PORT            PORT(SDOPORT)
 #define SDO_DDR             DDR(SDOPORT)
 #define SDO_PIN             PIN(SDOPORT)
+#define SDO_NUMERIC			NUMPORT(SDOPORT)
 
 #define SCK_PORT            PORT(SCKPORT)
 #define SCK_DDR             DDR(SCKPORT)
 #define SCK_PIN             PIN(SCKPORT)
+#define SCK_NUMERIC			NUMPORT(SCKPORT)
 
 #define ACTIVATE_RFM        NSEL_PORT &= ~(1 << NSEL)
 #define DEACTIVATE_RFM      NSEL_PORT |= (1 << NSEL)
@@ -98,9 +102,8 @@
 #endif
 
 
-#define HARDWARE_SPI_69                                                                   \
-	(RFM69_USE_HARDWARE_SPI && HASHARDSPI69 && (NSELPORT == SDOPORT) && (NSELPORT == SDIPORT) && \
-	 (NSELPORT == SCKPORT) && (NSELPORT == B) && (SDI == 3) && (SDO == 4) && (SCK == 5))
+#define HARDWARE_SPI_69  (RFM69_USE_HARDWARE_SPI && HASHARDSPI69 && (NSEL_NUMERIC == SDO_NUMERIC) && (NSEL_NUMERIC == SDI_NUMERIC) && \
+						 (NSEL_NUMERIC == SCK_NUMERIC) && (NSEL_NUMERIC == 1) && (SDI == 3) && (SDO == 4) && (SCK == 5))
 
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr);   // Immediate access to register
 uint8_t rfm_receiving(void);                      // Valid data received?

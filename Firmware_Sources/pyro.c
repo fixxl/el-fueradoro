@@ -21,21 +21,21 @@ void wdt_init(void) {
 
 // Initialise Key-Switch
 void key_init(void) {
-	KEYPORT |= (1 << KEY);
-	KEYDDR  &= ~(1 << KEY);
+	KEY_PORT |= (1 << KEY);
+	KEY_DDR  &= ~(1 << KEY);
 
 	// Activate Pin-Change Interrupt
-	if (KEYPORT == PORTB) {
+	if (KEY_PORT == PORTB) {
 		PCICR  |= (1 << PCIE0);
 		PCMSK0 |= (1 << KEY);
 	}
 
-	if (KEYPORT == PORTD) {
+	if (KEY_PORT == PORTD) {
 		PCICR  |= (1 << PCIE2);
 		PCMSK2 |= (1 << KEY);
 	}
 
-	if (KEYPORT == PORTC) {
+	if (KEY_PORT == PORTC) {
 		PCICR  |= (1 << PCIE1);
 		PCMSK1 |= (1 << KEY);
 	}
@@ -47,21 +47,21 @@ void key_init(void) {
 
 // Un-initialise Key-Switch (needed only if a device configured as ignition device gets configured as transmitter while on)
 void key_deinit(void) {
-	KEYPORT &= ~(1 << KEY);
-	KEYDDR  &= ~(1 << KEY);
+	KEY_PORT &= ~(1 << KEY);
+	KEY_DDR  &= ~(1 << KEY);
 
 	// Deactivate Pin-Change Interrupt
-	if (KEYPORT == PORTB) {
+	if (KEY_PORT == PORTB) {
 		PCICR  &= ~(1 << PCIE0);
 		PCMSK0 &= ~(1 << KEY);
 	}
 
-	if (KEYPORT == PORTD) {
+	if (KEY_PORT == PORTD) {
 		PCICR  &= ~(1 << PCIE2);
 		PCMSK2 &= ~(1 << KEY);
 	}
 
-	if (KEYPORT == PORTC) {
+	if (KEY_PORT == PORTC) {
 		PCICR  &= ~(1 << PCIE1);
 		PCMSK1 &= ~(1 << KEY);
 	}
@@ -433,7 +433,7 @@ int main(void) {
 		TIMSK0 |= (1 << TOIE0);
 	}
 	else {
-		armed = debounce(&KEYPIN, KEY);
+		armed = debounce(&KEY_PIN, KEY);
 
 		if (armed) led_red_on();
 		else led_red_off();
@@ -470,7 +470,7 @@ int main(void) {
 			key_flag = 0;
 
 			// Box armed: armed = 1, Box not armed: armed = 0
-			armed = debounce(&KEYPIN, KEY);
+			armed = debounce(&KEY_PIN, KEY);
 
 			if (armed) led_red_on();
 			else   led_red_off();

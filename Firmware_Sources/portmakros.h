@@ -13,4 +13,8 @@
 #define   DDR(x)          CONCAT(DDR, x)
 #define   PORT(x)         CONCAT(PORT, x)
 #define   PIN(x)          CONCAT(PIN, x)
+#define	  BPORT			  1
+#define	  CPORT			  2
+#define   DPORT			  3
+#define	  NUMPORT(x)	  CONCAT(x, PORT)
 #endif /* PORTMAKROS_H_ */
