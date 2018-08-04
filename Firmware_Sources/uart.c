@@ -109,40 +109,40 @@ uint8_t uart_putc(uint8_t c) {
 		while (--utimer && !(UCSR0A & (1 << UDRE0))) ;
 
 		switch (c) {
-			 case 'ä': {
+			 /*case 'ï¿½': {
 				  c = 228;
 				  break;
 			  }
 
-			 case 'Ä': {
+			 case 'ï¿½': {
 				  c = 196;
 				  break;
 			  }
 
-			 case 'ö': {
+			 case 'ï¿½': {
 				  c = 246;
 				  break;
 			  }
 
-			 case 'Ö': {
+			 case 'ï¿½': {
 				  c = 214;
 				  break;
 			  }
 
-			 case 'ü': {
+			 case 'ï¿½': {
 				  c = 252;
 				  break;
 			  }
 
-			 case 'Ü': {
+			 case 'ï¿½': {
 				  c = 220;
 				  break;
 			  }
 
-			 case 'ß': {
+			 case 'ï¿½': {
 				  c = 223;
 				  break;
-			  }
+			  }*/
 
 			 default: {
 				  break;
@@ -263,7 +263,7 @@ void uart_shownum(int32_t zahl, uint8_t type) {
 
 // Ensure lower case letters
 uint8_t uart_lower_case(char letter) {
-	if (((letter >= 'A') && (letter <= 'Z')) || (letter == 'Ä') || (letter == 'Ö') || (letter == 'Ü')) letter |= 0x20;
-
+	// if (((letter >= 'A') && (letter <= 'Z')) || (letter == 'ï¿½') || (letter == 'ï¿½') || (letter == 'ï¿½')) letter |= 0x20;
+	if (((letter >= 'A') && (letter <= 'Z')) || (letter == 0xC4) || (letter == 0xD6) || (letter == 0xDC)) letter |= 0x20;
 	return letter;
 }
