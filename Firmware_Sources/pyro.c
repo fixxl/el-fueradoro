@@ -991,6 +991,18 @@ int main(void) {
 					  break;
 				  }
 
+				 case MEASURE: {
+					 loopcount = MEASURE_REPEATS;
+					 tmp	   = MEASURE_LENGTH - 1;
+					 break;
+				 }
+
+				 case IMPEDANCES: {
+					 loopcount = IMPEDANCES_REPEATS;
+					 tmp	   = IMPEDANCES_LENGTH - 1;
+					 break;
+				 }
+
 				 default: {
 					  loopcount = 0;
 					  tmp       = 0;
@@ -1191,6 +1203,24 @@ int main(void) {
 
 						  break;
 					  }
+
+					 case MEASURE: {
+						  // Wait for all repetitions to be over
+						  for (uint8_t i = rx_field[MEASURE_LENGTH - 1] - 1; i;
+						       i--) _delay_us((ADDITIONAL_LENGTH + MEASURE_LENGTH) * BYTE_DURATION_US);
+
+						  // Send empty impedance list because we cannot measure with version 1 and 2
+						  if (!armed && (unique_id == rx_field[1])) {
+							  tx_field[0] = IMPEDANCES;
+							  tx_field[1] = unique_id;
+
+							  for(uint8_t i = 0; i < 16; i++) tx_field[2+i] = 0x00;
+
+							  flags.b.transmit   = 1;
+							  _delay_ms(100);
+						  }
+						  break;
+					 }
 
 					 // Default action (do nothing)
 					 default: {
