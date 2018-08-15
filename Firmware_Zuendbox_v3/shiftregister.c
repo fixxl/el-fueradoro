@@ -32,8 +32,8 @@ void sr_init(void) {
 		}
 
 		// ... and apply shift-register to output register.
-		RCLOCK_PIN = (1 << RCLOCK); // Pin durch Toggling high
-		RCLOCK_PIN = (1 << RCLOCK); // Pin durch Toggling low
+		RCLOCK_PIN = (1 << RCLOCK); // Pin high after toggling
+		RCLOCK_PIN = (1 << RCLOCK); // Pin low after toggling
 	}
 
 	_delay_ms(1);

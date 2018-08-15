@@ -32,8 +32,8 @@ void dm_init(void) {
 		}
 
 		// ... and apply shift-register to output register.
-		LAT_PIN = (1 << LAT); // Pin durch Toggling high
-		LAT_PIN = (1 << LAT); // Pin durch Toggling low
+		LAT_PIN = (1 << LAT); // Pin high after toggling
+		LAT_PIN = (1 << LAT); // Pin low after toggling
 	}
 
 	_delay_ms(1);

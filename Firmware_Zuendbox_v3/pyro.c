@@ -138,6 +138,9 @@ void sr_dm_init(void) {
             // Activate and configure hardware SPI at F_CPU/16
             SPCR    |= (1 << SPE | 1 << MSTR | 1 << SPR0);
         #endif
+    #else
+        sr_init()
+        dm_init()    
     #endif
 }
 
@@ -469,6 +472,7 @@ int main(void) {
 
                     mask        <<= 1;
                 }
+                sr_shiftout(0x0000)
 
                 dm_shiftout(statusleds);
 
@@ -478,6 +482,9 @@ int main(void) {
 
                     for(uint8_t i = 0; i < 16; i++) tx_field[2 + i] = impedances[i];
                 }
+            }
+            else {
+                flags.b.transmit = 0
             }
 
             SREG                   = temp_sreg;
