@@ -453,45 +453,6 @@ int main(void) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        if(flags.b.read_impedance) {
-            temp_sreg              = SREG;
-            cli();
-            flags.b.read_impedance = 0;
-
-            MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
-
-            if(!armed) {
-                uint16_t mask = 0x0001;
-                statusleds = 0;
-                for(uint8_t i = 0; i < 16; i++) {
-                    sr_shiftout(mask);
-                    _delay_ms(5);
-                    impedances[i] = imp_calc(4);
-
-                    if(impedances[i] < 26) statusleds |= mask;
-
-                    mask        <<= 1;
-                }
-                sr_shiftout(0x0000)
-
-                dm_shiftout(statusleds);
-
-                if(flags.b.transmit) {
-                    tx_field[0] = IMPEDANCES;
-                    tx_field[1] = unique_id;
-
-                    for(uint8_t i = 0; i < 16; i++) tx_field[2 + i] = impedances[i];
-                }
-            }
-            else {
-                flags.b.transmit = 0
-            }
-
-            SREG                   = temp_sreg;
-        }
-
-        // -------------------------------------------------------------------------------------------------------
-
         // UART-Routine
         flags.b.uart_active = ((UCSR0A & (1 << RXC0)) && 1);
 
@@ -565,12 +526,18 @@ int main(void) {
                 flags.b.transmit = 0;
             }
 
-            // "list" gives a overview over connected boxes
+            // "list" gives an overview over connected boxes
             if (uart_strings_equal(uart_field, "list")) {
                 flags.b.list     = 1;
                 flags.b.transmit = 0;
             }
 
+            // "imp" measures and lists local impedances
+            if (uart_strings_equal(uart_field, "list")) {
+                flags.b.read_impedance = 1;
+                flags.b.list_impedance = 1;
+            }
+            
             // "cls" clears terminal screen
             if (uart_strings_equal(uart_field, "cls")) terminal_reset();
 
@@ -676,6 +643,66 @@ int main(void) {
 
         // -------------------------------------------------------------------------------------------------------
 
+        if(flags.b.read_impedance) {
+            temp_sreg              = SREG;
+            cli();
+            flags.b.read_impedance = 0;
+
+            MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
+
+            if(!armed) {
+                uint16_t mask = 0x0001;
+                statusleds = 0;
+                for(uint8_t i = 0; i < 16; i++) {
+                    sr_shiftout(mask);
+                    _delay_ms(5);
+                    impedances[i] = imp_calc(4);
+
+                    if(impedances[i] < 26) statusleds |= mask;
+
+                    mask        <<= 1;
+                }
+                sr_shiftout(0x0000)
+
+                dm_shiftout(statusleds);
+
+                if(flags.b.transmit) {
+                    tx_field[0] = IMPEDANCES;
+                    tx_field[1] = unique_id;
+
+                    for(uint8_t i = 0; i < 16; i++) tx_field[2 + i] = impedances[i];
+                }
+            }
+            else {
+                flags.b.transmit = 0
+            }
+
+            SREG                   = temp_sreg;
+        } 
+
+        // -------------------------------------------------------------------------------------------------------
+
+        if(flags.b.list_impedance && !flags.b.read_impedance) {
+            temp_sreg              = SREG;
+            cli();
+            flags.b.list_impedance = 0;
+            
+            uart_puts_P(PSTR("\n\n\rGemessene Kanalwiderstände\n\r"));
+            uart_puts_P(PSTR("==========================\n\rKanal Widerstand\r\n"));
+            for(uint8_t i = 0; i < 16; i++) {
+                if(i < 9) uart_puts_P(PSTR(" "));
+                uart_shownum(i+1, 'd')
+                uart_puts_P(PSTR("    "));
+                uart_shownum(impedances[i], 'd')
+                uart_puts_P(PSTR("\r\n"));
+            }
+            uart_puts_P(PSTR("\r\n\n\n"));
+            
+            SREG                   = temp_sreg;
+        }
+
+        // -------------------------------------------------------------------------------------------------------        
+        
         // Hardware
         if (flags.b.hw) {
             temp_sreg  = SREG;
@@ -691,7 +718,7 @@ int main(void) {
             uart_puts_P(PSTR("\n\n\r"));
 
             SREG       = temp_sreg;
-        }
+        }        
 
         // -------------------------------------------------------------------------------------------------------
 

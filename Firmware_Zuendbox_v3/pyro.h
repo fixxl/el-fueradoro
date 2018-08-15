@@ -72,7 +72,7 @@ typedef union {
         unsigned receive            : 1;
         unsigned list               : 1;
         unsigned read_impedance     : 1;
-        unsigned show_only          : 1;
+        unsigned list_impedance     : 1;
         unsigned reset_device       : 1;
         unsigned clear_list         : 1;
         unsigned hw                 : 1;
