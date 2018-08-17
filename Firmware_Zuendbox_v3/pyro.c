@@ -662,7 +662,7 @@ int main(void) {
 
                     mask        <<= 1;
                 }
-                sr_shiftout(0x0000)
+                sr_shiftout(0x0000);
 
                 dm_shiftout(statusleds);
 
@@ -674,7 +674,7 @@ int main(void) {
                 }
             }
             else {
-                flags.b.transmit = 0
+                flags.b.transmit = 0;
             }
 
             SREG                   = temp_sreg;
@@ -691,9 +691,9 @@ int main(void) {
             uart_puts_P(PSTR("==========================\n\rKanal Widerstand\r\n"));
             for(uint8_t i = 0; i < 16; i++) {
                 if(i < 9) uart_puts_P(PSTR(" "));
-                uart_shownum(i+1, 'd')
+                uart_shownum(i+1, 'd');
                 uart_puts_P(PSTR("    "));
-                uart_shownum(impedances[i], 'd')
+                uart_shownum(impedances[i], 'd');
                 uart_puts_P(PSTR("\r\n"));
             }
             uart_puts_P(PSTR("\r\n\n\n"));
