@@ -655,14 +655,13 @@ int main(void) {
                 statusleds = 0;
                 for(uint8_t i = 0; i < 16; i++) {
                     sr_shiftout(mask);
-                    _delay_ms(5);
+                    _delay_ms(2);
                     impedances[i] = imp_calc(4);
-
+                    sr_shiftout(0x0000);
                     if(impedances[i] < 26) statusleds |= mask;
-
                     mask        <<= 1;
                 }
-                sr_shiftout(0x0000);
+
 
                 dm_shiftout(statusleds);
 
