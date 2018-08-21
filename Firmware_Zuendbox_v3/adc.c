@@ -20,7 +20,7 @@ void adc_init(void) {
     // Comparator off
     ACSR     |= 1 << ACD;
 
-    // VCC as reference, select channel 5
+    // 1.1V as reference, select channel 5
     ADMUX    |= (1 << REFS1 | 1 << REFS0 | 1 << MUX2 | 1 << MUX0);
 
     // ADC-Prescaler = 64 (9.8304MHz / 64 = 153kHz)
@@ -64,7 +64,7 @@ void adc_init(void) {
     }
 }
 
-static uint16_t adc_read(uint8_t channel) {
+static uint16_t adc_read(const uint8_t channel) {
     uint16_t result = 0;
 
     ADMUX   &= ~(0x07);
@@ -84,7 +84,7 @@ static uint16_t adc_read(uint8_t channel) {
 }
 
 // Calculation of battery voltage
-uint8_t bat_calc(uint8_t channel) {
+uint8_t bat_calc(const uint8_t channel) {
 
 	uint8_t result;
 	uint16_t voltage_raw = adc_read(channel);
@@ -95,15 +95,33 @@ uint8_t bat_calc(uint8_t channel) {
     return result;
 }
 
-uint8_t imp_calc(uint8_t channel) {
+uint8_t imp_calc(const uint8_t channel) {
     uint16_t voltage_raw;
     uint8_t result;
 
-    for(uint8_t i = 0; i < 16; i++) {
-    	voltage_raw = adc_read(channel);
+   	voltage_raw = adc_read(channel);
 
-    	// 25/512 * voltage_raw = R
-    	result = (25 * voltage_raw + 256) >> 9;
+   	// With 1.1V-reference:
+    // 25/512 * voltage_raw = R
+   	result = (25 * voltage_raw + 256) >> 9;
+    
+    // Check
+    if(!result) return 1;
+    else if(result < 49) return result;
+    else {
+        // Reference to VCC
+        ADMUX  &= ~(1 << REFS1);
+        _delay_ms(2);
+        
+        voltage_raw = adc_read(channel);
+        
+        // With 3.3V-reference:
+        // 75/512 * voltage_raw = R
+        result = (75 * voltage_raw + 256) >> 9;
+        
+        // Reference back to 1.1V
+        ADMUX  |=  (1 << REFS1);
+        _delay_ms(2);
     }
     return result;
 }
