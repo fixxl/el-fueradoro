@@ -15,7 +15,7 @@ void adc_deinit(void) {
 
 // Initialisation
 void adc_init(void) {
-    uint16_t nosense;
+    uint16_t nosense __attribute__((used));
 
     // Comparator off
     ACSR     |= 1 << ACD;
@@ -34,34 +34,6 @@ void adc_init(void) {
     while (ADCSRA & (1 << ADSC));
 
     nosense   = ADCW;
-
-    _delay_ms(250);
-
-    // Check if correct reference is selected
-    nosense   = 0;
-
-    for (uint8_t i = 8; i; i--) {
-        ADCSRA  |= 1 << ADSC;
-
-        while (ADCSRA & (1 << ADSC));
-
-        nosense += ADCW;
-    }
-
-    nosense >>= 3;
-
-    // Switch reference if "wrong" reference selection is detected
-    if (nosense < 400) {
-        ADMUX  |= (1 << REFS1);
-
-        _delay_ms(250);
-
-        ADCSRA |= 1 << ADSC;
-
-        while (ADCSRA & (1 << ADSC));
-
-        nosense = ADCW;
-    }
 }
 
 static uint16_t adc_read(const uint8_t channel) {
@@ -70,13 +42,16 @@ static uint16_t adc_read(const uint8_t channel) {
     ADMUX   &= ~(0x07);
     ADMUX   |= channel;
 
-    // 8 measurements (reference-dependent), summing up
-    for (uint8_t i = 8; i; i--) {
+    // 9 measurements, discarding the first, summing up the rest
+    for (uint8_t i = 9; i; i--) {
         ADCSRA |= 1 << ADSC;
 
         while (ADCSRA & (1 << ADSC));
 
         result += ADCW;
+
+        // Discard first measurement
+        if(i == 9) result = 0;
     }
     result >>= 3;
 
@@ -104,21 +79,21 @@ uint8_t imp_calc(const uint8_t channel) {
    	// With 1.1V-reference:
     // 25/512 * voltage_raw = R
    	result = (25 * voltage_raw + 256) >> 9;
-    
+
     // Check
     if(!result) return 1;
     else if(result < 49) return result;
     else {
-        // Reference to VCC
+        // Reference to AVCC
         ADMUX  &= ~(1 << REFS1);
         _delay_ms(2);
-        
+
         voltage_raw = adc_read(channel);
-        
+
         // With 3.3V-reference:
         // 75/512 * voltage_raw = R
         result = (75 * voltage_raw + 256) >> 9;
-        
+
         // Reference back to 1.1V
         ADMUX  |=  (1 << REFS1);
         _delay_ms(2);

@@ -1,6 +1,6 @@
 /*
  *           Firmware
- *         EL FUERADORO
+ *         EL FUERADORO v3
  *
  *         Felix Pflaum
  *
@@ -140,7 +140,7 @@ void sr_dm_init(void) {
         #endif
     #else
         sr_init()
-        dm_init()    
+        dm_init()
     #endif
 }
 
@@ -537,7 +537,7 @@ int main(void) {
                 flags.b.read_impedance = 1;
                 flags.b.list_impedance = 1;
             }
-            
+
             // "cls" clears terminal screen
             if (uart_strings_equal(uart_field, "cls")) terminal_reset();
 
@@ -677,7 +677,7 @@ int main(void) {
             }
 
             SREG                   = temp_sreg;
-        } 
+        }
 
         // -------------------------------------------------------------------------------------------------------
 
@@ -685,7 +685,7 @@ int main(void) {
             temp_sreg              = SREG;
             cli();
             flags.b.list_impedance = 0;
-            
+
             uart_puts_P(PSTR("\n\n\rGemessene Kanalwiderstände\n\r"));
             uart_puts_P(PSTR("==========================\n\rKanal Widerstand\r\n"));
             for(uint8_t i = 0; i < 16; i++) {
@@ -696,12 +696,12 @@ int main(void) {
                 uart_puts_P(PSTR("\r\n"));
             }
             uart_puts_P(PSTR("\r\n\n\n"));
-            
+
             SREG                   = temp_sreg;
         }
 
-        // -------------------------------------------------------------------------------------------------------        
-        
+        // -------------------------------------------------------------------------------------------------------
+
         // Hardware
         if (flags.b.hw) {
             temp_sreg  = SREG;
@@ -717,7 +717,7 @@ int main(void) {
             uart_puts_P(PSTR("\n\n\r"));
 
             SREG       = temp_sreg;
-        }        
+        }
 
         // -------------------------------------------------------------------------------------------------------
 
