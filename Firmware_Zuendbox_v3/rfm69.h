@@ -102,8 +102,8 @@
 #endif
 
 
-#define HARDWARE_SPI_69  (RFM69_USE_HARDWARE_SPI && HASHARDSPI69 && (NSEL_NUMERIC == SDO_NUMERIC) && (NSEL_NUMERIC == SDI_NUMERIC) && \
-						 (NSEL_NUMERIC == SCK_NUMERIC) && (NSEL_NUMERIC == 1) && (SDI == 3) && (SDO == 4) && (SCK == 5))
+#define HARDWARE_SPI_69  (RFM69_USE_HARDWARE_SPI && HASHARDSPI69 && (SDO_NUMERIC == SDI_NUMERIC) && \
+						 (SDO_NUMERIC == SCK_NUMERIC) && (SDO_NUMERIC == 1) && (SDI == 3) && (SDO == 4) && (SCK == 5))
 
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr);   // Immediate access to register
 uint8_t rfm_receiving(void);                      // Valid data received?

@@ -25,17 +25,17 @@ void key_init(void) {
     KEY_DDR       &= ~(1 << KEY);
 
     // Activate Pin-Change Interrupt
-    if (KEY_PORT == PORTB) {
+    if (KEY_NUMERIC == BPORT) {
         PCICR  |= (1 << PCIE0);
         PCMSK0 |= (1 << KEY);
     }
 
-    if (KEY_PORT == PORTD) {
+    if (KEY_NUMERIC == DPORT) {
         PCICR  |= (1 << PCIE2);
         PCMSK2 |= (1 << KEY);
     }
 
-    if (KEY_PORT == PORTC) {
+    if (KEY_NUMERIC == CPORT) {
         PCICR  |= (1 << PCIE1);
         PCMSK1 |= (1 << KEY);
     }
@@ -135,8 +135,10 @@ void sr_dm_init(void) {
         OE_PORT     &= ~(1 << OE);
 
         #if HARDWARE_SPI_SR
+
             // Activate and configure hardware SPI at F_CPU/16
-            SPCR    |= (1 << SPE | 1 << MSTR | 1 << SPR0);
+            if (!(SPCR & (1 << SPE))) SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
+
         #endif
     #else
         sr_init()
@@ -237,37 +239,6 @@ uint8_t fire_command_uart_valid(const char *field) {
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-void device_initialisation(uint8_t ignotrans) {
-    // Initialisation for transmitter
-    sr_init();
-    dm_init();
-    key_init();
-    key_flag = 1;
-    adc_init();
-    leds_off();
-}
-
-// ------------------------------------------------------------------------------------------------------------------------
-
-// Shift LCD-cursor (line 3 and 4)
-void cursor_x_shift(uint8_t *last_zeile, uint8_t *last_spalte, uint8_t *anz_zeile, uint8_t *anz_spalte) {
-    uint8_t lastzeile = *last_zeile, lastspalte = *last_spalte, anzzeile = *anz_zeile,
-            anzspalte = *anz_spalte;
-
-    lastzeile   = anzzeile;
-    lastspalte  = anzspalte;
-    anzspalte  += 7;
-
-    if (anzspalte > 21) {
-        anzzeile++;
-        anzspalte = 1;
-    }
-
-    if (anzzeile > 4) anzzeile = 3;
-
-    *last_zeile = lastzeile, *last_spalte = lastspalte, *anz_zeile = anzzeile, *anz_spalte = anzspalte;
-}
-
 // Main programme
 int main(void) {
     wdt_disable();
@@ -300,6 +271,10 @@ int main(void) {
     int8_t    rssis[MAX_ARRAYSIZE + 1]                = { 0 };
     uint8_t   impedances[16]                          = { 0 };
 
+    // Make PB2 an high output to guarantee flawless
+    // SPI-master-operation
+    PORTB         |= (1 << PB2);
+    DDRB          |= (1 << PB2);
 
     /* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
      * gate pins of the MOSFETs and beware them from conducting directly after turning on the device.
@@ -335,7 +310,7 @@ int main(void) {
     // Initialise LEDs
     led_init();
 
-    // Initialise ADC and find out what kind of device the software runs on
+    // Initialise ADC
     adc_init();
 
     // Get Slave- und Unique-ID from EEPROM for ignition devices
@@ -375,11 +350,11 @@ int main(void) {
     led_orange_off();
 
     // Initialise devices
-    device_initialisation(1);
+    key_init();
+    leds_off();
 
-    // Initialise UART and tell the PC we're ready
+    // Initialise UART
     uart_init(BAUD);
-    allow_uart_sending();
 
     // Detect temperature sensor and measure temperature if possible
     const uint8_t tempsenstype = tempident();
@@ -394,13 +369,10 @@ int main(void) {
         rfm_cmd((0x3E00 + i * (0x0100)) | eeread(START_ADDRESS_AESKEY_STORAGE + i), 1);
     }
 
-    #if (RFM == 69)
-        uint8_t rfm_pwr        = eeread(RFM_PWR_ADDRESS);
 
-        if ((eeread(RFM_PWR_ADDRESS + 1) == crc8(0x11, rfm_pwr)) && (rfm_pwr < 0x20)) rfm_cmd((0x1180 | rfm_pwr), 1);
+    uint8_t rfm_pwr            = eeread(RFM_PWR_ADDRESS);
 
-    #endif
-
+    if ((eeread(RFM_PWR_ADDRESS + 1) == crc8(0x11, rfm_pwr)) && (rfm_pwr < 0x20)) rfm_cmd((0x1180 | rfm_pwr), 1);
 
     armed                  = debounce(&KEY_PIN, KEY);
 
@@ -417,6 +389,7 @@ int main(void) {
 
     flags.b.transmit       = 1;
     flags.b.read_impedance = 1;
+    key_flag               = 1;
 
     // Enable Interrupts
     sei();
@@ -533,7 +506,7 @@ int main(void) {
             }
 
             // "imp" measures and lists local impedances
-            if (uart_strings_equal(uart_field, "list")) {
+            if (uart_strings_equal(uart_field, "imp")) {
                 flags.b.read_impedance = 1;
                 flags.b.list_impedance = 1;
             }
@@ -658,7 +631,9 @@ int main(void) {
                     _delay_ms(2);
                     impedances[i] = imp_calc(4);
                     sr_shiftout(0x0000);
+
                     if(impedances[i] < 26) statusleds |= mask;
+
                     mask        <<= 1;
                 }
 
@@ -676,7 +651,7 @@ int main(void) {
                 flags.b.transmit = 0;
             }
 
-            SREG                   = temp_sreg;
+            SREG = temp_sreg;
         }
 
         // -------------------------------------------------------------------------------------------------------
@@ -690,7 +665,8 @@ int main(void) {
             uart_puts_P(PSTR("==========================\n\rKanal Widerstand\r\n"));
             for(uint8_t i = 0; i < 16; i++) {
                 if(i < 9) uart_puts_P(PSTR(" "));
-                uart_shownum(i+1, 'd');
+
+                uart_shownum(i + 1, 'd');
                 uart_puts_P(PSTR("    "));
                 uart_shownum(impedances[i], 'd');
                 uart_puts_P(PSTR("\r\n"));

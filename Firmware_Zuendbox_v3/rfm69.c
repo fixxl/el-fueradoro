@@ -241,7 +241,7 @@
 		#ifdef SPCR
 			#if HARDWARE_SPI_69
 				// Activate and configure hardware SPI at F_CPU/16
-				SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
+				if (!(SPCR & (1 << SPE))) SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
 			#endif
 		#endif
 

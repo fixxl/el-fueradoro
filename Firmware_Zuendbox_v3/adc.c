@@ -15,7 +15,7 @@ void adc_deinit(void) {
 
 // Initialisation
 void adc_init(void) {
-    uint16_t nosense __attribute__((used));
+    uint16_t nosense;
 
     // Comparator off
     ACSR     |= 1 << ACD;
@@ -34,6 +34,7 @@ void adc_init(void) {
     while (ADCSRA & (1 << ADSC));
 
     nosense   = ADCW;
+    nosense   += 3;
 }
 
 static uint16_t adc_read(const uint8_t channel) {
@@ -98,5 +99,6 @@ uint8_t imp_calc(const uint8_t channel) {
         ADMUX  |=  (1 << REFS1);
         _delay_ms(2);
     }
+    uart_puts("Done\r\n");
     return result;
 }
