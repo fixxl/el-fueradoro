@@ -62,9 +62,11 @@ void sr_shiftout(uint16_t scheme) {
 	RCLOCK_PORT &= ~(1 << RCLOCK);
 
 	#if HARDWARE_SPI_SR
-		SPDR = (scheme >> 8) & 0xFF;
+		if (SR_CHANNELS > 8) {
+			SPDR = (scheme >> 8) & 0xFF;
 
-		while (!(SPSR & (1 << SPIF))) ;
+			while (!(SPSR & (1 << SPIF))) ;
+		}
 
 		SPDR = scheme & 0xFF;
 

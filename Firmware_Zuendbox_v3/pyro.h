@@ -8,8 +8,6 @@
 #ifndef PYRO_H_
 #define PYRO_H_
 
-#define DEBUGMODE			1
-
 // Key switch location
 #define KEYPORT               D
 #define KEYNUM                2

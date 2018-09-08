@@ -83,22 +83,5 @@ uint8_t imp_calc(const uint8_t channel) {
 
     // Check
     if(!result) return 1;
-    else if(result < 49) return result;
-    else {
-        // Reference to AVCC
-        ADMUX  &= ~(1 << REFS1);
-        _delay_ms(2);
-
-        voltage_raw = adc_read(channel);
-
-        // With 3.3V-reference:
-        // 75/512 * voltage_raw = R
-        result = (75 * voltage_raw + 256) >> 9;
-
-        // Reference back to 1.1V
-        ADMUX  |=  (1 << REFS1);
-        _delay_ms(2);
-    }
-    uart_puts("Done\r\n");
     return result;
 }

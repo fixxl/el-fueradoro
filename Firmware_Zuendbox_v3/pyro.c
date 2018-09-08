@@ -124,9 +124,13 @@ void sr_dm_init(void) {
                 SCLOCK_PIN = (1 << SCLOCK);     // Pin low after toggling
             }
 
-            // ... and apply shift-register to output register.
+            // ... and apply shift-register to hc output register.
             RCLOCK_PIN = (1 << RCLOCK);         // Pin durch Toggling high
             RCLOCK_PIN = (1 << RCLOCK);         // Pin durch Toggling low
+
+    		// ... and apply shift-register to dm output register.
+    		LAT_PIN = (1 << LAT); // Pin high after toggling
+    		LAT_PIN = (1 << LAT); // Pin low after toggling
         }
 
         _delay_ms(1);
@@ -418,7 +422,7 @@ int main(void) {
             else {
                 MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
                 led_red_off();
-                flags.b.read_impedance = 1;
+                // flags.b.read_impedance = 1;
             }
 
             SREG      = temp_sreg;
@@ -628,15 +632,14 @@ int main(void) {
                 statusleds = 0;
                 for(uint8_t i = 0; i < 16; i++) {
                     sr_shiftout(mask);
-                    _delay_ms(2);
+                    _delay_ms(10);
                     impedances[i] = imp_calc(4);
                     sr_shiftout(0x0000);
 
-                    if(impedances[i] < 26) statusleds |= mask;
+                    if(impedances[i] < 50) statusleds |= mask;
 
                     mask        <<= 1;
                 }
-
 
                 dm_shiftout(statusleds);
 
@@ -668,7 +671,8 @@ int main(void) {
 
                 uart_shownum(i + 1, 'd');
                 uart_puts_P(PSTR("    "));
-                uart_shownum(impedances[i], 'd');
+                if(impedances[i] < 50) uart_shownum(impedances[i], 'd');
+                else uart_puts_P(PSTR("Offen"));
                 uart_puts_P(PSTR("\r\n"));
             }
             uart_puts_P(PSTR("\r\n\n\n"));
