@@ -422,7 +422,7 @@ int main(void) {
             else {
                 MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
                 led_red_off();
-                // flags.b.read_impedance = 1;
+                flags.b.read_impedance = 1;
             }
 
             SREG      = temp_sreg;
