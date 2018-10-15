@@ -422,8 +422,8 @@ int main(void) {
             else {
                 MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
                 led_red_off();
-                flags.b.read_impedance = 1;
             }
+            flags.b.read_impedance = 1;
 
             SREG      = temp_sreg;
         }
@@ -627,32 +627,27 @@ int main(void) {
 
             MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
 
-            if(!armed) {
-                uint16_t mask = 0x0001;
-                statusleds = 0;
-                for(uint8_t i = 0; i < 16; i++) {
-                    sr_shiftout(mask);
-                    _delay_ms(10);
-                    impedances[i] = imp_calc(4);
-                    sr_shiftout(0x0000);
+			uint16_t mask = 0x0001;
+			statusleds = 0;
+			for(uint8_t i = 0; i < 16; i++) {
+				sr_shiftout(mask);
+				_delay_ms(10);
+				impedances[i] = imp_calc(4);
+				sr_shiftout(0x0000);
 
-                    if(impedances[i] < 50) statusleds |= mask;
+				if(impedances[i] < 50) statusleds |= mask;
 
-                    mask        <<= 1;
-                }
+				mask        <<= 1;
+			}
 
-                dm_shiftout(statusleds);
+			dm_shiftout(statusleds);
 
-                if(flags.b.transmit) {
-                    tx_field[0] = IMPEDANCES;
-                    tx_field[1] = unique_id;
+			if(flags.b.transmit) {
+				tx_field[0] = IMPEDANCES;
+				tx_field[1] = unique_id;
 
-                    for(uint8_t i = 0; i < 16; i++) tx_field[2 + i] = impedances[i];
-                }
-            }
-            else {
-                flags.b.transmit = 0;
-            }
+				for(uint8_t i = 0; i < 16; i++) tx_field[2 + i] = impedances[i];
+			}
 
             SREG = temp_sreg;
         }
@@ -1194,8 +1189,8 @@ int main(void) {
                         for (uint8_t i = rx_field[MEASURE_LENGTH - 1] - 1; i;
                              i--) _delay_us((ADDITIONAL_LENGTH + MEASURE_LENGTH) * BYTE_DURATION_US);
 
-                        // Send empty impedance list because we cannot measure with version 1 and 2
-                        if (!armed && (unique_id == rx_field[1])) {
+                        // Set flag for impedance reading and subsequent transmitting
+                        if (unique_id == rx_field[1]) {
                             flags.b.read_impedance = 1;
                             flags.b.transmit       = 1;
                         }
