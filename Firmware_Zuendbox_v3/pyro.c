@@ -25,21 +25,16 @@ void key_init(void) {
     KEY_DDR       &= ~(1 << KEY);
 
     // Activate Pin-Change Interrupt
-    if (KEY_NUMERIC == BPORT) {
-        PCICR  |= (1 << PCIE0);
-        PCMSK0 |= (1 << KEY);
-    }
-
-    if (KEY_NUMERIC == DPORT) {
-        PCICR  |= (1 << PCIE2);
-        PCMSK2 |= (1 << KEY);
-    }
-
-    if (KEY_NUMERIC == CPORT) {
-        PCICR  |= (1 << PCIE1);
-        PCMSK1 |= (1 << KEY);
-    }
-
+	#if (KEY_NUMERIC == BPORT)
+		PCICR  |= (1 << PCIE0);
+		PCMSK0 |= (1 << KEY);
+	#elif (KEY_NUMERIC == DPORT)
+		PCICR  |= (1 << PCIE2);
+		PCMSK2 |= (1 << KEY);
+	#else
+		PCICR  |= (1 << PCIE1);
+		PCMSK1 |= (1 << KEY);
+	#endif
     // Keep low-impedance path between ignition voltage and clamps closed
     MOSSWITCHPORT &= ~(1 << MOSSWITCH);
     MOSSWITCHDDR  |= (1 << MOSSWITCH);
@@ -51,20 +46,16 @@ void key_deinit(void) {
     KEY_DDR  &= ~(1 << KEY);
 
     // Deactivate Pin-Change Interrupt
-    if (KEY_PORT == PORTB) {
-        PCICR  &= ~(1 << PCIE0);
-        PCMSK0 &= ~(1 << KEY);
-    }
-
-    if (KEY_PORT == PORTD) {
-        PCICR  &= ~(1 << PCIE2);
-        PCMSK2 &= ~(1 << KEY);
-    }
-
-    if (KEY_PORT == PORTC) {
-        PCICR  &= ~(1 << PCIE1);
-        PCMSK1 &= ~(1 << KEY);
-    }
+	#if (KEY_NUMERIC == BPORT)
+		PCICR  &= ~(1 << PCIE0);
+		PCMSK0 &= ~(1 << KEY);
+	#elif (KEY_NUMERIC == DPORT)
+		PCICR  &= ~(1 << PCIE2);
+		PCMSK2 &= ~(1 << KEY);
+	#else
+		PCICR  &= ~(1 << PCIE1);
+		PCMSK1 &= ~(1 << KEY);
+	#endif
 }
 
 // Switch debouncing

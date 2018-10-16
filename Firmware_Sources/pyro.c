@@ -21,50 +21,41 @@ void wdt_init(void) {
 
 // Initialise Key-Switch
 void key_init(void) {
-	KEY_PORT |= (1 << KEY);
-	KEY_DDR  &= ~(1 << KEY);
+    KEY_PORT      |= (1 << KEY);
+    KEY_DDR       &= ~(1 << KEY);
 
-	// Activate Pin-Change Interrupt
-	if (KEY_PORT == PORTB) {
+    // Activate Pin-Change Interrupt
+	#if (KEY_NUMERIC == BPORT)
 		PCICR  |= (1 << PCIE0);
 		PCMSK0 |= (1 << KEY);
-	}
-
-	if (KEY_PORT == PORTD) {
+	#elif (KEY_NUMERIC == DPORT)
 		PCICR  |= (1 << PCIE2);
 		PCMSK2 |= (1 << KEY);
-	}
-
-	if (KEY_PORT == PORTC) {
+	#else
 		PCICR  |= (1 << PCIE1);
 		PCMSK1 |= (1 << KEY);
-	}
-
-	// Keep low-impedance path between ignition voltage and clamps closed
-	MOSSWITCHPORT &= ~(1 << MOSSWITCH);
-	MOSSWITCHDDR  |= (1 << MOSSWITCH);
+	#endif
+    // Keep low-impedance path between ignition voltage and clamps closed
+    MOSSWITCHPORT &= ~(1 << MOSSWITCH);
+    MOSSWITCHDDR  |= (1 << MOSSWITCH);
 }
 
 // Un-initialise Key-Switch (needed only if a device configured as ignition device gets configured as transmitter while on)
 void key_deinit(void) {
-	KEY_PORT &= ~(1 << KEY);
-	KEY_DDR  &= ~(1 << KEY);
+    KEY_PORT &= ~(1 << KEY);
+    KEY_DDR  &= ~(1 << KEY);
 
-	// Deactivate Pin-Change Interrupt
-	if (KEY_PORT == PORTB) {
+    // Deactivate Pin-Change Interrupt
+	#if (KEY_NUMERIC == BPORT)
 		PCICR  &= ~(1 << PCIE0);
 		PCMSK0 &= ~(1 << KEY);
-	}
-
-	if (KEY_PORT == PORTD) {
+	#elif (KEY_NUMERIC == DPORT)
 		PCICR  &= ~(1 << PCIE2);
 		PCMSK2 &= ~(1 << KEY);
-	}
-
-	if (KEY_PORT == PORTC) {
+	#else
 		PCICR  &= ~(1 << PCIE1);
 		PCMSK1 &= ~(1 << KEY);
-	}
+	#endif
 }
 
 // Switch debouncing
