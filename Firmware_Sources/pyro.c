@@ -1201,7 +1201,7 @@ int main(void) {
 						       i--) _delay_us((ADDITIONAL_LENGTH + MEASURE_LENGTH) * BYTE_DURATION_US);
 
 						  // Send empty impedance list because we cannot measure with version 1 and 2
-						  if (!armed && (unique_id == rx_field[1])) {
+						  if (unique_id == rx_field[1]) {
 							  tx_field[0] = IMPEDANCES;
 							  tx_field[1] = unique_id;
 
