@@ -19043,19 +19043,19 @@ Source: http://www.st.com/stonline/products/literature/ds/7194/ld1117axx.pdf</de
 <wire x1="0" y1="269.24" x2="0" y2="106.68" width="0.1524" layer="98"/>
 <wire x1="0" y1="106.68" x2="177.8" y2="106.68" width="0.1524" layer="98"/>
 <wire x1="177.8" y1="106.68" x2="177.8" y2="269.24" width="0.1524" layer="98"/>
-<text x="2.54" y="259.08" size="5.08" layer="98">Spannungsversorgung und -erzeugung</text>
-<text x="190.5" y="259.08" size="5.08" layer="98">Schieberegister und MOSFETs</text>
+<text x="2.54" y="259.08" size="5.08" layer="98" font="vector">Spannungsversorgung und -erzeugung</text>
+<text x="190.5" y="259.08" size="5.08" layer="98" font="vector">Schieberegister und MOSFETs</text>
 <wire x1="477.52" y1="0" x2="477.52" y2="104.14" width="0.1524" layer="98"/>
 <wire x1="477.52" y1="104.14" x2="358.14" y2="104.14" width="0.1524" layer="98"/>
 <wire x1="358.14" y1="104.14" x2="358.14" y2="0" width="0.1524" layer="98"/>
 <wire x1="358.14" y1="0" x2="477.52" y2="0" width="0.1524" layer="98"/>
-<text x="368.3" y="93.98" size="5.08" layer="98">Funkmodul</text>
+<text x="368.3" y="93.98" size="5.08" layer="98" font="vector">Funkmodul</text>
 <wire x1="353.06" y1="104.14" x2="251.46" y2="104.14" width="0.1524" layer="98"/>
 <wire x1="251.46" y1="104.14" x2="251.46" y2="0" width="0.1524" layer="98"/>
 <wire x1="251.46" y1="0" x2="353.06" y2="0" width="0.1524" layer="98"/>
 <wire x1="353.06" y1="0" x2="353.06" y2="104.14" width="0.1524" layer="98"/>
-<text x="259.08" y="93.98" size="5.08" layer="98">Serielle Schnittstelle</text>
-<text x="185.42" y="93.98" size="5.08" layer="98">ISP-Anschluss</text>
+<text x="259.08" y="93.98" size="5.08" layer="98" font="vector">Serielle Schnittstelle</text>
+<text x="185.42" y="93.98" size="5.08" layer="98" font="vector">ISP-Anschluss</text>
 <wire x1="243.84" y1="104.14" x2="180.34" y2="104.14" width="0.1524" layer="98"/>
 <wire x1="180.34" y1="104.14" x2="180.34" y2="0" width="0.1524" layer="98"/>
 <wire x1="180.34" y1="0" x2="243.84" y2="0" width="0.1524" layer="98"/>
@@ -19064,8 +19064,8 @@ Source: http://www.st.com/stonline/products/literature/ds/7194/ld1117axx.pdf</de
 <wire x1="0" y1="0" x2="0" y2="104.14" width="0.1524" layer="98"/>
 <wire x1="0" y1="104.14" x2="175.26" y2="104.14" width="0.1524" layer="98"/>
 <wire x1="175.26" y1="104.14" x2="175.26" y2="0" width="0.1524" layer="98"/>
-<text x="2.54" y="93.98" size="5.08" layer="98">Mikrocontroller und Ereignis-LEDs</text>
-<text x="134.62" y="271.78" size="12.9032" layer="98">EL FUERADORO - Zündbox v2</text>
+<text x="2.54" y="93.98" size="5.08" layer="98" font="vector">Mikrocontroller und Ereignis-LEDs</text>
+<text x="134.62" y="271.78" size="12.9032" layer="98" font="vector">EL FUERADORO - Zündbox v2</text>
 <text x="27.178" y="213.36" size="1.778" layer="97">Power Switch</text>
 <text x="15.24" y="203.2" size="1.778" layer="97" rot="R90">Battery</text>
 <text x="203.2" y="157.48" size="1.778" layer="97" rot="R90">Key Switch</text>
