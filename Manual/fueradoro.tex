@@ -680,9 +680,15 @@
 
 		Als Alternative zur Kombination aus Laptop/PC und dem in den vorangegangenen Abschnitten beschriebenen Transmitter wurde in Zusammenarbeit mit einem Softwareentwickler ein Audio-Funksystem auf Basis des bekannten Einplatinencomputers \enquote{Raspberry Pi} entwickelt. Dieser übernimmt die Kontrolle der Show inklusive der Musikwiedergabe.
 
-		Neben einem Raspberry Pi werden für den Aufbau eine speziell für die Verwendung mit {\anlage} entwickelte Aufsteckplatine sowie ein Touchdisplay, eine USB-Soundkarte, zwei Taster (FIRE und ON-OFF), ein Schlüsselschalter und zwei LEDs benötigt. Eine Einkaufsliste findet sich in Tabelle~\ref{tab:raspibom} ab Seite \pageref{tab:raspibom}.
+		Neben einem Raspberry Pi werden für den Aufbau eine speziell für die Verwendung mit {\anlage} entwickelte Aufsteckplatine sowie ein Touchdisplay, eine USB-Soundkarte, zwei Taster (FIRE und ON-OFF), welche interne oder externe LEDs besitzen können, ein Schlüsselschalter und zwei weitere LEDs für die Signalisierung von Senden (TX) und Empfangen (RX) benötigt. Eine Einkaufsliste findet sich in Tabelle~\ref{tab:raspibom} ab Seite \pageref{tab:raspibom}.
 
-		Ausgangspunkt für die Arbeiten mit {\REF} ist ein komplett aufgebautes System mit beschriebener SD-Karte, die notwendigen Schritte hierzu werden in den Abschnitten~\ref{sec:raspipcb}, \ref{subsec:raspicase} und \ref{ch:raspisd} dargelegt.
+		Ausgangspunkt für die Arbeiten mit {\REF} ist ein komplett aufgebautes System mit beschriebener SD-Karte, die notwendigen Schritte hierzu werden in den Abschnitten~\ref{sec:raspipcb}, \ref{subsec:raspicase} und \ref{ch:raspisd} dargelegt. Eine mögliche Außenansicht mit den notwendigen Funktionseinheiten ist in Abbildung~\ref{fig:raspEasyFireDescription} gezeigt.
+
+		\begin{figure}
+			\centering\includegraphics[width=120mm]{Bilder/raspEasyFireDescription}
+			\caption{Aufgebautes System \REF}
+			\label{fig:raspEasyFireDescription}
+		\end{figure}
 
 		\section{Erster Start}
 
@@ -691,7 +697,7 @@
 		\section{Konfiguration}
 
 			Die Konfiguration von {\REF} bedeutet vor allem, den korrekten AES-Schlüssel festzulegen, damit die Kommunikation mit den Zündboxen reibungslos funktioniert, es können aber auch noch weitere Konfigurationseinstellungen getätigt werden, welche nicht im Programm via Touchscreen verfügbar sind.
-			
+
 			Die einfachste Möglichkeit ist der Anschluss einer USB-Tastatur an den Raspberry Pi und Beenden des Startup-Skripts zur Kommandozeile. Alternativ kann auch per SSH über den stationären Rechner auf {\REF} zugegriffen werden.
 
 			Hierzu muss sichergestellt sein, dass sich {\REF} mit dem Drahtlosnetzwerk verbunden hat, um die lokale IP-Adresse (beispielsweise: 192.168.0.5) ermitteln zu können. Als SSH-Client kann das bereits als Terminalprogramm bekannte \texttt{Putty} verwendet werden, welches man mit folgenden Parametern startet:
@@ -710,55 +716,128 @@
 				\item[raspEasyFire.conf] Die Konfigurationsdatei mit grundlegenden Programmeinstellungen. Mit einer Raute (\#) beginnende Zeilen stellen dabei Kommentare dar, welche die Bedeutung der nachfolgenden Einstellungen demonstrieren, Einstellungen selbst werden in der Form \enquote{Variable: Wert} angegeben. Typischerweise sollte es nicht notwendig sein, hier Einstellungen zu ändern, der derzeit ausgewählte Zündplan wird beispielsweise immer automatisch durch das eigentliche Programm aktualisiert.
 				\item[aesvalues.txt] In dieser Datei wird der verwendete AES-Schlüssel hinterlegt, der nötig ist, um zu gewährleisten, dass {\REF} und die Zündboxen eine gemeinsame Sprache sprechen. Die Werte heißen \enquote{value\_01, \dots, value\_16} und müssen im Hexadezimalformat, d.h. mit vorangestelltem \enquote{0x} angegeben werden, der Wertebereich für jeden einzelnen \enquote{value} geht von \enquote{0x00} bis \enquote{0xFF}.
 			\end{description}
-		
+
 			Zum Ändern der Dateien steht der simple Texteditor \enquote{nano} zur Verfügung, um sich über eingeschränkte Schreibrechte keine Gedanken machen zu müssen, sollte der Aufruf über den Befehl
 			\begin{center}
 				\emph{sudo nano DATEINAME}
 			\end{center}
-			erfolgen, wobei \enquote{DATEINAME} durch \enquote{aesvalues.txt} oder \enquote{raspEasyFire.conf} zu ersetzen ist.
-			
+			mit Administratorrechten erfolgen, wobei \enquote{DATEINAME} durch \enquote{aesvalues.txt} oder \enquote{raspEasyFire.conf} zu ersetzen ist.
+
 			In \enquote{nano} werden dann die entsprechenden Einstellungen vorgenommen, beendet wird das Programm durch die Tastenkombination \enquote{STRG + X}, anschließend bestätigt man die Nachfrage, ob die Änderungen gespeichert werden sollen.
-		
+
 		\section{Passwort ändern}
 			Um den Zugriff für unbefugte Personen auf den Raspberry Pi zu verhindern, sollte unbedingt das Passwort des Users \enquote{pi} geändert werden. Möglich ist dies über ein Menü, welches man aus der Bash über
 			\begin{center}
 				\emph{sudo raspi-config}
 			\end{center}
 			erreicht.
-			
+
 		\section{Zündpläne und Musikdateien übertragen}
-			{\REF} verarbeitet unmittelbar in {\pic} erzeugte zpl-Dateien, so dass die Shows bequem am eigenen Rechner konzipiert werden können. Für die Übertragung der Dateien existieren grundsätzlich zwei Möglichkeiten, entweder über einen USB-Stick oder via Netzwerk über das SFTP-Protokoll. Bei Musikdateien muss es sich um mp3-Dateien handeln, welche auch die Endung \enquote{.mp3} besitzen, Zündpläne müssen auf \enquote{.zpl} enden und Dateien, die zusammen gehören, müssen denselben Namen tragen: Eine Show \enquote{Feuerwerk.zpl} verlangt demnach nach einer Musikdatei \enquote{Feuerwerk.mp3}.
-			
+				{\REF} verarbeitet unmittelbar in {\pic} erzeugte zpl-Dateien, so dass die Shows bequem am eigenen Rechner konzipiert werden können. Für die Übertragung der Dateien existieren grundsätzlich zwei Möglichkeiten, entweder über einen USB-Stick oder via Netzwerk über das SFTP-Protokoll. Bei Musikdateien muss es sich um mp3-Dateien handeln, welche auch die Endung \enquote{.mp3} besitzen, Zündpläne müssen auf \enquote{.zpl} enden und Dateien, die zusammen gehören, müssen denselben Namen tragen: Eine Show \enquote{Feuerwerk.zpl} verlangt demnach nach einer Musikdatei \enquote{Feuerwerk.mp3}.
+
 			\subsection{USB-Stick}
-			
+
 				Um Zündpläne und Musikdateien via USB-Stick zu übertragen, müssen die Dateien im Hauptverzeichnis eines USB-Sticks abgelegt werden und dieser Stick vor dem Hochfahren des Systems mit dem Raspberry Pi verbunden werden. Der Stick wird dann automatisch erkannt und die zpl- bzw. mp3-Dateien in die Verzeichnisse \url{/home/pi/raspEasyFire3/showfiles/zpl} bzw. \url{/home/pi/raspEasyFire3/showfiles/mp3} kopiert. Bereits dort existierende Dateien gleichen Namens werden ohne Nachfrage überschrieben.
-				
+
 			\subsection{SFTP}
-				
+
 				Unmittelbar übers Netzwerk können Dateien durch ein Programm wie den \enquote{FileZilla FTP Client} verschoben werden. Dort muss dann im Servermanager eine SFTP-Verbindung erstellt werden, wobei der Server der internen IP-Adresse von {\REF} entspricht und die Zugangsdaten mit Nutzername \enquote{pi} und dem entsprechend gewählten Passwort anzugeben sind. Auch hier wird bei erstmaliger Verbindung typischerweise eine Bestätigung gefordert, anschließend kann man durch das Dateisystem navigieren und die Show- und Musikdateien in den entsprechenden Verzeichnissen \url{/home/pi/raspEasyFire3/showfiles/zpl} bzw. \url{/home/pi/raspEasyFire3/showfiles/mp3} ablegen.
-			
+
 		\section{Die Benutzeroberfläche}
-		
-		Durch Drücken des FIRE-Buttons nach dem Hochfahren, startet die Benutzeroberfläche von {\REF}. 
-		
-		\subsection{Automatische Checks vor Showbeginn}
-		
-			Damit die Show reibungslos verläuft, kontrolliert {\REF}, ob Zündpläne und sonstige Gegebenheiten korrekt sind. Folgende Bedingungen müssen dabei für eine automatische Show erfüllt sein:
-			\begin{itemize}
-				\item Verwendete Slave-IDs müssen im Bereich von 1 bis 30 liegen, Slave-ID 99 ist zulässig für \enquote{Dummy-Cues}, die zwar auf dem Display angezeigt werden, aber keine Zündung auslösen.
-				\item Ansprechbare Kanalnummern liegen im Bereich von 1 bis 16.
-				\item Jede Kombination aus Slave-ID und Kanalnummer darf im Zündplan lediglich einmal vorkommen. Dient der Kanal der Triggerung eines weiteren Geräts, soll also wirklich mehrfach ausgelöst werden, so ist in die Effektbeschreibung bei jedem Aufruf \enquote{STEPPER} (Großschreibung beachten) mit einzutragen.
-				\item Der Abstand zwischen zwei \enquote{echten} Zündungen muss mindestens \SI{100}{\milli\second} betragen, für Dummy-Cues gilt diese Beschränkung demnach nicht.
-				\item Für jede angesprochene Slave-ID (Ausnahme ist die Dummy-Slave-ID 99) muss eine Zündbox mit der entsprechenden Slave-ID gefunden worden sein. Um diese Überprüfung abzuschalten, kann in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt werden.
-				\item Alle gefundenen Zündboxen müssen scharf geschaltet sein, auch diese Überprüfung wird übersprungen, wenn in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt ist.
-				\item Ist eine Musikshow vorgesehen, muss eine zum Zündplan passende Musikdatei im korrekten Verzeichnis vorhanden sein. Ebenso muss die in der Konfigurationsdatei benannte Soundcheckdatei existieren.
-				\item Bei einer Musikshow müssen alle Zündzeitpunkte müssen innerhalb der Dauer des Musikstücks liegen, da die Zündzeiten mit dem Zeitstempel des Audioplayers abgeglichen werden. Möchte man Zündungen nach dem Ende des Musikstücks setzen, muss die mp3-Datei durch das Hinzufügen von Stille am Ende verlängert werden.
-				\item {\REF} muss durch den Schlüsselschalter scharf geschaltet sein.
-			\end{itemize}
-		
-			Es empfiehlt sich, mit großem Zeitpuffer vor Beginn der Show einen Trockenlauf zu machen, um auf Fehler, die vor Ort nicht mehr allzu leich zu beheben sind, aufmerksam zu werden.
+
+			Durch Drücken des FIRE-Buttons nach dem Hochfahren, startet die Benutzeroberfläche von {\REF}, sie ist in Abbildung~\ref{fig:REFstartscreen} gezeigt.
+
+			\begin{figure}
+				\centering\includegraphics[width=150mm]{Bilder/REFstartscreen}
+				\caption{Startbildschirm nach dem Aufruf von \REF}
+				\label{fig:REFstartscreen}
+			\end{figure}
+
+			Im linken Teil des Bildschirms werden einige Informationen wie der aktuelle Zündplan oder die gemessene Batteriespannung angezeigt, am rechten Rand des Bildschirms sind die Schaltflächen zur Bedienung via Touchscreen zu sehen:
+			\begin{enumerate}
+				\item Modusauswahl
+				      \begin{description}
+					      \item [Auto-Mode] Vollautomatisches Zünden nach Zeitplan
+					      \item [Semi-Auto-Mode] Manuelle Zündung per Knopfdruck mit vorgegebener Reihenfolge
+					      \item [Manual Mode] Vollständig manuelle Zündung
+				      \end{description}
+				\item Musikbegleitung an/aus
+				\item Zündplanauswahl
+				\item Slavesuche
+				\item Ferngesteuerte ID-Änderung bei Zündboxen
+				\item Soundcheck
+			\end{enumerate}
+
+			\subsection{Zündplanauswahl}
+
+				Anwählen des Punktes \enquote{ZPL wählen} führt zum in Abbildung~\ref{fig:REFzplwahl} gezeigten Bildschirm. Hier kann aus den im Programmunterverzeichnis \enquote{showfiles/zpl} vorhandenen Zündplänen gewählt werden. Die Auswahl ist abschließend zu bestätigen, um den gewählten Zündplan zu laden. Analog verhält es sich im manuellen Modus mit Musik mit der Auswahl der MP3-Datei.
+
+				\begin{figure}
+					\centering\includegraphics[width=150mm]{Bilder/REFzplwahl}
+					\caption{Auswahl des Zündplans}
+					\label{fig:REFzplwahl}
+				\end{figure}
+
+				Die Auswahl wird gespeichert und ist beim nächsten Programmstart aktiv.
+				
+			\subsection{Slavesuche}
 			
-			Sind alle Bedingungen erfüllt, beginnt die FIRE-Button-LED nach dem Scharfschalten zu blinken und ein Druck auf den FIRE-Button startet die Show.
+				Mit einem Druck auf die Schaltfläche \enquote{Slaves suchen} wird eine Suche nach verfügbaren Zündboxen gestartet. Diese dauert etwa fünf Sekunden, anschließend werden die Anzahl und die Parameter der in Reichweite befindlichen Boxen wie in Abbildung~\ref{fig:REFslavesfound} zu sehen auf dem Startbildschirm angezeigt.
+				
+				\begin{figure}
+					\centering\includegraphics[width=150mm]{Bilder/REFslavesfound}
+					\caption{Anzeige der gefundenen Boxen}
+					\label{fig:REFslavesfound}
+				\end{figure}
+							
+			\subsection{ID-Änderung}
+			
+				Über den Punkt \enquote{IDs ändern} können Zündboxen neue IDs zugewiesen werden, den Bildschirm dazu zeigt Abbildung~\ref{fig:REFids}. Hierzu müssen per \enquote{+} und \enquote{-} die alten und neuen IDs eingestellt werden, durch Druck auf \enquote{Bestätigen} wird der Befehl zur Änderung der IDs dann abgeschickt. Es ist zu beachten, dass diese Änderung nur wirksam werden kann, wenn die entsprechende Zündbox nicht scharf geschaltet ist.
+				
+				\begin{figure}
+					\centering\includegraphics[width=150mm]{Bilder/REFids}
+					\caption{Ändern der IDs}
+					\label{fig:REFids}
+				\end{figure}		
+			
+			\subsection{Soundcheck}
+			
+				Durch einen Druck auf den Button \enquote{Soundcheck} wird die in der Konfigurationsdatei eingestellte Soundcheckdatei wiedergegeben, möglich ist dies nur im nicht scharfgeschalteten Zustand. Beendet wird der Soundcheck durch Drücken des FIRE-Buttons oder Drehen des Schlüsselschalters in die \enquote{scharfe} Position.		
+
+			\subsection{Showstart}
+
+				Gestartet wird die Show im aktuell eingestellten Modus durch Drücken des FIRE-Buttons, es müssen allerdings bestimmte Voraussetzungen erfüllt sein, damit es wirklich losgehen kann.
+				
+				Damit die Show reibungslos verläuft, kontrolliert {\REF}, ob Zündpläne und sonstige Gegebenheiten korrekt sind. Folgende Bedingungen müssen dabei für eine automatische Show erfüllt sein:
+				\begin{itemize}
+					\item Verwendete Slave-IDs müssen im Bereich von 1 bis 30 liegen, Slave-ID 99 ist zulässig für \enquote{Dummy-Cues}, die zwar auf dem Display angezeigt werden, aber keine Zündung auslösen.
+					\item Ansprechbare Kanalnummern liegen im Bereich von 1 bis 16.
+					\item Jede Kombination aus Slave-ID und Kanalnummer darf im Zündplan lediglich einmal vorkommen. Dient der Kanal der Triggerung eines weiteren Geräts, soll also wirklich mehrfach ausgelöst werden, so ist in die Effektbeschreibung bei jedem Aufruf \enquote{STEPPER} (Großschreibung beachten) mit einzutragen.
+					\item Der Abstand zwischen zwei \enquote{echten} Zündungen muss mindestens \SI{100}{\milli\second} betragen, für Dummy-Cues gilt diese Beschränkung demnach nicht.
+					\item Für jede angesprochene Slave-ID (Ausnahme ist die Dummy-Slave-ID 99) muss eine Zündbox mit der entsprechenden Slave-ID gefunden worden sein. Um diese Überprüfung abzuschalten, kann in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt werden.
+					\item Alle gefundenen Zündboxen müssen scharf geschaltet sein, auch diese Überprüfung wird übersprungen, wenn in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt ist.
+					\item Ist eine Musikshow vorgesehen, muss eine zum Zündplan passende Musikdatei im korrekten Verzeichnis vorhanden sein. Ebenso muss die in der Konfigurationsdatei benannte Soundcheckdatei existieren.
+					\item Bei einer Musikshow müssen alle Zündzeitpunkte müssen innerhalb der Dauer des Musikstücks liegen, da die Zündzeiten mit dem Zeitstempel des Audioplayers abgeglichen werden. Möchte man Zündungen nach dem Ende des Musikstücks setzen, muss die mp3-Datei durch das Hinzufügen von Stille am Ende verlängert werden.
+					\item {\REF} muss durch den Schlüsselschalter scharf geschaltet sein.
+				\end{itemize}
+
+				Wird der FIRE-Button gedrückt, ohne dass die nötigen Voraussetzungen erfüllt sind, erscheint ein Info-Popup, welches die zu behebenden Probleme auflistet. Es empfiehlt sich, mit großem Zeitpuffer vor Beginn der Show einen Trockenlauf zu machen, um auf Fehler, die vor Ort nicht mehr allzu leicht zu beheben sind, aufmerksam zu werden. Sind alle Bedingungen erfüllt, beginnt die FIRE-Button-LED nach dem Drehen des Schlüsselschalters in die \enquote{scharfe} Position zu blinken und ein Druck auf den FIRE-Button startet die Show.
+				
+				Beispiele für die Ansicht im automatischen (mit Backup-Cues) und manuellen Modus sind in Abbildung~\ref{fig:REFauto} bzw. Abbildung~\ref{fig:REFmanual} gezeigt. Backup-Cues können durch Drücken der entsprechenden Schaltfläche bei gleichzeitigem Drücken des FIRE-Buttons ausgelöst werden.
+				
+				\begin{figure}
+					\begin{subfigure}{\textwidth}
+						\includegraphics{Bilder/REFautoshow}
+						\caption{Automatischer Modus}
+						\label{fig:REFauto}
+					\end{subfigure}\newline
+					\begin{subfigure}{\textwidth}
+						\includegraphics{Bilder/REFmanualshow}
+						\caption{Manueller Modus}
+						\label{fig:REFmanual}
+					\end{subfigure}
+					\caption{Bildschirme während der Show}
+				\end{figure}
 
 	\chapter{Show}
 		In diesem Kapitel gibt es einige Hinweise zur Planung und Umsetzung eines choreographierten Feuerwerks.
