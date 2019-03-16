@@ -1986,20 +1986,20 @@
 
 			Für {\anlage} müssen die Fusebits beim \texttt{ATmega328P} gemäß Tabelle \ref{tab:fuses} gesetzt werden.
 
-			\begin{table}[h]
+			\begin{table}
 				\centering
 				\begin{tabu}
-					to .9\textwidth {llX}
+					to .9\textwidth {lX[1,l]X[-7,l]}
 					\hline\hline
 					\textbf{Fuse} & \textbf{Wert}     & \textbf{Bedeutung}                                                                                                                                                                             \\ \hline
 					Low Fuse      & 0xF7              & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle                                                                                                                     \\
 					High Fuse     & 0xD6              & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
-					Extended Fuse & 0x05\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{\volt}$                                                                                                                                      \\ \hline\hline
+					Extended Fuse & 0x05/ 0xFD\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{\volt}$                                                                                                                                      \\ \hline\hline
 				\end{tabu}
 				\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
 				\label{tab:fuses}
 			\end{table}
-			\footnotetext{Bei der Extended Fuse werden nur die unteren drei Bit verwendet, die oberen fünf sind nicht in Gebrauch und können daher beliebig jeweils mit 1 oder 0 beschrieben und gelesen werden. Im Beispiel werden die nicht-relevanten Bits mit 0 beschrieben, so dass sich der Wert 0x05 ergibt, äquivalent dazu könnte der Wert aber beispielsweise auch 0xFD oder 0xA5 lauten.}
+			\footnotetext{Bei der Extended Fuse werden nur die unteren drei Bit verwendet, die oberen fünf sind nicht in Gebrauch und können daher beliebig jeweils mit 1 oder 0 beschrieben und gelesen werden. Werden die nicht-relevanten Bits mit 0 beschrieben, ergibt sich der Wert 0x05, bei Beschreibung mit 1 der Wert 0xFD. AVRDUDE ist leider nicht imstande, die oberen fünf Bits zu ignorieren und meldet daher einen Verifizierungsfehler, falls die Bits mit 0 geschrieben und mit 1 gelesen bzw. mit 1 geschrieben und mit 0 gelesen werden.}
 
 			Wird beim Flashen des Bootloaders das Standard-EEPROM-Image nicht mitübertragen, die herstellerseitige Voreinstellung des EEPROMs also nicht verändert, werden Zündboxen~-- nach dem Programmieren der \enquote{echten} Firmware~-- zunächst \enquote{E} bzw. \enquote{e} für \enquote{Error} als Unique- bzw. Slave-ID melden, da an den Speicherstellen für IDs und Prüfsummen nicht zueinander passende Werte stehen. Die Zündbox muss dann einmalig kabelgebunden über die lokale Konfiguration auf gültige Werte eingestellt werden.
 
