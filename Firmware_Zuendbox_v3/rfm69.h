@@ -18,7 +18,7 @@
 
 /* Output power in dBm (-18...13) */
 #ifndef P_OUT_DBM
-	#define P_OUT_DBM       8 // Output power in dBm
+    #define P_OUT_DBM       8 // Output power in dBm
 #endif
 
 /* Pin assignment */
@@ -40,22 +40,22 @@
 #define NSEL_PORT           PORT(NSELPORT)
 #define NSEL_DDR            DDR(NSELPORT)
 #define NSEL_PIN            PIN(NSELPORT)
-#define NSEL_NUMERIC		NUMPORT(NSELPORT)
+#define NSEL_NUMERIC        NUMPORT(NSELPORT)
 
 #define SDI_PORT            PORT(SDIPORT)
 #define SDI_DDR             DDR(SDIPORT)
 #define SDI_PIN             PIN(SDIPORT)
-#define SDI_NUMERIC			NUMPORT(SDIPORT)
+#define SDI_NUMERIC         NUMPORT(SDIPORT)
 
 #define SDO_PORT            PORT(SDOPORT)
 #define SDO_DDR             DDR(SDOPORT)
 #define SDO_PIN             PIN(SDOPORT)
-#define SDO_NUMERIC			NUMPORT(SDOPORT)
+#define SDO_NUMERIC         NUMPORT(SDOPORT)
 
 #define SCK_PORT            PORT(SCKPORT)
 #define SCK_DDR             DDR(SCKPORT)
 #define SCK_PIN             PIN(SCKPORT)
-#define SCK_NUMERIC			NUMPORT(SCKPORT)
+#define SCK_NUMERIC         NUMPORT(SCKPORT)
 
 #define ACTIVATE_RFM        NSEL_PORT &= ~(1 << NSEL)
 #define DEACTIVATE_RFM      NSEL_PORT |= (1 << NSEL)
@@ -68,8 +68,8 @@
 
 #if RFM12COMP
  #define BR_VAL    \
-	((((((344828L - \
-	      (BITRATE < 2694L) * 301725L) + (BITRATE / 2)) / BITRATE) - 1) | ((BITRATE < 2694) * 0x80)))
+    ((((((344828L - \
+          (BITRATE < 2694L) * 301725L) + (BITRATE / 2)) / BITRATE) - 1) | ((BITRATE < 2694) * 0x80)))
  #if BR_VAL < 128
   #define BR              ((10000000L + (29 * BR_VAL / 2)) / (29 * (BR_VAL + 1)))
  #else
@@ -103,7 +103,7 @@
 
 
 #define HARDWARE_SPI_69  (RFM69_USE_HARDWARE_SPI && HASHARDSPI69 && (SDO_NUMERIC == SDI_NUMERIC) && \
-						 (SDO_NUMERIC == SCK_NUMERIC) && (SDO_NUMERIC == 1) && (SDI == 3) && (SDO == 4) && (SCK == 5))
+                         (SDO_NUMERIC == SCK_NUMERIC) && (SDO_NUMERIC == 1) && (SDI == 3) && (SDO == 4) && (SCK == 5))
 
 uint8_t rfm_cmd(uint16_t command, uint8_t wnr);   // Immediate access to register
 uint8_t rfm_receiving(void);                      // Valid data received?

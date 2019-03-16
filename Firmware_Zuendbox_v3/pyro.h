@@ -22,6 +22,9 @@
 // Maximum Array Size
 #define MAX_ARRAYSIZE         30
 
+// Ignition time * 10ms
+#define IGNITION_TIME         2
+
 // Threshold to clear LCD (Number of counter overflows)
 #define DEL_THRES             251
 
@@ -67,6 +70,8 @@ typedef union {
         unsigned uart_active        : 1;
         unsigned uart_config        : 1;
         unsigned fire               : 1;
+        unsigned finish_firing      : 1;
+        unsigned is_fire_active     : 1;
         unsigned send               : 1;
         unsigned transmit           : 1;
         unsigned receive            : 1;

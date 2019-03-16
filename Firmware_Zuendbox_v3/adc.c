@@ -62,8 +62,8 @@ static uint16_t adc_read(const uint8_t channel) {
 // Calculation of battery voltage
 uint8_t bat_calc(const uint8_t channel) {
 
-	uint8_t result;
-	uint16_t voltage_raw = adc_read(channel);
+    uint8_t result;
+    uint16_t voltage_raw = adc_read(channel);
 
     // voltage_raw * 11 / 64 = voltage_in
     result = (11 * voltage_raw + 32) >> 6;
@@ -75,11 +75,11 @@ uint8_t imp_calc(const uint8_t channel) {
     uint16_t voltage_raw;
     uint8_t result;
 
-   	voltage_raw = adc_read(channel);
+    voltage_raw = adc_read(channel);
 
-   	// With 1.1V-reference:
+    // With 1.1V-reference:
     // 25/512 * voltage_raw = R
-   	result = (25 * voltage_raw + 256) >> 9;
+    result = (25 * voltage_raw + 256) >> 9;
 
     // Check
     if(!result) return 1;
