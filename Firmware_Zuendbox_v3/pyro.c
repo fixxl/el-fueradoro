@@ -10,7 +10,7 @@
 #include "global.h"
 
 // Global Variables
-static volatile uint8_t  key_flag = 0;
+static volatile uint8_t  key_flag = 0, timer1_flags = 0;
 static volatile uint8_t  channel_monitor = 0;
 static volatile uint16_t active_channels = 0, transmit_flag = 0;
 
@@ -71,16 +71,16 @@ uint8_t debounce(volatile uint8_t *port, uint8_t pin) {
 
     // Query switch state every 10 ms until 8 identical states in a row are received
     while (((keystate != 0x00) && (keystate != 0xFF)) || (ctr < 8)) {
-        keystate <<= 1;                         // Shift left
-        keystate  |= ((*port & (1 << pin)) > 0);// Write 0 or 1 to LSB
+        keystate <<= 1;                          // Shift left
+        keystate  |= ((*port & (1 << pin)) > 0); // Write 0 or 1 to LSB
 
-        while (!(TIFR0 & (1 << TOV0)))          // Wait for timer overflow
+        while ( !(TIFR0 & (1 << TOV0)))          // Wait for timer overflow
             ;
 
-        TIFR0      = (1 << TOV0);               // Clear interrupt flag
-        TCNT0      = 160;                       // Preload timer
+        TIFR0      = (1 << TOV0);                // Clear interrupt flag
+        TCNT0      = 160;                        // Preload timer
 
-        if (ctr < 8) ctr++;                     // Make sure at least 8 queries are executed
+        if ( ctr < 8 ) ctr++;                    // Make sure at least 8 queries are executed
 
     }
 
@@ -110,19 +110,19 @@ void sr_dm_init(void) {
         SCLOCK_PORT &= ~(1 << SCLOCK);
 
         // Set shift-register values to 0...
-        for (uint8_t j = 3; j; j--) {
-            for (uint8_t i = (SR_CHANNELS + 4); i; i--) {
-                SCLOCK_PIN = (1 << SCLOCK);     // Pin high after toggling
-                SCLOCK_PIN = (1 << SCLOCK);     // Pin low after toggling
+        for ( uint8_t j = 3; j; j-- ) {
+            for ( uint8_t i = (SR_CHANNELS + 4); i; i-- ) {
+                SCLOCK_PIN = (1 << SCLOCK);      // Pin high after toggling
+                SCLOCK_PIN = (1 << SCLOCK);      // Pin low after toggling
             }
 
             // ... and apply shift-register to hc output register.
-            RCLOCK_PIN = (1 << RCLOCK);         // Pin durch Toggling high
-            RCLOCK_PIN = (1 << RCLOCK);         // Pin durch Toggling low
+            RCLOCK_PIN = (1 << RCLOCK);          // Pin durch Toggling high
+            RCLOCK_PIN = (1 << RCLOCK);          // Pin durch Toggling low
 
             // ... and apply shift-register to dm output register.
-            LAT_PIN    = (1 << LAT);            // Pin high after toggling
-            LAT_PIN    = (1 << LAT);            // Pin low after toggling
+            LAT_PIN    = (1 << LAT);             // Pin high after toggling
+            LAT_PIN    = (1 << LAT);             // Pin low after toggling
         }
 
         _delay_ms(1);
@@ -133,7 +133,7 @@ void sr_dm_init(void) {
         #if HARDWARE_SPI_SR
 
             // Activate and configure hardware SPI at F_CPU/16
-            if (!(SPCR & (1 << SPE))) SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
+            if ( !(SPCR & (1 << SPE))) SPCR |= (1 << SPE | 1 << MSTR | 1 << SPR0);
 
         #endif
     #else
@@ -168,7 +168,7 @@ uint16_t rfmtalk(void) {
         uart_puts("\n\rKommando (16-Bit-Hex-Format): 0x");
     #endif
 
-    for (uint8_t i = 4; i; i--) {
+    for ( uint8_t i = 4; i; i-- ) {
         rfm_order <<= 4;
         inp         = uart_getc();
         uart_putc(inp);
@@ -177,7 +177,7 @@ uint16_t rfmtalk(void) {
         rfm_order  |= uinp;
     }
 
-    if (!error) return rfm_order;
+    if ( !error ) return rfm_order;
     else return 0xFFFF;
 }
 
@@ -187,13 +187,13 @@ uint16_t rfmtalk(void) {
 uint8_t tempident(void) {
     uint8_t checkup = 0;
 
-    for (uint8_t i = 5; i; i--) {
-        checkup += w1_reset();                      // In case of sensor connection w1_reset() will return 0
-        checkup += !((W1_PIN & (1 << W1)) && 1);    // In case of sensor connection the right side will end up as 0
+    for ( uint8_t i = 5; i; i-- ) {
+        checkup += w1_reset();                   // In case of sensor connection w1_reset() will return 0
+        checkup += !((W1_PIN & (1 << W1)) && 1); // In case of sensor connection the right side will end up as 0
     }
 
     // Type of temp. sensor is detected by return value
-    if (!checkup) return DS18B20;
+    if ( !checkup ) return DS18B20;
     else {
         W1_DDR  &= ~(1 << W1);
         W1_PORT |= (1 << W1);
@@ -207,14 +207,14 @@ int8_t tempmeas(uint8_t type) {
     uint16_t temp_hex;
     uint32_t utimer;
 
-    if (!type) return -128;
+    if ( !type ) return -128;
     else {
         w1_temp_conf(125, -40, 9);
         w1_command(CONVERT_T, NULL);
 
         utimer      = F_CPU / 128;
 
-        while (--utimer && !w1_bit_io(1));
+        while ( --utimer && !w1_bit_io(1));
 
         w1_command(READ, NULL);
         temp_hex    = w1_byte_rd();
@@ -303,6 +303,7 @@ int main(void) {
 
     // Initialise Timer
     timer1_init();
+    timer1_on();
 
     // Initialise LEDs
     led_init();
@@ -313,22 +314,22 @@ int main(void) {
     // Get Slave- und Unique-ID from EEPROM for ignition devices
     update_addresses(&unique_id, &slave_id);
 
-    if (!unique_id || !slave_id) {
-        if (!unique_id) unique_id = 30;
+    if ( !unique_id || !slave_id ) {
+        if ( !unique_id ) unique_id = 30;
 
-        if (!slave_id) slave_id = 30;
+        if ( !slave_id ) slave_id = 30;
 
         addresses_save(unique_id, slave_id);
         wdt_enable(6);
 
-        while (1);
+        while ( 1 );
     }
 
     led_yellow_on();
 
     // Initialise arrays and show slave-id by blinking!
-    for (uint8_t warten = 0; warten < MAX_ARRAYSIZE; warten++) {
-        if (warten < slave_id) {
+    for ( uint8_t warten = 0; warten < MAX_ARRAYSIZE; warten++ ) {
+        if ( warten < slave_id ) {
             led_yellow_toggle();
             led_orange_toggle();
             _delay_ms(200);
@@ -362,7 +363,7 @@ int main(void) {
 
     // Set encryption active, read and transfer AES-Key
     rfm_cmd(0x3DA1, 1);
-    for(uint8_t i = 0; i < 16; i++) {
+    for( uint8_t i = 0; i < 16; i++ ) {
         rfm_cmd((0x3E00 + i * (0x0100)) | eeread(START_ADDRESS_AESKEY_STORAGE + i), 1);
     }
 
@@ -373,7 +374,7 @@ int main(void) {
 
     armed                  = debounce(&KEY_PIN, KEY);
 
-    if (armed) led_red_on();
+    if ( armed ) led_red_on();
     else led_red_off();
 
     flags.b.clear_list     = 1;
@@ -399,11 +400,11 @@ int main(void) {
      * variable, interrupts are disabled and the flag gets cleared, after the routine interrupts are re-enabled
      *
      */
-    while (1) {
+    while ( 1 ) {
         // -------------------------------------------------------------------------------------------------------
 
         // Control key switch (key_flag gets set via pin-change-interrupt)
-        if (key_flag) {
+        if ( key_flag ) {
             temp_sreg              = SREG;
             cli();
             key_flag               = 0;
@@ -411,7 +412,7 @@ int main(void) {
             // Box armed: armed = 1, Box not armed: armed = 0
             armed                  = debounce(&KEY_PIN, KEY);
 
-            if (armed) led_red_on();
+            if ( armed ) led_red_on();
             else {
                 MOSSWITCHPORT &= ~(1 << MOSSWITCH);
                 led_red_off();
@@ -427,7 +428,7 @@ int main(void) {
         // UART-Routine
         flags.b.uart_active = ((UCSR0A & (1 << RXC0)) && 1);
 
-        if (flags.b.uart_active) {
+        if ( flags.b.uart_active ) {
             temp_sreg           = SREG;
             cli();
             flags.b.uart_active = 0;
@@ -439,7 +440,7 @@ int main(void) {
 
             // React according to first char (ignition command or not?)
             // Ignition command is always 4 chars long
-            switch (uart_field[0]) {
+            switch ( uart_field[0] ) {
                 case 0xFF: {
                     uart_field[1] = uart_getc();
                     uart_field[2] = uart_getc();
@@ -461,9 +462,9 @@ int main(void) {
                     #if !CASE_SENSITIVE
                         uart_field[0] = uart_lower_case(uart_field[0]);
                     #endif
-                    uart_putc(uart_field[0]);                   // Show first char so everything looks as it should
+                    uart_putc(uart_field[0]); // Show first char so everything looks as it should
 
-                    if (!uart_gets(uart_field + 1)) {
+                    if ( !uart_gets(uart_field + 1)) {
                         uart_puts_P(PSTR("\033[1D"));
                         uart_puts_P(PSTR(" "));
                         uart_puts_P(PSTR("\033[1D"));
@@ -476,57 +477,57 @@ int main(void) {
 
             // Evaluate inputs
             // "conf" starts ID configuration
-            if (uart_strings_equal(uart_field, "conf")) {
+            if ( uart_strings_equal(uart_field, "conf")) {
                 flags.b.uart_config = 1;
                 flags.b.transmit    = 0;
             }
 
             // "remote" starts remote ID configuration
-            if (uart_strings_equal(uart_field, "remote")) {
+            if ( uart_strings_equal(uart_field, "remote")) {
                 flags.b.remote   = 1;
                 flags.b.transmit = 0;
             }
 
             // "clearlist" empties list of boxes
-            if (uart_strings_equal(uart_field, "clearlist")) flags.b.clear_list = 1;
+            if ( uart_strings_equal(uart_field, "clearlist")) flags.b.clear_list = 1;
 
             // "send" allows to manually send a command
-            if (uart_strings_equal(uart_field, "send") || uart_strings_equal(uart_field, "fire") ||
-                uart_strings_equal(uart_field, "ident") || uart_strings_equal(uart_field, "temp")) {
+            if ( uart_strings_equal(uart_field, "send") || uart_strings_equal(uart_field, "fire") ||
+                 uart_strings_equal(uart_field, "ident") || uart_strings_equal(uart_field, "temp")) {
                 flags.b.send     = 1;
                 flags.b.transmit = 0;
             }
 
             // "list" gives an overview over connected boxes
-            if (uart_strings_equal(uart_field, "list")) {
+            if ( uart_strings_equal(uart_field, "list")) {
                 flags.b.list     = 1;
                 flags.b.transmit = 0;
             }
 
             // "imp" measures and lists local impedances
-            if (uart_strings_equal(uart_field, "imp")) {
+            if ( uart_strings_equal(uart_field, "imp")) {
                 flags.b.read_impedance = 1;
                 flags.b.list_impedance = 1;
             }
 
             // "cls" clears terminal screen
-            if (uart_strings_equal(uart_field, "cls")) terminal_reset();
+            if ( uart_strings_equal(uart_field, "cls")) terminal_reset();
 
             // "kill" resets the controller
-            if (uart_strings_equal(uart_field, "kill")) flags.b.reset_device = 1;
+            if ( uart_strings_equal(uart_field, "kill")) flags.b.reset_device = 1;
 
             // "hardware" or "hw" outputs for uC- and rfm-type
-            if (uart_strings_equal(uart_field, "hw") || uart_strings_equal(uart_field, "hardware")) flags.b.hw = 1;
+            if ( uart_strings_equal(uart_field, "hw") || uart_strings_equal(uart_field, "hardware")) flags.b.hw = 1;
 
             // "rfm" gives access to radio module
-            if (uart_strings_equal(uart_field, "rfm")) {
+            if ( uart_strings_equal(uart_field, "rfm")) {
                 scheme = rfmtalk();
 
-                if (scheme != 0xFFFF) {
+                if ( scheme != 0xFFFF ) {
                     #if (RFM == 69)
                         rfm_pwr = 0;
 
-                        if ((scheme & 0xFFE0) == 0x9180) rfm_pwr = (scheme & 0x001F);
+                        if ((scheme & 0xFFE0) == 0x9180 ) rfm_pwr = (scheme & 0x001F);
 
                         scheme  = rfm_cmd(scheme, (scheme & 32768) && 1);
                     #else
@@ -537,16 +538,16 @@ int main(void) {
 
                     #if (RFM == 69)
 
-                        if (rfm_pwr) {
+                        if ( rfm_pwr ) {
                             uart_puts_P(PSTR("\r\nSendeleistung dauerhaft speichern (j/n)? "));
                             inp = 0;
 
-                            while (!((inp == 'j') || (inp == 'n'))) inp = uart_getc() | 0x20;
+                            while ( !((inp == 'j') || (inp == 'n'))) inp = uart_getc() | 0x20;
 
                             uart_putc(inp);
                             uart_puts_P(PSTR("\r\n"));
 
-                            if (inp == 'j') {
+                            if ( inp == 'j' ) {
                                 eewrite(rfm_pwr, RFM_PWR_ADDRESS);
                                 eewrite(crc8(0x11, rfm_pwr), (RFM_PWR_ADDRESS + 1));
                                 uart_puts_P(PSTR("Speichern erfolgreich!\r\n"));
@@ -560,16 +561,16 @@ int main(void) {
             }
 
             // "aeskey" displays the current key and allows to set a new one
-            if (uart_strings_equal(uart_field, "aeskey")) {
+            if ( uart_strings_equal(uart_field, "aeskey")) {
                 changes = aesconf();
 
-                if (changes) flags.b.reset_device = 1;
+                if ( changes ) flags.b.reset_device = 1;
 
                 changes = 0;
             }
 
             // If valid ignition command was received
-            if (fire_command_uart_valid(uart_field)) {
+            if ( fire_command_uart_valid(uart_field)) {
                 // Transmit to everybody
                 tx_field[0]      = FIRE;
                 tx_field[1]      = uart_field[1];
@@ -577,10 +578,10 @@ int main(void) {
                 flags.b.transmit = 1;
 
                 // Check if ignition was triggered on device that received the serial command
-                if (slave_id == uart_field[1]) {
+                if ( slave_id == uart_field[1] ) {
                     tmp = uart_field[2] - 1;
 
-                    if (!flags.b.fire) {
+                    if ( !flags.b.fire ) {
                         rx_field[2]  = uart_field[2];
                         flags.b.fire = 1;
                         loopcount    = 1;
@@ -590,40 +591,44 @@ int main(void) {
 
             led_yellow_off();
 
-            if (uart_field[0] && (uart_field[0] != 0xFF)) uart_puts_P(PSTR("\n\r"));
+            if ( uart_field[0] && (uart_field[0] != 0xFF)) uart_puts_P(PSTR("\n\r"));
 
             SREG = temp_sreg;
         }
 
         // -------------------------------------------------------------------------------------------------------
 
-        if(flags.b.read_impedance) {
+        if( flags.b.read_impedance || (timer1_flags & TIMER_MEASURE_FLAG)) {
             temp_sreg              = SREG;
             cli();
             flags.b.read_impedance = 0;
+            timer1_flags          &= ~TIMER_MEASURE_FLAG;
 
+            // Make sure that ignition voltage is disconnected
             MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
 
+            // Loop through all 16 channels and measure impedance
             uint16_t mask = 0x0001;
             statusleds             = 0;
-            for(uint8_t i = 0; i < 16; i++) {
+            for( uint8_t i = 0; i < 16; i++ ) {
                 sr_shiftout(mask);
-                _delay_ms(10);
+                _delay_ms(2);
                 impedances[i] = imp_calc(4);
                 sr_shiftout(0x0000);
 
-                if(impedances[i] < 50) statusleds |= mask;
+                if( impedances[i] < 50 ) statusleds |= mask;
 
                 mask        <<= 1;
             }
 
+            // Turn on status LEDs
             dm_shiftout(statusleds);
 
-            if(flags.b.transmit) {
+            if( flags.b.transmit ) {
                 tx_field[0] = IMPEDANCES;
                 tx_field[1] = unique_id;
 
-                for(uint8_t i = 0; i < 16; i++) tx_field[2 + i] = impedances[i];
+                for( uint8_t i = 0; i < 16; i++ ) tx_field[2 + i] = impedances[i];
             }
 
             SREG                   = temp_sreg;
@@ -631,20 +636,20 @@ int main(void) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        if(flags.b.list_impedance && !flags.b.read_impedance) {
+        if( flags.b.list_impedance && !flags.b.read_impedance ) {
             temp_sreg              = SREG;
             cli();
             flags.b.list_impedance = 0;
 
             uart_puts_P(PSTR("\n\n\rGemessene Kanalwiderstände\n\r"));
             uart_puts_P(PSTR("==========================\n\rKanal Widerstand\r\n"));
-            for(uint8_t i = 0; i < 16; i++) {
-                if(i < 9) uart_puts_P(PSTR(" "));
+            for( uint8_t i = 0; i < 16; i++ ) {
+                if( i < 9 ) uart_puts_P(PSTR(" "));
 
                 uart_shownum(i + 1, 'd');
                 uart_puts_P(PSTR("    "));
 
-                if(impedances[i] < 50) uart_shownum(impedances[i], 'd');
+                if( impedances[i] < 50 ) uart_shownum(impedances[i], 'd');
                 else uart_puts_P(PSTR("Offen"));
 
                 uart_puts_P(PSTR("\r\n"));
@@ -657,7 +662,7 @@ int main(void) {
         // -------------------------------------------------------------------------------------------------------
 
         // Hardware
-        if (flags.b.hw) {
+        if ( flags.b.hw ) {
             temp_sreg  = SREG;
             cli();
             flags.b.hw = 0;
@@ -676,14 +681,14 @@ int main(void) {
         // -------------------------------------------------------------------------------------------------------
 
         // Slave- and Unique-ID settings
-        if (flags.b.uart_config) {
+        if ( flags.b.uart_config ) {
             temp_sreg           = SREG;
             cli();
             flags.b.uart_config = 0;
 
             changes             = configprog(1);
 
-            if (changes) flags.b.reset_device = 1;
+            if ( changes ) flags.b.reset_device = 1;
 
             changes             = 0;
             SREG                = temp_sreg;
@@ -692,7 +697,7 @@ int main(void) {
         // -------------------------------------------------------------------------------------------------------
 
         // Remote Slave- and Unique-ID settings
-        if (flags.b.remote) {
+        if ( flags.b.remote ) {
             temp_sreg      = SREG;
             cli();
             flags.b.remote = 0;
@@ -700,7 +705,7 @@ int main(void) {
             changes        = 0;
             changes        = remote_config(tx_field);
 
-            if (changes) {
+            if ( changes ) {
                 // If the numbers are those of the connected device
                 if ((tx_field[1] == unique_id) && (tx_field[2] == slave_id)) {
                     uart_puts_P(PSTR("\n\rIDs werden lokal angepasst!\n\r"));
@@ -722,7 +727,7 @@ int main(void) {
         // -------------------------------------------------------------------------------------------------------
 
         // Manual transmission
-        if (flags.b.send) {
+        if ( flags.b.send ) {
             temp_sreg    = SREG;
             cli();
 
@@ -730,7 +735,7 @@ int main(void) {
 
             nr           = 0, tmp = 0, inp = 0;
 
-            switch (uart_field[0]) {
+            switch ( uart_field[0] ) {
                 case FIRE:
                 case IDENT:
                 case TEMPERATURE: {
@@ -741,7 +746,7 @@ int main(void) {
                 default: {
                     uart_puts_P(PSTR("\n\rModus(f/i/t): "));
 
-                    while (!inp) inp = uart_getc() | 0x20;
+                    while ( !inp ) inp = uart_getc() | 0x20;
 
                     uart_putc(inp);
                     uart_puts_P(PSTR("\r\n"));
@@ -756,16 +761,16 @@ int main(void) {
                 tmp = 1;
 
                 // Handle slave-id and channel input
-                switch (tx_field[0]) {
+                switch ( tx_field[0] ) {
                     case FIRE: {
-                        for (uint8_t round = 1; round < 3; round++) {                               // Loop twice
+                        for ( uint8_t round = 1; round < 3; round++ ) {                            // Loop twice
                             nr = 0;
-                            uart_puts_P(round < 2 ? PSTR("Slave-ID:\t") : PSTR("\n\rKanal:  \t"));  // First for slave-id, then for channel
+                            uart_puts_P(round < 2 ? PSTR("Slave-ID:\t") : PSTR("\n\rKanal:  \t")); // First for slave-id, then for channel
 
-                            for (i = 0; i < 2; i++) {                                               // Get the user to assign the numbers with 2 digits
+                            for ( i = 0; i < 2; i++ ) {                                            // Get the user to assign the numbers with 2 digits
                                 inp = 0;
 
-                                while (!inp) inp = uart_getc();
+                                while ( !inp ) inp = uart_getc();
 
                                 uart_putc(inp);
                                 nr *= 10;
@@ -774,13 +779,13 @@ int main(void) {
 
                             uart_puts_P(PSTR(" = "));
 
-                            if ((nr > 0) && (nr < ((round < 2) ? 31 : 17))) {                       // Slave-ID has to be 1-30, Channel 1-16
+                            if ((nr > 0) && (nr < ((round < 2) ? 31 : 17))) {                      // Slave-ID has to be 1-30, Channel 1-16
                                 uart_shownum(nr, 'd');
                                 tx_field[round] = nr;
                             }
-                            else {                                                                  // Otherwise the input's invalid
+                            else {                                                                 // Otherwise the input's invalid
                                 uart_puts_P(PSTR("Ungültige Eingabe"));
-                                tmp   = 0;                                                          // Sending gets disallowed
+                                tmp   = 0;                                                         // Sending gets disallowed
                                 round = 3;
                             }
                         }
@@ -800,7 +805,7 @@ int main(void) {
 
                         uart_puts_P(PSTR("Temperatur: "));
 
-                        if (temperature == -128) uart_puts_P(PSTR("n.a."));
+                        if ( temperature == -128 ) uart_puts_P(PSTR("n.a."));
                         else {
                             fixedspace(temperature, 'd', 4);
                             uart_puts_P(PSTR("°C"));
@@ -823,7 +828,7 @@ int main(void) {
             uart_puts_P(PSTR("\n\n\r"));
 
             // Take action after proper command
-            if (tmp) {
+            if ( tmp ) {
                 flags.b.transmit = 1;
 
                 if ((tx_field[0] == FIRE) && (slave_id == tx_field[1])) {
@@ -833,7 +838,7 @@ int main(void) {
             }
             else flags.b.transmit = 0;
 
-            while (UCSR0A & (1 << RXC0)) inp = UDR0;
+            while ( UCSR0A & (1 << RXC0)) inp = UDR0;
 
             SREG = temp_sreg;
         }
@@ -841,7 +846,7 @@ int main(void) {
         // -------------------------------------------------------------------------------------------------------
 
         // List network devices
-        if (flags.b.list) {
+        if ( flags.b.list ) {
             temp_sreg    = SREG;
             cli();
 
@@ -857,7 +862,7 @@ int main(void) {
         // -------------------------------------------------------------------------------------------------------
 
         // Software-Reset via Watchdog
-        if (flags.b.reset_device) {
+        if ( flags.b.reset_device ) {
             cli();
 
             sr_disable();
@@ -865,13 +870,13 @@ int main(void) {
             wdt_enable(6);
             terminal_reset();
 
-            while (1);
+            while ( 1 );
         }
 
         // -------------------------------------------------------------------------------------------------------
 
         // Clear list of ignition devices
-        if (flags.b.clear_list || (flags.b.transmit && (tx_field[0] == IDENT))) {
+        if ( flags.b.clear_list || (flags.b.transmit && (tx_field[0] == IDENT))) {
             temp_sreg                           = SREG;
             cli();
 
@@ -879,7 +884,7 @@ int main(void) {
 
             iderrors                            = 0;
 
-            for (i = 0; i < 30; i++) {
+            for ( i = 0; i < 30; i++ ) {
                 slaveid_char[i]         = 0;
                 quantity[i]             = 0;
                 battery_voltage_char[i] = 0;
@@ -903,16 +908,16 @@ int main(void) {
 
         // Transmit
         // Check if device has waited long enough (according to unique-id) to be allowed to transmit
-        if (!transmission_allowed && (transmit_flag > (unique_id * 10U + 10U))) transmission_allowed = 1;
+        if ( !transmission_allowed && (transmit_flag > (unique_id * 10U + 10U))) transmission_allowed = 1;
 
         // Transmission process
-        if (flags.b.transmit && transmission_allowed) {
+        if ( flags.b.transmit && transmission_allowed ) {
             temp_sreg        = SREG;
             cli();
 
             flags.b.transmit = 0;
 
-            switch (tx_field[0]) {
+            switch ( tx_field[0] ) {
                 case FIRE: {
                     loopcount = FIRE_REPEATS;
                     tmp       = FIRE_LENGTH - 1;
@@ -966,19 +971,19 @@ int main(void) {
             tx_field[tmp + 1]    = '\0';
             tx_length            = tmp + 1;
 
-            if ((tx_field[0] != FIRE) || armed) {                       // Only send 'FIRE' if sending device is armed
-                for (uint8_t i = loopcount; i; i--) {
+            if ((tx_field[0] != FIRE) || armed ) {                    // Only send 'FIRE' if sending device is armed
+                for ( uint8_t i = loopcount; i; i-- ) {
                     led_green_on();
 
-                    rfm_tx_error = rfm_transmit(tx_field, tx_length);   // Transmit message
+                    rfm_tx_error = rfm_transmit(tx_field, tx_length); // Transmit message
                     tx_field[tmp]--;
 
-                    if(!rfm_tx_error) led_green_off();
+                    if( !rfm_tx_error ) led_green_off();
                 }
             }
 
-            if(!flags.b.is_fire_active) {
-                timer1_off();
+            if( !flags.b.is_fire_active ) {
+                timer1_flags &= ~TIMER_TRANSMITCOUNTER_FLAG;
                 timer1_reset();
             }
 
@@ -993,37 +998,37 @@ int main(void) {
         // -------------------------------------------------------------------------------------------------------
 
         // Fire
-        if (flags.b.fire) {
+        if ( flags.b.fire ) {
             temp_sreg    = SREG;
             cli();
             flags.b.fire = 0;
 
-            if (armed && (rx_field[2] > 0) && (rx_field[2] < 17)) {     // If channel number is valid
-                tmp                    = rx_field[2];                   // Save channel number to variable
+            if ( armed && (rx_field[2] > 0) && (rx_field[2] < 17)) {  // If channel number is valid
+                tmp                    = rx_field[2];                 // Save channel number to variable
 
-                flags.b.is_fire_active = 1;                             // Signalize that we're currently firing
+                flags.b.is_fire_active = 1;                           // Signalize that we're currently firing
 
                 // Turn all leds on
                 leds_on();
 
-                scheme                 = 0;                             // Set mask-variable to zero
+                scheme                 = 0;                           // Set mask-variable to zero
 
-                for (uint8_t i = 16; i; i--) {
-                    scheme <<= 1;                                       // Left-shift mask-variable
+                for ( uint8_t i = 16; i; i-- ) {
+                    scheme <<= 1;                                     // Left-shift mask-variable
 
-                    if (i == tmp) scheme |= 1;                          // Set LSB if loop variable equals channel number
+                    if ( i == tmp ) scheme |= 1;                      // Set LSB if loop variable equals channel number
 
                 }
 
                 scheme                |= active_channels;
 
                 MOSSWITCHPORT         |= (1 << MOSSWITCH);
-                sr_shiftout(scheme);                                    // Write pattern to shift-register
+                sr_shiftout(scheme);                                  // Write pattern to shift-register
                 active_channels        = scheme;
 
                 // (Re-)Start the interval timer
                 timer1_reset();
-                timer1_on();
+                timer1_flags          |= TIMER_TRANSMITCOUNTER_FLAG;
             }
 
             // Turn on receiver
@@ -1034,51 +1039,51 @@ int main(void) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        if (flags.b.is_fire_active && channel_monitor) {                // If we're currently firing and monitoring is due
+        if ( flags.b.is_fire_active && channel_monitor ) {            // If we're currently firing and monitoring is due
             temp_sreg       = SREG;
             cli();
 
-            channel_monitor = 0;                                        // Clear the monitoring flag
-            anti_scheme     = 0;                                        // Reset the delete scheme
+            channel_monitor = 0;                                      // Clear the monitoring flag
+            anti_scheme     = 0;                                      // Reset the delete scheme
 
             controlvar      = 1;
-            for (uint8_t i = 0; i < 16; i++) {
-                if(active_channels & controlvar) {                      // If a given channel is currently active
-                    channel_timeout[i]++;                               // Increment the timeout-value for that channel
+            for ( uint8_t i = 0; i < 16; i++ ) {
+                if( active_channels & controlvar ) {                  // If a given channel is currently active
+                    channel_timeout[i]++;                             // Increment the timeout-value for that channel
 
-                    if(channel_timeout[i] >= IGNITION_TIME) {           // If the channel was active for at least the ignition time
-                        anti_scheme          |= controlvar;             // Set delete-bit for this channel
-                        channel_timeout[i]    = 0;                      // Reset channel-timeout value
-                        flags.b.finish_firing = 1;                      // Leave a note that a change in the list of active channels is due
+                    if( channel_timeout[i] >= IGNITION_TIME ) {       // If the channel was active for at least the ignition time
+                        anti_scheme          |= controlvar;           // Set delete-bit for this channel
+                        channel_timeout[i]    = 0;                    // Reset channel-timeout value
+                        flags.b.finish_firing = 1;                    // Leave a note that a change in the list of active channels is due
                     }
                 }
 
-                controlvar <<= 1;                                       // Left-shift mask-variable
+                controlvar <<= 1;                                     // Left-shift mask-variable
             }
-            anti_scheme    ^= active_channels;                          // Set channels to zero, which shell be deleted AND are active, others remain active.
+            anti_scheme    ^= active_channels;                        // Set channels to zero, which shell be deleted AND are active, others remain active.
             SREG            = temp_sreg;
         }
 
         // -------------------------------------------------------------------------------------------------------
 
         // Stop firing if it's due
-        if (flags.b.finish_firing) {                                    // If we have the order to stop firing on at least one channel
+        if ( flags.b.finish_firing ) {                                // If we have the order to stop firing on at least one channel
             temp_sreg             = SREG;
             cli();
-            flags.b.finish_firing = 0;                                  // Mark the order as done
+            flags.b.finish_firing = 0;                                // Mark the order as done
 
             // Lock respective MOSFETs
-            sr_shiftout(anti_scheme);                                   // Perform the necessary shift-register changes
+            sr_shiftout(anti_scheme);                                 // Perform the necessary shift-register changes
 
-            active_channels       = anti_scheme;                        // Re-write the list of currently active channels
+            active_channels       = anti_scheme;                      // Re-write the list of currently active channels
 
-            if (!anti_scheme) {                                         // If no more channels are active at the moment
-                MOSSWITCHPORT         &= ~(1 << MOSSWITCH);             // Block the P-FET-channel
-                flags.b.is_fire_active = 0;                             // Signalize that firing is finished for now
+            if ( !anti_scheme ) {                                     // If no more channels are active at the moment
+                MOSSWITCHPORT         &= ~(1 << MOSSWITCH);           // Block the P-FET-channel
+                flags.b.is_fire_active = 0;                           // Signalize that firing is finished for now
 
                 // Turn off the interval timer
-                if(!flags.b.transmit) {
-                    timer1_off();
+                if( !flags.b.transmit ) {
+                    timer1_flags &= ~TIMER_TRANSMITCOUNTER_FLAG;
                     timer1_reset();
                     transmit_flag = 0;
                 }
@@ -1096,7 +1101,7 @@ int main(void) {
         // Receive
         flags.b.receive = rfm_receiving();
 
-        if (flags.b.receive) {
+        if ( flags.b.receive ) {
             temp_sreg       = SREG;
             cli();
 
@@ -1104,25 +1109,25 @@ int main(void) {
 
             led_orange_on();
             #ifdef RFM69_H_
-                rssi        = rfm_get_rssi_dbm();                       // Measure signal strength (RFM69 only)
+                rssi        = rfm_get_rssi_dbm();                     // Measure signal strength (RFM69 only)
             #endif
-            rfm_rx_error    = rfm_receive(rx_field, &rx_length);        // Get Message
+            rfm_rx_error    = rfm_receive(rx_field, &rx_length);      // Get Message
             led_orange_off();
 
-            if (rfm_rx_error) rx_field[0] = ERROR;
+            if ( rfm_rx_error ) rx_field[0] = ERROR;
             else {
-                switch (rx_field[0]) {                                  // Act according to type of message received
+                switch ( rx_field[0] ) {                              // Act according to type of message received
                     // Received ignition command (only relevant for ignition devices)
                     case FIRE: {
                         // Wait for all repetitions to be over
-                        for (uint8_t i = rx_field[FIRE_LENGTH - 1] - 1; i; i--) {
+                        for ( uint8_t i = rx_field[FIRE_LENGTH - 1] - 1; i; i-- ) {
                             _delay_us((ADDITIONAL_LENGTH + FIRE_LENGTH) * BYTE_DURATION_US);
                         }
 
-                        if (armed && (rx_field[1] == slave_id)) {
+                        if ( armed && (rx_field[1] == slave_id)) {
                             tmp = rx_field[2] - 1;
 
-                            if (!flags.b.fire) flags.b.fire = 1;
+                            if ( !flags.b.fire ) flags.b.fire = 1;
                         }
 
                         break;
@@ -1131,8 +1136,8 @@ int main(void) {
                     // Received temperature-measurement-trigger
                     case TEMPERATURE: {
                         // Wait for all repetitions to be over
-                        for (uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1; i;
-                             i--) _delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
+                        for ( uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1; i;
+                              i-- ) _delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
 
                         temperature = tempmeas(tempsenstype);
                         break;
@@ -1141,7 +1146,7 @@ int main(void) {
                     // Received identification-demand
                     case IDENT: {
                         // Wait for all repetitions to be over
-                        for (uint8_t i = rx_field[IDENT_LENGTH - 1] - 1; i; i--) _delay_us(
+                        for ( uint8_t i = rx_field[IDENT_LENGTH - 1] - 1; i; i-- ) _delay_us(
                                 (ADDITIONAL_LENGTH + IDENT_LENGTH) * BYTE_DURATION_US);
 
                         tx_field[0]          = PARAMETERS;
@@ -1154,7 +1159,7 @@ int main(void) {
                         transmission_allowed = 0;
                         timer1_reset();
                         transmit_flag        = 0;
-                        timer1_on();
+                        timer1_flags        |= TIMER_TRANSMITCOUNTER_FLAG;
 
                         flags.b.transmit     = 1;
                         flags.b.clear_list   = 1;
@@ -1165,15 +1170,15 @@ int main(void) {
                     // Received Parameters
                     case PARAMETERS: {
                         // Wait for all repetitions to be over
-                        for (uint8_t i = rx_field[PARAMETERS_LENGTH - 1] - 1; i;
-                             i--) _delay_us((ADDITIONAL_LENGTH + PARAMETERS_LENGTH) * BYTE_DURATION_US);
+                        for ( uint8_t i = rx_field[PARAMETERS_LENGTH - 1] - 1; i;
+                              i-- ) _delay_us((ADDITIONAL_LENGTH + PARAMETERS_LENGTH) * BYTE_DURATION_US);
 
                         // Increment ID error, if ID-error (='E') or 0 or unique-id of this device
                         // or already used unique-id was received as unique-id
                         if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id) ||
                             (rx_field[1] && slaveid_char[(uint8_t)(rx_field[1] - 1)])) iderrors++;
                         else {
-                            tmp                       = rx_field[1] - 1;// Index = unique_id-1 (zero-based indexing)
+                            tmp                       = rx_field[1] - 1; // Index = unique_id-1 (zero-based indexing)
                             slaveid_char[tmp]         = rx_field[2];
                             battery_voltage_char[tmp] = rx_field[3];
                             sharpness[tmp]            = (rx_field[4] ? 'j' : 'n');
@@ -1187,10 +1192,10 @@ int main(void) {
                     // Received change command
                     case CHANGE: {
                         // Wait for all repetitions to be over
-                        for (uint8_t i = rx_field[CHANGE_LENGTH - 1] - 1; i;
-                             i--) _delay_us((ADDITIONAL_LENGTH + CHANGE_LENGTH) * BYTE_DURATION_US);
+                        for ( uint8_t i = rx_field[CHANGE_LENGTH - 1] - 1; i;
+                              i-- ) _delay_us((ADDITIONAL_LENGTH + CHANGE_LENGTH) * BYTE_DURATION_US);
 
-                        if (!armed && (unique_id == rx_field[1]) && (slave_id == rx_field[2])) {
+                        if ( !armed && (unique_id == rx_field[1]) && (slave_id == rx_field[2])) {
                             rem_uid = rx_field[3];
                             rem_sid = rx_field[4];
 
@@ -1208,11 +1213,11 @@ int main(void) {
 
                     case MEASURE: {
                         // Wait for all repetitions to be over
-                        for (uint8_t i = rx_field[MEASURE_LENGTH - 1] - 1; i;
-                             i--) _delay_us((ADDITIONAL_LENGTH + MEASURE_LENGTH) * BYTE_DURATION_US);
+                        for ( uint8_t i = rx_field[MEASURE_LENGTH - 1] - 1; i;
+                              i-- ) _delay_us((ADDITIONAL_LENGTH + MEASURE_LENGTH) * BYTE_DURATION_US);
 
                         // Set flag for impedance reading and subsequent transmitting
-                        if (unique_id == rx_field[1]) {
+                        if ( unique_id == rx_field[1] ) {
                             flags.b.read_impedance = 1;
                             flags.b.transmit       = 1;
                             transmission_allowed   = 1;
@@ -1242,10 +1247,23 @@ int main(void) {
 }
 
 // Interrupt vectors
-ISR(TIMER1_COMPA_vect) {                        // Occurs every 10ms if active
-    transmit_flag++;
+ISR(TIMER1_COMPA_vect) {                            // Occurs every 10ms if active
+    static uint8_t meascycles = 0;
 
-    if(active_channels) channel_monitor = 1;    // Set a reminder to monitor the channels
+    // Trigger impedance measurement every 2.5s
+    meascycles++;
+
+    if ( meascycles > 249 ) {
+        timer1_flags |= TIMER_MEASURE_FLAG;
+        meascycles    = 0;
+    }
+
+    if( timer1_flags & TIMER_TRANSMITCOUNTER_FLAG ) {
+        transmit_flag++;
+
+        if( active_channels ) channel_monitor = 1;  // Set a reminder to monitor the channels
+
+    }
 }
 
 ISR(KEYINT) {

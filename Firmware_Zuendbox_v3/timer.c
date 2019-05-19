@@ -7,7 +7,7 @@
 
 #include "global.h"
 
-// Activate Timer 1 (Prescaler 8) => Overflow after 53ms
+// Activate Timer 1 (Prescaler 8)
 void timer1_on(void) {
     TCCR1B |= (1 << CS11);
 }
@@ -25,7 +25,7 @@ void timer1_off(void) {
 }
 
 // Reset Timer 1 (Counter to 0, clear compare flag)
-inline void timer1_reset(void) {
+void timer1_reset(void) {
     TIFR1 = (1 << OCF1A);
     TCNT1 = 0;
 }

@@ -8,10 +8,13 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
-#define TIMER_OVERFLOW    (TIFR1 & (1 << TOV1))
+#define TIMER_MEASURE_FLAG          1
+#define TIMER_TRANSMITCOUNTER_FLAG  2
+
+#define TIMER_OVERFLOW              (TIFR1 & (1 << TOV1))
 
 void timer1_init(void);
 void timer1_on(void);
 void timer1_off(void);
-extern void timer1_reset(void);
+void timer1_reset(void);
 #endif
