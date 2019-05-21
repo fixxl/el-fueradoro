@@ -598,7 +598,17 @@ int main(void) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        if( flags.b.read_impedance || (timer1_flags & TIMER_MEASURE_FLAG)) {
+        // Check receive flag
+        temp_sreg       = SREG;
+        cli();
+        flags.b.receive = rfm_receiving();
+        SREG            = temp_sreg;
+
+        // -------------------------------------------------------------------------------------------------------
+
+        // Update channel impedances unless some more important event is happening right now
+        if( (flags.b.read_impedance || (timer1_flags & TIMER_MEASURE_FLAG)) &&
+           !(flags.b.fire || flags.b.is_fire_active || flags.b.receive || ( flags.b.transmit && transmission_allowed )) ) {
             temp_sreg              = SREG;
             cli();
             flags.b.read_impedance = 0;
@@ -612,7 +622,7 @@ int main(void) {
             statusleds             = 0;
             for( uint8_t i = 0; i < 16; i++ ) {
                 sr_shiftout(mask);
-                _delay_ms(2);
+                _delay_ms(1);
                 impedances[i] = imp_calc(4);
                 sr_shiftout(0x0000);
 
@@ -911,7 +921,7 @@ int main(void) {
         if ( !transmission_allowed && (transmit_flag > (unique_id * 10U + 10U))) transmission_allowed = 1;
 
         // Transmission process
-        if ( flags.b.transmit && transmission_allowed ) {
+        if ( flags.b.transmit && transmission_allowed && !flags.b.receive ) {
             temp_sreg        = SREG;
             cli();
 
@@ -1091,6 +1101,7 @@ int main(void) {
                 // Turn all LEDs off and the red one on again
                 leds_off();
                 led_red_on();
+                flags.b.read_impedance = 1;
             }
 
             SREG                  = temp_sreg;
@@ -1098,8 +1109,13 @@ int main(void) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        // Receive
+        // Check receive flag
+        temp_sreg       = SREG;
+        cli();
         flags.b.receive = rfm_receiving();
+        SREG            = temp_sreg;
+
+        // -------------------------------------------------------------------------------------------------------
 
         if ( flags.b.receive ) {
             temp_sreg       = SREG;
@@ -1250,10 +1266,10 @@ int main(void) {
 ISR(TIMER1_COMPA_vect) {                            // Occurs every 10ms if active
     static uint8_t meascycles = 0;
 
-    // Trigger impedance measurement every 2.5s
+    // Trigger impedance measurement every 1.25s
     meascycles++;
 
-    if ( meascycles > 249 ) {
+    if ( meascycles > 124 ) {
         timer1_flags |= TIMER_MEASURE_FLAG;
         meascycles    = 0;
     }
