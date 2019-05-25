@@ -45,6 +45,9 @@
 // Ceiled duration of byte transmission in microseconds
 #define   BYTE_DURATION_US    (8 * (1000000UL + BITRATE) / BITRATE)
 
+#define   setTxCase(XX)       case XX: { loopcount = XX##_REPEATS; tmp       = XX##_LENGTH - 1; break; }
+#define   waitRx(XX)          for ( uint8_t i = rx_field[XX##_LENGTH - 1] - 1; i; i-- ) _delay_us((ADDITIONAL_LENGTH + XX##_LENGTH) * BYTE_DURATION_US)
+
 // Radio message lengths
 #define   ADDITIONAL_LENGTH   13    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
 #define   FIRE_LENGTH         4

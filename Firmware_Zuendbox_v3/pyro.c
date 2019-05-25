@@ -268,6 +268,8 @@ int main(void) {
     uint8_t   impedances[16]                          = { 0 };
     uint8_t   channel_timeout[16]                     = { 0 };
 
+    char      transmission_type                       = IDENT;
+
     // Make PB2 an high output to guarantee flawless
     // SPI-master-operation
     PORTB         |= (1 << PB2);
@@ -387,6 +389,7 @@ int main(void) {
 
     flags.b.transmit       = 1;
     flags.b.read_impedance = 1;
+    transmission_type      = PARAMETERS;
     key_flag               = 1;
 
     // Enable Interrupts
@@ -607,8 +610,8 @@ int main(void) {
         // -------------------------------------------------------------------------------------------------------
 
         // Update channel impedances unless some more important event is happening right now
-        if( (flags.b.read_impedance || (timer1_flags & TIMER_MEASURE_FLAG)) &&
-           !(flags.b.fire || flags.b.is_fire_active || flags.b.receive || ( flags.b.transmit && transmission_allowed )) ) {
+        if((flags.b.read_impedance || (timer1_flags & TIMER_MEASURE_FLAG)) &&
+           !(flags.b.fire || flags.b.is_fire_active || flags.b.receive)) {
             temp_sreg              = SREG;
             cli();
             flags.b.read_impedance = 0;
@@ -622,7 +625,7 @@ int main(void) {
             statusleds             = 0;
             for( uint8_t i = 0; i < 16; i++ ) {
                 sr_shiftout(mask);
-                _delay_ms(1);
+                _delay_ms(3);
                 impedances[i] = imp_calc(4);
                 sr_shiftout(0x0000);
 
@@ -634,7 +637,7 @@ int main(void) {
             // Turn on status LEDs
             dm_shiftout(statusleds);
 
-            if( flags.b.transmit ) {
+            if( flags.b.transmit && (transmission_type == IMPEDANCES)) {
                 tx_field[0] = IMPEDANCES;
                 tx_field[1] = unique_id;
 
@@ -646,7 +649,7 @@ int main(void) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        if( flags.b.list_impedance && !flags.b.read_impedance ) {
+        if( flags.b.list_impedance && !flags.b.read_impedance && !flags.b.receive ) {
             temp_sreg              = SREG;
             cli();
             flags.b.list_impedance = 0;
@@ -839,6 +842,7 @@ int main(void) {
 
             // Take action after proper command
             if ( tmp ) {
+                transmission_type = tx_field[0];
                 flags.b.transmit = 1;
 
                 if ((tx_field[0] == FIRE) && (slave_id == tx_field[1])) {
@@ -918,57 +922,23 @@ int main(void) {
 
         // Transmit
         // Check if device has waited long enough (according to unique-id) to be allowed to transmit
-        if ( !transmission_allowed && (transmit_flag > (unique_id * 10U + 10U))) transmission_allowed = 1;
+        if ( !transmission_allowed && (timer1_flags & TIMER_TRANSMITCOUNTER_FLAG) && (transmit_flag > (unique_id * 10U + 10U))) transmission_allowed = 1;
 
         // Transmission process
-        if ( flags.b.transmit && transmission_allowed && !flags.b.receive ) {
-            temp_sreg        = SREG;
+        if ( flags.b.transmit && transmission_allowed ) {
+            temp_sreg            = SREG;
             cli();
 
-            flags.b.transmit = 0;
+            flags.b.transmit     = 0;
 
             switch ( tx_field[0] ) {
-                case FIRE: {
-                    loopcount = FIRE_REPEATS;
-                    tmp       = FIRE_LENGTH - 1;
-                    break;
-                }
-
-                case CHANGE: {
-                    loopcount = CHANGE_REPEATS;
-                    tmp       = CHANGE_LENGTH - 1;
-                    break;
-                }
-
-                case IDENT: {
-                    loopcount = IDENT_REPEATS;
-                    tmp       = IDENT_LENGTH - 1;
-                    break;
-                }
-
-                case TEMPERATURE: {
-                    loopcount = TEMPERATURE_REPEATS;
-                    tmp       = TEMPERATURE_LENGTH - 1;
-                    break;
-                }
-
-                case PARAMETERS: {
-                    loopcount = PARAMETERS_REPEATS;
-                    tmp       = PARAMETERS_LENGTH - 1;
-                    break;
-                }
-
-                case MEASURE: {
-                    loopcount = MEASURE_REPEATS;
-                    tmp       = MEASURE_LENGTH - 1;
-                    break;
-                }
-
-                case IMPEDANCES: {
-                    loopcount = IMPEDANCES_REPEATS;
-                    tmp       = IMPEDANCES_LENGTH - 1;
-                    break;
-                }
+                setTxCase(FIRE);
+                setTxCase(CHANGE);
+                setTxCase(IDENT);
+                setTxCase(TEMPERATURE);
+                setTxCase(PARAMETERS);
+                setTxCase(MEASURE);
+                setTxCase(IMPEDANCES);
 
                 default: {
                     loopcount = 0;
@@ -992,11 +962,7 @@ int main(void) {
                 }
             }
 
-            if( !flags.b.is_fire_active ) {
-                timer1_flags &= ~TIMER_TRANSMITCOUNTER_FLAG;
-                timer1_reset();
-            }
-
+            timer1_flags        &= ~TIMER_TRANSMITCOUNTER_FLAG;
             transmit_flag        = 0;
             transmission_allowed = 0;
 
@@ -1035,16 +1001,12 @@ int main(void) {
                 MOSSWITCHPORT         |= (1 << MOSSWITCH);
                 sr_shiftout(scheme);                                  // Write pattern to shift-register
                 active_channels        = scheme;
-
-                // (Re-)Start the interval timer
-                timer1_reset();
-                timer1_flags          |= TIMER_TRANSMITCOUNTER_FLAG;
             }
 
             // Turn on receiver
             rfm_rxon();
 
-            SREG = temp_sreg;
+            SREG         = temp_sreg;
         }
 
         // -------------------------------------------------------------------------------------------------------
@@ -1091,16 +1053,10 @@ int main(void) {
                 MOSSWITCHPORT         &= ~(1 << MOSSWITCH);           // Block the P-FET-channel
                 flags.b.is_fire_active = 0;                           // Signalize that firing is finished for now
 
-                // Turn off the interval timer
-                if( !flags.b.transmit ) {
-                    timer1_flags &= ~TIMER_TRANSMITCOUNTER_FLAG;
-                    timer1_reset();
-                    transmit_flag = 0;
-                }
-
                 // Turn all LEDs off and the red one on again
                 leds_off();
                 led_red_on();
+
                 flags.b.read_impedance = 1;
             }
 
@@ -1136,9 +1092,7 @@ int main(void) {
                     // Received ignition command (only relevant for ignition devices)
                     case FIRE: {
                         // Wait for all repetitions to be over
-                        for ( uint8_t i = rx_field[FIRE_LENGTH - 1] - 1; i; i-- ) {
-                            _delay_us((ADDITIONAL_LENGTH + FIRE_LENGTH) * BYTE_DURATION_US);
-                        }
+                        waitRx(FIRE);
 
                         if ( armed && (rx_field[1] == slave_id)) {
                             tmp = rx_field[2] - 1;
@@ -1152,8 +1106,7 @@ int main(void) {
                     // Received temperature-measurement-trigger
                     case TEMPERATURE: {
                         // Wait for all repetitions to be over
-                        for ( uint8_t i = rx_field[TEMPERATURE_LENGTH - 1] - 1; i;
-                              i-- ) _delay_us((ADDITIONAL_LENGTH + TEMPERATURE_LENGTH) * BYTE_DURATION_US);
+                        waitRx(TEMPERATURE);
 
                         temperature = tempmeas(tempsenstype);
                         break;
@@ -1162,8 +1115,7 @@ int main(void) {
                     // Received identification-demand
                     case IDENT: {
                         // Wait for all repetitions to be over
-                        for ( uint8_t i = rx_field[IDENT_LENGTH - 1] - 1; i; i-- ) _delay_us(
-                                (ADDITIONAL_LENGTH + IDENT_LENGTH) * BYTE_DURATION_US);
+                        waitRx(IDENT);
 
                         tx_field[0]          = PARAMETERS;
                         tx_field[1]          = unique_id;
@@ -1173,11 +1125,13 @@ int main(void) {
                         tx_field[5]          = temperature;
 
                         transmission_allowed = 0;
+
                         timer1_reset();
-                        transmit_flag        = 0;
                         timer1_flags        |= TIMER_TRANSMITCOUNTER_FLAG;
+                        transmit_flag        = 0;
 
                         flags.b.transmit     = 1;
+                        transmission_type    = PARAMETERS;
                         flags.b.clear_list   = 1;
 
                         break;
@@ -1186,8 +1140,7 @@ int main(void) {
                     // Received Parameters
                     case PARAMETERS: {
                         // Wait for all repetitions to be over
-                        for ( uint8_t i = rx_field[PARAMETERS_LENGTH - 1] - 1; i;
-                              i-- ) _delay_us((ADDITIONAL_LENGTH + PARAMETERS_LENGTH) * BYTE_DURATION_US);
+                        waitRx(PARAMETERS);
 
                         // Increment ID error, if ID-error (='E') or 0 or unique-id of this device
                         // or already used unique-id was received as unique-id
@@ -1208,8 +1161,7 @@ int main(void) {
                     // Received change command
                     case CHANGE: {
                         // Wait for all repetitions to be over
-                        for ( uint8_t i = rx_field[CHANGE_LENGTH - 1] - 1; i;
-                              i-- ) _delay_us((ADDITIONAL_LENGTH + CHANGE_LENGTH) * BYTE_DURATION_US);
+                        waitRx(CHANGE);
 
                         if ( !armed && (unique_id == rx_field[1]) && (slave_id == rx_field[2])) {
                             rem_uid = rx_field[3];
@@ -1229,14 +1181,17 @@ int main(void) {
 
                     case MEASURE: {
                         // Wait for all repetitions to be over
-                        for ( uint8_t i = rx_field[MEASURE_LENGTH - 1] - 1; i;
-                              i-- ) _delay_us((ADDITIONAL_LENGTH + MEASURE_LENGTH) * BYTE_DURATION_US);
+                        waitRx(MEASURE);
 
                         // Set flag for impedance reading and subsequent transmitting
                         if ( unique_id == rx_field[1] ) {
                             flags.b.read_impedance = 1;
                             flags.b.transmit       = 1;
-                            transmission_allowed   = 1;
+                            transmission_type      = IMPEDANCES;
+                            transmission_allowed   = 0;
+                            timer1_reset();
+                            timer1_flags          |= TIMER_TRANSMITCOUNTER_FLAG;
+                            transmit_flag          = 10 * unique_id;      // Preload for 100ms delay
                         }
 
                         break;
@@ -1263,10 +1218,9 @@ int main(void) {
 }
 
 // Interrupt vectors
-ISR(TIMER1_COMPA_vect) {                            // Occurs every 10ms if active
-    static uint8_t meascycles = 0;
-
+ISR(TIMER1_COMPA_vect) {                                                 // Occurs every 10ms if active
     // Trigger impedance measurement every 1.25s
+    static uint8_t meascycles = 0;
     meascycles++;
 
     if ( meascycles > 124 ) {
@@ -1274,11 +1228,16 @@ ISR(TIMER1_COMPA_vect) {                            // Occurs every 10ms if acti
         meascycles    = 0;
     }
 
+    // -------------------------------------------------------------------------------------------------------
+
     if( timer1_flags & TIMER_TRANSMITCOUNTER_FLAG ) {
         transmit_flag++;
+    }
 
-        if( active_channels ) channel_monitor = 1;  // Set a reminder to monitor the channels
+    // -------------------------------------------------------------------------------------------------------
 
+    if( active_channels ) {
+        channel_monitor = 1;                                             // Set a reminder to monitor the channels
     }
 }
 
