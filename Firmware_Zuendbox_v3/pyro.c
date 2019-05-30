@@ -240,35 +240,31 @@ int main(void) {
     wdt_disable();
 
     // Local Variables
-    uint16_t  scheme = 0, anti_scheme = 0, controlvar = 0, statusleds = 0;
-    uint8_t   i, nr, inp, tmp;
-    uint8_t   tx_length = 2, rx_length = 0;
-    uint8_t   rfm_rx_error = 0, rfm_tx_error = 0;
-    uint8_t   temp_sreg;
-    uint8_t   slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
-    uint8_t   loopcount = 5, transmission_allowed = 1;
-    uint8_t   armed                                   = 0;
-    uint8_t   changes                                 = 0;
-    uint8_t   iderrors                                = 0;
-    uint8_t   rssi                                    = 0;
-    int8_t    temperature                             = -128;
+    uint16_t    scheme = 0, anti_scheme = 0, controlvar = 0, statusleds = 0;
+    uint8_t     i, nr, inp, tmp;
+    uint8_t     tx_length = 2, rx_length = 0;
+    uint8_t     rfm_rx_error = 0, rfm_tx_error = 0;
+    uint8_t     temp_sreg;
+    uint8_t     slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
+    uint8_t     loopcount = 5, transmission_allowed = 1;
+    uint8_t     armed                         = 0;
+    uint8_t     changes                       = 0;
+    uint8_t     iderrors                      = 0;
+    uint8_t     rssi                          = 0;
+    int8_t      temperature                   = -128;
 
-    bitfeld_t flags;
+    bitfeld_t   flags;
     flags.complete = 0;
 
-    char      uart_field[MAX_ARRAYSIZE + 2]           = { 0 };
-    char      rx_field[MAX_ARRAYSIZE + 1]             = { 0 };
-    char      tx_field[MAX_ARRAYSIZE + 1]             = { 0 };
-    char      slaveid_char[MAX_ARRAYSIZE + 1]         = { 0 };
-    char      quantity[MAX_ARRAYSIZE + 1]             = { 0 };
-    char      battery_voltage_char[MAX_ARRAYSIZE + 1] = { 0 };
-    char      sharpness[MAX_ARRAYSIZE + 1]            = { 0 };
-    int8_t    temps[MAX_ARRAYSIZE + 1]                = { 0 };
-    int8_t    rssis[MAX_ARRAYSIZE + 1]                = { 0 };
-    uint8_t   impedances[16]                          = { 0 };
-    uint8_t   channel_timeout[16]                     = { 0 };
+    char        uart_field[MAX_ARRAYSIZE + 2] = { 0 };
+    char        rx_field[MAX_ARRAYSIZE + 1]   = { 0 };
+    char        tx_field[MAX_ARRAYSIZE + 1]   = { 0 };
+    char        quantity[MAX_ARRAYSIZE + 1]   = { 0 };
+    fireslave_t slaves[MAX_ARRAYSIZE + 1];
+    uint8_t     impedances[16]                = { 0 };
+    uint8_t     channel_timeout[16]           = { 0 };
 
-    char      transmission_type                       = IDENT;
+    char        transmission_type             = IDENT;
 
     // Make PB2 an high output to guarantee flawless
     // SPI-master-operation
@@ -337,13 +333,14 @@ int main(void) {
             _delay_ms(200);
         }
 
-        uart_field[warten]           = 1;
-        tx_field[warten]             = 0;
-        rx_field[warten]             = 0;
-        slaveid_char[warten]         = 0;
-        battery_voltage_char[warten] = 0;
-        sharpness[warten]            = 0;
-        temps[warten]                = -128;
+        uart_field[warten]             = 1;
+        tx_field[warten]               = 0;
+        rx_field[warten]               = 0;
+        slaves[warten].slave_id        = 0;
+        slaves[warten].battery_voltage = 0;
+        slaves[warten].sharpness       = 0;
+        slaves[warten].temperature     = -128;
+        slaves[warten].rssi            = 0;
     }
 
     led_yellow_off();
@@ -843,7 +840,7 @@ int main(void) {
             // Take action after proper command
             if ( tmp ) {
                 transmission_type = tx_field[0];
-                flags.b.transmit = 1;
+                flags.b.transmit  = 1;
 
                 if ((tx_field[0] == FIRE) && (slave_id == tx_field[1])) {
                     rx_field[2]  = tx_field[2];
@@ -866,8 +863,8 @@ int main(void) {
 
             flags.b.list = 0;
 
-            list_complete(slaveid_char, battery_voltage_char, sharpness, temps, rssis, iderrors);
-            evaluate_boxes(slaveid_char, quantity);
+            list_complete(slaves, iderrors);
+            evaluate_boxes(slaves, quantity);
             list_array(quantity);
 
             SREG         = temp_sreg;
@@ -891,31 +888,31 @@ int main(void) {
 
         // Clear list of ignition devices
         if ( flags.b.clear_list || (flags.b.transmit && (tx_field[0] == IDENT))) {
-            temp_sreg                           = SREG;
+            temp_sreg                             = SREG;
             cli();
 
-            flags.b.clear_list                  = 0;
+            flags.b.clear_list                    = 0;
 
-            iderrors                            = 0;
+            iderrors                              = 0;
 
             for ( i = 0; i < 30; i++ ) {
-                slaveid_char[i]         = 0;
-                quantity[i]             = 0;
-                battery_voltage_char[i] = 0;
-                sharpness[i]            = 0;
-                temps[i]                = -128;
-                rssis[i]                = 0;
+                quantity[i]               = 0;
+                slaves[i].slave_id        = 0;
+                slaves[i].battery_voltage = 0;
+                slaves[i].sharpness       = 0;
+                slaves[i].temperature     = -128;
+                slaves[i].rssi            = -128;
             }
 
             // Ignition devices have to write themselves in the list
-            slaveid_char[unique_id - 1]         = slave_id;
-            quantity[slave_id - 1]              = 1;
-            battery_voltage_char[unique_id - 1] = bat_calc(5);
-            sharpness[unique_id - 1]            = (armed ? 'j' : 'n');
-            temps[unique_id - 1]                = temperature;
-            rssis[unique_id - 1]                = 0;
+            quantity[slave_id - 1]                = 1;
+            slaves[unique_id - 1].slave_id        = slave_id;
+            slaves[unique_id - 1].battery_voltage = bat_calc(5);
+            slaves[unique_id - 1].sharpness       = (armed ? 'j' : 'n');
+            slaves[unique_id - 1].temperature     = temperature;
+            slaves[unique_id - 1].rssi            = 0;
 
-            SREG                                = temp_sreg;
+            SREG                                  = temp_sreg;
         }
 
         // -------------------------------------------------------------------------------------------------------
@@ -1145,14 +1142,14 @@ int main(void) {
                         // Increment ID error, if ID-error (='E') or 0 or unique-id of this device
                         // or already used unique-id was received as unique-id
                         if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id) ||
-                            (rx_field[1] && slaveid_char[(uint8_t)(rx_field[1] - 1)])) iderrors++;
+                            (rx_field[1] && slaves[(uint8_t)(rx_field[1] - 1)].slave_id)) iderrors++;
                         else {
-                            tmp                       = rx_field[1] - 1; // Index = unique_id-1 (zero-based indexing)
-                            slaveid_char[tmp]         = rx_field[2];
-                            battery_voltage_char[tmp] = rx_field[3];
-                            sharpness[tmp]            = (rx_field[4] ? 'j' : 'n');
-                            temps[tmp]                = rx_field[5];
-                            rssis[tmp]                = rssi;
+                            tmp                         = rx_field[1] - 1; // Index = unique_id-1 (zero-based indexing)
+                            slaves[tmp].slave_id        = rx_field[2];
+                            slaves[tmp].battery_voltage = rx_field[3];
+                            slaves[tmp].sharpness       = (rx_field[4] ? 'j' : 'n');
+                            slaves[tmp].temperature     = rx_field[5];
+                            slaves[tmp].rssi            = rssi;
                         }
 
                         break;
@@ -1191,7 +1188,7 @@ int main(void) {
                             transmission_allowed   = 0;
                             timer1_reset();
                             timer1_flags          |= TIMER_TRANSMITCOUNTER_FLAG;
-                            transmit_flag          = 10 * unique_id;      // Preload for 100ms delay
+                            transmit_flag          = 10 * unique_id;       // Preload for 100ms delay
                         }
 
                         break;
@@ -1218,7 +1215,7 @@ int main(void) {
 }
 
 // Interrupt vectors
-ISR(TIMER1_COMPA_vect) {                                                 // Occurs every 10ms if active
+ISR(TIMER1_COMPA_vect) {                                                   // Occurs every 10ms if active
     // Trigger impedance measurement every 1.25s
     static uint8_t meascycles = 0;
     meascycles++;
@@ -1237,7 +1234,7 @@ ISR(TIMER1_COMPA_vect) {                                                 // Occu
     // -------------------------------------------------------------------------------------------------------
 
     if( active_channels ) {
-        channel_monitor = 1;                                             // Set a reminder to monitor the channels
+        channel_monitor = 1;                                               // Set a reminder to monitor the channels
     }
 }
 

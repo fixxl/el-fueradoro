@@ -45,11 +45,11 @@
 // Ceiled duration of byte transmission in microseconds
 #define   BYTE_DURATION_US    (8 * (1000000UL + BITRATE) / BITRATE)
 
-#define   setTxCase(XX)       case XX: { loopcount = XX##_REPEATS; tmp       = XX##_LENGTH - 1; break; }
-#define   waitRx(XX)          for ( uint8_t i = rx_field[XX##_LENGTH - 1] - 1; i; i-- ) _delay_us((ADDITIONAL_LENGTH + XX##_LENGTH) * BYTE_DURATION_US)
+#define   setTxCase(XX)       case XX: { loopcount = XX ## _REPEATS; tmp = XX ## _LENGTH - 1; break; }
+#define   waitRx(XX)          for ( uint8_t i = rx_field[XX ## _LENGTH - 1] - 1; i; i-- ) _delay_us((ADDITIONAL_LENGTH + XX ## _LENGTH) * BYTE_DURATION_US)
 
 // Radio message lengths
-#define   ADDITIONAL_LENGTH   13    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
+#define   ADDITIONAL_LENGTH   13 // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
 #define   FIRE_LENGTH         4
 #define   IDENT_LENGTH        4
 #define   MEASURE_LENGTH      4
@@ -88,6 +88,14 @@ typedef union {
     }        b;
     uint16_t complete;
 } bitfeld_t;
+
+typedef struct {
+    uint8_t slave_id;
+    uint8_t battery_voltage;
+    uint8_t sharpness;
+    int8_t  temperature;
+    int8_t  rssi;
+} fireslave_t;
 
 #define KEY_DDR                      DDR(KEYPORT)
 #define KEY_PIN                      PIN(KEYPORT)
@@ -135,4 +143,4 @@ void    key_init(void);
 void    key_deinit(void);
 uint8_t debounce(volatile uint8_t *port, uint8_t pin);
 uint8_t fire_command_uart_valid(const char *field);
-#endif                      /* PYRO_H_ */
+#endif /* PYRO_H_ */

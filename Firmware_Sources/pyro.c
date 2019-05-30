@@ -289,12 +289,8 @@ int main(void) {
     char      uart_field[MAX_ARRAYSIZE + 2]           = { 0 };
     char      rx_field[MAX_ARRAYSIZE + 1]             = { 0 };
     char      tx_field[MAX_ARRAYSIZE + 1]             = { 0 };
-    char      slaveid_char[MAX_ARRAYSIZE + 1]         = { 0 };
     char      quantity[MAX_ARRAYSIZE + 1]             = { 0 };
-    char      battery_voltage_char[MAX_ARRAYSIZE + 1] = { 0 };
-    char      sharpness[MAX_ARRAYSIZE + 1]            = { 0 };
-    int8_t    temps[MAX_ARRAYSIZE + 1]                = { 0 };
-    int8_t    rssis[MAX_ARRAYSIZE + 1]                = { 0 };
+    fireslave_t slaves[MAX_ARRAYSIZE + 1];
     char      lcd_array[MAX_ARRAYSIZE + 1]            = { 0 };
     uint8_t   channel_timeout[16]                     = { 0 };
 
@@ -375,10 +371,11 @@ int main(void) {
         uart_field[warten]           = 1;
         tx_field[warten]             = 0;
         rx_field[warten]             = 0;
-        slaveid_char[warten]         = 0;
-        battery_voltage_char[warten] = 0;
-        sharpness[warten]            = 0;
-        temps[warten]                = -128;
+        slaves[warten].slave_id        = 0;
+        slaves[warten].battery_voltage = 0;
+        slaves[warten].sharpness       = 0;
+        slaves[warten].temperature     = -128;
+        slaves[warten].rssi            = 0;
     }
 
     led_yellow_off();
@@ -859,8 +856,8 @@ int main(void) {
 
             flags.b.list = 0;
 
-            list_complete(slaveid_char, battery_voltage_char, sharpness, temps, rssis, iderrors);
-            evaluate_boxes(slaveid_char, quantity);
+            list_complete(slaves, iderrors);
+            evaluate_boxes(slaves, quantity);
             list_array(quantity);
 
             SREG         = temp_sreg;
@@ -896,22 +893,22 @@ int main(void) {
             iderrors           = 0;
 
             for ( i = 0; i < 30; i++ ) {
-                slaveid_char[i]         = 0;
-                quantity[i]             = 0;
-                battery_voltage_char[i] = 0;
-                sharpness[i]            = 0;
-                temps[i]                = -128;
-                rssis[i]                = 0;
+                quantity[i]               = 0;
+                slaves[i].slave_id        = 0;
+                slaves[i].battery_voltage = 0;
+                slaves[i].sharpness       = 0;
+                slaves[i].temperature     = -128;
+                slaves[i].rssi            = -128;
             }
 
             // Ignition devices have to write themselves in the list
             if ( !TRANSMITTER ) {
-                slaveid_char[unique_id - 1]         = slave_id;
                 quantity[slave_id - 1]              = 1;
-                battery_voltage_char[unique_id - 1] = adc_read(5);
-                sharpness[unique_id - 1]            = (armed ? 'j' : 'n');
-                temps[unique_id - 1]                = temperature;
-                rssis[unique_id - 1]                = 0;
+                slaves[unique_id - 1].slave_id        = slave_id;
+                slaves[unique_id - 1].battery_voltage = adc_read(5);
+                slaves[unique_id - 1].sharpness       = (armed ? 'j' : 'n');
+                slaves[unique_id - 1].temperature     = temperature;
+                slaves[unique_id - 1].rssi            = 0;
             }
 
             SREG               = temp_sreg;
@@ -1145,14 +1142,14 @@ int main(void) {
                         // Increment ID error, if ID-error (='E') or 0 or unique-id of this device
                         // or already used unique-id was received as unique-id
                         if ((rx_field[1] == 'E') || (!rx_field[1]) || (rx_field[1] == unique_id) ||
-                            (rx_field[1] && slaveid_char[(uint8_t)(rx_field[1] - 1)])) iderrors++;
+                            (rx_field[1] && slaves[(uint8_t)(rx_field[1] - 1)].slave_id)) iderrors++;
                         else {
-                            tmp                       = rx_field[1] - 1; // Index = unique_id-1 (zero-based indexing)
-                            slaveid_char[tmp]         = rx_field[2];
-                            battery_voltage_char[tmp] = rx_field[3];
-                            sharpness[tmp]            = (rx_field[4] ? 'j' : 'n');
-                            temps[tmp]                = rx_field[5];
-                            rssis[tmp]                = rssi;
+                            tmp                         = rx_field[1] - 1; // Index = unique_id-1 (zero-based indexing)
+                            slaves[tmp].slave_id        = rx_field[2];
+                            slaves[tmp].battery_voltage = rx_field[3];
+                            slaves[tmp].sharpness       = (rx_field[4] ? 'j' : 'n');
+                            slaves[tmp].temperature     = rx_field[5];
+                            slaves[tmp].rssi            = rssi;
                         }
 
                         break;

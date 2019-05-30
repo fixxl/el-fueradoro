@@ -91,6 +91,14 @@ typedef union {
     uint32_t complete;
 } bitfeld_t;
 
+typedef struct {
+    uint8_t slave_id;
+    uint8_t battery_voltage;
+    uint8_t sharpness;
+    int8_t  temperature;
+    int8_t  rssi;
+} fireslave_t;
+
 #define TRANSMITTER                     (!ig_or_notrans)
 
 #define KEY_DDR                         DDR(KEYPORT)

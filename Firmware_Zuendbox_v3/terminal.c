@@ -304,8 +304,9 @@ uint8_t aesconf(void) {
     return 0;
 }
 
+
 // List ignition devices
-void list_complete(char *slvs, char *batt, char *sharpn, int8_t *temps, int8_t *rssis, uint8_t wrongids) {
+void list_complete(fireslave_t slaves[MAX_ARRAYSIZE+1], uint8_t wrongids) {
     uint8_t i = 0, ganz, zehntel;
 
     terminal_reset();
@@ -325,20 +326,20 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t *temps, int8_t *
         uart_puts_P(PSTR(": "));
 
         // Show Slave-ID
-        if (!slvs[i]) uart_puts_P(PSTR("---"));
+        if (!slaves[i].slave_id) uart_puts_P(PSTR("---"));
         else {
             uart_puts_P(PSTR(" "));
 
-            if (slvs[i] < 10) uart_puts_P(PSTR("0"));
+            if (slaves[i].slave_id < 10) uart_puts_P(PSTR("0"));
 
-            uart_shownum(slvs[i], 'd');
+            uart_shownum(slaves[i].slave_id, 'd');
         }
 
         uart_puts_P(PSTR(", "));
 
         // Show Battery Voltages
-        ganz    = batt[i] / 10;
-        zehntel = batt[i] % 10;
+        ganz    = slaves[i].battery_voltage / 10;
+        zehntel = slaves[i].battery_voltage % 10;
 
         if (!ganz) uart_puts_P(PSTR("----"));
         else {
@@ -350,23 +351,23 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t *temps, int8_t *
         uart_puts_P(PSTR(", "));
 
         // Show if armed or not
-        if (slvs[i]) uart_putc(sharpn[i]); else   uart_puts_P(PSTR("-"));
+        if (slaves[i].slave_id) uart_putc(slaves[i].sharpness); else   uart_puts_P(PSTR("-"));
 
         uart_puts_P(PSTR(", "));
 
         // Show Temperature
-        if (temps[i] != -128) fixedspace(temps[i], 'd', 4);
-        else slvs[i] ? uart_puts_P(PSTR("n.a.")) : uart_puts_P(PSTR("----"));
+        if (slaves[i].temperature != -128) fixedspace(slaves[i].temperature, 'd', 4);
+        else slaves[i].slave_id ? uart_puts_P(PSTR("n.a.")) : uart_puts_P(PSTR("----"));
 
         uart_puts_P(PSTR(", "));
 
         // Show RSSI-values
-        if (rssis[i]) {
-            if (rssis[i] < 100) uart_puts_P(PSTR(" "));
-            if (rssis[i] < 10) uart_puts_P(PSTR(" "));
+        if (slaves[i].rssi) {
+            if (slaves[i].rssi < 100) uart_puts_P(PSTR(" "));
+            if (slaves[i].rssi < 10) uart_puts_P(PSTR(" "));
 
             uart_puts_P(PSTR("-"));
-            uart_shownum(rssis[i], 'd');
+            uart_shownum(slaves[i].rssi, 'd');
         }
         else   uart_puts_P(PSTR("----"));
 
@@ -379,6 +380,7 @@ void list_complete(char *slvs, char *batt, char *sharpn, int8_t *temps, int8_t *
     uart_shownum(wrongids, 'd');
     uart_puts_P(PSTR("\n\r"));
 }
+
 
 // Show number of boxes for every Slave-ID
 void list_array(char *arr) {
@@ -413,14 +415,14 @@ void list_array(char *arr) {
 }
 
 // Calculate number of boxes with certain Slave-ID
-void evaluate_boxes(char *boxes, char *quantity) {
+void evaluate_boxes(fireslave_t boxes[MAX_ARRAYSIZE+1], char *quantity) {
     uint8_t i, j, n;
 
     for (i = 1; i < 31; i++) {
         n = 0;
 
         for (j = 0; j < 30; j++)
-            if (boxes[j] == i) n++;
+            if (boxes[j].slave_id == i) n++;
 
         quantity[i - 1] = n;
     }
