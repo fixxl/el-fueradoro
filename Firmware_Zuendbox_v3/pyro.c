@@ -608,7 +608,7 @@ int main(void) {
 
         // Update channel impedances unless some more important event is happening right now
         if((flags.b.read_impedance || (timer1_flags & TIMER_MEASURE_FLAG)) &&
-           !(flags.b.fire || flags.b.is_fire_active || flags.b.receive)) {
+           !(flags.b.fire || flags.b.is_fire_active || flags.b.receive || ( flags.b.transmit && (transmission_type != IMPEDANCES) ))) {
             temp_sreg              = SREG;
             cli();
             flags.b.read_impedance = 0;
@@ -622,7 +622,7 @@ int main(void) {
             statusleds             = 0;
             for( uint8_t i = 0; i < 16; i++ ) {
                 sr_shiftout(mask);
-                _delay_ms(3);
+                _delay_ms(2);
                 impedances[i] = imp_calc(4);
                 sr_shiftout(0x0000);
 
