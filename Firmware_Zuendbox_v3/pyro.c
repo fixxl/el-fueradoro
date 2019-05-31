@@ -572,10 +572,12 @@ int main(void) {
             // If valid ignition command was received
             if ( fire_command_uart_valid(uart_field)) {
                 // Transmit to everybody
-                tx_field[0]      = FIRE;
-                tx_field[1]      = uart_field[1];
-                tx_field[2]      = uart_field[2];
-                flags.b.transmit = 1;
+                tx_field[0]          = FIRE;
+                tx_field[1]          = uart_field[1];
+                tx_field[2]          = uart_field[2];
+                flags.b.transmit     = 1;
+                transmission_type    = FIRE;
+                transmission_allowed = 1;
 
                 // Check if ignition was triggered on device that received the serial command
                 if ( slave_id == uart_field[1] ) {
@@ -608,7 +610,7 @@ int main(void) {
 
         // Update channel impedances unless some more important event is happening right now
         if((flags.b.read_impedance || (timer1_flags & TIMER_MEASURE_FLAG)) &&
-           !(flags.b.fire || flags.b.is_fire_active || flags.b.receive || ( flags.b.transmit && (transmission_type != IMPEDANCES) ))) {
+           !(flags.b.fire || flags.b.is_fire_active || flags.b.receive || ( flags.b.transmit && (transmission_type != IMPEDANCES)))) {
             temp_sreg              = SREG;
             cli();
             flags.b.read_impedance = 0;

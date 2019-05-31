@@ -269,30 +269,30 @@ int main(void) {
     wdt_disable();
 
     // Local Variables
-    uint16_t  scheme = 0, anti_scheme = 0, controlvar;
-    uint8_t   i, nr, inp, tmp;
-    uint8_t   tx_length = 2, rx_length = 0;
-    uint8_t   temp_sreg;
-    uint8_t   slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
-    uint8_t   rfm_rx_error = 1, rfm_tx_error = 0;
-    uint8_t   loopcount = 5, transmission_allowed = 1;
-    uint8_t   anzspalte = 1, anzzeile = 3, lastspalte = 15, lastzeile = 4;
-    uint8_t   armed                                   = 0;
-    uint8_t   changes                                 = 0;
-    uint8_t   iderrors                                = 0;
-    uint8_t   rssi                                    = 0;
-    int8_t    temperature                             = -128;
+    uint16_t    scheme = 0, anti_scheme = 0, controlvar;
+    uint8_t     i, nr, inp, tmp;
+    uint8_t     tx_length = 2, rx_length = 0;
+    uint8_t     temp_sreg;
+    uint8_t     slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
+    uint8_t     rfm_rx_error = 1, rfm_tx_error = 0;
+    uint8_t     loopcount = 5, transmission_allowed = 1;
+    uint8_t     anzspalte = 1, anzzeile = 3, lastspalte = 15, lastzeile = 4;
+    uint8_t     armed                         = 0;
+    uint8_t     changes                       = 0;
+    uint8_t     iderrors                      = 0;
+    uint8_t     rssi                          = 0;
+    int8_t      temperature                   = -128;
 
-    bitfeld_t flags;
+    bitfeld_t   flags;
     flags.complete = 0;
 
-    char      uart_field[MAX_ARRAYSIZE + 2]           = { 0 };
-    char      rx_field[MAX_ARRAYSIZE + 1]             = { 0 };
-    char      tx_field[MAX_ARRAYSIZE + 1]             = { 0 };
-    char      quantity[MAX_ARRAYSIZE + 1]             = { 0 };
+    char        uart_field[MAX_ARRAYSIZE + 2] = { 0 };
+    char        rx_field[MAX_ARRAYSIZE + 1]   = { 0 };
+    char        tx_field[MAX_ARRAYSIZE + 1]   = { 0 };
+    char        quantity[MAX_ARRAYSIZE + 1]   = { 0 };
     fireslave_t slaves[MAX_ARRAYSIZE + 1];
-    char      lcd_array[MAX_ARRAYSIZE + 1]            = { 0 };
-    uint8_t   channel_timeout[16]                     = { 0 };
+    char        lcd_array[MAX_ARRAYSIZE + 1]  = { 0 };
+    uint8_t     channel_timeout[16]           = { 0 };
 
 
     /* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
@@ -332,7 +332,7 @@ int main(void) {
 
     // Initialise ADC and find out what kind of device the software runs on
     adc_init();
-    const uint8_t ig_or_notrans                       = (adc_read(5) < 156);
+    const uint8_t ig_or_notrans               = (adc_read(5) < 156);
 
     // Get Slave- und Unique-ID from EEPROM for ignition devices
     update_addresses(&unique_id, &slave_id);
@@ -368,9 +368,9 @@ int main(void) {
             _delay_ms(200);
         }
 
-        uart_field[warten]           = 1;
-        tx_field[warten]             = 0;
-        rx_field[warten]             = 0;
+        uart_field[warten]             = 1;
+        tx_field[warten]               = 0;
+        rx_field[warten]               = 0;
         slaves[warten].slave_id        = 0;
         slaves[warten].battery_voltage = 0;
         slaves[warten].sharpness       = 0;
@@ -409,9 +409,9 @@ int main(void) {
     #endif
 
     if ( TRANSMITTER ) {
-        tx_field[0]       = IDENT;
-        tx_field[1]       = 'd';
-        tx_field[2]       = '0';
+        tx_field[0] = IDENT;
+        tx_field[1] = 'd';
+        tx_field[2] = '0';
 
         // Transmit something to make other devices adjust to frequency
         for ( uint8_t j = 5; j; j-- ) {
@@ -422,7 +422,7 @@ int main(void) {
         }
 
         lcd_clear();
-        TIMSK0           |= (1 << TOIE0);
+        TIMSK0     |= (1 << TOIE0);
     }
     else {
         armed              = debounce(&KEY_PIN, KEY);
@@ -637,10 +637,11 @@ int main(void) {
             // If valid ignition command was received
             if ( fire_command_uart_valid(uart_field)) {
                 // Transmit to everybody
-                tx_field[0]      = FIRE;
-                tx_field[1]      = uart_field[1];
-                tx_field[2]      = uart_field[2];
-                flags.b.transmit = 1;
+                tx_field[0]          = FIRE;
+                tx_field[1]          = uart_field[1];
+                tx_field[2]          = uart_field[2];
+                flags.b.transmit     = 1;
+                transmission_allowed = 1;
 
                 // Check if ignition was triggered on device that received the serial command
                 if ((slave_id == uart_field[1]) && !TRANSMITTER ) {
@@ -832,7 +833,8 @@ int main(void) {
 
             // Take action after proper command
             if ( tmp ) {
-                flags.b.transmit = 1;
+                flags.b.transmit     = 1;
+                transmission_allowed = 1;
 
                 if ((tx_field[0] == FIRE) && (slave_id == tx_field[1])) {
                     rx_field[2]  = tx_field[2];
@@ -903,7 +905,7 @@ int main(void) {
 
             // Ignition devices have to write themselves in the list
             if ( !TRANSMITTER ) {
-                quantity[slave_id - 1]              = 1;
+                quantity[slave_id - 1]                = 1;
                 slaves[unique_id - 1].slave_id        = slave_id;
                 slaves[unique_id - 1].battery_voltage = adc_read(5);
                 slaves[unique_id - 1].sharpness       = (armed ? 'j' : 'n');
@@ -1191,7 +1193,7 @@ int main(void) {
                             transmission_allowed = 0;
                             timer1_reset();
                             timer1_flags        |= TIMER_TRANSMITCOUNTER_FLAG;
-                            transmit_flag        = 10 * unique_id;       // Preload for 100ms delay
+                            transmit_flag        = 10 * unique_id;         // Preload for 100ms delay
                         }
 
                         break;
@@ -1216,7 +1218,7 @@ int main(void) {
         // Clear LCD in case of timeouts
         if ( TRANSMITTER && !flags.b.lcd_update && ((clear_lcd_tx_flag > DEL_THRES) || (clear_lcd_rx_flag > DEL_THRES) ||
                                                     (hist_del_flag > (3 * DEL_THRES)))) {
-            temp_sreg = SREG;                                            // Speichere Statusregister
+            temp_sreg = SREG;                                              // Speichere Statusregister
             cli();
 
             if ( clear_lcd_tx_flag > DEL_THRES ) {
