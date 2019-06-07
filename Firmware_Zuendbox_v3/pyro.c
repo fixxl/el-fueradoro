@@ -903,7 +903,7 @@ int main(void) {
                 slaves[i].battery_voltage = 0;
                 slaves[i].sharpness       = 0;
                 slaves[i].temperature     = -128;
-                slaves[i].rssi            = -128;
+                slaves[i].rssi            = 0;
             }
 
             // Ignition devices have to write themselves in the list

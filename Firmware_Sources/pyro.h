@@ -96,7 +96,7 @@ typedef struct {
     uint8_t battery_voltage;
     uint8_t sharpness;
     int8_t  temperature;
-    int8_t  rssi;
+    uint8_t  rssi;
 } fireslave_t;
 
 #define TRANSMITTER                     (!ig_or_notrans)
