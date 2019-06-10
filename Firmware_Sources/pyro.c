@@ -676,6 +676,12 @@ int main(void) {
             uart_puts_P(PSTR(STRINGIZE_VALUE_OF(MCU)));
             uart_puts_P(PSTR("\n\rRFM"));
             uart_shownum(RFM, 'd');
+            #if defined COMPILEDATE && defined COMPILETIME
+                uart_puts_P(PSTR("\n\r"));
+                uart_puts_P(PSTR("Datecode "));
+                uart_shownum(COMPILEDATE, 'd');
+                uart_shownum(COMPILETIME, 'd');
+            #endif
             uart_puts_P(PSTR("\n\n\r"));
 
             SREG       = temp_sreg;
