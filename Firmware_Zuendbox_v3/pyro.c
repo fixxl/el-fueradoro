@@ -38,7 +38,7 @@ void key_init(void) {
     #endif
     // Keep low-impedance path between ignition voltage and clamps closed
     MOSSWITCHPORT &= ~(1 << MOSSWITCH);
-    MOSSWITCHDDR  |= (1 << MOSSWITCH);
+    MOSSWITCHDDR  |=  (1 << MOSSWITCH);
 }
 
 // Un-initialise Key-Switch (needed only if a device configured as ignition device gets configured as transmitter while on)
@@ -238,6 +238,8 @@ uint8_t fire_command_uart_valid(const char *field) {
 // Main programme
 int main(void) {
     wdt_disable();
+    MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
+    MOSSWITCHDDR          |=  (1 << MOSSWITCH);
 
     // Local Variables
     uint16_t    scheme = 0, anti_scheme = 0, controlvar = 0, statusleds = 0;

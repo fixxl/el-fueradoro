@@ -91,9 +91,12 @@
 
 	{\bfseries
 	\begin{enumerate}
-		\item Bei den Zündboxen der ersten Generation liegt das Metallgehäuse des SMA-Antennen\-anschlusses an der Oberseite der Zündbox auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{\volt}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden. Bei den Zündboxen der zweiten Generation sind schaltungstechnische Maßnahmen getroffen, um den Strom im Kurzschlussfall zu begrenzen und ein Auslösen der Anzünder bei Verbindung zwischen roter Klemme und Antennenanschluss im nicht-scharfgeschalteten Zustand auszuschließen.
-		\item Devices nie ohne angeschlossene Antenne einschalten, um Rückreflexionen an offenen Steckern/Buchsen zu vermeiden, welche die Sendeendstufe zerstören könnten.
-		\item Keine Softwareupdates an Zündboxen durchführen, solange Anzünder angeschlossen sind, da das Verhalten nach einem fehlgeschlagenen Update unvorhersehbar ist.
+		\item
+		      Bei den Zündboxen der ersten Generation liegt das Metallgehäuse des SMA-Antennen\-anschlusses an der Oberseite der Zündbox auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{\volt}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden. Bei den Zündboxen der zweiten Generation sind schaltungstechnische Maßnahmen getroffen, um den Strom im Kurzschlussfall zu begrenzen und ein Auslösen der Anzünder bei Verbindung zwischen roter Klemme und Antennenanschluss im nicht-scharfgeschalteten Zustand auszuschließen.
+		\item
+		      Devices nie ohne angeschlossene Antenne einschalten, um Rückreflexionen an offenen Steckern/Buchsen zu vermeiden, welche die Sendeendstufe zerstören könnten.
+		\item
+		      Keine Softwareupdates an Zündboxen durchführen, solange Anzünder angeschlossen sind, da das Verhalten nach einem fehlgeschlagenen Update unvorhersehbar ist.
 	\end{enumerate}
 	}
 
@@ -155,8 +158,10 @@
 
 			Welches der beiden Kabel an welcher Klemme des Zündkanals angeschlossen wird, spielt keine Rolle, da es sich bei den Anzündern um passive elektrische Bauelemente handelt, die in beiden Richtungen gleichermaßen von Strom durchflossen werden können. Die Verdrahtung sollte aber stets im ausgeschalteten Zustand der Boxen erfolgen und aus Sicherheitsgründen immer in folgender Reihenfolge:
 			\begin{itemize}
-				\item Beim Anklemmen der Kabel zuerst ein Kabel an der schwarzen Klemme befestigen, anschließend das andere an der roten!
-				\item Beim Lösen der Kabel zuerst das Kabel von der roten Klemme lösen, anschließend das von der schwarzen!
+				\item
+				      Beim Anklemmen der Kabel zuerst ein Kabel an der schwarzen Klemme befestigen, anschließend das andere an der roten!
+				\item
+				      Beim Lösen der Kabel zuerst das Kabel von der roten Klemme lösen, anschließend das von der schwarzen!
 			\end{itemize}
 			Dies ist der Tatsache geschuldet, dass bei der ersten Generation der Zündboxen, wenn eine Seite des Zündkanals fest mit der Zündspannung, d.\,h. einer roten Klemme verbunden ist, ein frei baumelndes zweites Kabel durch Berührung eines Bauteils auf Massepotential, z.\,B. der Antennenbuchse oder der Überwurfmutter des gewinkelten SMA-Steckers, einen Kurzschluss und somit eine Zündung auslösen würde~-- selbst dann, wenn die Box nicht scharf geschaltet ist! In der zweiten Generation der Zündboxen ist dieses Manko behoben.
 
@@ -407,11 +412,16 @@
 
 				Mit \enquote{list} ist es möglich, sich die Systemübersicht entsprechend Abbildung~\ref{fig:list} anzeigen zu lassen. Es werden zwei Tabellen ausgegeben, wobei die obere nach Unique-ID geordnet anzeigt:
 				\begin{enumerate}
-					\item Slave-ID, welcher der Unique-ID zugewiesen ist.
-					\item Spannung, welche die Batterie der Box mit der entsprechenden Unique-ID liefert.
-					\item Scharfschaltungsstatus der Box mit der jeweiligen Unique-ID: (j)a (=scharf) oder (n)ein (=nicht scharf).
-					\item Temperatur im Inneren der Box, sofern die Box über einen eingebauten Temperatursensor verfügt, ansonsten wird \enquote{n.a.}~(not available) angezeigt.
-					\item Stärke des von der Box empfangenen Antwortsignals (RSSI = Received Signal Strength Indicator) in dBm. Je größer der Wert ist~-- bei negativen Werten also umso näher er bei 0 liegt, umso besser und umso weniger störanfällig ist die Verbindung zwischen den Devices. Die theoretische Empfangsgrenze liegt bei etwa $\SI{-96}{\dBm}$.
+					\item
+					      Slave-ID, welcher der Unique-ID zugewiesen ist.
+					\item
+					      Spannung, welche die Batterie der Box mit der entsprechenden Unique-ID liefert.
+					\item
+					      Scharfschaltungsstatus der Box mit der jeweiligen Unique-ID: (j)a (=scharf) oder (n)ein (=nicht scharf).
+					\item
+					      Temperatur im Inneren der Box, sofern die Box über einen eingebauten Temperatursensor verfügt, ansonsten wird \enquote{n.a.}~(not available) angezeigt.
+					\item
+					      Stärke des von der Box empfangenen Antwortsignals (RSSI = Received Signal Strength Indicator) in dBm. Je größer der Wert ist~-- bei negativen Werten also umso näher er bei 0 liegt, umso besser und umso weniger störanfällig ist die Verbindung zwischen den Devices. Die theoretische Empfangsgrenze liegt bei etwa $\SI{-96}{\dBm}$.
 				\end{enumerate}
 
 				Die untere Tabelle listet auf, wie viele Boxen mit der entsprechenden Slave-ID derzeit aktiv sind.
@@ -692,11 +702,11 @@
 
 		\section{Erster Start}
 
-			Beim ersten Hochfahren passt sich das System an die tatsächlichen lokalen Gegebenheiten an, insbesondere wird die komplette Größe der verwendeten Speicherkarte nutzbar gemacht. Zusätzlich muss der Anwender mitteilen, welche Auflösung das von ihm verwendete Display besitzt: Der FIRE-Taster setzt die Auflösung auf 800x480 Pixel, der ON-OFF-Taster auf 1024x600 Pixel. Anschließend erfolgt ein automatischer Neustart des Systems, der im Auswahlbildschirm mündet, ob man das Programm starten (FIRE-Button) oder das System herunterfahren (ON-OFF-Button) möchte. Ein gleichzeitiges Drücken beider Taster beendet das Startup-Skript und bringt den Nutzer zur \enquote{Bash}, wie die Kommandozeile unter Linux genannt wird
+			Beim ersten Hochfahren passt sich das System an die tatsächlichen lokalen Gegebenheiten an, insbesondere wird die komplette Größe der verwendeten Speicherkarte nutzbar gemacht. Zusätzlich muss der Anwender mitteilen, welche Auflösung das von ihm verwendete Display besitzt: Der FIRE-Taster setzt die Auflösung auf 800x480 Pixel, der ON-OFF-Taster auf 1024x600 Pixel. Anschließend erfolgt ein automatischer Neustart des Systems, der im Auswahlbildschirm mündet, ob man das Programm starten (FIRE-Button) oder das System herunterfahren (ON-OFF-Button) möchte. Ein gleichzeitiges Drücken beider Taster beendet das Startup-Skript und bringt den Nutzer zur \enquote{Bash}, wie die Kommandozeile unter Linux genannt wird.
 
-		\section{Konfiguration}
+		\section{Konfiguration und Zugriff}
 
-			Die Konfiguration von {\REF} bedeutet vor allem, den korrekten AES-Schlüssel festzulegen, damit die Kommunikation mit den Zündboxen reibungslos funktioniert, es können aber auch noch weitere Konfigurationseinstellungen getätigt werden, welche nicht im Programm via Touchscreen verfügbar sind.
+			Die meisten Konfigurationseinstellungen sind mittlerweile im Programm via Touchscreen verfügbar, dennoch kann es nötig oder gewünscht sein, unmittelbar auf das Dateisystem oder die Ordnerstruktur des Raspberry Pi zuzugreifen.
 
 			Die einfachste Möglichkeit ist der Anschluss einer USB-Tastatur an den Raspberry Pi und Beenden des Startup-Skripts zur Kommandozeile. Alternativ kann auch per SSH über den stationären Rechner auf {\REF} zugegriffen werden.
 
@@ -707,23 +717,42 @@
 
 			Nun muss man beim ersten Verbindungsaufbau den SSH-Schlüssel bestätigen und wird dann nach dem Passwort gefragt. Das Standardpasswort für den Nutzer \enquote{pi} lautet \emph{raspberry}. Ab diesem Punkt ist das Vorgehen mit direkt angeschlossener Tastatur oder SSH-Zugang identisch.
 
+		\section{Anpassung und Umbenennung von AES-Schlüsseln}
+
+			Ist der Zugriff eingerichtet, wird eine der ersten Tätigkeiten die Einstellung des passenden AES-Schlüssels sein, damit {\REF} und die Zündboxen von {\anlage} dieselbe Sprache sprechen.
+
 			Ausgangspunkt auf der Bash ist das Home-Verzeichnis des Users \enquote{pi}, von dort kann man mit der Eingabe
 			\begin{center}
 				\emph{cd raspEasyFire3/config}
 			\end{center}
-			ins Verzeichnis der Konfigurationsdateien wechseln. Auch wenn an dieser Stelle keine ausführliche Linux-Einführung gegeben werden soll, sei kurz darauf hingewiesen, dass Linux im Gegensatz zu Windows bei Datei- und Verzeichnisnamen \enquote{case sensitive} ist, also genau auf Groß- und Kleinschreibung achtet. In diesem Verzeichnis befinden sich von Haus aus zwei Dateien, namentlich
+			ins Verzeichnis der Konfigurationsdateien wechseln. Auch wenn an dieser Stelle keine ausführliche Linux-Einführung gegeben werden soll, sei kurz darauf hingewiesen, dass Linux im Gegensatz zu Windows bei Datei- und Verzeichnisnamen \enquote{case sensitive} ist, also genau auf Groß- und Kleinschreibung achtet.
+
+			In diesem Verzeichnis befinden sich von Haus aus drei Dateien, namentlich
 			\begin{description}
-				\item[raspEasyFire.conf] Die Konfigurationsdatei mit grundlegenden Programmeinstellungen. Mit einer Raute (\#) beginnende Zeilen stellen dabei Kommentare dar, welche die Bedeutung der nachfolgenden Einstellungen demonstrieren, Einstellungen selbst werden in der Form \enquote{Variable: Wert} angegeben. Typischerweise sollte es nicht notwendig sein, hier Einstellungen zu ändern, der derzeit ausgewählte Zündplan wird beispielsweise immer automatisch durch das eigentliche Programm aktualisiert.
-				\item[aesvalues.txt] In dieser Datei wird der verwendete AES-Schlüssel hinterlegt, der nötig ist, um zu gewährleisten, dass {\REF} und die Zündboxen eine gemeinsame Sprache sprechen. Die Werte heißen \enquote{value\_01, \dots, value\_16} und müssen im Hexadezimalformat, d.h. mit vorangestelltem \enquote{0x} angegeben werden, der Wertebereich für jeden einzelnen \enquote{value} geht von \enquote{0x00} bis \enquote{0xFF}.
+				\item[raspEasyFire.conf] Die Konfigurationsdatei mit grundlegenden Programmeinstellungen. Mit einer Raute (\#) beginnende Zeilen stellen dabei Kommentare dar, welche die Bedeutung der nachfolgenden Einstellungen demonstrieren, Einstellungen selbst werden in der Form \enquote{Variable: Wert} angegeben. Typischerweise sollte es nicht notwendig sein, hier Einstellungen zu ändern, der derzeit ausgewählte Zündplan wird beispielsweise immer automatisch durch das eigentliche Programm aktualisiert, andere Einstellungen können in der {\REF}-Oberfläche geändert werden.
+				\item[aesvalues\_default.txt] Diese Datei enthält den Standard-AES-Schlüssel, der zur Kommunikation mit den Zündboxen verwendet wird. Die Werte heißen \enquote{value\_01, \dots, value\_16} und müssen im Hexadezimalformat, d.h. mit vorangestelltem \enquote{0x} angegeben werden, der Wertebereich für jeden einzelnen \enquote{value} geht von \enquote{0x00} bis \enquote{0xFF}.
+				\item[aesvalues.txt] Diese Datei wird enthält den derzeit im Programm verwendeten AES-Schlüssel. Im Auslieferungszustand ist sie mit \emph{aesvalues\_default.txt} identisch.
 			\end{description}
 
-			Zum Ändern der Dateien steht der simple Texteditor \enquote{nano} zur Verfügung, um sich über eingeschränkte Schreibrechte keine Gedanken machen zu müssen, sollte der Aufruf über den Befehl
+			Um einen eigenen AES-Schlüssel, welcher beispielsweise den Namen \enquote{mykey} tragen könnte, anzulegen, empfiehlt es sich, die Datei \emph{aesvalues\_default.txt} zunächst mit dem Kopierbefehl \emph{cp} zu duplizieren:
 			\begin{center}
-				\emph{sudo nano DATEINAME}
+				\emph{sudo cp aesvalues\_default.txt aesvalues\_mykey.txt}
 			\end{center}
-			mit Administratorrechten erfolgen, wobei \enquote{DATEINAME} durch \enquote{aesvalues.txt} oder \enquote{raspEasyFire.conf} zu ersetzen ist.
+			Das Voranstellen von \emph{sudo} führt dazu, dass der Befehl mit Administratorrechten ausgeführt wird, so dass man sich keine Gedanken um eingeschränkte Schreibrechte machen muss.
+
+			Zum Anpassen des Dateiinhalts steht der simple Texteditor \enquote{nano} zur Verfügung, per
+			\begin{center}
+				\emph{sudo nano aesvalues\_mykey.txt}
+			\end{center}
+			startet man die Bearbeitung.
 
 			In \enquote{nano} werden dann die entsprechenden Einstellungen vorgenommen, beendet wird das Programm durch die Tastenkombination \enquote{STRG + X}, anschließend bestätigt man die Nachfrage, ob die Änderungen gespeichert werden sollen.
+
+			Um die Daten aus \emph{aesvalues\_mykey.txt} zu verwenden, kann man sie entweder später im Programm per Touchscreen auswählen oder direkt via
+			\begin{center}
+				\emph{sudo cp aesvalues\_mykey.txt aesvalues.txt}
+			\end{center}
+			zur neuen Standardeinstellung machen.
 
 		\section{Passwort ändern}
 			Um den Zugriff für unbefugte Personen auf den Raspberry Pi zu verhindern, sollte unbedingt das Passwort des Users \enquote{pi} geändert werden. Möglich ist dies über ein Menü, welches man aus der Bash über
@@ -733,7 +762,7 @@
 			erreicht.
 
 		\section{Zündpläne und Musikdateien übertragen}
-				{\REF} verarbeitet unmittelbar in {\pic} erzeugte zpl-Dateien, so dass die Shows bequem am eigenen Rechner konzipiert werden können. Für die Übertragung der Dateien existieren grundsätzlich zwei Möglichkeiten, entweder über einen USB-Stick oder via Netzwerk über das SFTP-Protokoll. Bei Musikdateien muss es sich um mp3-Dateien handeln, welche auch die Endung \enquote{.mp3} besitzen, Zündpläne müssen auf \enquote{.zpl} enden und Dateien, die zusammen gehören, müssen denselben Namen tragen: Eine Show \enquote{Feuerwerk.zpl} verlangt demnach nach einer Musikdatei \enquote{Feuerwerk.mp3}.
+			\REF{} verarbeitet unmittelbar in {\pic} erzeugte zpl-Dateien, so dass die Shows bequem am eigenen Rechner konzipiert werden können. Für die Übertragung der Dateien existieren grundsätzlich zwei Möglichkeiten, entweder über einen USB-Stick oder via Netzwerk über das SFTP-Protokoll. Bei Musikdateien muss es sich um mp3-Dateien handeln, welche auch die Endung \enquote{.mp3} besitzen, Zündpläne müssen auf \enquote{.zpl} enden und Dateien, die zusammen gehören, müssen denselben Namen tragen: Eine Show \enquote{Feuerwerk.zpl} verlangt demnach nach einer Musikdatei \enquote{Feuerwerk.mp3}.
 
 			\subsection{USB-Stick}
 
@@ -755,22 +784,33 @@
 
 			Im linken Teil des Bildschirms werden einige Informationen wie der aktuelle Zündplan oder die gemessene Batteriespannung angezeigt, am rechten Rand des Bildschirms sind die Schaltflächen zur Bedienung via Touchscreen zu sehen:
 			\begin{enumerate}
-				\item Modusauswahl
+				\item
+				      Modusauswahl
 				      \begin{description}
-					      \item [Auto-Mode] Vollautomatisches Zünden nach Zeitplan
-					      \item [Semi-Auto-Mode] Manuelle Zündung per Knopfdruck mit vorgegebener Reihenfolge
-					      \item [Manual Mode] Vollständig manuelle Zündung
+					      \item [Auto-Mode]
+					            Vollautomatisches Zünden nach Zeitplan
+					      \item [Semi-Auto-Mode]
+					            Manuelle Zündung per Knopfdruck mit vorgegebener Reihenfolge
+					      \item [Manual Mode]
+					            Vollständig manuelle Zündung
 				      \end{description}
-				\item Musikbegleitung an/aus
-				\item Zündplanauswahl
-				\item Slavesuche
-				\item Ferngesteuerte ID-Änderung bei Zündboxen
-				\item Soundcheck
+				\item
+				      Musikbegleitung an/aus
+				\item
+				      Zündplanauswahl
+				\item
+				      Slavesuche
+				\item
+				      Weitere Optionen
+				\item
+				      Soundcheck
 			\end{enumerate}
 
 			\subsection{Zündplanauswahl}
 
-				Anwählen des Punktes \enquote{ZPL wählen} führt zum in Abbildung~\ref{fig:REFzplwahl} gezeigten Bildschirm. Hier kann aus den im Programmunterverzeichnis \enquote{showfiles/zpl} vorhandenen Zündplänen gewählt werden. Die Auswahl ist abschließend zu bestätigen, um den gewählten Zündplan zu laden. Analog verhält es sich im manuellen Modus mit Musik mit der Auswahl der MP3-Datei.
+				Anwählen des Punktes \enquote{ZPL wählen} führt zum in Abbildung~\ref{fig:REFzplwahl} gezeigten Bildschirm. Hier kann aus den im Programmunterverzeichnis \enquote{showfiles/zpl} vorhandenen Zündplänen gewählt werden. Die Auswahl ist abschließend zu bestätigen, um den gewählten Zündplan zu laden.
+
+				Analog verhält es sich im manuellen Modus mit Musik mit der Auswahl der MP3-Datei, sofern die Musikbegleitung aktiviert ist.
 
 				\begin{figure}
 					\centering\includegraphics[width=150mm]{Bilder/REFzplwahl}
@@ -778,71 +818,117 @@
 					\label{fig:REFzplwahl}
 				\end{figure}
 
-				Die Auswahl wird gespeichert und ist beim nächsten Programmstart aktiv.
-				
+				Die Auswahl von Zündplan bzw. Musikstück wird jeweils gespeichert und ist dann auch beim nächsten Programmstart aktiv.
+
 			\subsection{Slavesuche}
-			
-				Mit einem Druck auf die Schaltfläche \enquote{Slaves suchen} wird eine Suche nach verfügbaren Zündboxen gestartet. Diese dauert etwa fünf Sekunden, anschließend werden die Anzahl und die Parameter der in Reichweite befindlichen Boxen wie in Abbildung~\ref{fig:REFslavesfound} zu sehen auf dem Startbildschirm angezeigt.
-				
+
+				Mit einem Druck auf die Schaltfläche \enquote{Slaves suchen} wird eine Suche nach verfügbaren Zündboxen gestartet. Diese dauert etwa fünf Sekunden, anschließend werden die Parameter der in Reichweite befindlichen Boxen wie in Abbildung~\ref{fig:REFslavesfound} zu sehen auf dem Startbildschirm angezeigt.
+
+				In Klammern hinter \enquote{Gefundene Slaves} taucht zudem die Gesamtanzahl gefundener Zündboxen auf. Werden weniger Boxen als erwartet gefunden, sollten~--sofern mehrmaliges erneutes Suchen keinen Erfolg gebracht hat~-- folgende Ursachen und Lösungsversuche in Erwägung gezogen werden:
+				\begin{enumerate}
+					\item
+					      Box nicht eingeschaltet oder Batterie leer $\Rightarrow$ Einschalten, Batterie laden/tauschen
+					\item
+					      Unterschiedliche AES-Schlüssel $\Rightarrow$ AES-Schlüssel abgleichen
+					\item
+					      Fehlende Funkverbindung durch Hindernisse, Abschattung, schlecht angebundene Antenne $\Rightarrow$ Boxposition anpassen für direkte Sichtlinie, Schraubverbindung der Antenne fest (aber nicht zu fest) anziehen, Abstand zwischen Box und {\REF} verringern
+					\item
+					      Datenkollision durch gleiche Unique-IDs $\Rightarrow$ Zuteilung einer anderen Unique-ID
+				\end{enumerate}
+
 				\begin{figure}
 					\centering\includegraphics[width=150mm]{Bilder/REFslavesfound}
 					\caption{Anzeige der gefundenen Boxen}
 					\label{fig:REFslavesfound}
 				\end{figure}
-							
-			\subsection{ID-Änderung}
-			
-				Über den Punkt \enquote{IDs ändern} können Zündboxen neue IDs zugewiesen werden, den Bildschirm dazu zeigt Abbildung~\ref{fig:REFids}. Hierzu müssen per \enquote{+} und \enquote{-} die alten und neuen IDs eingestellt werden, durch Druck auf \enquote{Bestätigen} wird der Befehl zur Änderung der IDs dann abgeschickt. Es ist zu beachten, dass diese Änderung nur wirksam werden kann, wenn die entsprechende Zündbox nicht scharf geschaltet ist.
-				
-				\begin{figure}
-					\centering\includegraphics[width=150mm]{Bilder/REFids}
-					\caption{Ändern der IDs}
-					\label{fig:REFids}
-				\end{figure}		
-			
+
+			\subsection{Weitere Optionen}
+				\subsubsection{Einstellungen ändern}
+					Unter diesem Punkt können einige Grundeinstellungen des Programms verändert werden:
+					\begin{description}
+						\item [Showmodus beim Start]
+						      Welche Art der Show soll beim Programmstart standardmäßig eingestellt sein? Diese Einstellung wird erst nach Neustart von {\REF} aktiv und hat keine Auswirkung auf die aktuelle Einstellung im Programm.
+						\item [Ton standardmäßig aus?]
+						      Soll die Standardeinstellung \enquote{Musik an} oder \enquote{Musik aus} lauten? Auch diese Einstellung wird erst nach Neustart von {\REF} aktiv und hat keine Auswirkung auf die aktuelle Einstellung im Programm.
+						\item [Herunterfahren beim Beenden]
+						      Soll nach dem Beenden von {\REF} das System komplett heruntergefahren oder in den Commandprompt gesprungen werden?
+						\item [Fehlende Slaves ignorieren]
+						      Soll beim Überprüfen der automatischen Show darauf bestanden werden, dass alle im Zündplan genannten Slaves (außer Slave 99) auch tatsächlich mindestens einmal vorhanden und alle Slaves scharf geschaltet sind oder nicht?
+						\item [Lautstärke]
+						      Lautstärkeeinstellung der Soundkarte für die Wiedergabe der Musik in Prozent.
+					\end{description}
+
+					Diese Einstellungen können durch \enquote{Bestätigen} dauerhaft übernommen oder durch \enquote{Abbrechen} wieder verworfen werden.
+
+				\subsubsection{ID-Änderung}
+
+					Über den Punkt \enquote{IDs ändern} können Zündboxen neue IDs zugewiesen werden, den Bildschirm dazu zeigt Abbildung~\ref{fig:REFids}. Hierzu müssen per \enquote{+} und \enquote{-} die alten und neuen IDs eingestellt werden, durch Druck auf \enquote{Bestätigen} wird der Befehl zur Änderung der IDs dann abgeschickt. Es ist zu beachten, dass diese Änderung nur wirksam werden kann, wenn die entsprechende Zündbox nicht scharf geschaltet ist.
+
+					\begin{figure}
+						\centering\includegraphics[width=150mm]{Bilder/REFids}
+						\caption{Ändern der IDs}
+						\label{fig:REFids}
+					\end{figure}
+
+				\subsubsection{AES-Key wählen}
+					In diesem Fenster kann gewählt werden, mit welcher der im Unterverzeichnis \emph{config} vorhandenen AES-Schlüssel-Dateien, welche einen Dateinamen der Form \emph{aesvalues\_NAME.txt} tragen müssen, gearbeitet werden soll. Die jeweils aktuell gewählte Datei ist blau markiert.
+
+					Sofern keins der Auswahlfelder markiert ist, entspricht der Inhalt der \emph{aesvalues.txt} keiner der vorhandenen Dateien des Namensschemas \emph{aesvalues\_NAME.txt}. Dies sollte man durch Auswahl eines Feldes und anschließendes Bestätigen beheben, um wieder einen definierten Zustand zu erreichen.
+
+				\subsubsection{AES-Key-Abgleich mit Box}
+					Wird eine eingeschaltete Zündbox über USB-Kabel (v3) bzw. einen RS232-USB-Konverter (v1/v2) an den Raspberry Pi angeschlossen, kann unter diesem Punkt ihr AES-Schlüssel ausgelesen werden. Unterscheidet er sich vom aktuell in {\REF} eingestellten Schlüssel, kann der Nutzer entscheiden, wessen Schlüssel auf das andere Device übertragen werden soll.
+
 			\subsection{Soundcheck}
-			
-				Durch einen Druck auf den Button \enquote{Soundcheck} wird die in der Konfigurationsdatei eingestellte Soundcheckdatei wiedergegeben, möglich ist dies nur im nicht scharfgeschalteten Zustand. Beendet wird der Soundcheck durch Drücken des FIRE-Buttons oder Drehen des Schlüsselschalters in die \enquote{scharfe} Position.		
+
+				Durch einen Druck auf den Button \enquote{Soundcheck} wird die in der Konfigurationsdatei eingestellte Soundcheckdatei wiedergegeben, möglich ist dies nur im nicht scharfgeschalteten Zustand. Beendet wird der Soundcheck durch Drücken des FIRE-Buttons oder Drehen des Schlüsselschalters in die \enquote{scharfe} Position.
 
 			\subsection{Widerstandsmessung}
-			
+
 				Durch Anklicken der entsprechenden Zeile in Abbildung~\ref{fig:REFslavesfound} fordert man eine {\anlage}-Zündbox dazu auf, die Widerstände ihrer 16 Kanäle zu messen und an {\REF} zu senden. Diese werden dann in tabellarischer Form angezeigt wie in Abbildung~\ref{fig:REFimpedances} gezeigt. Am unteren Rand des Bildschirms kann zur jeweils nächsten und vorherigen Box oder zurück zum Startbildschirm gesprungen werden.
-				
+
 				\begin{figure}
 					\centering\includegraphics[width=150mm]{Bilder/REFimpedances}
 					\caption{Widerstandsmessung}
 					\label{fig:REFimpedances}
 				\end{figure}
-			
-				
-			
+
 			\subsection{Showstart}
 
 				Gestartet wird die Show im aktuell eingestellten Modus durch Drücken des FIRE-Buttons, es müssen allerdings bestimmte Voraussetzungen erfüllt sein, damit es wirklich losgehen kann.
-				
+
 				Damit die Show reibungslos verläuft, kontrolliert {\REF}, ob Zündpläne und sonstige Gegebenheiten korrekt sind. Folgende Bedingungen müssen dabei für eine automatische Show erfüllt sein:
 				\begin{itemize}
-					\item Verwendete Slave-IDs müssen im Bereich von 1 bis 30 liegen, Slave-ID 99 ist zulässig für \enquote{Dummy-Cues}, die zwar auf dem Display angezeigt werden, aber keine Zündung auslösen.
-					\item Ansprechbare Kanalnummern liegen im Bereich von 1 bis 16.
-					\item Jede Kombination aus Slave-ID und Kanalnummer darf im Zündplan lediglich einmal vorkommen. Dient der Kanal der Triggerung eines weiteren Geräts, soll also wirklich mehrfach ausgelöst werden, so ist in die Effektbeschreibung bei jedem Aufruf \enquote{STEPPER} (Großschreibung beachten) mit einzutragen.
-					\item Der Abstand zwischen zwei \enquote{echten} Zündungen muss mindestens \SI{100}{\milli\second} betragen, für Dummy-Cues gilt diese Beschränkung demnach nicht.
-					\item Für jede angesprochene Slave-ID (Ausnahme ist die Dummy-Slave-ID 99) muss eine Zündbox mit der entsprechenden Slave-ID gefunden worden sein. Um diese Überprüfung abzuschalten, kann in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt werden.
-					\item Alle gefundenen Zündboxen müssen scharf geschaltet sein, auch diese Überprüfung wird übersprungen, wenn in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt ist.
-					\item Ist eine Musikshow vorgesehen, muss eine zum Zündplan passende Musikdatei im korrekten Verzeichnis vorhanden sein. Ebenso muss die in der Konfigurationsdatei benannte Soundcheckdatei existieren.
-					\item Bei einer Musikshow müssen alle Zündzeitpunkte müssen innerhalb der Dauer des Musikstücks liegen, da die Zündzeiten mit dem Zeitstempel des Audioplayers abgeglichen werden. Möchte man Zündungen nach dem Ende des Musikstücks setzen, muss die mp3-Datei durch das Hinzufügen von Stille am Ende verlängert werden.
-					\item {\REF} muss durch den Schlüsselschalter scharf geschaltet sein.
+					\item
+					      Verwendete Slave-IDs müssen im Bereich von 1 bis 30 liegen, Slave-ID 99 ist zulässig für \enquote{Dummy-Cues}, die zwar auf dem Display angezeigt werden, aber keine Zündung auslösen.
+					\item
+					      Ansprechbare Kanalnummern liegen im Bereich von 1 bis 16.
+					\item
+					      Jede Kombination aus Slave-ID und Kanalnummer darf im Zündplan lediglich einmal vorkommen. Dient der Kanal der Triggerung eines weiteren Geräts, soll also wirklich mehrfach ausgelöst werden, so ist in die Effektbeschreibung bei jedem Aufruf \enquote{STEPPER} (Großschreibung beachten) mit einzutragen.
+					\item
+					      Der Abstand zwischen zwei \enquote{echten} Zündungen muss mindestens \SI{100}{\milli\second} betragen, für Dummy-Cues gilt diese Beschränkung demnach nicht.
+					\item
+					      Für jede angesprochene Slave-ID (Ausnahme ist die Dummy-Slave-ID 99) muss eine Zündbox mit der entsprechenden Slave-ID gefunden worden sein. Um diese Überprüfung abzuschalten, kann in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt werden. Diese Einstellung kann auch über \enquote{Weitere Optionen} und \enquote{Einstellungen anpassen} mit \enquote{Fehlende Slaves ignorieren} verändert werden.
+					\item
+					      Alle gefundenen Zündboxen müssen scharf geschaltet sein. Auch diese Überprüfung wird übersprungen, wenn in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt ist.
+					\item
+					      Ist eine Musikshow vorgesehen, muss eine zum Zündplan passende Musikdatei im korrekten Verzeichnis vorhanden sein. Ebenso muss die in der Konfigurationsdatei benannte Soundcheckdatei existieren.
+					\item
+					      Bei einer Musikshow müssen alle Zündzeitpunkte innerhalb der Dauer des Musikstücks liegen, da die Zündzeiten mit dem Zeitstempel des Audioplayers abgeglichen werden. Möchte man Zündungen nach dem Ende des Musikstücks setzen, muss die mp3-Datei durch das Hinzufügen von Stille am Ende verlängert werden.
+					\item
+					      {\REF} muss durch den Schlüsselschalter scharf geschaltet sein.
 				\end{itemize}
 
 				Wird der FIRE-Button gedrückt, ohne dass die nötigen Voraussetzungen erfüllt sind, erscheint ein Info-Popup, welches die zu behebenden Probleme auflistet. Es empfiehlt sich, mit großem Zeitpuffer vor Beginn der Show einen Trockenlauf zu machen, um auf Fehler, die vor Ort nicht mehr allzu leicht zu beheben sind, aufmerksam zu werden. Sind alle Bedingungen erfüllt, beginnt die FIRE-Button-LED nach dem Drehen des Schlüsselschalters in die \enquote{scharfe} Position zu blinken und ein Druck auf den FIRE-Button startet die Show.
-				
-				Beispiele für die Ansicht im automatischen (mit Backup-Cues) und manuellen Modus sind in Abbildung~\ref{fig:REFauto} bzw. Abbildung~\ref{fig:REFmanual} gezeigt. Backup-Cues können durch Drücken der entsprechenden Schaltfläche bei gleichzeitigem Drücken des FIRE-Buttons ausgelöst werden.
-				
+
+				Beispiele für die Ansicht im automatischen (mit Backup-Cues) und manuellen Modus sind in Abbildung~\ref{fig:REFauto} bzw. Abbildung~\ref{fig:REFmanual} gezeigt. Backup-Cues können durch Drücken des FIRE-Buttons und anschließendes Betätigen der entsprechenden Schaltfläche ausgelöst werden.
+
 				\begin{figure}
 					\begin{subfigure}{\textwidth}
 						\includegraphics{Bilder/REFautoshow}
 						\caption{Automatischer Modus}
 						\label{fig:REFauto}
-					\end{subfigure}\newline
+					\end{subfigure}
+					\newline
 					\begin{subfigure}{\textwidth}
 						\includegraphics{Bilder/REFmanualshow}
 						\caption{Manueller Modus}
@@ -974,10 +1060,14 @@
 
 				Wenig ist ärgerlicher, als dass eine sorgfältig geplante Show an Flüchtigkeitsfehlern scheitert. Ein falscher Klick bei der Erstellung des Zündplans kann dafür sorgen, dass die Highlightbatterie nicht angesprochen wird und statt buntem Lichterzauber nur schwarze Nacht am Himmel zu sehen ist. Aus diesem Grund existiert das auf {\anlage} zugeschnittene Tool \texttt{schemecheck.exe}, welches folgende Dinge im Zündplan erkennen kann und hinweist auf:
 				\begin{itemize}
-					\item Verwenden einer Slave-ID außerhalb des Bereichs $1-30$
-					\item Ansprechen eines Kanals außerhalb des Bereichs $1-16$
-					\item Unterschreiten des minimalen Zündabstands von $\SI{100}{\milli\second}$
-					\item Mehrfachzünden derselben Slave-Kanal-Kombination
+					\item
+					      Verwenden einer Slave-ID außerhalb des Bereichs $1-30$
+					\item
+					      Ansprechen eines Kanals außerhalb des Bereichs $1-16$
+					\item
+					      Unterschreiten des minimalen Zündabstands von $\SI{100}{\milli\second}$
+					\item
+					      Mehrfachzünden derselben Slave-Kanal-Kombination
 				\end{itemize}
 				Darüber hinaus werden auch alle angesprochenen Slave-IDs und die Gesamtzahl der Cues angezeigt.
 
@@ -1675,10 +1765,13 @@
 
 				Zur Verbindung der Platinen mit der Peripherie wird bei {\anlage} eine Vielzahl von Kabeln benötigt, die grob in drei Kategorien unterteilt werden können:
 				\begin{enumerate}
-					\item  Flachbandkabel bzw. Flachbandkabel-Adern zum Anschluss von LCD (außer Hintergrundbeleuchtung), LEDs und Schlüsselschalter
-					\item Litze mit einer Querschnittsfläche von mindestens 0,5\,mm$^2$, d.\,h. einem Mindestdurchmesser von 0,8\,mm, zum Anschluss von LCD-Hintergrundbeleuchtung, Netzschalter und
+					\item
+					      Flachbandkabel bzw. Flachbandkabel-Adern zum Anschluss von LCD (außer Hintergrundbeleuchtung), LEDs und Schlüsselschalter
+					\item
+					      Litze mit einer Querschnittsfläche von mindestens 0,5\,mm$^2$, d.\,h. einem Mindestdurchmesser von 0,8\,mm, zum Anschluss von LCD-Hintergrundbeleuchtung, Netzschalter und
 					      Zündklemmen
-					\item 50\,$\Omega$-Koaxialkabel als Antennenkabel
+					\item
+					      50\,$\Omega$-Koaxialkabel als Antennenkabel
 				\end{enumerate}
 
 				Die Koaxialkabel werden in diesem Abschnitt nicht behandelt, da dafür oft Spezialwerkzeug notwendig ist und davon ausgegangen wird, dass diese Kabel bereits fertig konfektioniert erworben werden. Für die Konfektionierung der anderen Kabel gilt, dass diese so kurz wie möglich aber gleichzeitig auch so lang wie nötig sein sollten, um das Verlöten/Verkleben annehmbar zu gestalten und das Gehäuse später noch einmal öffnen zu können, ohne gleich alles abzureißen.
@@ -1811,11 +1904,16 @@
 
 				\begin{enumerate}
 					\label{enum:leds}
-					\item Die Verbindung der Adern des Flachbandkabels auf einer Länge von etwa $\SI{35}{\milli\metre}$ auftrennen
-					\item Auf jede Ader einen dünnen Schrumpfschlauch der Länge $\SI{15}{\milli\metre}$ stecken (noch nicht erhitzen!)
-					\item Das kürzere Anschlussbein der LED (Kathode) mit dem Seitenschneider auf eine Länge von $\SI{8}{\milli\metre}$ trimmen und die mit GND verbundene Ader anlöten
-					\item Das längere Anschlussbein der LED (Anode) mit dem Seitenschneider auf eine Länge von $\SI{8}{\milli\metre}$ trimmen und die andere Ader anlöten
-					\item Schrumpfschläuche bis ans LED-Gehäuse vorschieben und per Heißluft schrumpfen
+					\item
+					      Die Verbindung der Adern des Flachbandkabels auf einer Länge von etwa $\SI{35}{\milli\metre}$ auftrennen
+					\item
+					      Auf jede Ader einen dünnen Schrumpfschlauch der Länge $\SI{15}{\milli\metre}$ stecken (noch nicht erhitzen!)
+					\item
+					      Das kürzere Anschlussbein der LED (Kathode) mit dem Seitenschneider auf eine Länge von $\SI{8}{\milli\metre}$ trimmen und die mit GND verbundene Ader anlöten
+					\item
+					      Das längere Anschlussbein der LED (Anode) mit dem Seitenschneider auf eine Länge von $\SI{8}{\milli\metre}$ trimmen und die andere Ader anlöten
+					\item
+					      Schrumpfschläuche bis ans LED-Gehäuse vorschieben und per Heißluft schrumpfen
 				\end{enumerate}
 
 				Anschließend das Flachbandkabel für das LCD vorbereiten, d.\,h. abisolieren, verzinnen und Verbindungen soweit lösen, dass alle Anschlüsse bequem erreicht werden können. Da das LCD im 4-Bit-Modus betrieben wird, werden nur die Pins 1-6 sowie 11-16 angeschlossen, 7-10 bleiben offen. Bei Anschluss der Pins 15 und 16 darauf achten, Anode und Kathode nicht zu vertauschen; die Belegung ist in der Regel so, dass die Anode an Pin 15 herausgeführt ist, kann aber von LCD zu LCD variieren. Der Lötkolben kann danach ausgeschaltet werden, jetzt geht es an die Befestigung.
@@ -1910,8 +2008,10 @@
 
 					Um die Antenne vom SMA-Anschluss an der Zündbox nach außen zu führen, wird ein zweiteiliger Adapter, der in Abbildung~\ref{fig:koffer-adapter-montiert} am Koffer montiert gezeigt ist, verwendet. So wird einerseits das Kabel geschützt, andererseits die Kabelführung stabilisiert. Die Halterung besteht aus zwei ineinander gesteckten Teilen:
 					\begin{itemize}
-						\item MDF-Platte: $\SI{85}{\milli\metre} \times \SI{35}{\milli\metre} \times \SI{3}{\milli\metre}$
-						\item PVC-Rohr, basierend auf einer Gardena-Micro-Drip-Verlängerung: $\oslash\SI{7,5}{\milli\metre} \times \SI{115}{\milli\metre}$
+						\item
+						      MDF-Platte: $\SI{85}{\milli\metre} \times \SI{35}{\milli\metre} \times \SI{3}{\milli\metre}$
+						\item
+						      PVC-Rohr, basierend auf einer Gardena-Micro-Drip-Verlängerung: $\oslash\SI{7,5}{\milli\metre} \times \SI{115}{\milli\metre}$
 					\end{itemize}
 
 					In die MDF-Platte wird $\SI{10}{\milli\metre}$ vom oberen Rand entfernt mehr oder weniger mittig ein $\SI{5}{\milli\metre}$-Loch gebohrt und ein Kanal senkrecht nach oben zum Rand eingebracht. Beim PVC-Rohr bringt man $\SI{7}{\centi\metre}$ vom Rand entfernt auf einer Länge von $\SI{3}{\milli\metre}$ zwei Einschnitte ein, um das Rohr an dieser Stelle auf die Breite des Kanals zu bringen. Die beiden Einzelteile sind in Abbildung~\ref{fig:koffer-adapter-einzeln}, der zusammengesteckte Adapter in Abbildung~\ref{fig:koffer-adapter-zusammen} abgebildet. Der Adapter wird vor dem Montieren der MDF-Platte am Koffer so ausgerichtet, dass die Rohröffnung genau auf die SMA-Buchse an der Zündbox zeigt.
@@ -1991,9 +2091,9 @@
 				\begin{tabu}
 					to .9\textwidth {lX[1,l]X[-7,l]}
 					\hline\hline
-					\textbf{Fuse} & \textbf{Wert}     & \textbf{Bedeutung}                                                                                                                                                                             \\ \hline
-					Low Fuse      & 0xF7              & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle                                                                                                                     \\
-					High Fuse     & 0xD6              & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
+					\textbf{Fuse} & \textbf{Wert}           & \textbf{Bedeutung}                                                                                                                                                                             \\ \hline
+					Low Fuse      & 0xF7                    & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle                                                                                                                     \\
+					High Fuse     & 0xD6                    & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
 					Extended Fuse & 0x05/ 0xFD\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{\volt}$                                                                                                                                      \\ \hline\hline
 				\end{tabu}
 				\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
@@ -2046,11 +2146,16 @@
 
 			Antennen für die verwendete Übertragungsfrequenz von \SI{868}{\mega\hertz} gibt es in großer Auswahl zu kaufen, eine einfache, omnidirektionale Antenne, welche ein sehr gutes Stehwellenverhältnis von <1,3:1 erzielt, kann aber auch relativ schnell selbst gebaut werden. Auf möglichst exakte Einhaltung der Abmessungen ist dabei zu achten:
 			\begin{itemize}
-				\item Koaxialkabel RG316
-				\item SMA-Steckverbinder (üblicherweise männliche Ausführung)
-				\item Kupfer- oder Messingröhrchen mit 8\,mm Durchmesser und 66,5\,mm Länge
-				\item Distanzhülse aus Kunststoff mit 5\,mm Länge, 7\,mm Außendurchmesser und 3,6\,mm Innendurchmesser
-				\item Schrumpfschläuche mit 1,2\,mm, 2,4\,mm, 4,8\,mm und 9,5\,mm Durchmesser vor dem Schrumpfen
+				\item
+				      Koaxialkabel RG316
+				\item
+				      SMA-Steckverbinder (üblicherweise männliche Ausführung)
+				\item
+				      Kupfer- oder Messingröhrchen mit \SI{8}{\milli\metre} Durchmesser und \SI{66,5}{\milli\metre} Länge
+				\item
+				      Distanzhülse aus Kunststoff mit \SI{5}{\milli\metre} Länge, \SI{7}{\milli\metre} Außendurchmesser und \SI{3,6}{\milli\metre} Innendurchmesser
+				\item
+				      Schrumpfschläuche mit \SI{1,2}{\milli\metre}, \SI{2,4}{\milli\metre}, \SI{4,8}{\milli\metre} und \SI{9,5}{\milli\metre} Durchmesser vor dem Schrumpfen
 			\end{itemize}
 
 			\begin{figure}
@@ -2061,7 +2166,7 @@
 				\label{fig:antenne}
 			\end{figure}
 
-			Die Antenne wird als Sperrtopfantenne bezeichnet und besitzt den in Abbildung~\ref{fig:antenne} gezeigten Aufbau. Der oberste Teil ist 88\,mm lang und besteht aus dem Innenleiter des Koaxialkabels mit dem ihn umgebenden Dielektrikum. Im mittleren Teil befindet sich ein 66,5\,mm langes Röhrchen, welches an seinem oberen Ende mit möglichst kurzer Verbindung an das Schirmgeflecht des Koaxialkabels angelötet wird. Anschließend folgt eine beliebige Länge Koaxialkabel, am Ende schließlich der Steckverbinder zum Anschluss an das Funkmodul.
+			Die Antenne wird als Sperrtopfantenne bezeichnet und besitzt den in Abbildung~\ref{fig:antenne} gezeigten Aufbau. Der oberste Teil ist \SI{88}{\milli\metre} lang und besteht aus dem Innenleiter des Koaxialkabels mit dem ihn umgebenden Dielektrikum. Im mittleren Teil befindet sich ein \SI{66,5}{\milli\metre} langes Röhrchen, welches an seinem oberen Ende mit möglichst kurzer Verbindung an das Schirmgeflecht des Koaxialkabels angelötet wird. Anschließend folgt eine beliebige Länge Koaxialkabel, am Ende schließlich der Steckverbinder zum Anschluss an das Funkmodul.
 
 			\begin{figure}[t]
 				\centering
@@ -2072,23 +2177,38 @@
 
 			Der Aufbau der Antenne erfolgt folgendermaßen:
 			\begin{enumerate}
-				\item Von der Rolle RG316 ein Stück der Länge abschneiden, welche später der Gesamtlänge von Antennenspitze bis zum Anschluss an das Funkmodul bzw. einen Adapterstecker entspricht
-				\item Entfernung des Kunststoffmantels auf einer Länge von 88\,mm
-				\item Entfernung des nun freiliegenden Schirmgeflechts auf einer Länge von 84\,mm, so dass noch 4\,mm des Schirmgeflechts verbleiben.
-				\item Auftrennen und Verdrillen des Schirmgeflechts
-				\item Verdicken des Koaxialkabels mit einem 10\,mm langen Stück Schrumpfschlauch, dessen Mitte 66,5\,mm vom oberen Ende der Ummantelung entfernt sein sollte.
-				\item Aufschieben der Distanzhülse in die Mitte des soeben verstärkten Teils. Gegen Abrutschen nach unten ggf. mit weiterem Schrumpfschlauch unterhalb der Hülse sichern.
-				\item Großzügiges Vorverzinnen des Röhrchens an einer Stelle der Innenwand
-				\item Überstülpen des Röhrchens und Anlöten des verdrillten Schirmgeflechts an der Innenwand
-				\item Gesamte Konstruktion mit Schrumpfschlauch stabilisieren (nach jedem Schritt schrumpfen!):
+				\item
+				      Von der Rolle RG316 ein Stück der Länge abschneiden, welche später der Gesamtlänge von Antennenspitze bis zum Anschluss an das Funkmodul bzw. einen Adapterstecker entspricht			 
+				\item
+				      Entfernung des Kunststoffmantels auf einer Länge von \SI{88}{\milli\metre}
+				\item
+				      Entfernung des nun freiliegenden Schirmgeflechts auf einer Länge von \SI{84}{\milli\metre}, so dass noch \SI{4}{\milli\metre} des Schirmgeflechts verbleiben.
+				\item
+				      Auftrennen und Verdrillen des Schirmgeflechts
+				\item
+				      Verdicken des Koaxialkabels mit einem \SI{10}{\milli\metre} langen Stück Schrumpfschlauch, dessen Mitte \SI{66,5}{\milli\metre} vom oberen Ende der Ummantelung entfernt sein sollte.
+				\item
+				      Aufschieben der Distanzhülse in die Mitte des soeben verstärkten Teils. Gegen Abrutschen nach unten ggf. mit weiterem Schrumpfschlauch unterhalb der Hülse sichern.
+				\item
+				      Großzügiges Vorverzinnen des Röhrchens an einer Stelle der Innenwand
+				\item
+				      Überstülpen des Röhrchens und Anlöten des verdrillten Schirmgeflechts an der Innenwand
+				\item
+				      Gesamte Konstruktion mit Schrumpfschlauch stabilisieren (nach jedem Schritt schrumpfen!):
 				      \begin{enumerate}
-					      \item Ein 88\,mm langes Stück Schrumpfschlauch $1,2$ über den obersten Teil der Antenne
-					      \item Ein 90\,mm langes Stück Schrumpfschlauch $2,4$ über den obersten Teil der Antenne, unmittelbar nach dem Schrumpfen die noch heißen oben überstehenden 2\,mm Schlauch durch Zusammendrücken verschmelzen
-					      \item Ein 2,5\,mm langes Stück Schrumpfschlauch $9,5$ über den aus dem Röhrchen herausstehenden Teil der Distanzhülse
-					      \item Ein 80\,mm langes Stück Schrumpfschlauch 9,5 über Röhrchen und Distanzhülse, so dass auf beiden Seiten etwa 5\,mm überstehen
-					      \item Mit einem 10\,mm langen Stück Schrumpfschlauch $4,8$ den Übergang zwischen oberem Antennenteil und Röhrchen versiegeln
+					      \item
+					            Ein \SI{88}{\milli\metre} langes Stück Schrumpfschlauch $1,2$ über den obersten Teil der Antenne
+					      \item
+					            Ein \SI{90}{\milli\metre} langes Stück Schrumpfschlauch $2,4$ über den obersten Teil der Antenne, unmittelbar nach dem Schrumpfen die noch heißen oben überstehenden \SI{2}{\milli\metre} Schlauch durch Zusammendrücken verschmelzen
+					      \item
+					            Ein 2,\SI{5}{\milli\metre} langes Stück Schrumpfschlauch $9,5$ über den aus dem Röhrchen herausstehenden Teil der Distanzhülse
+					      \item
+					            Ein \SI{80}{\milli\metre} langes Stück Schrumpfschlauch 9,5 über Röhrchen und Distanzhülse, so dass auf beiden Seiten etwa \SI{5}{\milli\metre} überstehen
+					      \item
+					            Mit einem \SI{10}{\milli\metre} langen Stück Schrumpfschlauch $4,8$ den Übergang zwischen oberem Antennenteil und Röhrchen versiegeln
 				      \end{enumerate}
-				\item Falls nötig: Kabel in Endposition einfädeln, bevor SMA-Steckverbinder am intakten Ende angebracht wird
+				\item
+				      Falls nötig: Kabel in Endposition einfädeln, bevor SMA-Steckverbinder am intakten Ende angebracht wird
 			\end{enumerate}
 
 			Um den SMA-Steckverbinder anzubringen, müssen vom intakten Ende aus gemessen zunächst \SI{12}{\milli\metre} des Mantels entfernt werden, anschließend \SI{8}{\milli\metre} des Schirmgeflechts und zuletzt auch \SI{4}{\milli\metre} des Dielektrikums. Nun werden Schrumpfschlauch und Crimpröhrchen auf das Kabel geschoben, anschließend der kleine Stecker am Innenleiter angelötet. Das Schirmgeflecht wird aufgefächert, das Gehäuse aufs Kabel geschoben und das Crimpröhrchen aufgesteckt, vercrimpt und Schrumpfschlauch darüber angebracht. Wenn gewünscht kann~-- wie in~\ref{fig:antenne} rechts zu sehen~-- Schrumpfschlauch 9,5 als Witterungsschutz über dem gesamten Steckverbinder angebracht werden.
@@ -2106,9 +2226,12 @@
 
 			Der Herstellungsprozess gliedert sich in folgende Schritte:
 			\begin{enumerate}
-				\item Kompilieren der Quellcodedateien (.c) in noch nicht gelinkte Dateien (.o)
-				\item Linken zu einer Gesamtdatei (.elf)
-				\item Umwandeln in eine Hexdatei (.hex), welche mit dem Bootloader über die serielle Schnittstelle auf den Controller geschrieben werden kann
+				\item
+				      Kompilieren der Quellcodedateien (.c) in noch nicht gelinkte Dateien (.o)
+				\item
+				      Linken zu einer Gesamtdatei (.elf)
+				\item
+				      Umwandeln in eine Hexdatei (.hex), welche mit dem Bootloader über die serielle Schnittstelle auf den Controller geschrieben werden kann
 			\end{enumerate}
 
 			Der gesamte Ablauf kann transparent in der Datei \enquote{build\_hexfiles.bat} im Verzeichnis \enquote{Hexfiles} nachvollzogen werden.
@@ -2140,7 +2263,8 @@
 
 		Ein ganz spezielles Dankeschön an:
 		\begin{itemize}
-			\item Marc Weissmann, der mit ursprünglich seinem, mittlerweile unserem gemeinsamen Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE~-- Feuerwerk im Röthel\-heim\-park Er\-langen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an trotz einiger mittlerweile behobener \enquote{Kinderkrankheiten} immer voll vertraut hat. Videos unserer bisherigen mit {\anlage} geschossenen Feuerwerke:
+			\item
+			      Marc Weissmann, der mit ursprünglich seinem, mittlerweile unserem gemeinsamen Projekt \href{http://www.facebook.com/FIREErlangen}{\texttt{FIRE~-- Feuerwerk im Röthel\-heim\-park Er\-langen}} den Ansporn zu dieser Entwicklung gegeben und ihr von Beginn an trotz einiger mittlerweile behobener \enquote{Kinderkrankheiten} immer voll vertraut hat. Videos unserer bisherigen mit {\anlage} geschossenen Feuerwerke:
 			      \begin{itemize}
 				      \item[*] \underline{\href{https://vimeo.com/116115628}{Silvesterfeuerwerk 2014/15}}
 				      \item[*] \underline{\href{https://vimeo.com/150594996}{Silvesterfeuerwerk 2015/16}}
@@ -2149,21 +2273,35 @@
 				      \item[*] \underline{\href{https://www.youtube.com/watch?v=q-nfOxinUgU}{Hochzeitsfeuerwerk August 2017}}
 				      \item[*] \underline{\href{https://www.youtube.com/watch?v=unH9tJSg1mw}{Silvesterfeuerwerk 2017/18}}
 			      \end{itemize}
-			\item Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
-			\item Jens Nachtigal, den Hauptprogrammierer und Anstoßgeber zur Entwicklung des Raspberry-Pi-Transmitters.
-			\item Die \enquote{Nachbau-Pioniere} Matthias Pee und Cedrik Sikora für Ideen und wertvolle Hinweise.
-			\item \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung.
-			\item \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Erklärungen zum Thema elektrische Zündung und natürlich die Zündsoftware {\pic} von User \emph{pyrobla}.
-			\item \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat.
-			\item Der \texttt{Brauerei Loscher} für Club Mate, den Bastler-Treibstoff.
-			\item Die vielen tollen Open-Source- und Freeware-Lösungen, welche die Softwareentwicklung erst möglich gemacht haben:
+			\item
+			      Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
+			\item
+			      Jens Nachtigal, den Hauptprogrammierer und Anstoßgeber zur Entwicklung des Raspberry-Pi-Transmitters.
+			\item
+			      Die \enquote{Nachbau-Pioniere} Matthias Pee und Cedrik Sikora für Ideen und wertvolle Hinweise.
+			\item
+			      \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}} für Hilfe in Sachen Hardware und Programmierung.
+			\item
+			      \href{http://www.feuerwerk-forum.de}{\texttt{feuerwerk-forum.de}} für Erklärungen zum Thema elektrische Zündung und natürlich die Zündsoftware {\pic} von User \emph{pyrobla}.
+			\item
+			      \href{http://www.saleae.com}{\texttt{Saleae}} für den grandiosen Logic 8, der wertvolle Dienste zur Erschließung des \texttt{RFM69} geleistet hat.
+			\item
+			      Der \texttt{Brauerei Loscher} für Club Mate, den Bastler-Treibstoff.
+			\item
+			      Die vielen tollen Open-Source- und Freeware-Lösungen, welche die Softwareentwicklung erst möglich gemacht haben:
 			      \begin{itemize}
-				      \item Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers.
-				      \item Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}, Kees Bakker und Thomas Holland für die Erweiterung \texttt{AVREclipse} sowie Ben Gardner für \texttt{Uncrustify} und die damit verbundene Übersichtlichkeit des Quellcodes.
-				      \item Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}.
-				      \item Leo-Andres Hofmann für die schöne Windows-Oberfläche \texttt{UpdateLoader}.
-				      \item \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{Git} und \texttt{GitHub} für die unkomplizierte Versionsverwaltung.
-				      \item {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs.
+				      \item
+				            Die GCC-Community für die \texttt{AVR-GCC-Toolchain} zum Programmieren des Mikrocontrollers.
+				      \item
+				            Die Eclipse-Foundation für die Programmierumgebung \texttt{Eclipse}, Kees Bakker und Thomas Holland für die Erweiterung \texttt{AVREclipse} sowie Ben Gardner für \texttt{Uncrustify} und die damit verbundene Übersichtlichkeit des Quellcodes.
+				      \item
+				            Peter Dannegger für den robusten, aber dennoch schlanken Bootloader \texttt{FastBoot}.
+				      \item
+				            Leo-Andres Hofmann für die schöne Windows-Oberfläche \texttt{UpdateLoader}.
+				      \item
+				            \texttt{Subversion} und \texttt{TortoiseSVN} bzw. \texttt{Git} und \texttt{GitHub} für die unkomplizierte Versionsverwaltung.
+				      \item
+				            {\LaTeX} und \texttt{TeXstudio} zur Erstellung des Handbuchs.
 			      \end{itemize}
 		\end{itemize}
 

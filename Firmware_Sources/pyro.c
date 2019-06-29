@@ -267,6 +267,8 @@ void cursor_x_shift(uint8_t *last_zeile, uint8_t *last_spalte, uint8_t *anz_zeil
 // Main programme
 int main(void) {
     wdt_disable();
+    MOSSWITCHPORT         &= ~(1 << MOSSWITCH);
+    MOSSWITCHDDR          |=  (1 << MOSSWITCH);
 
     // Local Variables
     uint16_t    scheme = 0, anti_scheme = 0, controlvar;
