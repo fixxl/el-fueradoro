@@ -9,15 +9,15 @@
 #define GLOBAL_H_
 
 #ifndef MCU
- #define MCU    "atmega168p"
+    #define MCU "atmega168p"
 #endif
 
 #ifndef RFM
- #define RFM    69
+    #define RFM 69
 #endif
 
-#define STRINGIZE(x)             # x
-#define STRINGIZE_VALUE_OF(x)    STRINGIZE(x)
+#define STRINGIZE( x )          # x
+#define STRINGIZE_VALUE_OF( x ) STRINGIZE( x )
 
 // Includes und Defines
 #include <avr/io.h>
@@ -49,6 +49,6 @@
 #endif
 
 // Global Variables
-//extern volatile uint8_t transmit_flag, key_flag;
-//extern volatile uint16_t clear_lcd_tx_flag, clear_lcd_rx_flag, hist_del_flag;
+// extern volatile uint8_t transmit_flag, key_flag;
+// extern volatile uint16_t clear_lcd_tx_flag, clear_lcd_rx_flag, hist_del_flag;
 #endif /* GLOBAL_H_ */
