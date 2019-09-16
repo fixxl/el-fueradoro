@@ -92,9 +92,9 @@
 	{\bfseries
 	\begin{enumerate}
 		\item
-		      Bei den Zündboxen der ersten Generation liegt das Metallgehäuse des SMA-Antennen\-anschlusses an der Oberseite der Zündbox auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{\volt}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden. Bei den Zündboxen der zweiten Generation sind schaltungstechnische Maßnahmen getroffen, um den Strom im Kurzschlussfall zu begrenzen und ein Auslösen der Anzünder bei Verbindung zwischen roter Klemme und Antennenanschluss im nicht-scharfgeschalteten Zustand auszuschließen.
+		      Bei den Zündboxen der ersten Generation liegt das Metallgehäuse des SMA-Antennen\-anschlusses an der Oberseite der Zündbox auf Massepotential, die roten Anschlussklemmen nach dem Einschalten und unter Umständen auch noch Minuten nach dem Ausschalten bei \SI{22,5}{\volt}. Ein Kurzschluss zwischen diesen beiden Punkten ist daher unbedingt zu vermeiden, um Schäden an der Schaltung und ungewollte Zündungen zu verhindern. Daher, sofern der Antennenanschluss nicht isoliert ist, beim Anschließen die Anzünder immer zuerst mit der schwarzen Klemme, danach mit der roten verbinden, beim Abklemmen zuerst das Kabel an der roten, dann das an der schwarzen Klemme lösen. Weiterhin sollte man die Zündbox erst in ihrer endgültigen Position einschalten, so dass ein unbeabsichtigtes Herausziehen der Kabel tunlichst ausgeschlossen ist. Sicherheitshalber kann auch der SMA-Stecker nach dem Anschrauben mit Klebeband isoliert werden. Bei den Zündboxen ab der zweiten Generation sind schaltungstechnische Maßnahmen getroffen, um den Strom im Kurzschlussfall zu begrenzen und ein Auslösen der Anzünder bei Verbindung zwischen roter Klemme und Antennenanschluss im nicht-scharfgeschalteten Zustand auszuschließen.
 		\item
-		      Devices nie ohne angeschlossene Antenne einschalten, um Rückreflexionen an offenen Steckern/Buchsen zu vermeiden, welche die Sendeendstufe zerstören könnten.
+		      Devices niemals ohne angeschlossene Antenne einschalten, um Rückreflexionen an offenen Steckern/Buchsen zu vermeiden, welche die Sendeendstufe zerstören könnten.
 		\item
 		      Keine Softwareupdates an Zündboxen durchführen, solange Anzünder angeschlossen sind, da das Verhalten nach einem fehlgeschlagenen Update unvorhersehbar ist.
 	\end{enumerate}
@@ -102,7 +102,7 @@
 
 	Trotz aller Sorgfalt bei der Entwicklung von Hard- und Software sowie ausgiebigen Tests seitens der Entwickler kann keinerlei Garantie für Sicherheit und Funktionalität von {\anlage} sowie keine Haftung für Sach- und Personenschäden, welche sich direkt oder indirekt aus dem Einsatz von {\anlage} ergeben, übernommen werden. Es werden mit {\anlage} dem Anwender lediglich Schaltpläne, Layouts und Programmcode sowie Hinweise zu Aufbau und Verwendung einer elektronischen Funkzündanlage, welche er frei weiter verbreiten und~-- selbstverständlich auf eigene Gefahr~-- verändern darf, zur Verfügung gestellt. {\anlage} ist und bleibt ein Hobby-Bastelprojekt, kein geprüftes oder in irgendeiner Form zertifiziertes Produkt!
 
-	Der Umgang mit Feuerwerkskörpern und explosivem Material unterliegt in Deutschland gesetzlichen Restriktionen, deren Einhaltung im Verantwortungsbereich des Anwenders liegt. {\anlage} darf nicht von Personen unter 18 Jahren bedient werden.
+	Der Umgang mit Feuerwerkskörpern und explosivem Material unterliegt in Deutschland und der EU harmonisierten wie auch nationalen gesetzlichen Restriktionen, deren Einhaltung im Verantwortungsbereich des Anwenders liegt. {\anlage} darf nicht von Personen unter 18 Jahren bedient werden.
 	%
 
 	\tableofcontents
@@ -113,7 +113,7 @@
 
 		\anlage{} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich als Kofferwort aus den spanischen Wörtern \emph{fuego}, \emph{radio} und \emph{oro} her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
 
-		Es besteht aus einer mit dem PC verbundenen Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen oder als Standalone-Lösung der Raspberry-Pi-Transmitter verwendet werden.
+		Es besteht aus einer mit dem PC verbundenen Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen oder als Standalone-Lösung der Raspberry-Pi-Transmitter \emph{raspEasyFire} verwendet werden.
 
 		\begin{figure}
 			\centering
@@ -125,6 +125,8 @@
 		Um möglichst große Flexibilität bei der Gestaltung eines Feuerwerks mit {\anlage} zu gewährleisten, was z.\,B. die Anzahl der verwendeten Zündboxen oder auch die Tatsache angeht, dass man identische Effekte gerne zeitgleich an zwei weiter voneinander entfernten Orten zünden möchte, können den Boxen per Software zwei Kennnummern (Unique-ID und Slave-ID) zugewiesen werden. Genaueres dazu findet sich im Abschnitt~\ref{ch:kommunikationpc}.
 
 		Transmitterbox und Zündbox sind in Abbildung~\ref{fig:transmitter} bzw.~\ref{fig:zuendbox} mit ihren wesentlichen Bestandteilen gezeigt. Sie werden im weiteren Text unter dem Begriff \enquote{Devices} zusammengefasst, falls sich Aussagen auf beide Teile beziehen, und in den folgenden Kapiteln näher beschrieben.
+		
+		Um den Raspberry-Pi-basierten Transmitter \emph{raspEasyFire} geht es in Abschnitt~\ref{ch:raspeasyfire} ab Seite~\pageref{ch:raspeasyfire}.
 
 		\section{Aufbau}
 
@@ -687,6 +689,7 @@
 					\end{figure}
 
 	\chapter{raspEasyFire}
+	\label{ch:raspeasyfire}
 
 		Als Alternative zur Kombination aus Laptop/PC und dem in den vorangegangenen Abschnitten beschriebenen Transmitter wurde in Zusammenarbeit mit einem Softwareentwickler ein Audio-Funksystem auf Basis des bekannten Einplatinencomputers \enquote{Raspberry Pi} entwickelt. Dieser übernimmt die Kontrolle der Show inklusive der Musikwiedergabe.
 
