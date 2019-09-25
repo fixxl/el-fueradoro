@@ -67,7 +67,7 @@ uint8_t uart_gets( char *s ) {
     uint8_t zeichen   = 0;
     char    buchstabe = 0xFE;
 
-    while ( buchstabe && ( zeichen < MAX_ARRAYSIZE - 1 ) ) {
+    while ( buchstabe && ( zeichen < MAX_COM_ARRAYSIZE - 1 ) ) {
         buchstabe = uart_getc();
         #if !CASE_SENSITIVE
             buchstabe = uart_lower_case( buchstabe );

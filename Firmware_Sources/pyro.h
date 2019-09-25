@@ -23,7 +23,7 @@
 #define MAX_ID                30
 
 // Maximum Array Size
-#define MAX_ARRAYSIZE         30
+#define MAX_COM_ARRAYSIZE     30
 
 // Threshold to clear LCD (Number of counter overflows)
 #define DEL_THRES             251

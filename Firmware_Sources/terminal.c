@@ -39,11 +39,11 @@ void fixedspace( int32_t zahl, uint8_t type, uint8_t space ) {
     uart_shownum( zahl, type );
 }
 
-// GUI-Routine to change IDs (allows numbers from 01 to 30)
+// GUI-Routine to change IDs (allows numbers from 01 to MAX_ID)
 static uint8_t changenumber( void ) {
     uint8_t zehner = 'c', einer = 'c', number = 0;
 
-    while ( !( zehner >= '0' && zehner <= '3' ) ) {
+    while ( !( zehner >= '0' && zehner <= ('0' + ((MAX_ID/10)%10)) ) ) {
         zehner = uart_getc();
 
         if ( ( zehner == 10 ) || ( zehner == 13 ) ) {
@@ -53,7 +53,7 @@ static uint8_t changenumber( void ) {
 
     uart_putc( zehner );
 
-    while ( !( number > 0 && number < 31 ) ) {
+    while ( !( number > 0 && number < (MAX_ID + 1) ) ) {
         einer = uart_getc();
 
         if ( ( einer == 10 ) || ( einer == 13 ) ) {
@@ -112,8 +112,9 @@ uint8_t remote_config( char *txf ) {
     if ( ( temporary[0] != temporary[2] ) || ( temporary[1] != temporary[3] ) ) {
         uart_puts_P( PSTR( "ID-Wechsel mit j bestätigen, abbrechen mit anderer Taste! " ) );
 
-        while ( !valid )
+        while ( !valid ) {
             valid = uart_getc();
+        }
 
         uart_putc( valid );
 
@@ -206,7 +207,9 @@ uint8_t configprog( const uint8_t devicetype ) {
 
         switch ( choice ) {
             case 'i': {
-                uart_puts_P( PSTR( "Neue Unique-ID (01-30, ENTER = alter Wert): " ) );
+                uart_puts_P( PSTR( "Neue Unique-ID (01-" ) );
+                uart_puts_P( PSTR (STRINGIZE_VALUE_OF( MAX_ID )) );
+                uart_puts_P( PSTR( ", ENTER = alter Wert): " ) );
                 uart_puts_P( PSTR( TERM_COL_RED ) );
                 uniqueid_old = uniqueid;
                 uniqueid     = changenumber();
@@ -217,7 +220,9 @@ uint8_t configprog( const uint8_t devicetype ) {
 
                 uart_puts_P( PSTR( TERM_COL_WHITE ) );
 
-                uart_puts_P( PSTR( "\n\rNeue Slave-ID (01-30, ENTER = alter Wert):  " ) );
+                uart_puts_P( PSTR( "\n\rNeue Slave-ID (01-" ) );
+                uart_puts_P( PSTR (STRINGIZE_VALUE_OF( MAX_ID )) );
+                uart_puts_P( PSTR( ", ENTER = alter Wert): " ) );
                 uart_puts_P( PSTR( TERM_COL_RED ) );
                 slaveid_old = slaveid;
                 slaveid     = changenumber();
@@ -342,7 +347,7 @@ uint8_t aesconf( void ) {
 
 
 // List ignition devices
-void list_complete( fireslave_t slaves[MAX_ARRAYSIZE + 1], uint8_t wrongids ) {
+void list_complete( fireslave_t slaves[MAX_ID + 1], uint8_t wrongids ) {
     uint8_t i = 0, ganz, zehntel;
 
     terminal_reset();
@@ -353,7 +358,7 @@ void list_complete( fireslave_t slaves[MAX_ARRAYSIZE + 1], uint8_t wrongids ) {
     uart_puts_P( PSTR( TERM_COL_WHITE ) );
     uart_puts_P( PSTR( "\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r" ) );
 
-    while ( i < 30 ) {
+    while ( i < MAX_ID ) {
         // Show Unique-ID
         if ( ( i + 1 ) < 10 ) {
             uart_puts_P( PSTR( "0" ) );
@@ -451,7 +456,7 @@ void list_array( char *arr ) {
     uint8_t i = 0;
     uart_puts_P( PSTR( "\n\rSlave-ID: Anzahl Boxen\n\r" ) );
 
-    while ( i < 30 ) {
+    while ( i < MAX_ID ) {
         if ( i < 9 ) {
             uart_putc( '0' );
         }
@@ -485,13 +490,13 @@ void list_array( char *arr ) {
 }
 
 // Calculate number of boxes with certain Slave-ID
-void evaluate_boxes( fireslave_t boxes[MAX_ARRAYSIZE + 1], char *quantity ) {
+void evaluate_boxes( fireslave_t boxes[MAX_COM_ARRAYSIZE + 1], char *quantity ) {
     uint8_t i, j, n;
 
-    for ( i = 1; i < 31; i++ ) {
+    for ( i = 1; i < MAX_ID+1; i++ ) {
         n = 0;
 
-        for ( j = 0; j < 30; j++ ) {
+        for ( j = 0; j < MAX_ID; j++ ) {
             if ( boxes[j].slave_id == i ) {
                 n++;
             }

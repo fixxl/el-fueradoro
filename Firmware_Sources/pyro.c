@@ -304,12 +304,12 @@ int main( void ) {
     bitfeld_t flags;
     flags.complete = 0;
 
-    char        uart_field[MAX_ARRAYSIZE + 2] = { 0 };
-    char        rx_field[MAX_ARRAYSIZE + 1]   = { 0 };
-    char        tx_field[MAX_ARRAYSIZE + 1]   = { 0 };
-    char        quantity[MAX_ARRAYSIZE + 1]   = { 0 };
-    fireslave_t slaves[MAX_ARRAYSIZE + 1];
-    char        lcd_array[MAX_ARRAYSIZE + 1] = { 0 };
+    char        uart_field[MAX_COM_ARRAYSIZE + 2] = { 0 };
+    char        rx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
+    char        tx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
+    char        quantity[MAX_COM_ARRAYSIZE + 1]   = { 0 };
+    fireslave_t slaves[MAX_ID + 1];
+    char        lcd_array[MAX_COM_ARRAYSIZE + 1] = { 0 };
     uint8_t     channel_timeout[16]          = { 0 };
 
 
@@ -383,7 +383,7 @@ int main( void ) {
     led_yellow_on();
 
     // Initialise arrays and show slave-id by blinking!
-    for ( uint8_t warten = 0; warten < MAX_ARRAYSIZE; warten++ ) {
+    for ( uint8_t warten = 0; warten < MAX_COM_ARRAYSIZE; warten++ ) {
         if ( warten < slave_id ) {
             led_yellow_toggle();
             led_orange_toggle();

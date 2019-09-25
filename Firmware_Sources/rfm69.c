@@ -98,8 +98,8 @@
         // Write data bytes
         if ( wnr ) {
             // Make sure there's no array-overflow
-            if ( data[0] > MAX_ARRAYSIZE ) {
-                data[0] = MAX_ARRAYSIZE;
+            if ( data[0] > MAX_COM_ARRAYSIZE ) {
+                data[0] = MAX_COM_ARRAYSIZE;
             }
 
             // Write-access register 0
@@ -122,8 +122,8 @@
             data[0] = rfm_spi( 0xFF );
 
             // Make sure there's no array-overflow
-            if ( data[0] > MAX_ARRAYSIZE ) {
-                data[0] = MAX_ARRAYSIZE;
+            if ( data[0] > MAX_COM_ARRAYSIZE ) {
+                data[0] = MAX_COM_ARRAYSIZE;
             }
 
             // Get data
@@ -276,7 +276,7 @@
             rfm_cmd( 0x3790, 1 );                                                                                     // Variable length, No DC-free
                                                                                                                       // encoding/decoding, CRC-Check, No
                                                                                                                       // Address filter
-            rfm_cmd( 0x3800 + MAX_ARRAYSIZE, 1 );                                                                     // Max. Payload-Length
+            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                     // Max. Payload-Length
             rfm_cmd( 0x3C80, 1 );                                                                                     // Tx-Start-Condition: FIFO not empty
             rfm_cmd( 0x3DA0, 1 );                                                                                     // Packet-Config2
             // Preamble length 4 bytes
@@ -296,7 +296,7 @@
             rfm_cmd( 0x2A00, 1 );                                                                                     // No Timeout after Rx-Start if no
                                                                                                                       // RSSI-Interrupt occurs
 
-            timeoutval = MAX_ARRAYSIZE + rfm_cmd( 0x2DFF, 0 ) + ( ( ( rfm_cmd( 0x2EFF, 0 ) & 0x38 ) >> 3 ) + 1 ) + 4; // Max. Arraysize + Preamble length + Sync
+            timeoutval = MAX_COM_ARRAYSIZE + rfm_cmd( 0x2DFF, 0 ) + ( ( ( rfm_cmd( 0x2EFF, 0 ) & 0x38 ) >> 3 ) + 1 ) + 4; // Max. Arraysize + Preamble length + Sync
                                                                                                                       // Word length + CRC + Length + 1 Byte
                                                                                                                       // Spare
 
@@ -316,7 +316,7 @@
 // Transmit data stream
     uint8_t rfm_transmit( char *data, uint8_t length ) {
         uint32_t utimer = RFM69_TIMEOUTVAL;
-        char     fifoarray[MAX_ARRAYSIZE + 1];
+        char     fifoarray[MAX_COM_ARRAYSIZE + 1];
 
         // Turn off receiver, switch to Standby
         rfm_rxoff();
@@ -324,8 +324,8 @@
         rfm_fifo_clear();
 
         // Limit length
-        if ( length > MAX_ARRAYSIZE - 1 ) {
-            length = MAX_ARRAYSIZE - 1;
+        if ( length > MAX_COM_ARRAYSIZE - 1 ) {
+            length = MAX_COM_ARRAYSIZE - 1;
         }
 
         // Write data to FIFO-array
@@ -352,7 +352,7 @@
 
 // Receive data stream
     uint8_t rfm_receive( char *data, uint8_t *length ) {
-        char    fifoarray[MAX_ARRAYSIZE + 1];
+        char    fifoarray[MAX_COM_ARRAYSIZE + 1];
         uint8_t length_local;
 
         // Turn off receiver, switch to Standby
@@ -364,8 +364,8 @@
         // Read data from FIFO-array
         length_local = fifoarray[0];                                        // Number of data bytes
 
-        if ( length_local > MAX_ARRAYSIZE - 1 ) {
-            length_local = MAX_ARRAYSIZE - 1;                               // Limit length
+        if ( length_local > MAX_COM_ARRAYSIZE - 1 ) {
+            length_local = MAX_COM_ARRAYSIZE - 1;                               // Limit length
 
         }
 

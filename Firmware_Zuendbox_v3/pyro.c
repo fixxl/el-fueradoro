@@ -264,7 +264,7 @@ int main( void ) {
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
     uint8_t  temp_sreg;
-    uint8_t  slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
+    uint8_t  slave_id = MAX_ID, unique_id = MAX_ID, rem_sid = MAX_ID, rem_uid = MAX_ID;
     uint8_t  loopcount = 5, transmission_allowed = 1;
     uint8_t  armed       = 0;
     uint8_t  changes     = 0;
@@ -275,11 +275,11 @@ int main( void ) {
     bitfeld_t flags;
     flags.complete = 0;
 
-    char        uart_field[MAX_ARRAYSIZE + 2] = { 0 };
-    char        rx_field[MAX_ARRAYSIZE + 1]   = { 0 };
-    char        tx_field[MAX_ARRAYSIZE + 1]   = { 0 };
-    char        quantity[MAX_ARRAYSIZE + 1]   = { 0 };
-    fireslave_t slaves[MAX_ARRAYSIZE + 1];
+    char        uart_field[MAX_COM_ARRAYSIZE + 2] = { 0 };
+    char        rx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
+    char        tx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
+    char        quantity[MAX_COM_ARRAYSIZE + 1]   = { 0 };
+    fireslave_t slaves[MAX_ID + 1];
     uint8_t     impedances[16]      = { 0 };
     uint8_t     channel_timeout[16] = { 0 };
 
@@ -349,7 +349,7 @@ int main( void ) {
     led_yellow_on();
 
     // Initialise arrays and show slave-id by blinking!
-    for ( uint8_t warten = 0; warten < MAX_ARRAYSIZE; warten++ ) {
+    for ( uint8_t warten = 0; warten < MAX_COM_ARRAYSIZE; warten++ ) {
         if ( warten < slave_id ) {
             led_yellow_toggle();
             led_orange_toggle();

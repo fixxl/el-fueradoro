@@ -19,8 +19,8 @@
 // Maximum ID
 #define MAX_ID                30
 
-// Maximum Array Size
-#define MAX_ARRAYSIZE         30
+// Maximum Array Size for communication (UART + radio)
+#define MAX_COM_ARRAYSIZE     30
 
 // Ignition time * 10ms
 #define IGNITION_TIME         2
