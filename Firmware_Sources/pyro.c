@@ -299,6 +299,7 @@ int main( void ) {
     uint8_t  changes     = 0;
     uint8_t  iderrors    = 0;
     uint8_t  rssi        = 0;
+    uint8_t  ledscheme   = 0;
     int8_t   temperature = -128;
 
     bitfeld_t flags;
@@ -309,8 +310,8 @@ int main( void ) {
     char        tx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
     char        quantity[MAX_COM_ARRAYSIZE + 1]   = { 0 };
     fireslave_t slaves[MAX_ID + 1];
-    char        lcd_array[MAX_COM_ARRAYSIZE + 1] = { 0 };
-    uint8_t     channel_timeout[16]          = { 0 };
+    char        lcd_array[MAX_COM_ARRAYSIZE + 1]  = { 0 };
+    uint8_t     channel_timeout[16]               = { 0 };
 
 
     /* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
@@ -380,16 +381,8 @@ int main( void ) {
         }
     }
 
-    led_yellow_on();
-
-    // Initialise arrays and show slave-id by blinking!
+    // Initialise arrays
     for ( uint8_t warten = 0; warten < MAX_COM_ARRAYSIZE; warten++ ) {
-        if ( warten < slave_id ) {
-            led_yellow_toggle();
-            led_orange_toggle();
-            _delay_ms( 200 );
-        }
-
         uart_field[warten]             = 1;
         tx_field[warten]               = 0;
         rx_field[warten]               = 0;
@@ -399,9 +392,6 @@ int main( void ) {
         slaves[warten].temperature     = -128;
         slaves[warten].rssi            = 0;
     }
-
-    led_yellow_off();
-    led_orange_off();
 
     // Initialise devices
     device_initialisation( ig_or_notrans );
@@ -449,6 +439,24 @@ int main( void ) {
         TIMSK0 |= ( 1 << TOIE0 );
     }
     else {
+        // Display slave ID
+        ledscheme = (slave_id & 0xF0) >> 4;
+        if( ledscheme & 0x01 ) led_yellow_on();
+        if( ledscheme & 0x02 ) led_green_on();
+        if( ledscheme & 0x04 ) led_orange_on();
+        if( ledscheme & 0x08 ) led_red_on();
+        _delay_ms(2000);
+        leds_on();
+        _delay_ms(250);
+        ledscheme = (slave_id & 0x0F);
+        if( ledscheme & 0x01 ) led_yellow_on();
+        if( ledscheme & 0x02 ) led_green_on();
+        if( ledscheme & 0x04 ) led_orange_on();
+        if( ledscheme & 0x08 ) led_red_on();
+        _delay_ms(2000);
+        leds_off();
+        _delay_ms(250);
+
         armed = debounce( &KEY_PIN, KEY );
 
         if ( armed ) {

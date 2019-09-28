@@ -270,6 +270,7 @@ int main( void ) {
     uint8_t  changes     = 0;
     uint8_t  iderrors    = 0;
     uint8_t  rssi        = 0;
+    uint8_t  ledscheme   = 0;
     int8_t   temperature = -128;
 
     bitfeld_t flags;
@@ -346,16 +347,9 @@ int main( void ) {
         while ( 1 );
     }
 
-    led_yellow_on();
 
     // Initialise arrays and show slave-id by blinking!
     for ( uint8_t warten = 0; warten < MAX_COM_ARRAYSIZE; warten++ ) {
-        if ( warten < slave_id ) {
-            led_yellow_toggle();
-            led_orange_toggle();
-            _delay_ms( 200 );
-        }
-
         uart_field[warten]             = 1;
         tx_field[warten]               = 0;
         rx_field[warten]               = 0;
@@ -366,8 +360,23 @@ int main( void ) {
         slaves[warten].rssi            = 0;
     }
 
-    led_yellow_off();
-    led_orange_off();
+    // Display slave ID
+    ledscheme = (slave_id & 0xF0) >> 4;
+    if( ledscheme & 0x01 ) led_yellow_on();
+    if( ledscheme & 0x02 ) led_green_on();
+    if( ledscheme & 0x04 ) led_orange_on();
+    if( ledscheme & 0x08 ) led_red_on();
+    _delay_ms(2000);
+    leds_on();
+    _delay_ms(250);
+    ledscheme = (slave_id & 0x0F);
+    if( ledscheme & 0x01 ) led_yellow_on();
+    if( ledscheme & 0x02 ) led_green_on();
+    if( ledscheme & 0x04 ) led_orange_on();
+    if( ledscheme & 0x08 ) led_red_on();
+    _delay_ms(2000);
+    leds_off();
+    _delay_ms(250);
 
     // Initialise devices
     key_init();
