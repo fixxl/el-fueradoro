@@ -183,19 +183,23 @@
 			\begin{table}
 				\centering
 				\begin{tabu}
-					to .7\textwidth [c]{Xl}
+					to .7\textwidth [c]{Xll}
 					\hline\hline
-					\textbf{Farbe} & \textbf{Funktion}                           \\ \hline
-					orange         & Funkmodul empfängt                          \\
-					grün           & Funkmodul sendet                            \\
-					gelb           & Daten kommen über serielle Schnittstelle an \\
-					rot            & Device ist scharf geschaltet                \\ \hline\hline
+					\textbf{Farbe} & \textbf{Funktion}                           & Startup-Faktor \\ \hline
+					orange         & Funkmodul empfängt                          & 4 \\
+					grün           & Funkmodul sendet                            & 2 \\
+					gelb           & Daten kommen über serielle Schnittstelle an & 1 \\
+					rot            & Device ist scharf geschaltet                & 8 \\ \hline\hline
 				\end{tabu}
 				\caption{Farben und Funktionen der Status-LEDs}
 				\label{tab:statusleds}
 			\end{table}
 
-			Während des Bootvorgangs leuchten bei den Zündboxen die orange und gelbe LED im Wechsel, wodurch dem Benutzer die aktuell eingestellte Slave-ID der Box visualisiert wird. Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
+			Während des Bootvorgangs wird durch die Status-LEDs dem Benutzer die aktuell eingestellte Slave-ID der Box in Binärdarstellung visualisiert. Hierzu leuchtet zunächst zwei Sekunden lang eine Kombination der Status-LEDs auf, anschließend gehen nacheinander schnell die gelbe, grüne, orange und rote LED an, bevor erneut zwei Sekunden lang eine weitere Kombination der Status-LEDs leuchtet. Der Zahlenwert, welcher durch eine Status-LED repräsentiert wird, ist in Tabelle~\ref{tab:statusleds} aufgeführt. Die eingestellte Slave-ID entspricht der Summe aus dem Wert der ersten Kombination multipliziert mit 16 und der zweiten Kombination.
+			
+			Beispiel: Leuchtet zunächst zwei Sekunden lang nur die gelbe LED und nach der Lauflichtsequenz leuchten zwei Sekunden die orange und grüne LED zusammen, ergibt sich die Slave-ID zu $16 {\cdot} 1 + 4 + 2 = 22$. 
+			
+			Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
 
 			Bei einem Zündvorgang leuchten an der Zündbox für die Dauer der Zündung (\SI{11}{\milli\second}) alle vier LEDs.
 
