@@ -361,13 +361,24 @@ int main( void ) {
     }
 
     // Display slave ID
+    leds_off();
     ledscheme = (slave_id & 0xF0) >> 4;
     if( ledscheme & 0x01 ) led_yellow_on();
     if( ledscheme & 0x02 ) led_green_on();
     if( ledscheme & 0x04 ) led_orange_on();
     if( ledscheme & 0x08 ) led_red_on();
     _delay_ms(2000);
-    leds_on();
+    leds_off();
+    _delay_ms(150);
+    led_yellow_on();
+    _delay_ms(150);
+    led_green_on();
+    _delay_ms(150);
+    led_orange_on();
+    _delay_ms(150);
+    led_red_on();
+    _delay_ms(150);
+    leds_off();
     _delay_ms(250);
     ledscheme = (slave_id & 0x0F);
     if( ledscheme & 0x01 ) led_yellow_on();
@@ -376,7 +387,7 @@ int main( void ) {
     if( ledscheme & 0x08 ) led_red_on();
     _delay_ms(2000);
     leds_off();
-    _delay_ms(250);
+    _delay_ms(200);
 
     // Initialise devices
     key_init();
@@ -752,8 +763,8 @@ int main( void ) {
             #if defined COMPILEDATE && defined COMPILETIME
                 uart_puts_P( PSTR( "\n\r" ) );
                 uart_puts_P( PSTR( "Datecode " ) );
-                uart_shownum( COMPILEDATE, 'd' );
-                uart_shownum( COMPILETIME, 'd' );
+                uart_puts_P( PSTR( STRINGIZE_VALUE_OF( COMPILEDATE ) ) );
+                uart_puts_P( PSTR( STRINGIZE_VALUE_OF( COMPILETIME ) ) );
             #endif
             uart_puts_P( PSTR( "\n\n\r" ) );
 
