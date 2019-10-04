@@ -195,9 +195,9 @@
 				\label{tab:statusleds}
 			\end{table}
 
-			Während des Bootvorgangs wird durch die Status-LEDs dem Benutzer die aktuell eingestellte Slave-ID der Box in Binärdarstellung visualisiert. Hierzu leuchtet zunächst zwei Sekunden lang eine Kombination der Status-LEDs auf, anschließend gehen nacheinander schnell die gelbe, grüne, orange und rote LED an, bevor erneut zwei Sekunden lang eine weitere Kombination der Status-LEDs leuchtet. Der Zahlenwert, welcher durch eine Status-LED repräsentiert wird, ist in Tabelle~\ref{tab:statusleds} aufgeführt. Die eingestellte Slave-ID entspricht der Summe aus dem Wert der ersten Kombination multipliziert mit 16 und der zweiten Kombination.
+			Während des Bootvorgangs wird durch die Status-LEDs dem Benutzer die aktuell eingestellte Slave-ID der Box in Binärdarstellung visualisiert. Hierzu gehen zunächst nacheinander schnell die gelbe, grüne, orange und rote LED an, ehe zwei Sekunden lang eine Kombination der Status-LEDs aufleuchtet. Anschließend gehen nacheinander schnell die rote, orange, grüne und gelbe LED an, bevor erneut zwei Sekunden lang eine weitere Kombination der Status-LEDs leuchtet. Der Zahlenwert, welcher durch eine Status-LED repräsentiert wird, ist in Tabelle~\ref{tab:statusleds} aufgeführt. Die eingestellte Slave-ID entspricht der Summe aus dem Wert der ersten Kombination multipliziert mit 16 und der zweiten Kombination.
 			
-			Beispiel: Leuchtet zunächst zwei Sekunden lang nur die gelbe LED und nach der Lauflichtsequenz leuchten zwei Sekunden die orange und grüne LED zusammen, ergibt sich die Slave-ID zu $16 {\cdot} 1 + 4 + 2 = 22$. 
+			Beispiel: Leuchtet nach dem ersten Lauflicht zunächst zwei Sekunden lang nur die gelbe LED und nach der zweiten Lauflichtsequenz leuchten zwei Sekunden die orange und grüne LED zusammen, ergibt sich die Slave-ID zu $16 {\cdot} 1 + 4 + 2 = 22$. 
 			
 			Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
 

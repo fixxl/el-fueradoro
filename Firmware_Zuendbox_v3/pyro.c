@@ -362,13 +362,6 @@ int main( void ) {
 
     // Display slave ID
     leds_off();
-    ledscheme = (slave_id & 0xF0) >> 4;
-    if( ledscheme & 0x01 ) led_yellow_on();
-    if( ledscheme & 0x02 ) led_green_on();
-    if( ledscheme & 0x04 ) led_orange_on();
-    if( ledscheme & 0x08 ) led_red_on();
-    _delay_ms(2000);
-    leds_off();
     _delay_ms(150);
     led_yellow_on();
     _delay_ms(150);
@@ -377,6 +370,24 @@ int main( void ) {
     led_orange_on();
     _delay_ms(150);
     led_red_on();
+    _delay_ms(150);
+    leds_off();
+    _delay_ms(250);
+    ledscheme = (slave_id & 0xF0) >> 4;
+    if( ledscheme & 0x01 ) led_yellow_on();
+    if( ledscheme & 0x02 ) led_green_on();
+    if( ledscheme & 0x04 ) led_orange_on();
+    if( ledscheme & 0x08 ) led_red_on();
+    _delay_ms(2000);
+    leds_off();
+    _delay_ms(150);
+    led_red_on();
+    _delay_ms(150);
+    led_orange_on();
+    _delay_ms(150);
+    led_green_on();
+    _delay_ms(150);
+    led_yellow_on();
     _delay_ms(150);
     leds_off();
     _delay_ms(250);
@@ -755,7 +766,7 @@ int main( void ) {
             flags.b.hw = 0;
 
             uart_puts_P( PSTR( "\n\r" ) );
-            uart_puts( "Zündbox" );
+            uart_puts( "Zündbox v3" );
             uart_puts_P( PSTR( "\n\r" ) );
             uart_puts_P( PSTR( STRINGIZE_VALUE_OF( MCU ) ) );
             uart_puts_P( PSTR( "\n\rRFM" ) );
