@@ -17,7 +17,9 @@
 #define MOSSWITCH_NUM         3
 
 // Maximum ID
-#define MAX_ID                30
+#ifndef MAX_ID
+    #define MAX_ID                30
+#endif
 
 // Maximum Array Size for communication (UART + radio)
 #define MAX_COM_ARRAYSIZE     30

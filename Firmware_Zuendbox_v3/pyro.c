@@ -246,7 +246,7 @@ int8_t tempmeas( uint8_t type ) {
 
 // Check if received uart-data are a valid ignition command
 uint8_t fire_command_uart_valid( const char *field ) {
-    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] < 31 ) && ( field[2] > 0 ) && ( field[2] < 17 )
+    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] <= MAX_ID ) && ( field[2] > 0 ) && ( field[2] < 17 )
            && ( field[3] == crc8( crc8( 0, field[1] ), field[2] ) );
 }
 
@@ -279,7 +279,7 @@ int main( void ) {
     char        uart_field[MAX_COM_ARRAYSIZE + 2] = { 0 };
     char        rx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
     char        tx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
-    char        quantity[MAX_COM_ARRAYSIZE + 1]   = { 0 };
+    char        quantity[MAX_ID + 1]              = { 0 };
     fireslave_t slaves[MAX_ID + 1];
     uint8_t     impedances[16]      = { 0 };
     uint8_t     channel_timeout[16] = { 0 };
@@ -334,11 +334,11 @@ int main( void ) {
 
     if ( !unique_id || !slave_id ) {
         if ( !unique_id ) {
-            unique_id = 30;
+            unique_id = MAX_ID;
         }
 
         if ( !slave_id ) {
-            slave_id = 30;
+            slave_id = MAX_ID;
         }
 
         addresses_save( unique_id, slave_id );
@@ -885,7 +885,7 @@ int main( void ) {
 
                             uart_puts_P( PSTR( " = " ) );
 
-                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? 31 : 17 ) ) ) { // Slave-ID has to be 1-30, Channel 1-16
+                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? (MAX_ID+1) : 17 ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel 1-16
                                 uart_shownum( nr, 'd' );
                                 tx_field[round] = nr;
                             }
@@ -995,7 +995,7 @@ int main( void ) {
 
             iderrors = 0;
 
-            for ( i = 0; i < 30; i++ ) {
+            for ( i = 0; i < MAX_ID; i++ ) {
                 quantity[i]               = 0;
                 slaves[i].slave_id        = 0;
                 slaves[i].battery_voltage = 0;
@@ -1276,9 +1276,9 @@ int main( void ) {
                             rem_uid = rx_field[3];
                             rem_sid = rx_field[4];
 
-                            // Change IDs if they are in the valid range (1-30) and at least one of the two IDs is
+                            // Change IDs if they are in the valid range (1-MAX_ID) and at least one of the two IDs is
                             // a different value than before
-                            if (   ( ( rem_uid > 0 ) && ( rem_uid < 31 ) ) && ( ( rem_sid > 0 ) && ( rem_sid < 31 ) )
+                            if (   ( ( rem_uid > 0 ) && ( rem_uid < (MAX_ID+1) ) ) && ( ( rem_sid > 0 ) && ( rem_sid < (MAX_ID+1) ) )
                                && ( ( rem_uid != unique_id ) || ( rem_sid != slave_id ) ) ) {
                                 addresses_save( rem_uid, rem_sid );
                                 flags.b.reset_device = 1;

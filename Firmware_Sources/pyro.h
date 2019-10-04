@@ -20,7 +20,10 @@
 #define IGNITION_TIME         2
 
 // Maximum ID
-#define MAX_ID                30
+// Maximum ID
+#ifndef MAX_ID
+    #define MAX_ID            30
+#endif
 
 // Maximum Array Size
 #define MAX_COM_ARRAYSIZE     30

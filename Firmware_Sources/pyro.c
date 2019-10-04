@@ -219,7 +219,7 @@ int8_t tempmeas( uint8_t type ) {
 
 // Check if received uart-data are a valid ignition command
 uint8_t fire_command_uart_valid( const char *field ) {
-    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] < 31 ) && ( field[2] > 0 ) && ( field[2] < 17 )
+    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] < (MAX_ID+1) ) && ( field[2] > 0 ) && ( field[2] < 17 )
            && ( field[3] == crc8( crc8( 0, field[1] ), field[2] ) );
 }
 
@@ -291,7 +291,7 @@ int main( void ) {
     uint8_t  i, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  temp_sreg;
-    uint8_t  slave_id = 30, unique_id = 30, rem_sid = 30, rem_uid = 30;
+    uint8_t  slave_id = MAX_ID, unique_id = MAX_ID, rem_sid = MAX_ID, rem_uid = MAX_ID;
     uint8_t  rfm_rx_error = 1, rfm_tx_error = 0;
     uint8_t  loopcount = 5, transmission_allowed = 1;
     uint8_t  anzspalte = 1, anzzeile = 3, lastspalte = 15, lastzeile = 4;
@@ -308,10 +308,10 @@ int main( void ) {
     char        uart_field[MAX_COM_ARRAYSIZE + 2] = { 0 };
     char        rx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
     char        tx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
-    char        quantity[MAX_COM_ARRAYSIZE + 1]   = { 0 };
+    char        quantity[MAX_ID + 1]              = { 0 };
     fireslave_t slaves[MAX_ID + 1];
-    char        lcd_array[MAX_COM_ARRAYSIZE + 1]  = { 0 };
-    uint8_t     channel_timeout[16]               = { 0 };
+    char        lcd_array[MAX_COM_ARRAYSIZE + 1] = { 0 };
+    uint8_t     channel_timeout[16]              = { 0 };
 
 
     /* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
@@ -359,11 +359,11 @@ int main( void ) {
     if ( ig_or_notrans ) {
         if ( !unique_id || !slave_id ) {
             if ( !unique_id ) {
-                unique_id = 30;
+                unique_id = MAX_ID;
             }
 
             if ( !slave_id ) {
-                slave_id = 30;
+                slave_id = MAX_ID;
             }
 
             addresses_save( unique_id, slave_id );
@@ -862,7 +862,7 @@ int main( void ) {
 
                             uart_puts_P( PSTR( " = " ) );
 
-                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? 31 : 17 ) ) ) { // Slave-ID has to be 1-30, Channel 1-16
+                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? (MAX_ID+1) : 17 ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel 1-16
                                 uart_shownum( nr, 'd' );
                                 tx_field[round] = nr;
                             }
@@ -978,7 +978,7 @@ int main( void ) {
 
             iderrors = 0;
 
-            for ( i = 0; i < 30; i++ ) {
+            for ( i = 0; i < MAX_ID; i++ ) {
                 quantity[i]               = 0;
                 slaves[i].slave_id        = 0;
                 slaves[i].battery_voltage = 0;
@@ -1258,9 +1258,9 @@ int main( void ) {
                             rem_uid = rx_field[3];
                             rem_sid = rx_field[4];
 
-                            // Change IDs if they are in the valid range (1-30) and at least one of the two IDs is
+                            // Change IDs if they are in the valid range (1-MAX_ID) and at least one of the two IDs is
                             // a different value than before
-                            if (   ( ( rem_uid > 0 ) && ( rem_uid < 31 ) ) && ( ( rem_sid > 0 ) && ( rem_sid < 31 ) )
+                            if (   ( ( rem_uid > 0 ) && ( rem_uid < (MAX_ID+1) ) ) && ( ( rem_sid > 0 ) && ( rem_sid < (MAX_ID+1) ) )
                                && ( ( rem_uid != unique_id ) || ( rem_sid != slave_id ) ) ) {
                                 addresses_save( rem_uid, rem_sid );
                                 flags.b.reset_device = 1;
@@ -1369,7 +1369,7 @@ int main( void ) {
                 else {
                     switch ( tx_field[0] ) {
                         case FIRE: {
-                            if ( tx_field[1] && ( tx_field[1] < 31 ) && tx_field[2] && ( tx_field[2] < 17 ) ) {
+                            if ( tx_field[1] && ( tx_field[1] < (MAX_ID+1) ) && tx_field[2] && ( tx_field[2] < 17 ) ) {
                                 lcd_send( 0, 1 );
                                 lcd_puts( " S" );
                                 lcd_arrize( tx_field[1], lcd_array, 2, 0 );
@@ -1492,7 +1492,7 @@ int main( void ) {
 
                 switch ( rx_field[0] ) {
                     case FIRE: {
-                        if ( rx_field[1] && ( rx_field[1] < 31 ) && rx_field[2] && ( rx_field[2] < 17 ) ) {
+                        if ( rx_field[1] && ( rx_field[1] < (MAX_ID+1) ) && rx_field[2] && ( rx_field[2] < 17 ) ) {
                             lcd_send( 0, 1 );
                             lcd_puts( " S" );
                             lcd_arrize( rx_field[1], lcd_array, 2, 0 );
@@ -1562,8 +1562,8 @@ int main( void ) {
                     }
 
                     case CHANGE: {
-                        if (  rx_field[1] && rx_field[2] && rx_field[3] && rx_field[4] && ( rx_field[1] < 31 )
-                           && ( rx_field[2] < 31 ) && ( rx_field[3] < 31 ) && ( rx_field[1] < 31 ) ) {
+                        if (  rx_field[1] && rx_field[2] && rx_field[3] && rx_field[4] && ( rx_field[1] < (MAX_ID+1) )
+                           && ( rx_field[2] < (MAX_ID+1) ) && ( rx_field[3] < (MAX_ID+1) ) && ( rx_field[1] < (MAX_ID+1) ) ) {
                             lcd_puts( "U" );   // Old Unique-ID
                             lcd_arrize( rx_field[1], lcd_array, 2, 0 );
                             lcd_puts( lcd_array );
