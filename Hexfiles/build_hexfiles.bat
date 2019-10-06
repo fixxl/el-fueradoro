@@ -20,8 +20,21 @@ SET foo3=
 for %%X in (..\Firmware_Zuendbox_v3\*.c) do SET foo3=!foo3! .\%%~nX.o
 REM -------------------------------------------------------------------
 
-set maxId=30
+SET maxId=30
 
+if "%1" NEQ "" (
+    SET "var="&for /f "delims=0123456789" %%i in ("%1") do set var=%%i
+    if not defined var (
+        set maxId=%1
+    )
+)
+
+if %maxId% GTR 250 set maxId=250
+if %maxId% LSS 1 set maxId=1
+
+echo.
+echo Maximum number of IDs: %maxId%
+echo.
 
 echo Compiling sources for ATMega328p and RFM69...
 

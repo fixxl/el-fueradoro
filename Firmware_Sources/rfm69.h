@@ -86,7 +86,7 @@
 
 #define P_OUT                  ( ( P_OUT_DBM + 18 ) * ( P_OUT_DBM > -19 ) * ( P_OUT_DBM < 14 ) + 31 * ( P_OUT_DBM > 18 ) )
 
-#ifndef MAX_ARRAYSIZE
+#ifndef MAX_COM_ARRAYSIZE
     #define MAX_COM_ARRAYSIZE      30
 #endif
 
