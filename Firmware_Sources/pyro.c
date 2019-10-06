@@ -386,6 +386,9 @@ int main( void ) {
         uart_field[warten]             = 1;
         tx_field[warten]               = 0;
         rx_field[warten]               = 0;
+    }
+
+    for ( uint8_t warten = 0; warten < MAX_ID; warten++ ) {
         slaves[warten].slave_id        = 0;
         slaves[warten].battery_voltage = 0;
         slaves[warten].sharpness       = 0;
