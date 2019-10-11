@@ -490,7 +490,7 @@ void list_array( char *arr ) {
 }
 
 // Calculate number of boxes with certain Slave-ID
-void evaluate_boxes( fireslave_t boxes[MAX_COM_ARRAYSIZE + 1], char *quantity ) {
+void evaluate_boxes( fireslave_t boxes[MAX_ID + 1], char *quantity ) {
     uint8_t i, j, n;
 
     for ( i = 1; i < MAX_ID+1; i++ ) {
