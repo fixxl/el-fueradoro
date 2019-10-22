@@ -12,7 +12,8 @@
 // Global Variables
 static volatile uint8_t  key_flag = 0, timer1_flags = 0;
 static volatile uint8_t  channel_monitor = 0;
-static volatile uint16_t active_channels = 0, transmit_flag = 0;
+static volatile uint16_t transmit_flag = 0;
+static volatile uint32_t active_channels = 0;
 
 void wdt_init( void ) {
     MCUSR = 0;
@@ -259,7 +260,7 @@ int main( void ) {
     MOSSWITCHDDR  |= ( 1 << MOSSWITCH );
 
     // Local Variables
-    uint16_t scheme = 0, anti_scheme = 0, controlvar = 0, statusleds = 0;
+    uint32_t scheme = 0, anti_scheme = 0, controlvar = 0, statusleds = 0;
     uint8_t  i, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
@@ -281,8 +282,8 @@ int main( void ) {
     char        tx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
     char        quantity[MAX_ID + 1]              = { 0 };
     fireslave_t slaves[MAX_ID + 1];
-    uint8_t     impedances[16]      = { 0 };
-    uint8_t     channel_timeout[16] = { 0 };
+    uint8_t     impedances[SR_CHANNELS]      = { 0 };
+    uint8_t     channel_timeout[SR_CHANNELS] = { 0 };
 
     char transmission_type = IDENT;
 
@@ -698,14 +699,14 @@ int main( void ) {
             // Make sure that ignition voltage is disconnected
             MOSSWITCHPORT &= ~( 1 << MOSSWITCH );
 
-            // Loop through all 16 channels and measure impedance
-            uint16_t mask = 0x0001;
+            // Loop through all channels and measure impedance
+            uint32_t mask = 0x00000001;
             statusleds = 0;
-            for ( uint8_t i = 0; i < 16; i++ ) {
+            for ( uint8_t i = 0; i < SR_CHANNELS; i++ ) {
                 sr_shiftout( mask );
                 _delay_ms( 2 );
                 impedances[i] = imp_calc( 4 );
-                sr_shiftout( 0x0000 );
+                sr_shiftout( 0 );
 
                 if ( impedances[i] < 50 ) {
                     statusleds |= mask;
@@ -1093,7 +1094,7 @@ int main( void ) {
 
                 scheme = 0;                 // Set mask-variable to zero
 
-                for ( uint8_t i = 16; i; i-- ) {
+                for ( uint8_t i = SR_CHANNELS; i; i-- ) {
                     scheme <<= 1;    // Left-shift mask-variable
 
                     if ( i == tmp ) {
@@ -1125,7 +1126,7 @@ int main( void ) {
             anti_scheme     = 0;                           // Reset the delete scheme
 
             controlvar = 1;
-            for ( uint8_t i = 0; i < 16; i++ ) {
+            for ( uint8_t i = 0; i < SR_CHANNELS; i++ ) {
                 if ( active_channels & controlvar ) { // If a given channel is currently active
                     channel_timeout[i]++;             // Increment the timeout-value for that channel
 

@@ -20,7 +20,7 @@ SET foo3=
 for %%X in (..\Firmware_Zuendbox_v3\*.c) do SET foo3=!foo3! .\%%~nX.o
 REM -------------------------------------------------------------------
 
-SET maxId=30
+SET maxId=50
 
 if "%1" NEQ "" (
     SET "var="&for /f "delims=0123456789" %%i in ("%1") do set var=%%i

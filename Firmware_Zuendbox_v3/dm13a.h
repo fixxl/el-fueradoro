@@ -16,10 +16,10 @@
 #define DCK_P               B
 #define DCK_NUM             5
 
-// How many channels? (8 or 16)
-// For 16 the DAI of the 74HC595 for channels 9-16
-// has to be connected to Q7S of the 74HC595 for channels 1-8
-#define DM_CHANNELS         16
+// How many channels?
+// For concatenating two DM13A DAI of the device for channels 17-32
+// has to be connected to Q7S of the device for channels 1-8
+#define DM_CHANNELS         SR_CHANNELS
 
 /* Use Hardware-SPI if available? */
 #define DM_USE_HARDWARE_SPI 1
@@ -29,7 +29,7 @@
 void dm_init( void );
 void dm_enable( void );
 void dm_disable( void );
-void dm_shiftout( uint16_t scheme );
+void dm_shiftout( uint32_t scheme );
 
 // Generation of names
 #define DAI_PORT            PORT( DAI_P )

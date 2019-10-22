@@ -60,22 +60,22 @@ void dm_disable( void ) {
 }
 
 // Transfer 16 bit pattern to outputs
-void dm_shiftout( uint16_t scheme ) {
+void dm_shiftout( uint32_t scheme ) {
     DAI_PORT &= ~( 1 << DAI );
     DCK_PORT &= ~( 1 << DCK );
     LAT_PORT &= ~( 1 << LAT );
+    uint32_t mask = 0x000000FF << (DM_CHANNELS - 8);
 
     #if HARDWARE_SPI_DM
-        SPDR = ( scheme >> 8 ) & 0xFF;
 
-        while ( !( SPSR & ( 1 << SPIF ) ) );
-
-        SPDR = scheme & 0xFF;
-
-        while ( !( SPSR & ( 1 << SPIF ) ) );
+        for(uint8_t i = DM_CHANNELS / 8; i; i--) {
+            SPDR = (scheme & mask) >> (DM_CHANNELS - 8);
+            scheme <<= 8;
+            while ( !( SPSR & ( 1 << SPIF ) ) );
+        }
 
     #else
-        uint16_t mask = 1 << ( DM_CHANNELS - 1 );
+        mask = 1UL << ( DM_CHANNELS - 1 );
 
         for ( uint8_t i = DM_CHANNELS; i; i-- ) {
             if ( scheme & mask ) {

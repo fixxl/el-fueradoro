@@ -60,25 +60,22 @@ void sr_disable( void ) {
 }
 
 // Transfer 16 bit pattern to outputs
-void sr_shiftout( uint16_t scheme ) {
+void sr_shiftout( uint32_t scheme ) {
     SER_IN_PORT &= ~( 1 << SER_IN );
     SCLOCK_PORT &= ~( 1 << SCLOCK );
     RCLOCK_PORT &= ~( 1 << RCLOCK );
 
+    uint32_t mask = 0x000000FF << (SR_CHANNELS - 8);
+
     #if HARDWARE_SPI_SR
-
-        if ( SR_CHANNELS > 8 ) {
-            SPDR = ( scheme >> 8 ) & 0xFF;
-
+        for(uint8_t i = SR_CHANNELS / 8; i; i--) {
+            SPDR = (scheme & mask) >> (SR_CHANNELS - 8);
+            scheme <<= 8;
             while ( !( SPSR & ( 1 << SPIF ) ) );
         }
 
-        SPDR = scheme & 0xFF;
-
-        while ( !( SPSR & ( 1 << SPIF ) ) );
-
     #else
-        uint16_t mask = 1 << ( SR_CHANNELS - 1 );
+        mask = 1UL << ( SR_CHANNELS - 1 );
 
         for ( uint8_t i = SR_CHANNELS; i; i-- ) {
             if ( scheme & mask ) {
