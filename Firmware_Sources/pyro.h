@@ -26,7 +26,7 @@
 #endif
 
 // Maximum Array Size
-#define MAX_COM_ARRAYSIZE     30
+#define MAX_COM_ARRAYSIZE     40
 
 // Threshold to clear LCD (Number of counter overflows)
 #define DEL_THRES             251
@@ -59,7 +59,7 @@
 #define   PARAMETERS_LENGTH   7
 #define   TEMPERATURE_LENGTH  5
 #define   CHANGE_LENGTH       6
-#define   IMPEDANCES_LENGTH   19
+#define   IMPEDANCES_LENGTH   (4+SR_CHANNELS)
 
 // Number of repetitions for radio messages
 #define   FIRE_REPEATS        5

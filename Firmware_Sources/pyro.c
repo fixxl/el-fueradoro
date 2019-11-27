@@ -1281,9 +1281,10 @@ int main( void ) {
                         if ( unique_id == rx_field[1] ) {
                             tx_field[0] = IMPEDANCES;
                             tx_field[1] = unique_id;
+                            tx_field[2] = SR_CHANNELS;
 
-                            for ( uint8_t i = 0; i < 16; i++ ) {
-                                tx_field[2 + i] = 0x00;
+                            for ( uint8_t i = 0; i < SR_CHANNELS; i++ ) {
+                                tx_field[3 + i] = 0x00;
                             }
 
                             flags.b.transmit     = 1;
