@@ -19,7 +19,9 @@
 // How many channels? (8 or 16)
 // For 16 the SER_IN of the 74HC595 for channels 9-16
 // has to be connected to Q7S of the 74HC595 for channels 1-8
-#define SR_CHANNELS         16
+#ifndef SR_CHANNELS
+    #define SR_CHANNELS         16
+#endif
 
 /* Use Hardware-SPI if available? */
 #define SR_USE_HARDWARE_SPI 1

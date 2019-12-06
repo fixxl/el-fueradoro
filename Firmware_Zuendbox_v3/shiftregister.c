@@ -65,7 +65,7 @@ void sr_shiftout( uint32_t scheme ) {
     SCLOCK_PORT &= ~( 1 << SCLOCK );
     RCLOCK_PORT &= ~( 1 << RCLOCK );
 
-    uint32_t mask = 0x000000FF << (SR_CHANNELS - 8);
+    uint32_t mask = 255UL << (SR_CHANNELS - 8);
 
     #if HARDWARE_SPI_SR
         for(uint8_t i = SR_CHANNELS / 8; i; i--) {

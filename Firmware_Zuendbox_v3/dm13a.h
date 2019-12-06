@@ -19,7 +19,9 @@
 // How many channels?
 // For concatenating two DM13A DAI of the device for channels 17-32
 // has to be connected to Q7S of the device for channels 1-8
-#define DM_CHANNELS         SR_CHANNELS
+#ifndef DM_CHANNELS
+    #define DM_CHANNELS         SR_CHANNELS
+#endif
 
 /* Use Hardware-SPI if available? */
 #define DM_USE_HARDWARE_SPI 1

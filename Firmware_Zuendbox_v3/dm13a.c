@@ -64,7 +64,7 @@ void dm_shiftout( uint32_t scheme ) {
     DAI_PORT &= ~( 1 << DAI );
     DCK_PORT &= ~( 1 << DCK );
     LAT_PORT &= ~( 1 << LAT );
-    uint32_t mask = 0x000000FF << (DM_CHANNELS - 8);
+    uint32_t mask = 255UL << (DM_CHANNELS - 8);
 
     #if HARDWARE_SPI_DM
 
