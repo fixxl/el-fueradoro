@@ -247,7 +247,7 @@ int8_t tempmeas( uint8_t type ) {
 
 // Check if received uart-data are a valid ignition command
 uint8_t fire_command_uart_valid( const char *field ) {
-    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] <= MAX_ID ) && ( field[2] > 0 ) && ( field[2] < 17 )
+    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] <= MAX_ID ) && ( field[2] > 0 ) && ( field[2] < SR_CHANNELS+1 )
            && ( field[3] == crc8( crc8( 0, field[1] ), field[2] ) );
 }
 
@@ -890,7 +890,7 @@ int main( void ) {
 
                             uart_puts_P( PSTR( " = " ) );
 
-                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? (MAX_ID+1) : 17 ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel 1-16
+                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? (MAX_ID+1) : ( SR_CHANNELS + 1 ) ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel 1-SR_CHANNELS
                                 uart_shownum( nr, 'd' );
                                 tx_field[round] = nr;
                             }
@@ -1085,7 +1085,7 @@ int main( void ) {
             cli();
             flags.b.fire = 0;
 
-            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < 17 ) ) { // If channel number is valid
+            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < SR_CHANNELS+1 ) ) { // If channel number is valid
                 tmp = rx_field[2];          // Save channel number to variable
 
                 flags.b.is_fire_active = 1; // Signalize that we're currently firing
