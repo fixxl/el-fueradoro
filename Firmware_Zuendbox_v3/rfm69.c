@@ -315,7 +315,6 @@
 
 // Transmit data stream
     uint8_t rfm_transmit( char *data, uint8_t length ) {
-        uint32_t utimer = RFM69_TIMEOUTVAL;
         char     fifoarray[MAX_COM_ARRAYSIZE + 1];
 
         // Turn off receiver, switch to Standby
@@ -342,7 +341,7 @@
         rfm_txon();
 
         // Wait for Package Sent (150 Byte-Times)
-        utimer = ( ( 75 * F_CPU + BR * 8 ) / ( 16 * BR ) );
+        uint32_t utimer = ( ( 75 * F_CPU + BR * 8 ) / ( 16 * BR ) );
 
         while ( --utimer && ( ( rfm_cmd( 0x2800, 0 ) & 0x09 ) != 0x08 ) );  // Check for package sent and module plugged in
 

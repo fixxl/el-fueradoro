@@ -219,18 +219,17 @@ uint8_t tempident( void ) {
 
 // Temperature measurement
 int8_t tempmeas( uint8_t type ) {
-    int16_t  temperature = -128;
-    uint16_t temp_hex;
-    uint32_t utimer;
-
     if ( !type ) {
         return -128;
     }
     else {
+        uint16_t temp_hex;
+        int16_t  temperature;
+
         w1_temp_conf( 125, -40, 9 );
         w1_command( CONVERT_T, NULL );
 
-        utimer = F_CPU / 128;
+        uint32_t utimer = F_CPU / 128;
 
         while ( --utimer && !w1_bit_io( 1 ) );
 
@@ -261,7 +260,7 @@ int main( void ) {
 
     // Local Variables
     uint32_t scheme = 0, anti_scheme = 0, controlvar = 0, statusleds = 0;
-    uint8_t  i, nr, inp, tmp;
+    uint8_t  iii, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
     uint8_t  temp_sreg;
@@ -285,7 +284,7 @@ int main( void ) {
     uint8_t     impedances[SR_CHANNELS]      = { 0 };
     uint8_t     channel_timeout[SR_CHANNELS] = { 0 };
 
-    char transmission_type = IDENT;
+    char transmission_type;
 
     // Make PB2 an high output to guarantee flawless
     // SPI-master-operation
@@ -878,7 +877,7 @@ int main( void ) {
                             nr = 0;
                             uart_puts_P( round < 2 ? PSTR( "Slave-ID:\t" ) : PSTR( "\n\rKanal:  \t" ) ); // First for slave-id, then for channel
 
-                            for ( i = 0; i < 2; i++ ) {                                 // Get the user to assign the numbers with 2 digits
+                            for ( iii = 0; iii < 2; iii++ ) {                                 // Get the user to assign the numbers with 2 digits
                                 inp = 0;
 
                                 while ( !inp ) inp = uart_getc();
@@ -1000,13 +999,13 @@ int main( void ) {
 
             iderrors = 0;
 
-            for ( i = 0; i < MAX_ID; i++ ) {
-                quantity[i]               = 0;
-                slaves[i].slave_id        = 0;
-                slaves[i].battery_voltage = 0;
-                slaves[i].sharpness       = 0;
-                slaves[i].temperature     = -128;
-                slaves[i].rssi            = 0;
+            for ( iii = 0; iii < MAX_ID; iii++ ) {
+                quantity[iii]               = 0;
+                slaves[iii].slave_id        = 0;
+                slaves[iii].battery_voltage = 0;
+                slaves[iii].sharpness       = 0;
+                slaves[iii].temperature     = -128;
+                slaves[iii].rssi            = 0;
             }
 
             // Ignition devices have to write themselves in the list

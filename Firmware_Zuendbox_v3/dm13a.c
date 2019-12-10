@@ -64,10 +64,10 @@ void dm_shiftout( uint32_t scheme ) {
     DAI_PORT &= ~( 1 << DAI );
     DCK_PORT &= ~( 1 << DCK );
     LAT_PORT &= ~( 1 << LAT );
-    uint32_t mask = 255UL << (DM_CHANNELS - 8);
+    uint32_t mask;
 
     #if HARDWARE_SPI_DM
-
+        mask = 255UL << (DM_CHANNELS - 8);
         for(uint8_t i = DM_CHANNELS / 8; i; i--) {
             SPDR = (scheme & mask) >> (DM_CHANNELS - 8);
             scheme <<= 8;
