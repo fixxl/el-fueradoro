@@ -34,7 +34,7 @@ void adc_init( void ) {
     while ( ADCSRA & ( 1 << ADSC ) );
 
     nosense  = ADCW;
-    nosense += 3;
+    (void) nosense;
 }
 
 static uint16_t adc_read( const uint8_t channel ) {

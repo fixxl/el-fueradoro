@@ -29,7 +29,7 @@
 void sr_init( void );
 void sr_enable( void );
 void sr_disable( void );
-void sr_shiftout( uint16_t scheme );
+void sr_shiftout( uint32_t scheme );
 
 // Generation of names
 #define SER_IN_PORT         PORT( SER_IN_P )

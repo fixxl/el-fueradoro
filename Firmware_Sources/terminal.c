@@ -348,7 +348,7 @@ uint8_t aesconf( void ) {
 
 // List ignition devices
 void list_complete( fireslave_t slaves[MAX_ID + 1], uint8_t wrongids ) {
-    uint8_t i = 0, ganz, zehntel;
+    uint8_t i = 0;
 
     terminal_reset();
     uart_puts_P( PSTR( TERM_COL_YELLOW ) );
@@ -384,8 +384,8 @@ void list_complete( fireslave_t slaves[MAX_ID + 1], uint8_t wrongids ) {
         uart_puts_P( PSTR( ", " ) );
 
         // Show Battery Voltages
-        ganz    = slaves[i].battery_voltage / 10;
-        zehntel = slaves[i].battery_voltage % 10;
+        uint8_t ganz    = slaves[i].battery_voltage / 10;
+        uint8_t zehntel = slaves[i].battery_voltage % 10;
 
         if ( !ganz ) {
             uart_puts_P( PSTR( "----" ) );

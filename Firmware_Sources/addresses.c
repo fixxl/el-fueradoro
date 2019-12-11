@@ -21,24 +21,21 @@ void update_addresses( uint8_t *uniqueid, uint8_t *slaveid ) {
 
 // Control if addresses are valid
 uint8_t address_valid( uint8_t uniqueid, uint8_t slaveid ) {
-    uint8_t mem_unique, mem_slave, mem_sum, mem_ucrc, mem_scrc, mem_bothcrc;
-    uint8_t sum, ucrc, scrc, bothcrc;
-
     for ( uint8_t startval = START_ADDRESS_ID_STORAGE;
           startval < ( START_ADDRESS_ID_STORAGE + 3 * STEP_ID_STORAGE ); startval += STEP_ID_STORAGE ) {
         // Get values from eeprom
-        mem_unique  = eeread( startval );
-        mem_slave   = eeread( startval + 1 );
-        mem_sum     = eeread( startval + 2 );       // Sum of both IDs
-        mem_ucrc    = eeread( startval + 3 );       // CRC8-value of Unique-ID (seed = 16)
-        mem_scrc    = eeread( startval + 4 );       // CRC8-value of Slave-ID (seed 16)
-        mem_bothcrc = eeread( startval + 5 );       // CRC8-value of Unique-ID and Slave-ID (seed 16)
+        uint8_t mem_unique  = eeread( startval );
+        uint8_t mem_slave   = eeread( startval + 1 );
+        uint8_t mem_sum     = eeread( startval + 2 );       // Sum of both IDs
+        uint8_t mem_ucrc    = eeread( startval + 3 );       // CRC8-value of Unique-ID (seed = 16)
+        uint8_t mem_scrc    = eeread( startval + 4 );       // CRC8-value of Slave-ID (seed 16)
+        uint8_t mem_bothcrc = eeread( startval + 5 );       // CRC8-value of Unique-ID and Slave-ID (seed 16)
 
         // Get values from function call
-        sum     = uniqueid + slaveid;               // Summe of both IDs
-        ucrc    = crc8( CRC_ID_STORAGE, uniqueid ); // CRC8-value of Unique-ID (seed = 16)
-        scrc    = crc8( CRC_ID_STORAGE, slaveid );  // CRC8-value of Slave-ID (seed 16)
-        bothcrc = crc8( ucrc, slaveid );            // CRC8-value of Unique-ID and Slave-ID (seed 16)
+        uint8_t sum     = uniqueid + slaveid;               // Summe of both IDs
+        uint8_t ucrc    = crc8( CRC_ID_STORAGE, uniqueid ); // CRC8-value of Unique-ID (seed = 16)
+        uint8_t scrc    = crc8( CRC_ID_STORAGE, slaveid );  // CRC8-value of Slave-ID (seed 16)
+        uint8_t bothcrc = crc8( ucrc, slaveid );            // CRC8-value of Unique-ID and Slave-ID (seed 16)
 
         // Compare values and return 1 if everything is fine
         if (   ( mem_unique == uniqueid ) && ( mem_slave == slaveid ) && ( mem_sum == sum ) && ( mem_ucrc == ucrc )
@@ -53,11 +50,8 @@ uint8_t address_valid( uint8_t uniqueid, uint8_t slaveid ) {
 
 // Read IDs from storage position 0, 1 or 2
 static void address_get( uint8_t *uid, uint8_t *sid, uint8_t storage_position ) {
-    uint8_t uid_local = *uid;
-    uint8_t sid_local = *sid;
-
-    uid_local = eeread( START_ADDRESS_ID_STORAGE + storage_position * STEP_ID_STORAGE );
-    sid_local = eeread( START_ADDRESS_ID_STORAGE + 1 + storage_position * STEP_ID_STORAGE );
+    uint8_t uid_local = eeread( START_ADDRESS_ID_STORAGE + storage_position * STEP_ID_STORAGE );
+    uint8_t sid_local = eeread( START_ADDRESS_ID_STORAGE + 1 + storage_position * STEP_ID_STORAGE );
 
     *uid = uid_local;
     *sid = sid_local;
@@ -65,15 +59,14 @@ static void address_get( uint8_t *uid, uint8_t *sid, uint8_t storage_position ) 
 
 // Load addresses and make sure, they're stored correctly in all 3 places
 uint8_t addresses_load( uint8_t *uniqueid, uint8_t *slaveid ) {
-    uint8_t sid_local = *slaveid, uid_local = *uniqueid;
+    uint8_t sid_local, uid_local;
 
     for ( uint8_t i = 0; i < 3; i++ ) {           // Try up to three times (three storage places)
         address_get( &uid_local, &sid_local, i ); // Read from memory
 
-        if ( address_valid( uid_local, sid_local ) ) {                    // If valid numbers are found
+        if ( address_valid( uid_local, sid_local ) ) { // If valid numbers are found
             if ( ID_MESS ) {
-                addresses_save( uid_local, sid_local );                   // Check if all storage positions are correct, rewrite if not
-
+                addresses_save( uid_local, sid_local ); // Check if all storage positions are correct, rewrite if not
             }
 
             *uniqueid = uid_local;

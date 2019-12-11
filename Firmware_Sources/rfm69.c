@@ -27,9 +27,7 @@
                 }
 
                 spibyte <<= 1;
-                SCK_PIN   = ( 1
-                            << SCK ); // Fast-toggling SCK-Pin by writing to PIN-Register. Some older AVRs don't get that, use "SCK_PORT ^= (1 << SCK);"
-                                      // instead!
+                SCK_PIN   = ( 1 << SCK ); // Fast-toggling SCK-Pin by writing to PIN-Register
                 __asm__ __volatile__ ( "rjmp 1f\n 1:" );
 
                 if ( SDO_PIN & ( 1 << SDO ) ) {
@@ -39,9 +37,7 @@
                     spibyte &= 0xFE;
                 }
 
-                SCK_PIN = ( 1
-                            << SCK ); // Fast-toggling SCK-Pin by writing to PIN-Register. Some older AVRs don't get that, use "SCK_PORT ^= (1 << SCK);"
-                                      // instead!
+                SCK_PIN = ( 1 << SCK );   // Fast-toggling SCK-Pin by writing to PIN-Register
             }
         #endif
         return spibyte;
@@ -253,8 +249,12 @@
         NSEL_DDR  |= ( 1 << NSEL );
         #ifdef SPCR
             #if HARDWARE_SPI_69
+
                 // Activate and configure hardware SPI at F_CPU/16
-                SPCR |= ( 1 << SPE | 1 << MSTR | 1 << SPR0 );
+                if ( !( SPCR & ( 1 << SPE ) ) ) {
+                    SPCR |= ( 1 << SPE | 1 << MSTR | 1 << SPR0 );
+                }
+
             #endif
         #endif
 
@@ -315,7 +315,6 @@
 
 // Transmit data stream
     uint8_t rfm_transmit( char *data, uint8_t length ) {
-        uint32_t utimer = RFM69_TIMEOUTVAL;
         char     fifoarray[MAX_COM_ARRAYSIZE + 1];
 
         // Turn off receiver, switch to Standby
@@ -342,7 +341,7 @@
         rfm_txon();
 
         // Wait for Package Sent (150 Byte-Times)
-        utimer = ( ( 75 * F_CPU + BR * 8 ) / ( 16 * BR ) );
+        uint32_t utimer = ( ( 75 * F_CPU + BR * 8 ) / ( 16 * BR ) );
 
         while ( --utimer && ( ( rfm_cmd( 0x2800, 0 ) & 0x09 ) != 0x08 ) );  // Check for package sent and module plugged in
 
@@ -365,12 +364,12 @@
         length_local = fifoarray[0];                                        // Number of data bytes
 
         if ( length_local > MAX_COM_ARRAYSIZE - 1 ) {
-            length_local = MAX_COM_ARRAYSIZE - 1;                               // Limit length
+            length_local = MAX_COM_ARRAYSIZE - 1; // Limit length
 
         }
 
         for ( uint8_t i = 0; i < length_local; i++ ) {
-            data[i] = fifoarray[i + 1]; // Data bytes
+            data[i] = fifoarray[i + 1];       // Data bytes
         }
 
         data[length_local] = '\0'; // Terminate string

@@ -34,6 +34,7 @@ void adc_init( void ) {
     while ( ADCSRA & ( 1 << ADSC ) );
 
     nosense = ADCW;
+    (void)nosense;
 
     _delay_ms( 250 );
 
@@ -61,6 +62,7 @@ void adc_init( void ) {
         while ( ADCSRA & ( 1 << ADSC ) );
 
         nosense = ADCW;
+        (void) nosense;
     }
 }
 

@@ -11,7 +11,8 @@
 
 // Global Variables
 static volatile uint8_t  timer1_flags = 0, channel_monitor = 0, key_flag = 0, clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0;
-static volatile uint16_t transmit_flag = 0, hist_del_flag = 0, active_channels = 0;
+static volatile uint16_t transmit_flag = 0, hist_del_flag = 0;
+static volatile uint32_t active_channels = 0;
 
 void wdt_init( void ) {
     MCUSR = 0;
@@ -191,14 +192,13 @@ uint8_t tempident( void ) {
 
 // Temperature measurement
 int8_t tempmeas( uint8_t type ) {
-    int16_t  temperature = -128;
-    uint16_t temp_hex;
-    uint32_t utimer;
-
     if ( !type ) {
         return -128;
     }
     else {
+        int16_t  temperature;
+        uint16_t temp_hex;
+        uint32_t utimer;
         w1_temp_conf( 125, -40, 9 );
         w1_command( CONVERT_T, NULL );
 
@@ -219,7 +219,7 @@ int8_t tempmeas( uint8_t type ) {
 
 // Check if received uart-data are a valid ignition command
 uint8_t fire_command_uart_valid( const char *field ) {
-    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] < (MAX_ID+1) ) && ( field[2] > 0 ) && ( field[2] < 17 )
+    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] < (MAX_ID+1) ) && ( field[2] > 0 ) && ( field[2] < (SR_CHANNELS+1) )
            && ( field[3] == crc8( crc8( 0, field[1] ), field[2] ) );
 }
 
@@ -261,8 +261,7 @@ void device_initialisation( uint8_t ignotrans ) {
 
 // Shift LCD-cursor (line 3 and 4)
 void cursor_x_shift( uint8_t *last_zeile, uint8_t *last_spalte, uint8_t *anz_zeile, uint8_t *anz_spalte ) {
-    uint8_t lastzeile = *last_zeile, lastspalte = *last_spalte, anzzeile = *anz_zeile,
-            anzspalte = *anz_spalte;
+    uint8_t lastzeile, lastspalte, anzzeile = *anz_zeile, anzspalte = *anz_spalte;
 
     lastzeile  = anzzeile;
     lastspalte = anzspalte;
@@ -287,8 +286,8 @@ int main( void ) {
     MOSSWITCHDDR  |= ( 1 << MOSSWITCH );
 
     // Local Variables
-    uint16_t scheme = 0, anti_scheme = 0, controlvar;
-    uint8_t  i, nr, inp, tmp;
+    uint32_t scheme = 0, anti_scheme = 0, controlvar;
+    uint8_t  iii, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  temp_sreg;
     uint8_t  slave_id = MAX_ID, unique_id = MAX_ID, rem_sid = MAX_ID, rem_uid = MAX_ID;
@@ -311,7 +310,7 @@ int main( void ) {
     char        quantity[MAX_ID + 1]              = { 0 };
     fireslave_t slaves[MAX_ID + 1];
     char        lcd_array[MAX_COM_ARRAYSIZE + 1] = { 0 };
-    uint8_t     channel_timeout[16]              = { 0 };
+    uint8_t     channel_timeout[SR_CHANNELS]     = { 0 };
 
 
     /* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
@@ -853,7 +852,7 @@ int main( void ) {
                             nr = 0;
                             uart_puts_P( round < 2 ? PSTR( "Slave-ID:\t" ) : PSTR( "\n\rKanal:  \t" ) ); // First for slave-id, then for channel
 
-                            for ( i = 0; i < 2; i++ ) {                                 // Get the user to assign the numbers with 2 digits
+                            for ( iii = 0; iii < 2; iii++ ) {                                 // Get the user to assign the numbers with 2 digits
                                 inp = 0;
 
                                 while ( !inp ) inp = uart_getc();
@@ -865,7 +864,7 @@ int main( void ) {
 
                             uart_puts_P( PSTR( " = " ) );
 
-                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? (MAX_ID+1) : 17 ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel 1-16
+                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? (MAX_ID+1) : (SR_CHANNELS+1) ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel 1-16
                                 uart_shownum( nr, 'd' );
                                 tx_field[round] = nr;
                             }
@@ -981,13 +980,13 @@ int main( void ) {
 
             iderrors = 0;
 
-            for ( i = 0; i < MAX_ID; i++ ) {
-                quantity[i]               = 0;
-                slaves[i].slave_id        = 0;
-                slaves[i].battery_voltage = 0;
-                slaves[i].sharpness       = 0;
-                slaves[i].temperature     = -128;
-                slaves[i].rssi            = -128;
+            for ( iii = 0; iii < MAX_ID; iii++ ) {
+                quantity[iii]               = 0;
+                slaves[iii].slave_id        = 0;
+                slaves[iii].battery_voltage = 0;
+                slaves[iii].sharpness       = 0;
+                slaves[iii].temperature     = -128;
+                slaves[iii].rssi            = -128;
             }
 
             // Ignition devices have to write themselves in the list
@@ -1069,7 +1068,7 @@ int main( void ) {
             cli();
             flags.b.fire = 0;
 
-            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < 17 ) ) { // If channel number is valid
+            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < (SR_CHANNELS+1) ) ) { // If channel number is valid
                 tmp = rx_field[2];                                        // Save channel number to variable
 
                 flags.b.is_fire_active = 1;                               // Signalize that we're currently firing
@@ -1111,7 +1110,7 @@ int main( void ) {
             anti_scheme     = 0;                           // Reset the delete scheme
 
             controlvar = 1;
-            for ( uint8_t i = 0; i < 16; i++ ) {
+            for ( uint8_t i = 0; i < SR_CHANNELS; i++ ) {
                 if ( active_channels & controlvar ) { // If a given channel is currently active
                     channel_timeout[i]++;             // Increment the timeout-value for that channel
 
@@ -1323,7 +1322,7 @@ int main( void ) {
                 clear_lcd_tx_flag = 0;
                 lcd_cursorset( 1, 1 );
 
-                for ( i = 0; i < 20; i++ ) {
+                for ( iii = 0; iii < 20; iii++ ) {
                     lcd_puts( " " );
                 }
             }
@@ -1332,7 +1331,7 @@ int main( void ) {
                 clear_lcd_rx_flag = 0;
                 lcd_cursorset( 2, 1 );
 
-                for ( i = 0; i < 20; i++ ) {
+                for ( iii = 0; iii < 20; iii++ ) {
                     lcd_puts( " " );
                 }
             }
@@ -1341,7 +1340,7 @@ int main( void ) {
                 hist_del_flag = 0;
                 lcd_cursorset( 3, 1 );
 
-                for ( i = 0; i < 20; i++ ) {
+                for ( iii = 0; iii < 20; iii++ ) {
                     lcd_puts( "  " );
                 }
 
@@ -1373,7 +1372,7 @@ int main( void ) {
                 else {
                     switch ( tx_field[0] ) {
                         case FIRE: {
-                            if ( tx_field[1] && ( tx_field[1] < (MAX_ID+1) ) && tx_field[2] && ( tx_field[2] < 17 ) ) {
+                            if ( tx_field[1] && ( tx_field[1] < (MAX_ID+1) ) && tx_field[2] && ( tx_field[2] < (SR_CHANNELS+1) ) ) {
                                 lcd_send( 0, 1 );
                                 lcd_puts( " S" );
                                 lcd_arrize( tx_field[1], lcd_array, 2, 0 );
@@ -1496,7 +1495,7 @@ int main( void ) {
 
                 switch ( rx_field[0] ) {
                     case FIRE: {
-                        if ( rx_field[1] && ( rx_field[1] < (MAX_ID+1) ) && rx_field[2] && ( rx_field[2] < 17 ) ) {
+                        if ( rx_field[1] && ( rx_field[1] < (MAX_ID+1) ) && rx_field[2] && ( rx_field[2] < (SR_CHANNELS+1) ) ) {
                             lcd_send( 0, 1 );
                             lcd_puts( " S" );
                             lcd_arrize( rx_field[1], lcd_array, 2, 0 );

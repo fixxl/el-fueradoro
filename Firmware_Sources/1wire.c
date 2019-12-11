@@ -229,7 +229,7 @@ int16_t w1_tempread_to_celsius( uint16_t temp, uint8_t digit ) {
 
 // Complete temperature measurement cycle
 int16_t w1_tempmeas( uint8_t byten ) {
-    uint8_t  diff, id[9];
+    uint8_t  id[9];
     uint16_t temp_hex;
     int16_t  temp;
 
@@ -237,8 +237,7 @@ int16_t w1_tempmeas( uint8_t byten ) {
 
     while ( !w1_bit_io( 1 ) );
 
-    diff = SEARCH_FIRST;
-    diff = w1_rom_search( diff, id );
+    w1_rom_search( SEARCH_FIRST, id );
     w1_command( READ, id );
     temp_hex  = w1_byte_rd();
     temp_hex += ( w1_byte_rd() ) << 8;
@@ -264,13 +263,13 @@ void w1_temp_to_array( int32_t tempmalzehn, char *tempfield, uint8_t signdigit )
     signdigit &= 0x03;
     uint8_t fieldcntr = 0, neededlength = 1;
 
-    int8_t  temp_int_loc   = tempmalzehn / 10;
-    uint8_t temp_digit_loc = tempmalzehn % 10;
-
     if ( tempmalzehn < 0 ) {
         tempfield[fieldcntr++] = '-';
         tempmalzehn            = -tempmalzehn;
     }
+
+    int8_t  temp_int_loc   = tempmalzehn / 10;
+    uint8_t temp_digit_loc = tempmalzehn % 10;
 
     int8_t zahlkopie = temp_int_loc;
 
