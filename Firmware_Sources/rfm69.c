@@ -276,7 +276,7 @@
             rfm_cmd( 0x3790, 1 );                                                                                     // Variable length, No DC-free
                                                                                                                       // encoding/decoding, CRC-Check, No
                                                                                                                       // Address filter
-            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                     // Max. Payload-Length
+            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                 // Max. Payload-Length
             rfm_cmd( 0x3C80, 1 );                                                                                     // Tx-Start-Condition: FIFO not empty
             rfm_cmd( 0x3DA0, 1 );                                                                                     // Packet-Config2
             // Preamble length 4 bytes
