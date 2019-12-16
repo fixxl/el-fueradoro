@@ -356,7 +356,7 @@ void list_complete( fireslave_t slaves[MAX_ID + 1], uint8_t wrongids ) {
     uart_puts_P( PSTR( "===============\n\r" ) );
 
     uart_puts_P( PSTR( TERM_COL_WHITE ) );
-    uart_puts_P( PSTR( "\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), RSSI (dBm)\n\r" ) );
+    uart_puts_P( PSTR( "\n\rUnique-ID: Slave-ID, Batteriespannung (V), Scharf?, Temperatur (°C), Kanalzahl, RSSI (dBm)\n\r" ) );
 
     while ( i < MAX_ID ) {
         // Show Unique-ID
@@ -416,6 +416,9 @@ void list_complete( fireslave_t slaves[MAX_ID + 1], uint8_t wrongids ) {
             slaves[i].slave_id ? uart_puts_P( PSTR( "n.a." ) ) : uart_puts_P( PSTR( "----" ) );
         }
 
+        uart_puts_P( PSTR( ", " ) );
+
+        uart_shownum( slaves[i].channels, 'd' );
         uart_puts_P( PSTR( ", " ) );
 
         // Show RSSI-values

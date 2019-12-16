@@ -497,6 +497,7 @@ int main( void ) {
         tx_field[3]        = adc_read( 5 );
         tx_field[4]        = armed;
         tx_field[5]        = temperature;
+        tx_field[6]        = SR_CHANNELS;
     }
 
     flags.b.transmit = 1;
@@ -1215,6 +1216,7 @@ int main( void ) {
                         tx_field[3] = ( TRANSMITTER ? 50 : adc_read( 5 ) );
                         tx_field[4] = armed;
                         tx_field[5] = temperature;
+                        tx_field[6] = SR_CHANNELS;
 
                         transmission_allowed = 0;
 
@@ -1245,6 +1247,7 @@ int main( void ) {
                             slaves[tmp].battery_voltage = rx_field[3];
                             slaves[tmp].sharpness       = ( rx_field[4] ? 'j' : 'n' );
                             slaves[tmp].temperature     = rx_field[5];
+                            slaves[tmp].channels        = rx_field[6];
                             slaves[tmp].rssi            = rssi;
                         }
 

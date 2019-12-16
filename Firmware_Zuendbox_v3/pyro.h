@@ -55,7 +55,7 @@
 #define   FIRE_LENGTH         4
 #define   IDENT_LENGTH        4
 #define   MEASURE_LENGTH      4
-#define   PARAMETERS_LENGTH   7
+#define   PARAMETERS_LENGTH   8
 #define   TEMPERATURE_LENGTH  5
 #define   CHANGE_LENGTH       6
 #define   IMPEDANCES_LENGTH   (4+SR_CHANNELS)
@@ -96,6 +96,7 @@ typedef struct {
     uint8_t battery_voltage;
     uint8_t sharpness;
     int8_t  temperature;
+    uint8_t channels;
     uint8_t rssi;
 } fireslave_t;
 
