@@ -80,9 +80,11 @@
 
     uint16_t rfm_status( void ) {
         uint16_t status = 0;
-        status  |= rfm_cmd( 0x2700, 0 );
-        status <<= 8;
-        status  |= rfm_cmd( 0x2800, 0 );
+        ACTIVATE_RFM;
+        rfm_spi ( 0x27 );
+        status  |= rfm_spi( 0x00 ) << 8;
+        status  |= rfm_spi( 0x00 );
+        DEACTIVATE_RFM;
         return status;
     }
 
@@ -276,7 +278,7 @@
             rfm_cmd( 0x3790, 1 );                                                                                     // Variable length, No DC-free
                                                                                                                       // encoding/decoding, CRC-Check, No
                                                                                                                       // Address filter
-            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                 // Max. Payload-Length
+            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                     // Max. Payload-Length
             rfm_cmd( 0x3C80, 1 );                                                                                     // Tx-Start-Condition: FIFO not empty
             rfm_cmd( 0x3DA0, 1 );                                                                                     // Packet-Config2
             // Preamble length 4 bytes
@@ -341,12 +343,15 @@
         rfm_txon();
 
         // Wait for Package Sent (150 Byte-Times)
-        uint32_t utimer = ( ( 75 * F_CPU + BR * 8 ) / ( 16 * BR ) );
+        uint32_t utimer = ( ( 75ULL * F_CPU + BR * 8 ) / ( 16 * BR ) );
+        uint8_t regval = 0;
 
-        while ( --utimer && ( ( rfm_cmd( 0x2800, 0 ) & 0x09 ) != 0x08 ) );  // Check for package sent and module plugged in
+        while ( utimer-- &&  !regval ) {
+            regval = rfm_cmd( 0x2800, 0 ) & 0x09; // Check for package sent and module plugged in
+        }
 
         rfm_txoff();
-        return utimer ? 0 : 1;                                              // 0 : successful, 1 : error
+        return (!utimer || (regval & 0x01));                  // 0 : successful, 1 : error
     }
 
 // Receive data stream
