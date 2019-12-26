@@ -24,6 +24,8 @@ uint8_t remote_config( char *txf );
 uint8_t configprog( const uint8_t devicetype );
 uint8_t aesconf( void );
 
+uint8_t igniter_setup( uint8_t ignition_setting );
+
 void list_complete( fireslave_t slaves[MAX_ID + 1], uint8_t wrongids );
 void list_array( char *arr );
 void evaluate_boxes( fireslave_t boxes[MAX_ID + 1], char *quantity );

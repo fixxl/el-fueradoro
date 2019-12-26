@@ -345,6 +345,38 @@ uint8_t aesconf( void ) {
     return 0;
 }
 
+// Set igniter type
+uint8_t igniter_setup( uint8_t ignition_setting ) {
+    uint8_t valid = 0;
+
+    uart_puts_P( PSTR( "\r\nDerzeit eingestelltes Anzündmittel\r\n==================================\r\n\n" ) );
+
+    if ( ignition_setting == 200 ) {
+        uart_puts_P( PSTR( "TALON (2 s)" ) );
+    }
+    else {
+        uart_puts_P( PSTR( "E-ANZÜNDER (20 ms)" ) );
+    }
+
+    uart_puts_P( PSTR( "\r\nAuswahl: (E)-Anzünder, (T)alon, Abbruch mit anderer Taste: " ) );
+    while ( !valid )
+        valid = uart_getc();
+
+    uart_putc( valid );
+    uart_puts_P( PSTR( "\r\n" ) );
+
+    switch ( valid | 0x20 ) {
+        case 'e': {
+            return 2;
+        }
+        case 't': {
+            return 200;
+        }
+        default: {
+            return ignition_setting;
+        }
+    }
+}
 
 // List ignition devices
 void list_complete( fireslave_t slaves[MAX_ID + 1], uint8_t wrongids ) {

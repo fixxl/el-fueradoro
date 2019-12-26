@@ -25,7 +25,8 @@
 #define MAX_COM_ARRAYSIZE     40
 
 // Ignition time * 10ms
-#define IGNITION_TIME         2
+#define EMATCH_TIME           2
+#define TALON_TIME            245
 
 // Threshold to clear LCD (Number of counter overflows)
 #define DEL_THRES             251

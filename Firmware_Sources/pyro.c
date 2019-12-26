@@ -300,6 +300,8 @@ int main( void ) {
     uint8_t  rssi        = 0;
     uint8_t  ledscheme   = 0;
     int8_t   temperature = -128;
+    uint8_t  ignition_time;
+    uint8_t  ign_time_backup;
 
     bitfeld_t flags;
     flags.complete = 0;
@@ -379,6 +381,12 @@ int main( void ) {
             while ( 1 );
         }
     }
+
+    // Make sure, ignition time is properly defined and set ignition time
+    if ( eeread(365) != TALON_TIME && eeread(365) != EMATCH_TIME ) {
+        eewrite( EMATCH_TIME, 365 );
+    }
+    ignition_time = ( eeread( 365 ) == TALON_TIME ) ? TALON_TIME : EMATCH_TIME;
 
     // Initialise arrays
     for ( uint8_t warten = 0; warten < MAX_COM_ARRAYSIZE; warten++ ) {
@@ -651,6 +659,16 @@ int main( void ) {
             // "hardware" or "hw" outputs for uC- and rfm-type
             if ( uart_strings_equal( uart_field, "hw" ) || uart_strings_equal( uart_field, "hardware" ) ) {
                 flags.b.hw = 1;
+            }
+
+            // "igniter" starts the igniter selection tool
+            if ( uart_strings_equal( uart_field, "igniter" ) ) {
+                ign_time_backup = ignition_time;
+                ignition_time   = igniter_setup( ignition_time );
+
+                if ( ignition_time != ign_time_backup ) {
+                    eewrite( ignition_time, 365 );
+                }
             }
 
             // "rfm" gives access to radio module
@@ -1115,7 +1133,7 @@ int main( void ) {
                 if ( active_channels & controlvar ) { // If a given channel is currently active
                     channel_timeout[i]++;             // Increment the timeout-value for that channel
 
-                    if ( channel_timeout[i] >= IGNITION_TIME ) { // If the channel was active for at least the ignition time
+                    if ( channel_timeout[i] >= ignition_time ) { // If the channel was active for at least the ignition time
                         anti_scheme          |= controlvar;      // Set delete-bit for this channel
                         channel_timeout[i]    = 0;               // Reset channel-timeout value
                         flags.b.finish_firing = 1;               // Leave a note that a change in the list of active channels is due
