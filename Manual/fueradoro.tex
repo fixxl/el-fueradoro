@@ -113,7 +113,7 @@
 
 		\anlage{} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich als Kofferwort aus den spanischen Wörtern \emph{fuego}, \emph{radio} und \emph{oro} her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5) geplant.
 
-		Es besteht aus einer mit dem PC verbundenen Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen oder als Standalone-Lösung der Raspberry-Pi-Transmitter \emph{raspEasyFire} verwendet werden.
+		Es besteht aus einer mit dem PC verbundenen Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt und einer oder mehreren Zündboxen mit je 16 oder 32 Kanälen zur elektrischen Zündung. Der klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen oder als Standalone-Lösung der Raspberry-Pi-Transmitter \emph{raspEasyFire} verwendet werden.
 
 		\begin{figure}
 			\centering
@@ -134,7 +134,7 @@
 
 			Die Transmitterbox ist mit einem LC-Display mit 20 Spalten und 4 Zeilen ausgestattet.
 
-			In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte Schieberegister \texttt{74HC595}, welche mit ihren insgesamt 16 Ausgängen 16 Feldeffekttransistoren vom Typ \texttt{IRF3708} für die Zündung ansteuern, außerdem ist auf der Platine mit dem \texttt{MC33063} bzw. einem fertigen Modul mit dem \texttt{XL6009} ein Hochsetzsteller zur Erzeugung einer höheren Zündspannung integriert sowie ein Schlüsselschalter zum Scharfschalten der Boxen. Parallel zur Drain-Source-Strecke jedes Feldeffekttransistors ist eine LED mit Vorwiderstand geschaltet, um zu signalisieren, an welchen Kanälen Anzünder angeschlossen sind.
+			In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte Schieberegister \texttt{74HC595}, welche mit ihren insgesamt 16 bzw. 32 Ausgängen 16 bzw. 32 Feldeffekttransistoren vom Typ \texttt{IRF3708} für die Zündung ansteuern, außerdem ist auf der Platine mit dem \texttt{MC33063} bzw. einem fertigen Modul mit dem \texttt{XL6009} ein Hochsetzsteller zur Erzeugung einer höheren Zündspannung integriert sowie ein Schlüsselschalter zum Scharfschalten der Boxen. Parallel zur Drain-Source-Strecke jedes Feldeffekttransistors ist eine LED mit Vorwiderstand geschaltet, um zu signalisieren, an welchen Kanälen Anzünder angeschlossen sind.
 
 		\section{Transmitter und Zündboxen}
 
@@ -167,7 +167,9 @@
 			\end{itemize}
 			Dies ist der Tatsache geschuldet, dass bei der ersten Generation der Zündboxen, wenn eine Seite des Zündkanals fest mit der Zündspannung, d.\,h. einer roten Klemme verbunden ist, ein frei baumelndes zweites Kabel durch Berührung eines Bauteils auf Massepotential, z.\,B. der Antennenbuchse oder der Überwurfmutter des gewinkelten SMA-Steckers, einen Kurzschluss und somit eine Zündung auslösen würde~-- selbst dann, wenn die Box nicht scharf geschaltet ist! In der zweiten Generation der Zündboxen ist dieses Manko behoben.
 
-			Parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom durch den LED-Zweig auf unter \SI{5}{\milli\ampere} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme~-- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen~-- verbunden ist, also ein geschlossener Strompfad von $\SI{22,5}{\volt}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen grünen LED signalisiert. Ein Leuchten der grünen LED ist dabei lediglich ein Indikator, dass \enquote{etwas} am jeweiligen Kanal angeschlossen ist, eine Aussage, ob der Widerstand des angeschlossenen Anzündernetzwerks gering genug ist, um eine Zündung auszulösen, wird durch die LED ausdrücklich nicht getroffen.
+			Bei den Zündboxen der ersten und zweiten Generation ist parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom durch den LED-Zweig auf unter \SI{5}{\milli\ampere} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme~-- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen~-- verbunden ist, also ein geschlossener Strompfad von $\SI{22,5}{\volt}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen grünen LED signalisiert. Ein Leuchten der grünen LED ist dabei lediglich ein Indikator, dass \enquote{etwas} am jeweiligen Kanal angeschlossen ist, eine Aussage, ob der Widerstand des angeschlossenen Anzündernetzwerks gering genug ist, um eine Zündung auszulösen, wird durch die LED ausdrücklich nicht getroffen.
+			
+			Anders verhält sich dies bei den Zündboxen der dritten Generation: Hier werden die Widerstände der einzelnen Kanäle periodisch bestimmt und die zugehörige grüne LED nur dann aktiviert, wenn der Kanalwiderstand ausreichend gering ist.
 
 		\section{Energieversorgung}
 
@@ -829,7 +831,7 @@
 
 			\subsection{Slavesuche}
 
-				Mit einem Druck auf die Schaltfläche \enquote{Slaves suchen} wird eine Suche nach verfügbaren Zündboxen gestartet. Diese dauert etwa fünf Sekunden, anschließend werden die Parameter der in Reichweite befindlichen Boxen wie in Abbildung~\ref{fig:REFslavesfound} zu sehen auf dem Startbildschirm angezeigt.
+				Mit einem Druck auf die Schaltfläche \enquote{Slaves suchen} wird eine Suche nach verfügbaren Zündboxen gestartet. Diese dauert etwa sieben Sekunden, anschließend werden die Parameter der in Reichweite befindlichen Boxen wie in Abbildung~\ref{fig:REFslavesfound} zu sehen auf dem Startbildschirm angezeigt.
 
 				In Klammern hinter \enquote{Gefundene Slaves} taucht zudem die Gesamtanzahl gefundener Zündboxen auf. Werden weniger Boxen als erwartet gefunden, sollten~--sofern mehrmaliges erneutes Suchen keinen Erfolg gebracht hat~-- folgende Ursachen und Lösungsversuche in Erwägung gezogen werden:
 				\begin{enumerate}
@@ -850,7 +852,7 @@
 				\end{figure}
 
 			\subsection{Weitere Optionen}
-				\subsubsection{Einstellungen ändern}
+				\subsubsection{Einstellungen anpassen}
 					Unter diesem Punkt können einige Grundeinstellungen des Programms verändert werden:
 					\begin{description}
 						\item [Showmodus beim Start]
@@ -860,14 +862,18 @@
 						\item [Herunterfahren beim Beenden]
 						      Soll nach dem Beenden von {\REF} das System komplett heruntergefahren oder in den Commandprompt gesprungen werden?
 						\item [Fehlende Slaves ignorieren]
-						      Soll beim Überprüfen der automatischen Show darauf bestanden werden, dass alle im Zündplan genannten Slaves (außer Slave 99) auch tatsächlich mindestens einmal vorhanden und alle Slaves scharf geschaltet sind oder nicht?
+						      Soll beim Überprüfen der automatischen oder semiautomatischen Show darauf bestanden werden, dass alle im Zündplan genannten Slaves (außer Slave 99) auch tatsächlich mindestens einmal vorhanden und alle Slaves scharf geschaltet sind oder nicht? Für den manuellen Modus hat diese Einstellung keine Bedeutung.
+						\item [Soundcheck mit Showmusik]
+							  Soll die aktuell ausgewählte Musik für den Soundcheck verwendet werden? Bei \enquote{Nein} wird das Standard-Teststück verwendet.
 						\item [Lautstärke]
 						      Lautstärkeeinstellung der Soundkarte für die Wiedergabe der Musik in Prozent.
+						\item [Maximale Anzahl Slaves]
+						      Wie viele Slaves sind zulässig? Dieser Wert ist gleichzeitig auch der Maximalwert für Unique-ID und Slave-ID einer einzelnen Box.
 					\end{description}
 
 					Diese Einstellungen können durch \enquote{Bestätigen} dauerhaft übernommen oder durch \enquote{Abbrechen} wieder verworfen werden.
 
-				\subsubsection{ID-Änderung}
+				\subsubsection{Slave ID ändern}
 
 					Über den Punkt \enquote{IDs ändern} können Zündboxen neue IDs zugewiesen werden, den Bildschirm dazu zeigt Abbildung~\ref{fig:REFids}. Hierzu müssen per \enquote{+} und \enquote{-} die alten und neuen IDs eingestellt werden, durch Druck auf \enquote{Bestätigen} wird der Befehl zur Änderung der IDs dann abgeschickt. Es ist zu beachten, dass diese Änderung nur wirksam werden kann, wenn die entsprechende Zündbox nicht scharf geschaltet ist.
 
@@ -876,6 +882,14 @@
 						\caption{Ändern der IDs}
 						\label{fig:REFids}
 					\end{figure}
+				
+				\subsubsection{El Fueradoro programmieren}
+					
+					In diesem Untermenü ist es möglich, die aktuellen Bootloader- und Firmwaredateien für \anlage{} herunterzuladen sowie über einen geeigneten Programmer den Bootloader auf ein El-Fueradoro-Device zu schreiben und bei vorhandenem Bootloader die Firmware zu übertragen.
+					
+			    \subsection{Dateien löschen}
+			    
+			        Hier können zpl- und mp3-Dateien gelöscht werden. Nicht löschbar sind Dateien, welche aktuell für die Show oder den Soundcheck ausgewählt sind.
 
 				\subsubsection{AES-Key wählen}
 					In diesem Fenster kann gewählt werden, mit welcher der im Unterverzeichnis \emph{config} vorhandenen AES-Schlüssel-Dateien, welche einen Dateinamen der Form \emph{aesvalues\_NAME.txt} tragen müssen, gearbeitet werden soll. Die jeweils aktuell gewählte Datei ist blau markiert.
@@ -884,6 +898,9 @@
 
 				\subsubsection{AES-Key-Abgleich mit Box}
 					Wird eine eingeschaltete Zündbox über USB-Kabel (v3) bzw. einen RS232-USB-Konverter (v1/v2) an den Raspberry Pi angeschlossen, kann unter diesem Punkt ihr AES-Schlüssel ausgelesen werden. Unterscheidet er sich vom aktuell in {\REF} eingestellten Schlüssel, kann der Nutzer entscheiden, wessen Schlüssel auf das andere Device übertragen werden soll.
+					
+			    \subsubsection{Updates durchführen}
+			    	Bei bestehender Internetverbindung kann hier die Software von \REF{} auf den letzten Stand gebracht werden. Ein Neustart ist nötig, um die Änderungen wirksam zu machen, ausgewählter AES-Key und ausgewählter Zündplan werden auf die Standardeinstellung zurückgesetzt.
 
 			\subsection{Soundcheck}
 
@@ -891,13 +908,25 @@
 
 			\subsection{Widerstandsmessung}
 
-				Durch Anklicken der entsprechenden Zeile in Abbildung~\ref{fig:REFslavesfound} fordert man eine {\anlage}-Zündbox dazu auf, die Widerstände ihrer 16 Kanäle zu messen und an {\REF} zu senden. Diese werden dann in tabellarischer Form angezeigt wie in Abbildung~\ref{fig:REFimpedances} gezeigt. Am unteren Rand des Bildschirms kann zur jeweils nächsten und vorherigen Box oder zurück zum Startbildschirm gesprungen werden.
+				Durch Anklicken der entsprechenden Zeile in Abbildung~\ref{fig:REFslavesfound} fordert man eine {\anlage}-Zündbox dazu auf, die Widerstände ihrer 16 bzw. 32 Kanäle zu messen und an {\REF} zu senden. Diese werden dann in tabellarischer Form angezeigt wie in Abbildung~\ref{fig:REFimpedances} gezeigt. Am unteren Rand des Bildschirms kann zur jeweils nächsten und vorherigen Box oder zurück zum Startbildschirm gesprungen werden.
 
 				\begin{figure}
 					\centering\includegraphics[width=150mm]{Bilder/REFimpedances}
 					\caption{Widerstandsmessung}
 					\label{fig:REFimpedances}
 				\end{figure}
+			
+			\subsection{Schlüsselwörter in Zündplänen}
+			
+				Um die Funktionalität der zpl-Dateien zu erweitern, die Kompatibilität mit \pic{} aber zu erhalten, existieren einige Schlüsselwörter und -zahlen, die für \pic{} keine Bedeutung haben, in \REF{} aber entsprechend interpretiert werden:
+				\begin{description}
+					\item [STEPPER]
+					Findet sich die Zeichenfolge \enquote{STEPPER} in einer Effektbeschreibung, so signalisiert dies \REF{}, dass der entsprechende Slave an diesem Kanal einen Stepper angeschlossen hat und der Kanal deshalb unter Umständen mehrfach gezündet werden darf, um den nächsten Effekt am Stepper zu triggern.
+					\item [BACKUP]
+					Findet sich die Zeichenfolge \enquote{BACKUP} in einer Effektbeschreibung, wird der Effekt nicht in die automatische Zündliste eingefügt, sondern als Schaltfläche auf dem Touchscreen hinterlegt, von wo aus der dann manuell während der Show durch Drücken des FIRE-Buttons und anschließendes Betätigen der Schaltfläche ausgelöst werden kann. Es spielt dabei keine Rolle, ob die Slave-Kanal-Kombination woanders im Feuerwerk verwendet wird oder nicht, man kann also sowohl zur händischen \enquote{Nachzündung} als auch für zusätzliche Pausen- oder Lückenfüller Backups hinterlegen.
+					\item [Slave 999]
+					Durch Verwendung der Slave-ID 999 wird \REF{} mitgeteilt, dass es sich hierbei nicht um einen tatsächlich zu schießenden Cue handelt, sondern nur um etwas, was auf dem Bildschirm angezeigt werden soll, beispielsweise durch einen zeitgesteuerten Stepper gezündete Cues oder Erinnerungen an eine bestimmte Aktion.
+				\end{description}
 
 			\subsection{Showstart}
 
@@ -906,17 +935,17 @@
 				Damit die Show reibungslos verläuft, kontrolliert {\REF}, ob Zündpläne und sonstige Gegebenheiten korrekt sind. Folgende Bedingungen müssen dabei für eine automatische Show erfüllt sein:
 				\begin{itemize}
 					\item
-					      Verwendete Slave-IDs müssen im Bereich von 1 bis 30 liegen, Slave-ID 99 ist zulässig für \enquote{Dummy-Cues}, die zwar auf dem Display angezeigt werden, aber keine Zündung auslösen.
+					      Verwendete Slave-IDs müssen im Bereich von 1 bis zum in den Einstellungen festgelegten Maximum liegen, Slave-ID 999 ist zulässig für \enquote{Dummy-Cues}, die zwar auf dem Display angezeigt werden, aber keine Zündung auslösen.
 					\item
-					      Ansprechbare Kanalnummern liegen im Bereich von 1 bis 16.
+					      Ansprechbare Kanalnummern liegen im Bereich von 1 bis 32.
 					\item
-					      Jede Kombination aus Slave-ID und Kanalnummer darf im Zündplan lediglich einmal vorkommen. Dient der Kanal der Triggerung eines weiteren Geräts, soll also wirklich mehrfach ausgelöst werden, so ist in die Effektbeschreibung bei jedem Aufruf \enquote{STEPPER} (Großschreibung beachten) mit einzutragen.
+					      Jede Kombination aus Slave-ID und Kanalnummer darf im Zündplan lediglich einmal vorkommen. Dient der Kanal der Triggerung eines weiteren Geräts, soll also wirklich mehrfach ausgelöst werden, so ist in die Effektbeschreibung bei jedem Aufruf \enquote{STEPPER} (Großschreibung beachten) mit einzutragen, auch das Hinzufügen von \enquote{BACKUP}, falls man bei Versagen der Zündung noch einmal manuell nachzünden möchte, unterbindet die Fehlermeldung.
 					\item
 					      Der Abstand zwischen zwei \enquote{echten} Zündungen muss mindestens \SI{100}{\milli\second} betragen, für Dummy-Cues gilt diese Beschränkung demnach nicht.
 					\item
-					      Für jede angesprochene Slave-ID (Ausnahme ist die Dummy-Slave-ID 99) muss eine Zündbox mit der entsprechenden Slave-ID gefunden worden sein. Um diese Überprüfung abzuschalten, kann in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt werden. Diese Einstellung kann auch über \enquote{Weitere Optionen} und \enquote{Einstellungen anpassen} mit \enquote{Fehlende Slaves ignorieren} verändert werden.
+					      Für jede angesprochene Slave-ID (Ausnahme ist die Dummy-Slave-ID 999) muss eine Zündbox mit der entsprechenden Slave-ID gefunden worden sein. Wird auf einer Slave-ID eine Kanalnummer größer als 16 angesprochen, muss mindestens eine Zündbox mit 32 Kanälen auf dieser Slave-ID vorhanden sein. Um diese Überprüfung abzuschalten, kann in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt werden. Diese Einstellung kann auch über \enquote{Weitere Optionen} und \enquote{Einstellungen anpassen} mit \enquote{Fehlende Slaves ignorieren} verändert werden.
 					\item
-					      Alle gefundenen Zündboxen müssen scharf geschaltet sein. Auch diese Überprüfung wird übersprungen, wenn in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt ist.
+					      Alle gefundenen Zündboxen, deren IDs im Feuerwerk verwendet werden, müssen scharf geschaltet sein. Auch diese Überprüfung wird übersprungen, wenn in der Konfigurationsdatei der Parameter \enquote{ignore-missing-slaves} auf \enquote{True} gesetzt ist.
 					\item
 					      Ist eine Musikshow vorgesehen, muss eine zum Zündplan passende Musikdatei im korrekten Verzeichnis vorhanden sein. Ebenso muss die in der Konfigurationsdatei benannte Soundcheckdatei existieren.
 					\item
@@ -1070,7 +1099,7 @@
 					\item
 					      Verwenden einer Slave-ID außerhalb des Bereichs $1-30$
 					\item
-					      Ansprechen eines Kanals außerhalb des Bereichs $1-16$
+					      Ansprechen eines Kanals außerhalb des Bereichs $1-32$
 					\item
 					      Unterschreiten des minimalen Zündabstands von $\SI{100}{\milli\second}$
 					\item
@@ -1104,7 +1133,7 @@
 
 	\chapter{Schaltpläne \& Layouts}
 
-		In den Abbildungen~\ref{fig:transmitterschematic},~\ref{fig:zuendboxschematic},~\ref{fig:zuendbox2schematic},~\ref{fig:zuendbox3schematic} und~\ref{fig:piadapterschematic} sind die Schaltpläne des PC-Transmitters, der verschiedenen Zündbox-Generationen und des Raspberry-Pi-Transmitters nach Funk\-tions\-ein\-heiten unterteilt gezeigt, in den Abbildungen~\ref{fig:transmitterlayout},~\ref{fig:zuendboxlayout},~\ref{fig:zuendbox2layout}, ~\ref{fig:zuendbox3layout} und~\ref{fig:piadapterlayout} die Layouts.
+		In den Abbildungen~\ref{fig:transmitterschematic},~\ref{fig:zuendboxschematic},~\ref{fig:zuendbox2schematic},~\ref{fig:zuendbox3schematic},,~\ref{fig:zuendbox332schematic} und~\ref{fig:piadapterschematic} sind die Schaltpläne des PC-Transmitters, der verschiedenen Zündbox-Generationen und des Raspberry-Pi-Transmitters nach Funk\-tions\-ein\-heiten unterteilt gezeigt, in den Abbildungen~\ref{fig:transmitterlayout},~\ref{fig:zuendboxlayout},~\ref{fig:zuendbox2layout},~\ref{fig:zuendbox3layout},~\ref{fig:zuendbox332layout} und~\ref{fig:piadapterlayout} die Layouts.
 
 		Erstellt wurden diese mit den Layoutprogrammen \texttt{EAGLE} von CadSoft bzw. \texttt{KiCAD}, die Originaldateien sowie Gerber-Dateien zur Fertigung sind im Unterordner \enquote{Schematics\_and\_Layouts} des Projekt-Hauptverzeichnisses abgelegt.
 
@@ -1139,10 +1168,17 @@
 			\caption{Schaltplan der Zündbox (3. Generation)}
 			\label{fig:zuendbox3schematic}
 		\end{figure}
+	
+		\begin{figure}
+			\centering
+			\includegraphics[width=.95\textwidth,keepaspectratio]{Bilder/Zuendboxschaltplan332}
+			\caption{Schaltplan der Zündbox (3. Generation) mit 32 Kanälen}
+			\label{fig:zuendbox332schematic}
+		\end{figure}
 
 		\begin{figure}
 			\centering
-			\includegraphics[angle=-90,totalheight=.95\textheight,keepaspectratio]{Bilder/Piadapterschaltplan}
+			\includegraphics[angle=90,totalheight=.95\textheight,keepaspectratio]{Bilder/Piadapterschaltplan}
 			\caption{Schaltplan des Raspberry-Pi-Adapters}
 			\label{fig:piadapterschematic}
 		\end{figure}
@@ -1173,6 +1209,12 @@
 			\caption{Layout der Zündbox (3. Generation, keine Originalgröße!)}
 			\label{fig:zuendbox3layout}
 		\end{figure}
+		\begin{figure}
+			\centering
+			\includegraphics[angle=90, height=.97\textheight,keepaspectratio]{Bilder/Zuendboxlayout332}
+			\caption{Layout der Zündbox (3. Generation mit 32 Kanälen, keine Originalgröße!)}
+			\label{fig:zuendbox332layout}
+		\end{figure}	
 		\begin{figure}
 			\centering
 			\includegraphics[angle=-90,width=.95\textwidth,keepaspectratio]{Bilder/Piadapterlayout}
@@ -1726,13 +1768,111 @@
 					\label{tab:zuendbox3bom}
 				\end{longtabu}
 			}
-
+\newpage
+			
+			{\footnotesize
+				\begin{longtabu}
+					{p{2.5cm}cX[l]ll}
+					\multicolumn{5}{c}{\textbf{Materialliste Zündbox v3 mit 32 Kanälen}}                                                                                                                                 \\
+					\\ \hline
+					Bauteil                                        & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           \\
+					\hline \endfirsthead\hline
+					Bauteil                                        & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           \\
+					\hline \endhead
+					\multicolumn{5}{c}{Kondensatoren}                                                                                                                                                     \\
+					C3, C14, C15                                   & 3    & Elektrolyt\-kon\-den\-sa\-tor, 10uF       & Reichelt   & RAD 10/100                                                           \\
+					C11, C12                                       & 2    & Elektrolyt\-kon\-den\-sa\-tor, 4700uF 35V & Reichelt   & RAD 4.700/35                                                         \\
+					C1, C2, C4{\dots}6, C9, C10, C13, C16{\dots}22 & 15   & Keramik\-kondensator, 100nF               & Reichelt   & X7R-2,5 100N                                                         \\
+					C7, C8                                         & 2    & Keramik\-kondensator, 15pF                & Reichelt   & KERKO 15P                                                            \\ [8pt]
+					\hline
+					\multicolumn{5}{c}{Dioden}                                                                                                                                                            \\
+					D33, D40                                       & 2    & 1N4148                                    & Reichelt   & 1N 4148                                                              \\
+					D38, D39                                       & 2    & 1N4001                                    & Reichelt   & 1N 4001                                                              \\ [8pt]
+					\hline
+					\multicolumn{5}{c}{Integrierte Schaltungen}                                                                                                                                           \\
+					U1, U11                                        & 2    & DM13A                                     & eBay       & ---                                                                  \\
+					U2                                             & 1    & MCP6002\_IP                               & Reichelt   & MCP 6002-I/P                                                         \\
+					U3                                             & 1    & RFM69CW                                   & Pollin     & 810 303                                                              \\
+					U4                                             & 1    & ATMEGA 328P                               & Reichelt   & ATMEGA 328P-PU                                                       \\
+					U5, U8, U12, U13                               & 4    & 74HC595                                   & Reichelt   & 74HC 595                                                             \\
+					U7                                             & 1    & LM1086                                    & Reichelt   & LM 1086 IT3,3                                                        \\
+					U9                                             & 1    & MCP2221\_IP                               & Reichelt   & MCP 2221-I/P                                                         \\
+					U10                                            & 1    & DS18B20                                   & Reichelt   & DS 18B20                                                             \\ [8pt]
+					\hline
+					\multicolumn{5}{c}{Step-Up-Modul}                                                                                                                                                     \\
+					U6                                             & 1    & Step-Up M-SU-XL6009                       & Pollin     & 351 434                                                              \\ [8pt]
+					\hline
+					\multicolumn{5}{c}{LEDs}                                                                                                                                                              \\
+					D35                                            & 1    & LED, 5mm, orange                          & Reichelt   & LED 5MM R OR                                                         \\
+					D36                                            & 1    & LED, 5mm, rot                             & Reichelt   & LED 5MM RT                                                           \\
+					D34                                            & 1    & LED, 5mm, gelb                            & Reichelt   & LED 5MM GE                                                           \\
+					D37                                            & 1    & LED, 5mm, grün                            & Reichelt   & LED 5MM GN                                                           \\
+					D1{\dots}32                                    & 32   & LED, 3mm, grün                            & Reichelt   & LED 3MM GN                                                           \\ [8pt]
+					\hline
+					\multicolumn{5}{c}{Quarz}                                                                                                                                                             \\
+					Y1                                             & 1    & Standardquarz, Grundton, 9,8304 Mhz       & Reichelt   & 9,8304-HC49U-S                                                       \\ [8pt]
+					\hline
+					\multicolumn{5}{c}{MOSFETs und Transistoren}                                                                                                                                          \\
+					Q1{\dots}32                                    & 32   & IRF3708                                   & AliExpress & \href{http://www.aliexpress.com/item/IRF3708/32797054137.html}{Link} \\
+					Q35                                            & 1    & IRF4905                                   & Reichelt   & IRF 4905                                                             \\
+					Q34, Q37                                       & 2    & BC337-40                                  & Reichelt   & BC 337-40                                                            \\
+					Q33, Q36                                       & 2    & BC327-40                                  & Reichelt   & BC 327-40                                                            \\[8pt]
+					\hline
+					\multicolumn{5}{c}{Widerstände}                                                                                                                                                       \\
+					R1, R31                                        & 2    & 47k                                       & Reichelt   & METALL 47,0K                                                         \\
+					R2                                             & 1    & 150                                       & Reichelt   & METALL 150                                                           \\
+					R3                                             & 1    & 150k                                      & Reichelt   & METALL 150K                                                          \\
+					R4                                             & 1    & 180k                                      & Reichelt   & METALL 180K                                                          \\
+					R5, R7, R16                                    & 3    & 100k                                      & Reichelt   & METALL 100K                                                          \\
+					R6                                             & 1    & 120k                                      & Reichelt   & METALL 120K                                                          \\
+					R8, R9, R15, R17, R27, R29, R32, R33           & 8    & 10k                                       & Reichelt   & METALL 10,0K                                                         \\
+					R10{\dots}13, R18{\dots}20                     & 7    & 1k                                        & Reichelt   & METALL 1,00K                                                         \\
+					R14                                            & 1    & 1M5                                       & Reichelt   & METALL 1,50M                                                         \\
+					R21, R23{\dots}25, R30, R34                    & 6    & 3k3                                       & Reichelt   & METALL 3,30K                                                         \\
+					R22                                            & 1    & 1k5                                       & Reichelt   & METALL 1,50K                                                         \\
+					R26                                            & 1    & 2R2-9W                                    & Reichelt   & 9W VERT. 2,2                                                         \\
+					R28                                            & 1    & 270R                                      & Reichelt   & METALL 270                                                           \\
+					RN1, RN2, RN3, RN4                             & 4    & Network, 9Pin, 10k                        & Reichelt   & SIL 9-8 10K                                                          \\ [8pt]
+					\hline
+					\multicolumn{5}{c}{HF-Komponenten}                                                                                                                                                    \\
+					& 1    & SMA-Kabel Funkmodul-Gehäuse               & eBay       & \href{http://www.ebay.com/itm/291548738413}{291548738413}            \\
+					& 1    & SMA-Kabel Gehäuse-Antenne                 & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}            \\
+					& 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}             \\
+					& 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}            \\ [8pt]
+					\hline
+					\multicolumn{5}{c}{Mechanische Bauteile}                                                                                                                                              \\
+					J1                                             & 1    & USB-Buchse Typ B                          & Reichelt   & USB BW                                                               \\
+					J2                                             & 1    & Wannenstecker, 10-pol                     & Reichelt   & WSL 10G                                                              \\
+					& 1    & Wippschalter                              & Pollin     & 420 697                                                              \\
+					& 1    & Miniatur-Schlüsselschalter                & Pollin     & 420 664                                                              \\
+					& 16   & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                               \\
+					& 1    & Koffer                                    & Amazon     & Bilora 545                                                           \\
+					& 1    & Akku                                      & Reichelt   & WP 1,2-12                                                            \\
+					& 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                         \\
+					& 32   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                         \\
+					& 32   & Muttern M3                                & Reichelt   & SK-E M3-100                                                          \\
+					& 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                          \\
+					& 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                        \\
+					& 1    & Buchsenleiste mit 6 Plätzen               & Reichelt   & MPE 094-1-006                                                        \\
+					& 1    & Buchsenleiste mit 7 Plätzen               & Reichelt   & MPE 094-1-007                                                        \\
+					& 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                              \\
+					\\ [8pt]
+					\hline
+					\multicolumn{5}{c}{Kabel}                                                                                                                                                             \\ \nopagebreak
+					& 1    & Flachbandkabel für LED+Schlüsselsch.      & Reichelt   & AWG 28-10F 3M                                                        \\
+					& 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                              \\
+					& 1    & Schrumpf\-schläu\-che 1,6mm               & Reichelt   & SDH 1,6 SW                                                           \\
+					& 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           \\ \hline
+					\caption{\normalsize Materialliste für die Zündbox (3. Generation) mit 32 Kanälen}
+					\label{tab:zuendbox332bom}
+				\end{longtabu}
+			}
 		\normalsize
 
 	\chapter{Platinenherstellung}
 		\label{ch:platinenherstellung}
 
-		Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters (Platinenabmessungen: $\SI{91,44}{\milli\metre}\times\SI{66,04}{\milli\metre}$) als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage. In Abbildung~\ref{fig:zuendboxprint} findet sich das Layout der Zündbox (Platinenabmessungen: $\SI{157,48}{\milli\metre}\times\SI{97,79}{\milli\metre}$) und in Abbildung~\ref{fig:rfmprint} das der Adapterplatine zum Auflöten des Funkmoduls (Abmessungen einer einzelnen Adapterplatine: $\SI{31,75}{\milli\metre}\times\SI{22,86}{\milli\metre}$).
+		Wer zur Platinenherstellung nicht auf die Dienste eines PCB-Herstellers zurückgreifen will, findet in Abbildung~\ref{fig:transmitterprint} die Platine des Transmitters (Platinenabmessungen: $\SI{91,44}{\milli\metre}\times\SI{66,04}{\milli\metre}$) als Druckvorlage für den Tonertransfer\footnote{Eine Einführung zum Ätzen mit dieser Methode gibt es \href{http://thomaspfeifer.net/platinen_aetzen.htm}{HIER}} bzw. als Belichtungsvorlage. In Abbildung~\ref{fig:zuendboxprint} findet sich das Layout der Zündbox (Platinenabmessungen: $\SI{157,48}{\milli\metre}\times\SI{97,79}{\milli\metre}$ bei den 16-Kanal-Versionen und $\SI{214}{\milli\metre}\times\SI{128}{\milli\metre}$ bei der 32-Kanal-Version) und in Abbildung~\ref{fig:rfmprint} das der Adapterplatine zum Auflöten des Funkmoduls (Abmessungen einer einzelnen Adapterplatine: $\SI{31,75}{\milli\metre}\times\SI{22,86}{\milli\metre}$).
 
 		Die Oberseite ist hierbei jeweils schon gespiegelt, die Ausdrücke können für einen Tonertransfer also einfach ausgedruckt und im Zwischenraum gefaltet werden, wobei auf möglichst exakte Deckung zu achten ist.
 
@@ -2301,6 +2441,8 @@
 			      Das gesamte private Umfeld, das die Arbeit am Projekt stets mit Fassung getragen und mit Interesse verfolgt hat.
 			\item
 			      Jens Nachtigal, den Hauptprogrammierer und Anstoßgeber zur Entwicklung des Raspberry-Pi-Transmitters.
+			\item
+			      Michael Czifra (pyro-michel) für die Unterstützung beim Layout der 32-Kanal-Version.
 			\item
 			      Die \enquote{Nachbau-Pioniere} Matthias Pee und Cedrik Sikora für Ideen und wertvolle Hinweise.
 			\item

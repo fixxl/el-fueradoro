@@ -1,7 +1,7 @@
 EESchema Schematic File Version 5
 EELAYER 30 0
 EELAYER END
-$Descr User 13780 16535
+$Descr User 13229 16338
 encoding utf-8
 Sheet 1 1
 Title ""
