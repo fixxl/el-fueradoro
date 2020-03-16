@@ -16,6 +16,11 @@
 #define MOSSWITCH_PORT        C
 #define MOSSWITCH_NUM         3
 
+// Main clock frequency
+#ifndef F_CPU
+    #define F_CPU             9830400UL
+#endif
+
 // Maximum ID
 #ifndef MAX_ID
     #define MAX_ID            30

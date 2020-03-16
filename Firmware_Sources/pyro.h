@@ -8,6 +8,11 @@
 #ifndef PYRO_H_
 #define PYRO_H_
 
+// Main clock frequency
+#ifndef F_CPU
+    #define F_CPU             9830400UL
+#endif
+
 // Key switch location
 #define KEYPORT               C
 #define KEYNUM                4
