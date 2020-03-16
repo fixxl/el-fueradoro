@@ -485,10 +485,16 @@ int main( void ) {
 
             if ( armed ) {
                 led_red_on();
+
+                // Turn off channel leds
+                dm_shiftout( statusleds );
             }
             else {
                 MOSSWITCHPORT &= ~( 1 << MOSSWITCH );
                 led_red_off();
+
+                // Trigger channel measurement
+                flags.b.read_impedance = 1;
             }
 
             flags.b.read_impedance = 1;
@@ -706,8 +712,8 @@ int main( void ) {
         // -------------------------------------------------------------------------------------------------------
 
         // Update channel impedances unless some more important event is happening right now
-        if (   ( flags.b.read_impedance || ( timer1_flags & TIMER_MEASURE_FLAG ) )
-           && !( flags.b.fire || flags.b.is_fire_active || flags.b.receive || ( flags.b.transmit && ( transmission_type != IMPEDANCES ) ) ) ) {
+        if ( !armed && ( flags.b.read_impedance || ( timer1_flags & TIMER_MEASURE_FLAG ) )
+           && !( flags.b.receive || ( flags.b.transmit && ( transmission_type != IMPEDANCES ) ) ) ) {
             temp_sreg = SREG;
             cli();
             flags.b.read_impedance = 0;
