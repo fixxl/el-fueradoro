@@ -373,6 +373,7 @@ int main( void ) {
     // Display slave ID and check channel LEDs
     leds_off();
     _delay_ms(150);
+    dm_shiftout( (1ULL << DM_CHANNELS) - 1);
     led_yellow_on();
     _delay_ms(150);
     led_green_on();
@@ -380,11 +381,10 @@ int main( void ) {
     led_orange_on();
     _delay_ms(150);
     led_red_on();
-    dm_shiftout( (1ULL << DM_CHANNELS) - 1);
-    _delay_ms(250);
+    _delay_ms(150);
     leds_off();
     _delay_ms(250);
-    dm_shiftout( 0 );
+
     ledscheme = (slave_id & 0xF0) >> 4;
     if( ledscheme & 0x01 ) led_yellow_on();
     if( ledscheme & 0x02 ) led_green_on();
@@ -392,7 +392,8 @@ int main( void ) {
     if( ledscheme & 0x08 ) led_red_on();
     _delay_ms(2000);
     leds_off();
-    _delay_ms(150);
+    _delay_ms(250);
+
     led_red_on();
     _delay_ms(150);
     led_orange_on();
@@ -400,17 +401,17 @@ int main( void ) {
     led_green_on();
     _delay_ms(150);
     led_yellow_on();
-    dm_shiftout( (1ULL << DM_CHANNELS) - 1);
-    _delay_ms(250);
+    _delay_ms(150);
     leds_off();
     _delay_ms(250);
-    dm_shiftout( 0 );
+
     ledscheme = (slave_id & 0x0F);
     if( ledscheme & 0x01 ) led_yellow_on();
     if( ledscheme & 0x02 ) led_green_on();
     if( ledscheme & 0x04 ) led_orange_on();
     if( ledscheme & 0x08 ) led_red_on();
     _delay_ms(2000);
+    dm_shiftout( 0 );
     leds_off();
     _delay_ms(200);
 
