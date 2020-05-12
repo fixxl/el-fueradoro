@@ -196,30 +196,73 @@
 
 // Bitrate config according to RFM12-recommendations (orthogonal frequencies)
     static inline void rfm_setbit( uint32_t bitrate ) {
-        uint8_t  bw;
+        uint8_t  bw, afc_bw, logemu;
         uint16_t freqdev;
 
-        switch ( bitrate / 19200 ) {
-            case 0:
-            case 1: {
-                bw      = 0x03;   // 62.5 kHz
-                freqdev = ( ( ( (uint8_t)( ( 90000UL + ( bitrate / 2 ) ) / bitrate ) ) * ( bitrate * 128 ) ) + 7812 ) / 15625;
-                break;
-            }
+        uint32_t mant, expo, myfreq = 867595000LL;
 
-            case 2:
-            case 3: {
-                bw      = 0x02;   // 125 kHz
-                freqdev = ( ( ( (uint8_t)( ( 180000UL + ( bitrate / 2 ) ) / bitrate ) ) * ( bitrate * 128 ) ) + 7812 ) / 15625;
-                break;
-            }
+        // freqdev = bitrate => beta = 2
+        freqdev = ( 512ULL * bitrate + 15625 ) / 31250;
 
-            default: {
-                bw      = 0x09;   // 200 kHz
-                freqdev = ( ( ( (uint8_t)( ( 240000UL + ( bitrate / 2 ) ) / bitrate ) ) * ( bitrate * 128 ) ) + 7812 ) / 15625;
-                break;
+        // RX-Bandwidth
+        // Start with minimum bandwidth setting
+        mant = 24;
+        expo = 1 << 7;
+
+        // Increase bandwidth until it's at least twice the bitrate
+        while ( !( 3 * bitrate < ( 32000000 / ( mant * 4 * expo ) ) ) ) {
+            mant -= 4;
+
+            if ( mant < 16 ) {
+                if ( expo ) {
+                    expo >>= 1;
+                    mant   = 24;
+                }
+                else {
+                    mant = 16;
+                }
             }
         }
+
+        // Loop-implementation of log2
+        logemu = 0;
+        while ( expo ) {
+            expo >>= 1;
+            logemu++;
+        }
+
+        bw = ( ( ( mant - 16 ) / 4 ) << 3 ) | logemu;
+
+        // AFC-Bandwidth
+        uint32_t xtalTol = (1ULL * myfreq + 25000UL) / 50000ULL;
+
+        // Start with minimum bandwidth setting
+        mant = 24;
+        expo = 1 << 7;
+
+        // Increase bandwidth until it's at least twice the bitrate
+        while ( !( 3 * bitrate + xtalTol < ( 32000000 / ( mant * 4 * expo ) ) ) ) {
+            mant -= 4;
+
+            if ( mant < 16 ) {
+                if ( expo ) {
+                    expo >>= 1;
+                    mant   = 24;
+                }
+                else {
+                    mant = 16;
+                }
+            }
+        }
+
+        // Loop-implementation of log2
+        logemu = 0;
+        while ( expo ) {
+            expo >>= 1;
+            logemu++;
+        }
+
+        afc_bw = ( ( ( mant - 16 ) / 4 ) << 3 ) | logemu;
 
         // Frequency Deviation
         rfm_cmd( 0x0500 | ( freqdev >> 8 ), 1 );
@@ -229,13 +272,8 @@
         rfm_cmd( 0x0400 | DATARATE_LSB, 1 );
         // Receiver Bandwidth
         rfm_cmd( 0x1940 | bw, 1 );
-
-        if ( bw ) {
-            bw--;
-        }
-
-        // AFC
-        rfm_cmd( 0x1A40 | bw, 1 );
+        // AFC-BW
+        rfm_cmd( 0x1A40 | afc_bw, 1 );
     }
 
 // Initialise RFM
@@ -278,7 +316,7 @@
             rfm_cmd( 0x3790, 1 );                                                                                     // Variable length, No DC-free
                                                                                                                       // encoding/decoding, CRC-Check, No
                                                                                                                       // Address filter
-            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                     // Max. Payload-Length
+            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                 // Max. Payload-Length
             rfm_cmd( 0x3C80, 1 );                                                                                     // Tx-Start-Condition: FIFO not empty
             rfm_cmd( 0x3DA0, 1 );                                                                                     // Packet-Config2
             // Preamble length 4 bytes
@@ -292,8 +330,8 @@
             rfm_cmd( 0x1800, 1 );                                                                                     // LNA: 50 Ohm Input Impedance, Automatic
                                                                                                                       // Gain Control
             rfm_cmd( 0x582D, 1 );                                                                                     // High sensitivity mode
-            rfm_cmd( 0x6F30, 1 );                                                                                     // Improved DAGC
-            rfm_cmd( 0x29BE, 1 );                                                                                     // RSSI mind. -95 dBm
+            rfm_cmd( 0x6F30, 1 );                                                                                     // Improved DAGC (for normal beta, beta = 2 -> beta >= 2
+            rfm_cmd( 0x29D2, 1 );                                                                                     // RSSI mind. -100 dBm
             rfm_cmd( 0x1E2D, 1 );                                                                                     // AFC auto on and clear
             rfm_cmd( 0x2A00, 1 );                                                                                     // No Timeout after Rx-Start if no
                                                                                                                       // RSSI-Interrupt occurs

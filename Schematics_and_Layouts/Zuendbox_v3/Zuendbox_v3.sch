@@ -1,6 +1,5 @@
-EESchema Schematic File Version 4
-LIBS:Zuendbox_v3-cache
-EELAYER 26 0
+EESchema Schematic File Version 5
+EELAYER 30 0
 EELAYER END
 $Descr User 13780 12205
 encoding utf-8
@@ -13,6 +12,11 @@ Comment1 ""
 Comment2 ""
 Comment3 ""
 Comment4 ""
+Comment5 ""
+Comment6 ""
+Comment7 ""
+Comment8 ""
+Comment9 ""
 $EndDescr
 $Comp
 L Driver_LED_FP:DM13A U1
@@ -748,17 +752,6 @@ F 3 "" H 3650 6300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MCU_Microchip_ATmega:ATmega328P-PU U4
-U 1 1 5B6A7BC1
-P 9650 2400
-F 0 "U4" H 9009 2446 50  0000 R CNN
-F 1 "ATmega328P-PU" H 9009 2355 50  0000 R CNN
-F 2 "Package_DIP:DIP-28_W7.62mm" H 9650 2400 50  0001 C CIN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/ATmega328_P%20AVR%20MCU%20with%20picoPower%20Technology%20Data%20Sheet%2040001984A.pdf" H 9650 2400 50  0001 C CNN
-	1    9650 2400
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:C C6
 U 1 1 5B6A8164
 P 8850 1350
@@ -829,8 +822,6 @@ Wire Wire Line
 Wire Wire Line
 	8500 1200 8500 900 
 Wire Wire Line
-	8500 900  9650 900 
-Wire Wire Line
 	8200 1200 8200 900 
 Wire Wire Line
 	8200 900  8500 900 
@@ -846,9 +837,6 @@ F 3 "" H 8500 900 50  0001 C CNN
 	1    8500 900 
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	9650 900  9750 900 
-Connection ~ 9650 900 
 $Comp
 L power:GND #PWR040
 U 1 1 5B6B0164
@@ -1346,17 +1334,6 @@ F 1 "+3.3V" H 9765 8673 50  0000 C CNN
 F 2 "" H 9750 8500 50  0001 C CNN
 F 3 "" H 9750 8500 50  0001 C CNN
 	1    9750 8500
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:AVR-ISP-10 J2
-U 1 1 5B781453
-P 12300 9400
-F 0 "J2" H 12020 9496 50  0000 R CNN
-F 1 "AVR-ISP-10" H 12020 9405 50  0000 R CNN
-F 2 "Connector_IDC:IDC-Header_2x05_P2.54mm_Vertical" V 12050 9450 50  0001 C CNN
-F 3 " ~" H 11025 8850 50  0001 C CNN
-	1    12300 9400
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -3341,4 +3318,31 @@ Wire Wire Line
 	11750 1450 12050 1450
 Wire Wire Line
 	10250 1700 11750 1700
+Wire Wire Line
+	8500 900  9650 900 
+$Comp
+L MCU_Microchip_ATmega:ATmega328P-PU U4
+U 1 1 5E9BA35A
+P 9650 2400
+F 0 "U4" H 9005 2446 50  0000 R CNN
+F 1 "ATmega328P-PU" H 9005 2355 50  0000 R CNN
+F 2 "Package_DIP:DIP-28_W7.62mm" H 9650 2400 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/ATmega328_P%20AVR%20MCU%20with%20picoPower%20Technology%20Data%20Sheet%2040001984A.pdf" H 9650 2400 50  0001 C CNN
+	1    9650 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9750 900  9650 900 
+Connection ~ 9650 900 
+$Comp
+L Connector:AVR-ISP-10 J2
+U 1 1 5E9D4123
+P 12300 9400
+F 0 "J2" H 11970 9496 50  0000 R CNN
+F 1 "AVR-ISP-10" H 11970 9405 50  0000 R CNN
+F 2 "" V 12050 9450 50  0001 C CNN
+F 3 " ~" H 11025 8850 50  0001 C CNN
+	1    12300 9400
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
