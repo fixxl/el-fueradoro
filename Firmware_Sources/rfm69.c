@@ -143,6 +143,7 @@
 // Turn Transmitter on and off
     uint8_t rfm_txon( void ) {
         uint32_t utimer = RFM69_TIMEOUTVAL;
+        rfm_highpower( 1 );
         rfm_cmd( 0x010C, 1 );                                          // TX on (set to transmitter mode in RegOpMode)
 
         while ( --utimer && !( rfm_cmd( 0x27FF, 0 ) & ( 1 << 7 ) ) );  // Wait for Mode-Ready- and TX-Ready-Flag
@@ -162,6 +163,7 @@
 // Turn Receiver on and off
     uint8_t rfm_rxon( void ) {
         uint32_t utimer = RFM69_TIMEOUTVAL;
+        rfm_highpower( 0 );
         rfm_cmd( ( rfm_cmd( 0x3DFF, 0 ) | 0x3D04 ), 1 );
         rfm_cmd( 0x0110, 1 );                                          // RX on (set to receiver mode in RegOpMode)
 
@@ -303,7 +305,6 @@
             rfm_cmd( 0x0202, 1 );                                                                                     // FSK, Packet mode, BT=.5
             // Bitrate + corresponding settings (Receiver bandwidth, frequency deviation)
             rfm_setbit( BR );
-            rfm_cmd( 0x131B, 1 );                                                                                     // OCP enabled, 100mA
             // DIO-Mapping
             rfm_cmd( 0x2500, 1 );                                                                                     // Clkout, FifoFull, FifoNotEmpty,
                                                                                                                       // FifoLevel, PacketSent/CrcOk
@@ -342,7 +343,10 @@
 
             rfm_cmd( 0x2B00 | ( timeoutval >> 1 ), 1 );                                                               // Timeout after RSSI-Interrupt if no
                                                                                                                       // Payload-Ready-Interrupt occurs
-            rfm_cmd( 0x1180 | ( P_OUT & 0x1F ), 1 );                                                                  // Set Output Power
+
+            rfm_cmd( 0x130F, 1 );                                                                                     // OCP disabled
+
+            rfm_cmd( 0x1100 | P_OUT, 1 );                                                                             // Set Output Power
         }
 
         rfm_cmd( 0x0A80, 1 );                                          // Start RC-Oscillator
@@ -351,6 +355,17 @@
         while ( --utimer && !( rfm_cmd( 0x0A00, 0 ) & ( 1 << 6 ) ) );  // Wait for RC-Oscillator
 
         rfm_rxon();
+    }
+
+    void rfm_highpower( uint8_t enable ) {
+        if ( enable && P_OUT_DBM > 5 && HPVERSION) {
+            rfm_cmd( 0x5A5D, 1 );
+            rfm_cmd( 0x5C7C, 1 );
+        }
+        else {
+            rfm_cmd( 0x5A55, 1);
+            rfm_cmd( 0x5C70, 1 );
+        }
     }
 
 // Transmit data stream

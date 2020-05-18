@@ -9,7 +9,7 @@
 #define RFM69_H_
 
 /* Carrierfrequenz in Hz */
-#define FREQUENCY              867595000LL
+#define FREQUENCY              869500000LL
 
 /* Bitrate in bps (1200 ... 300000) and shall it be calculated as for RFM12
  * in order to get equal bitrate for RFM12 and RFM69 if used together? */
@@ -19,6 +19,10 @@
 /* Output power in dBm (-18...13) */
 #ifndef P_OUT_DBM
     #define P_OUT_DBM          8 // Output power in dBm
+#endif
+
+#ifndef HPVERSION
+    #define HPVERSION          0
 #endif
 
 /* Pin assignment */
@@ -84,7 +88,7 @@
 #define DATARATE_MSB           ( DATARATE >> 8 )
 #define DATARATE_LSB           ( DATARATE & 0xFF )
 
-#define P_OUT                  ( ( P_OUT_DBM + 18 ) * ( P_OUT_DBM > -19 ) * ( P_OUT_DBM < 14 ) + 31 * ( P_OUT_DBM > 18 ) )
+#define P_OUT                  ( ( P_OUT_DBM + 18 + 0x80 ) * ( P_OUT_DBM > -19 ) * ( P_OUT_DBM < 14 ) + ( P_OUT_DBM + 11 + 0x60 ) * ( P_OUT_DBM > 13 ) * ( P_OUT_DBM < 21 ) )
 
 #ifndef MAX_COM_ARRAYSIZE
     #define MAX_COM_ARRAYSIZE      30
@@ -115,6 +119,7 @@ uint8_t rfm_txon( void );                           // Turn on Transmitter
 uint8_t rfm_txoff( void );                          // Turn off Transmitter
 
 void rfm_init( void );                              // Initialisation
+void rfm_highpower( uint8_t enable );               // High Power Settings
 uint8_t rfm_transmit( char *data, uint8_t length ); // Transmit data
 uint8_t rfm_receive( char *data, uint8_t *length ); // Get received data
 
