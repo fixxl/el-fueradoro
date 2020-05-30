@@ -332,7 +332,7 @@
                                                                                                                       // Gain Control
             rfm_cmd( 0x582D, 1 );                                                                                     // High sensitivity mode
             rfm_cmd( 0x6F30, 1 );                                                                                     // Improved DAGC (for normal beta, beta = 2 -> beta >= 2
-            rfm_cmd( 0x29D2, 1 );                                                                                     // RSSI mind. -100 dBm
+            rfm_cmd( 0x29CF, 1 );                                                                                     // RSSI mind. -103.5 dBm
             rfm_cmd( 0x1E2D, 1 );                                                                                     // AFC auto on and clear
             rfm_cmd( 0x2A00, 1 );                                                                                     // No Timeout after Rx-Start if no
                                                                                                                       // RSSI-Interrupt occurs
@@ -344,7 +344,7 @@
             rfm_cmd( 0x2B00 | ( timeoutval >> 1 ), 1 );                                                               // Timeout after RSSI-Interrupt if no
                                                                                                                       // Payload-Ready-Interrupt occurs
 
-            rfm_cmd( 0x130F, 1 );                                                                                     // OCP disabled
+            rfm_cmd( 0x131B, 1 );                                                                                     // OCP to 100 mA (changes with High Power)
 
             rfm_cmd( 0x1100 | P_OUT, 1 );                                                                             // Set Output Power
         }
@@ -359,11 +359,13 @@
 
     void rfm_highpower( uint8_t enable ) {
         if ( enable && P_OUT_DBM > 5 && HPVERSION) {
+            rfm_cmd( 0x130F, 1 );
             rfm_cmd( 0x5A5D, 1 );
             rfm_cmd( 0x5C7C, 1 );
         }
         else {
-            rfm_cmd( 0x5A55, 1);
+            rfm_cmd( 0x131B, 1 );
+            rfm_cmd( 0x5A55, 1 );
             rfm_cmd( 0x5C70, 1 );
         }
     }
