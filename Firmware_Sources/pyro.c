@@ -423,15 +423,6 @@ int main( void ) {
         rfm_cmd( ( 0x3E00 + i * ( 0x0100 ) ) | eeread( START_ADDRESS_AESKEY_STORAGE + i ), 1 );
     }
 
-    #if ( RFM == 69 )
-        uint8_t rfm_pwr = eeread( RFM_PWR_ADDRESS );
-
-        if ( ( eeread( RFM_PWR_ADDRESS + 1 ) == crc8( 0x11, rfm_pwr ) ) && ( rfm_pwr < 0x20 ) ) {
-            rfm_cmd( ( 0x1180 | rfm_pwr ), 1 );
-        }
-
-    #endif
-
     if ( TRANSMITTER ) {
         tx_field[0] = IDENT;
         tx_field[1] = 'd';
@@ -677,38 +668,12 @@ int main( void ) {
 
                 if ( scheme != 0xFFFF ) {
                     #if ( RFM == 69 )
-                        rfm_pwr = 0;
-
-                        if ( ( scheme & 0xFFE0 ) == 0x9180 ) {
-                            rfm_pwr = ( scheme & 0x001F );
-                        }
-
                         scheme = rfm_cmd( scheme, ( scheme & 32768 ) && 1 );
                     #else
                         scheme = rfm_cmd( scheme );
                     #endif
                     uart_puts_P( PSTR( " --> : 0x" ) );
                     uart_shownum( scheme, 'h' );
-
-                    #if ( RFM == 69 )
-
-                        if ( rfm_pwr ) {
-                            uart_puts_P( PSTR( "\r\nSendeleistung dauerhaft speichern (j/n)? " ) );
-                            inp = 0;
-
-                            while ( !( ( inp == 'j' ) || ( inp == 'n' ) ) ) inp = uart_getc() | 0x20;
-
-                            uart_putc( inp );
-                            uart_puts_P( PSTR( "\r\n" ) );
-
-                            if ( inp == 'j' ) {
-                                eewrite( rfm_pwr, RFM_PWR_ADDRESS );
-                                eewrite( crc8( 0x11, rfm_pwr ), ( RFM_PWR_ADDRESS + 1 ) );
-                                uart_puts_P( PSTR( "Speichern erfolgreich!\r\n" ) );
-                            }
-                        }
-
-                    #endif
                 }
 
                 uart_puts( "\n\n\r" );
