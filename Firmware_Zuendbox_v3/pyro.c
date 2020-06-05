@@ -1105,6 +1105,7 @@ int main( void ) {
 
                 MOSSWITCHPORT |= ( 1 << MOSSWITCH );
                 sr_shiftout( scheme ); // Write pattern to shift-register
+                dm_shiftout( scheme ); // Write pattern to LED driver to show active channel
                 active_channels = scheme;
             }
 
@@ -1149,8 +1150,9 @@ int main( void ) {
             cli();
             flags.b.finish_firing = 0;      // Mark the order as done
 
-            // Lock respective MOSFETs
+            // Lock respective MOSFETs and clear LEDs
             sr_shiftout( anti_scheme );     // Perform the necessary shift-register changes
+            dm_shiftout( anti_scheme );     // Blackout LEDs for inactive channels
 
             active_channels = anti_scheme;  // Re-write the list of currently active channels
 
