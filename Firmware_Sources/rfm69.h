@@ -26,8 +26,8 @@
 #endif
 
 /* Pin assignment */
-#define NSELPORT               C
-#define NSEL                   1
+#define NSELPORT               B
+#define NSEL                   2
 #define SDIPORT                B
 #define SDI                    3
 #define SDOPORT                B
