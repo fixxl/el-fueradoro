@@ -427,7 +427,7 @@ int main( void ) {
     temperature = tempmeas( tempsenstype );
 
     // Initialise radio
-    rfm_init();
+    const uint8_t rfm_fail = rfm_init();
 
     // Set encryption active, read and transfer AES-Key
     rfm_cmd( 0x3DA1, 1 );
@@ -495,6 +495,13 @@ int main( void ) {
             flags.b.read_impedance = 1;
 
             SREG = temp_sreg;
+        }
+
+        // -------------------------------------------------------------------------------------------------------
+
+        if ( rfm_fail ) {
+            led_green_on();
+            led_orange_on();
         }
 
         // -------------------------------------------------------------------------------------------------------

@@ -279,7 +279,7 @@
     }
 
 // Initialise RFM
-    void rfm_init( void ) {
+    uint8_t rfm_init( void ) {
         uint32_t utimer;
         uint8_t  timeoutval;
         // Configure SPI inputs and outputs
@@ -299,6 +299,8 @@
 
             #endif
         #endif
+
+        uint8_t rfm_fail = ( rfm_cmd( 0x10FF, 0 ) != 0x24 ) && 1;
 
         for ( uint8_t i = 10; i; i-- ) {
             _delay_ms( 4 );
@@ -355,6 +357,8 @@
         while ( --utimer && !( rfm_cmd( 0x0A00, 0 ) & ( 1 << 6 ) ) );  // Wait for RC-Oscillator
 
         rfm_rxon();
+
+        return rfm_fail;
     }
 
     void rfm_highpower( uint8_t enable ) {

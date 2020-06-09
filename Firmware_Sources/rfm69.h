@@ -118,7 +118,7 @@ uint8_t rfm_rxoff( void );                          // Turn off Receiver
 uint8_t rfm_txon( void );                           // Turn on Transmitter
 uint8_t rfm_txoff( void );                          // Turn off Transmitter
 
-void rfm_init( void );                              // Initialisation
+uint8_t rfm_init( void );                              // Initialisation
 void rfm_highpower( uint8_t enable );               // High Power Settings
 uint8_t rfm_transmit( char *data, uint8_t length ); // Transmit data
 uint8_t rfm_receive( char *data, uint8_t *length ); // Get received data

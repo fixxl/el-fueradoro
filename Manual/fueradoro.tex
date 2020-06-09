@@ -130,11 +130,11 @@
 
 		\section{Aufbau}
 
-			Detailliertere Infos zum Aufbau erhalten interessierte Leser in den nächsten Teilen dieses Dokuments ab Seite~\pageref{part:dokumentation}. An dieser Stelle soll nur kurz auf die Funktionalität eingegangen werden. Herzstück aller Devices ist der 8-bit-Mikrocontroller \texttt{ATmega328P} von Atmel, welcher die verschiedenen Peripheriebausteine kontrolliert. In jedem Device befinden sich ein Funkmodul \texttt{RFM69CW} von HopeRF, welches die drahtlose Kommunikation zwischen den einzelnen Devices übernimmt, ein RS232-Treiberbaustein \texttt{MAX202} mit an die Gehäuseaußenseite geführter Sub-D-Buchse zur Kommunikation zwischen Mikrocontroller und PC sowie vier Status-LEDs.
+			Detailliertere Infos zum Aufbau erhalten interessierte Leser in den nächsten Teilen dieses Dokuments ab Seite~\pageref{part:dokumentation}. An dieser Stelle soll nur kurz auf die Funktionalität eingegangen werden. Herzstück aller Devices ist der 8-bit-Mikrocontroller \texttt{ATmega328P} von Atmel, welcher die verschiedenen Peripheriebausteine kontrolliert. In jedem Device befinden sich ein Funkmodul \texttt{RFM69CW} oder \texttt{RFM69HCW} von HopeRF, welches die drahtlose Kommunikation zwischen den einzelnen Devices übernimmt, ein RS232-Treiberbaustein \texttt{MAX202} mit an die Gehäuseaußenseite geführter Sub-D-Buchse zur Kommunikation zwischen Mikrocontroller und PC sowie vier Status-LEDs.
 
 			Die Transmitterbox ist mit einem LC-Display mit 20 Spalten und 4 Zeilen ausgestattet.
 
-			In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte Schieberegister \texttt{74HC595}, welche mit ihren insgesamt 16 bzw. 32 Ausgängen 16 bzw. 32 Feldeffekttransistoren vom Typ \texttt{IRF3708} für die Zündung ansteuern, außerdem ist auf der Platine mit dem \texttt{MC33063} bzw. einem fertigen Modul mit dem \texttt{XL6009} ein Hochsetzsteller zur Erzeugung einer höheren Zündspannung integriert sowie ein Schlüsselschalter zum Scharfschalten der Boxen. Parallel zur Drain-Source-Strecke jedes Feldeffekttransistors ist eine LED mit Vorwiderstand geschaltet, um zu signalisieren, an welchen Kanälen Anzünder angeschlossen sind.
+			In den Zündboxen befinden sich zwei vom Mikrocontroller gesteuerte kaskadierte Schieberegister \texttt{74HC595}, welche mit ihren insgesamt 16 bzw. 32 Ausgängen 16 bzw. 32 Feldeffekttransistoren vom Typ \texttt{IRF3708} für die Zündung ansteuern, außerdem ist auf der Platine mit dem \texttt{MC33063} bzw. einem fertigen Modul mit dem \texttt{XL6009} ein Hochsetzsteller zur Erzeugung einer höheren Zündspannung integriert sowie ein Schlüsselschalter zum Scharfschalten der Boxen. Bei den ersten beiden Generationen liegt parallel zur Drain-Source-Strecke jedes Feldeffekttransistors eine LED mit Vorwiderstand, um zu signalisieren, an welchen Kanälen Anzünder angeschlossen sind. Ab der dritten Generation werden diese Kanal-LEDs über LED-Treiber \texttt{DM13A} angesteuert, um genauere Informationen über den Kanalzustand und weitere Funktionen darstellen zu können.
 
 		\section{Transmitter und Zündboxen}
 
@@ -185,9 +185,9 @@
 			\begin{table}
 				\centering
 				\begin{tabu}
-					to .7\textwidth [c]{Xll}
+					to .8\textwidth [c]{lXl}
 					\hline\hline
-					\textbf{Farbe} & \textbf{Funktion}                           & Startup-Faktor \\ \hline
+					\textbf{Farbe} & \textbf{Funktion}                           & \textbf{Startup-Faktor} \\ \hline
 					orange         & Funkmodul empfängt                          & 4 \\
 					grün           & Funkmodul sendet                            & 2 \\
 					gelb           & Daten kommen über serielle Schnittstelle an & 1 \\
@@ -201,9 +201,11 @@
 			
 			Beispiel: Leuchtet nach dem ersten Lauflicht zunächst zwei Sekunden lang nur die gelbe LED und nach der zweiten Lauflichtsequenz leuchten zwei Sekunden die orange und grüne LED zusammen, ergibt sich die Slave-ID zu $16 {\cdot} 1 + 4 + 2 = 22$. 
 			
+			Ab der dritten Generation werden während dieser Sequenz auch alle Kanal-LEDs eingeschaltet, um defekte LEDs erkennen zu können.
+			
 			Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
 
-			Bei einem Zündvorgang leuchten an der Zündbox für die Dauer der Zündung (\SI{11}{\milli\second}) alle vier LEDs.
+			Bei einem Zündvorgang leuchten an der Zündbox für die Dauer der Zündung (\SI{11}{\milli\second}) alle vier LEDs, bei Zündboxen ab der dritten Generation zusätzlich auch die zum gezündeten Kanal zugehörige Kanal-LED.
 
 		\section{Das LCD des Transmitters}
 
@@ -455,7 +457,7 @@
 			\subsection{Funkmodul-Zugriff}
 				\label{sec:rfmzugriff}
 
-				Die zwingend für den Betrieb von {\anlage} notwendigen Zugriffe auf das Funkmodul werden von der Software automatisch getätigt, so dass diese Funktion in der Regel nicht gebraucht wird. Dennoch ist es möglich das verwendete Funkmodul \texttt{RFM69CW\footnote{Link zum Datenblatt auf Seite~\pageref{sec:datasheets}}} unmittelbar über das Terminalprogramm anzusprechen, um Werte aus den Registern zu lesen oder die Register für die aktuelle Sitzung neu zu beschreiben. Beim nächsten Neustart des Devices werden stets die Standardeinstellungen wiederhergestellt, lediglich die Sendeleistung kann dauerhaft gespeichert werden.
+				Die zwingend für den Betrieb von {\anlage} notwendigen Zugriffe auf das Funkmodul werden von der Software automatisch getätigt, so dass diese Funktion in der Regel nicht gebraucht wird. Dennoch ist es möglich das verwendete Funkmodul \texttt{RFM69CW} bzw. \texttt{RFM69HCW\footnote{Link zum Datenblatt auf Seite~\pageref{sec:datasheets}}} unmittelbar über das Terminalprogramm anzusprechen, um Werte aus den Registern zu lesen oder die Register für die aktuelle Sitzung neu zu beschreiben. Beim nächsten Neustart des Devices werden stets die Standardeinstellungen wiederhergestellt.
 
 				Nach Eingabe von \enquote{rfm} und Bestätigung mit \emph{ENTER} erscheint eine Aufforderung zur Befehls\-eingabe. Diese hat im Hexadezimalformat als 16-Bit-Wert zu erfolgen, d.\,h. vierstellig mit den zulässigen Zeichen 0-9 und A-F bzw. a-f. Jedes eingegebene Zeichen symbolisiert dabei vier Bits, die Umrechnung ist in Tabelle~\ref{tab:zahlensysteme} gezeigt.
 
@@ -498,14 +500,14 @@
 							 & d7 {\dots} d0           & Zu schreibender Registerwert (beliebig falls w/$\overline{\mbox{r}} = 0$) \\ \hline\hline
 						\end{tabu}
 					\end{center}
-					\caption{Struktur des \texttt{RFM69CW}-Befehls}
+					\caption{Struktur des \texttt{RFM69}-Befehls}
 					\label{tab:rfmcommand}
 				\end{table}
 
 				\subsubsection{Auslesen der eingestellten Sendeleistung}
 					\label{subsec:readpower}
 
-					Zur Veranschaulichung soll hier die Abfrage der aktuell eingestellten Sendeleistung und eine anschließende Änderung derselben simuliert werden: Aus dem Datenblatt, dem die Bedeutungen aller Registeradressen und ihrer acht Registerbits zu entnehmen sind, kann die Registeradresse 0x11 als diejenige identifiziert werden, in der die Informationen zur Sendeleistung hinterlegt sind. Um nun den aktuellen Wert auszulesen, gibt man~-- wie in Abbildung~\ref{fig:rfmread} gezeigt~-- im Terminalprogramm \enquote{rfm} gefolgt von \emph{ENTER} ein und anschließend die Zeichenfolge \enquote{11FF}, wobei die beiden hinteren Stellen wie erwähnt keine Rolle spielen.
+					Zur Veranschaulichung soll hier die Abfrage der aktuell eingestellten Sendeleistung und eine anschließende Änderung derselben mit dem Funkmodul \texttt{RFM69CW} simuliert werden: Aus dem Datenblatt, dem die Bedeutungen aller Registeradressen und ihrer acht Registerbits zu entnehmen sind, kann die Registeradresse 0x11 als diejenige identifiziert werden, in der die Informationen zur Sendeleistung hinterlegt sind. Um nun den aktuellen Wert auszulesen, gibt man~-- wie in Abbildung~\ref{fig:rfmread} gezeigt~-- im Terminalprogramm \enquote{rfm} gefolgt von \emph{ENTER} ein und anschließend die Zeichenfolge \enquote{11FF}, wobei die beiden hinteren Stellen wie erwähnt keine Rolle spielen.
 
 					\begin{figure}
 						\centering
@@ -527,9 +529,7 @@
 						\label{fig:rfmwrite}
 					\end{figure}
 
-					Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Anschließend erfolgt eine Nachfrage, ob die Sendeleistung dauerhaft gespeichert werden soll. Verneint man dies, wird beim nächsten Neustart des Device der Standardwert wiederhergestellt, andernfalls ist der gerade eingestellte Wert der neue Standardwert.
-
-					Ein nochmaliges Auslesen des Registers, wie im Abschnitt~\ref{subsec:readpower} beschrieben, sollte nun den eben eingeschriebenen Wert 0x98 zurückgeben.
+					Als Antwort erhält man vom Modul den Registerwert von VOR dem Schreibzugriff, im Beispiel also den Wert 0x9A. Ein nochmaliges Auslesen des Registers, wie im Abschnitt~\ref{subsec:readpower} beschrieben, sollte nun den eben eingeschriebenen Wert 0x98 zurückgeben. Beim nächsten Neustart des Device wird der Standardwert wiederhergestellt.
 
 			\subsection{AES-Verschlüsselung}
 				\label{sec:encryption}
@@ -642,18 +642,22 @@
 
 			\subsection{Aktualisierung}
 
-					{\anlage} bietet die Möglichkeit, die Firmware via serielle Schnittstelle vom PC aus zu aktualisieren. Hierfür stehen das Kommandozeilentool \emph{fwupdate.exe} oder eine Windows-Oberfläche namens \texttt{UpdateLoader}, welche beide zunächst einen Reset auslösen, um den Bootloader des Devices zu aktivieren, und anschließend die im iHex-Format vorliegende Firmware überträgen.
+				{\anlage} bietet die Möglichkeit, die Firmware via serielle Schnittstelle vom PC aus zu aktualisieren. Hierfür stehen das Kommandozeilentool \emph{fwupdate.exe} oder eine Windows-Oberfläche namens \texttt{UpdateLoader}, welche beide zunächst einen Reset auslösen, um den Bootloader des Devices zu aktivieren, und anschließend die im iHex-Format vorliegende Firmware überträgen.
 
-				Es existieren zwei grundsätzlich identische Firmwareversionen, welche sich nur in der standardmäßig eingestellten Sendeleistung des Funkmoduls unterscheiden. In der Standardversion ist eine geringere Sendeleistung eingestellt, in der \enquote{High Power}-Firmware, ist die Sendeleistung des Funkmoduls standardmäßig auf den Maximalwert gesetzt, so dass sich zwei verschiedene Firmwaredateien gemäß Tabelle~\ref{tab:firmwareversions} im gleichen Ordner wie \emph{fwupdate.exe} und \emph{UpdateLoader.exe} befinden.
+				Es existieren für jede Kombination von Platinenversion (v1/v2, v3 mit 16 Kanälen und v3 mit 32 Kanälen) und Funkmodul (RFM69CW und RFM69HCW) Firmwareversionen. Tabelle~\ref{tab:firmwareversions} gibt einen Überblick über die Versionen, welche sich im gleichen Ordner wie \emph{fwupdate.exe} und \emph{UpdateLoader.exe} befinden.
 
 				\begin{table}
 					\centering
 					\begin{tabu}
-						to .925\textwidth {Xccc}
+						to \textwidth {lccX[c]}
 						\hline\hline
-						Firmware                        & Controller  & Funkmodul & Sendeleistung   \\ \hline
-						Pyro\_atmega328p\_RFM69.hex     & ATMEGA 328P & RFM69CW   & $\SI{8}{\dBm}$  \\
-						Pyro\_atmega328p\_RFM69\_HP.hex & ATMEGA 328P & RFM69CW   & $\SI{13}{\dBm}$ \\ \hline\hline
+						Firmware                                 & Platine & Kanäle & Funkmodul (Sendeleistung)   \\ \hline				
+						Pyro\_atmega328p\_RFM69CW\_16ch.hex      & v1/v2   & 16     & RFM69CW   $(\SI{13}{\dBm})$  \\
+						Pyro\_atmega328p\_RFM69HCW\_16ch.hex     & v1/v2   & 16     & RFM69HCW  $(\SI{20}{\dBm})$ \\
+						Pyro\_v3\_atmega328p\_RFM69CW\_16ch.hex  & v3      & 16     & RFM69CW   $(\SI{13}{\dBm})$  \\
+						Pyro\_v3\_atmega328p\_RFM69CW\_32ch.hex  & v3      & 32     & RFM69CW   $(\SI{13}{\dBm})$  \\
+						Pyro\_v3\_atmega328p\_RFM69HCW\_16ch.hex & v3      & 16     & RFM69HCW  $(\SI{20}{\dBm})$  \\
+						Pyro\_v3\_atmega328p\_RFM69HCW\_32ch.hex & v3      & 32     & RFM69HCW  $(\SI{20}{\dBm})$  \\
 					\end{tabu}
 					\caption{Verfügbare Firmware-Versionen}
 					\label{tab:firmwareversions}
