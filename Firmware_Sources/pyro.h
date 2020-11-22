@@ -49,6 +49,7 @@
 #define   CHANGE              'c'
 #define   MEASURE             'm'
 #define   IMPEDANCES          'z'
+#define   RSSITHRESHOLD       'r'
 #define   IDLE                0
 
 // Ceiled duration of byte transmission in microseconds
@@ -58,23 +59,25 @@
 #define   waitRx( XX )    for ( uint8_t i = rx_field[XX ## _LENGTH - 1] - 1; i; i-- ) _delay_us ( ( ADDITIONAL_LENGTH + XX ## _LENGTH ) * BYTE_DURATION_US )
 
 // Radio message lengths
-#define   ADDITIONAL_LENGTH   13    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
-#define   FIRE_LENGTH         4
-#define   IDENT_LENGTH        4
-#define   MEASURE_LENGTH      4
-#define   PARAMETERS_LENGTH   8
-#define   TEMPERATURE_LENGTH  5
-#define   CHANGE_LENGTH       6
-#define   IMPEDANCES_LENGTH   (4+SR_CHANNELS)
+#define   ADDITIONAL_LENGTH    13    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
+#define   FIRE_LENGTH          4
+#define   IDENT_LENGTH         4
+#define   MEASURE_LENGTH       4
+#define   PARAMETERS_LENGTH    8
+#define   TEMPERATURE_LENGTH   5
+#define   CHANGE_LENGTH        6
+#define   RSSITHRESHOLD_LENGTH 2
+#define   IMPEDANCES_LENGTH    (4+SR_CHANNELS)
 
 // Number of repetitions for radio messages
-#define   FIRE_REPEATS        5
-#define   IDENT_REPEATS       3
-#define   CHANGE_REPEATS      3
-#define   PARAMETERS_REPEATS  2
-#define   TEMPERATURE_REPEATS 2
-#define   MEASURE_REPEATS     2
-#define   IMPEDANCES_REPEATS  2
+#define   FIRE_REPEATS          5
+#define   RSSITHRESHOLD_REPEATS 5
+#define   IDENT_REPEATS         3
+#define   CHANGE_REPEATS        3
+#define   PARAMETERS_REPEATS    2
+#define   TEMPERATURE_REPEATS   2
+#define   MEASURE_REPEATS       2
+#define   IMPEDANCES_REPEATS    2
 
 // Bitflags
 typedef union {

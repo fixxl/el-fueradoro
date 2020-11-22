@@ -12,7 +12,7 @@
 // Global Variables
 static volatile uint8_t  key_flag = 0, timer1_flags = 0;
 static volatile uint8_t  channel_monitor = 0;
-static volatile uint16_t transmit_flag = 0;
+static volatile uint16_t transmit_flag   = 0;
 static volatile uint32_t active_channels = 0;
 
 void wdt_init( void ) {
@@ -82,7 +82,7 @@ uint8_t debounce( volatile uint8_t *port, uint8_t pin ) {
         TCNT0 = 160;           // Preload timer
 
         if ( ctr < 8 ) {
-            ctr++;             // Make sure at least 8 queries are executed
+            ctr++; // Make sure at least 8 queries are executed
 
         }
     }
@@ -246,7 +246,7 @@ int8_t tempmeas( uint8_t type ) {
 
 // Check if received uart-data are a valid ignition command
 uint8_t fire_command_uart_valid( const char *field ) {
-    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] <= MAX_ID ) && ( field[2] > 0 ) && ( field[2] < SR_CHANNELS+1 )
+    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] <= MAX_ID ) && ( field[2] > 0 ) && ( field[2] < SR_CHANNELS + 1 )
            && ( field[3] == crc8( crc8( 0, field[1] ), field[2] ) );
 }
 
@@ -296,23 +296,26 @@ int main( void ) {
     /* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
      * gate pins of the MOSFETs and beware them from conducting directly after turning on the device.
      *
-     * The SIPO-registers 74HC595 providing the 16 channels for ignition internally possess a shift register and
+     * The SIPO-registers 74HC595 providing the channels for ignition internally possess a shift register and
      * an output register. Into the latter data from the shift register are transferred by a rising edge at the RCLOCK-pin.
      * This leads to the situation that changes within the shift register are only visible at the outputs after a rising
      * edge at the RCLOCK-pin.
      *
      * As soon as the PIN /OE (Inverted output enable) is pulled low, the outputs are enabled. The problem is that the initial
-     * output states are random and cannot be predicted nor controlled. The available "Master Reset" does only affect the internal
+     * output states are random and can neither be predicted nor controlled. The available "Master Reset" does only affect the internal
      * shift register but has no influence on the outputs unless a rising edge at RCLOCK happens.
      *
      * To guarantee a defined power-on-state the /OE-pin needs to be pulled high until all 16 channels are set to low and
-     * written into the output register. Therefore an external pullup-resistor is connected to /OE which makes the outputs tri-state.
-     * Additional pulldown-resistor-arrays pull the shift register outputs to "low". Only after 16 zeros have been clocked into the
+     * written into the output register. Therefore a strong external pullup-resistor is connected to /OE which makes the outputs tri-state.
+     * Additional pulldown-resistor-arrays pull the shift register outputs to "low". Only after zeros for all channels have been clocked into the
      * shift register and its values have been written to the output registers /OE may be set to "low".
      *
      * Therefore it is strcitly recommended not to change sr_init() and to call sr_init() immediately as the first function right at
      * the beginning of the main-programme. sr_init() takes care of a safe start for the ignition devices and doesn't do any harm to
      * the transmitter.
+     *
+     * sr_dm_init() can be used in an alternative as it serves the same purpose and additionally clears all outputs
+     * of the DM13A led driver.
      *
      */
     sr_dm_init();
@@ -334,6 +337,7 @@ int main( void ) {
     // Get Slave- und Unique-ID from EEPROM for ignition devices
     update_addresses( &unique_id, &slave_id );
 
+    // Change values and restart in case an ID is 0
     if ( !unique_id || !slave_id ) {
         if ( !unique_id ) {
             unique_id = MAX_ID;
@@ -350,16 +354,17 @@ int main( void ) {
     }
 
     // Make sure, ignition time is properly defined and set ignition time
-    if ( eeread(365) != TALON_TIME && eeread(365) != EMATCH_TIME ) {
+    if ( ( eeread( 365 ) != TALON_TIME ) && ( eeread( 365 ) != EMATCH_TIME ) ) {
         eewrite( EMATCH_TIME, 365 );
     }
+
     ignition_time = ( eeread( 365 ) == TALON_TIME ) ? TALON_TIME : EMATCH_TIME;
 
     // Initialise arrays
     for ( uint8_t warten = 0; warten < MAX_COM_ARRAYSIZE; warten++ ) {
-        uart_field[warten]             = 1;
-        tx_field[warten]               = 0;
-        rx_field[warten]               = 0;
+        uart_field[warten] = 1;
+        tx_field[warten]   = 0;
+        rx_field[warten]   = 0;
     }
 
     for ( uint8_t warten = 0; warten < MAX_ID; warten++ ) {
@@ -372,48 +377,74 @@ int main( void ) {
 
     // Display slave ID and check channel LEDs
     leds_off();
-    _delay_ms(150);
-    dm_shiftout( (1ULL << DM_CHANNELS) - 1);
+    _delay_ms( 150 );
+    dm_shiftout( ( 1ULL << DM_CHANNELS ) - 1 );
     led_yellow_on();
-    _delay_ms(150);
+    _delay_ms( 150 );
     led_green_on();
-    _delay_ms(150);
+    _delay_ms( 150 );
     led_orange_on();
-    _delay_ms(150);
+    _delay_ms( 150 );
     led_red_on();
-    _delay_ms(150);
+    _delay_ms( 150 );
     leds_off();
-    _delay_ms(250);
+    _delay_ms( 250 );
 
-    ledscheme = (slave_id & 0xF0) >> 4;
-    if( ledscheme & 0x01 ) led_yellow_on();
-    if( ledscheme & 0x02 ) led_green_on();
-    if( ledscheme & 0x04 ) led_orange_on();
-    if( ledscheme & 0x08 ) led_red_on();
-    _delay_ms(2000);
+    ledscheme = ( slave_id & 0xF0 ) >> 4;
+
+    if ( ledscheme & 0x01 ) {
+        led_yellow_on();
+    }
+
+    if ( ledscheme & 0x02 ) {
+        led_green_on();
+    }
+
+    if ( ledscheme & 0x04 ) {
+        led_orange_on();
+    }
+
+    if ( ledscheme & 0x08 ) {
+        led_red_on();
+    }
+
+    _delay_ms( 2000 );
     leds_off();
-    _delay_ms(250);
+    _delay_ms( 250 );
 
     led_red_on();
-    _delay_ms(150);
+    _delay_ms( 150 );
     led_orange_on();
-    _delay_ms(150);
+    _delay_ms( 150 );
     led_green_on();
-    _delay_ms(150);
+    _delay_ms( 150 );
     led_yellow_on();
-    _delay_ms(150);
+    _delay_ms( 150 );
     leds_off();
-    _delay_ms(250);
+    _delay_ms( 250 );
 
-    ledscheme = (slave_id & 0x0F);
-    if( ledscheme & 0x01 ) led_yellow_on();
-    if( ledscheme & 0x02 ) led_green_on();
-    if( ledscheme & 0x04 ) led_orange_on();
-    if( ledscheme & 0x08 ) led_red_on();
-    _delay_ms(2000);
+    ledscheme = ( slave_id & 0x0F );
+
+    if ( ledscheme & 0x01 ) {
+        led_yellow_on();
+    }
+
+    if ( ledscheme & 0x02 ) {
+        led_green_on();
+    }
+
+    if ( ledscheme & 0x04 ) {
+        led_orange_on();
+    }
+
+    if ( ledscheme & 0x08 ) {
+        led_red_on();
+    }
+
+    _delay_ms( 2000 );
     dm_shiftout( 0 );
     leds_off();
-    _delay_ms(200);
+    _delay_ms( 200 );
 
     // Initialise devices
     key_init();
@@ -688,7 +719,7 @@ int main( void ) {
         // -------------------------------------------------------------------------------------------------------
 
         // Update channel impedances unless some more important event is happening right now
-        if ( ( ( !armed && ( timer1_flags & TIMER_MEASURE_FLAG ) ) || flags.b.read_impedance )
+        if (   ( ( !armed && ( timer1_flags & TIMER_MEASURE_FLAG ) ) || flags.b.read_impedance )
            && !( flags.b.receive || ( flags.b.transmit && ( transmission_type != IMPEDANCES ) ) ) ) {
             temp_sreg = SREG;
             cli();
@@ -715,7 +746,7 @@ int main( void ) {
             }
 
             // Turn on status LEDs
-            if (!armed) {
+            if ( !armed ) {
                 dm_shiftout( statusleds );
             }
             else {
@@ -882,7 +913,8 @@ int main( void ) {
                             nr = 0;
                             uart_puts_P( round < 2 ? PSTR( "Slave-ID:\t" ) : PSTR( "\n\rKanal:  \t" ) ); // First for slave-id, then for channel
 
-                            for ( iii = 0; iii < 2; iii++ ) {                                 // Get the user to assign the numbers with 2 digits
+                            for ( iii = 0; iii < 2; iii++ ) {                                                        // Get the user to assign the numbers with
+                                                                                                                     // 2 digits
                                 inp = 0;
 
                                 while ( !inp ) inp = uart_getc();
@@ -894,13 +926,14 @@ int main( void ) {
 
                             uart_puts_P( PSTR( " = " ) );
 
-                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? (MAX_ID+1) : ( SR_CHANNELS + 1 ) ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel 1-SR_CHANNELS
+                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? ( MAX_ID + 1 ) : ( SR_CHANNELS + 1 ) ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel
+                                                                                                                     // 1-SR_CHANNELS
                                 uart_shownum( nr, 'd' );
                                 tx_field[round] = nr;
                             }
-                            else {                                                      // Otherwise the input's invalid
+                            else {                                                                                   // Otherwise the input's invalid
                                 uart_puts_P( PSTR( "Ungültige Eingabe" ) );
-                                tmp   = 0;                                              // Sending gets disallowed
+                                tmp   = 0;                                                                           // Sending gets disallowed
                                 round = 3;
                             }
                         }
@@ -1089,18 +1122,18 @@ int main( void ) {
             cli();
             flags.b.fire = 0;
 
-            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < SR_CHANNELS+1 ) ) { // If channel number is valid
-                tmp = rx_field[2];          // Save channel number to variable
+            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < SR_CHANNELS + 1 ) ) { // If channel number is valid
+                tmp = rx_field[2];                                                     // Save channel number to variable
 
-                flags.b.is_fire_active = 1; // Signalize that we're currently firing
+                flags.b.is_fire_active = 1;                                            // Signalize that we're currently firing
 
                 // Turn all leds on
                 leds_on();
 
-                scheme = 0;                 // Set mask-variable to zero
+                scheme = 0;                                                            // Set mask-variable to zero
 
                 for ( uint8_t i = SR_CHANNELS; i; i-- ) {
-                    scheme <<= 1;    // Left-shift mask-variable
+                    scheme <<= 1; // Left-shift mask-variable
 
                     if ( i == tmp ) {
                         scheme |= 1; // Set LSB if loop variable equals channel number
@@ -1291,7 +1324,7 @@ int main( void ) {
 
                             // Change IDs if they are in the valid range (1-MAX_ID) and at least one of the two IDs is
                             // a different value than before
-                            if (   ( ( rem_uid > 0 ) && ( rem_uid < (MAX_ID+1) ) ) && ( ( rem_sid > 0 ) && ( rem_sid < (MAX_ID+1) ) )
+                            if (   ( ( rem_uid > 0 ) && ( rem_uid < ( MAX_ID + 1 ) ) ) && ( ( rem_sid > 0 ) && ( rem_sid < ( MAX_ID + 1 ) ) )
                                && ( ( rem_uid != unique_id ) || ( rem_sid != slave_id ) ) ) {
                                 addresses_save( rem_uid, rem_sid );
                                 flags.b.reset_device = 1;
@@ -1316,6 +1349,12 @@ int main( void ) {
                             transmit_flag = 10 * unique_id; // Preload for 100ms delay
                         }
 
+                        break;
+                    }
+
+                    case RSSITHRESHOLD: {
+                        waitRx( RSSITHRESHOLD );
+                        rfm_cmd(0x2900 | rx_field[ 1 ], 1);
                         break;
                     }
 

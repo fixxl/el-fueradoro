@@ -1289,6 +1289,12 @@ int main( void ) {
                         break;
                     }
 
+                    case RSSITHRESHOLD: {
+                        waitRx( RSSITHRESHOLD );
+                        rfm_cmd(0x2900 | rx_field[ 1 ], 1);
+                        break;
+                    }
+
                     // Default action (do nothing)
                     default: {
                         break;
