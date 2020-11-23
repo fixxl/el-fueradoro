@@ -62,7 +62,7 @@
 #define   FIRE_LENGTH          4
 #define   IDENT_LENGTH         4
 #define   MEASURE_LENGTH       4
-#define   PARAMETERS_LENGTH    8
+#define   PARAMETERS_LENGTH    9
 #define   TEMPERATURE_LENGTH   5
 #define   CHANGE_LENGTH        6
 #define   RSSITHRESHOLD_LENGTH 2

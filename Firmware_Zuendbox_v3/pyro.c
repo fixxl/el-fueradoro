@@ -1215,7 +1215,7 @@ int main( void ) {
         // Check receive flag
         temp_sreg = SREG;
         cli();
-        flags.b.receive = rfm_receiving();
+        flags.b.receive = flags.b.receive || rfm_receiving();
         SREG            = temp_sreg;
 
         // -------------------------------------------------------------------------------------------------------
@@ -1275,6 +1275,7 @@ int main( void ) {
                         tx_field[4] = armed;
                         tx_field[5] = temperature;
                         tx_field[6] = SR_CHANNELS;
+                        tx_field[7] = rssi;
 
                         transmission_allowed = 0;
 

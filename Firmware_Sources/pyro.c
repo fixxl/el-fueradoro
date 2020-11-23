@@ -1207,6 +1207,7 @@ int main( void ) {
                         tx_field[4] = armed;
                         tx_field[5] = temperature;
                         tx_field[6] = SR_CHANNELS;
+                        tx_field[7] = rssi;
 
                         transmission_allowed = 0;
 
