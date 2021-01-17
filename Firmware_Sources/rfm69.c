@@ -325,7 +325,7 @@
                                                                                                                          // Address filter
             rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                    // Max. Payload-Length
             rfm_cmd( 0x3C80, 1 );                                                                                        // Tx-Start-Condition: FIFO not empty
-            rfm_cmd( 0x3DA0, 1 );                                                                                        // Packet-Config2
+            rfm_cmd( 0x3D30, 1 );                                                                                        // Packet-Config2
             // Preamble length 4 bytes
             rfm_cmd( 0x2C00, 1 );
             rfm_cmd( 0x2D04, 1 );
