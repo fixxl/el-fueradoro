@@ -1204,8 +1204,6 @@ int main( void ) {
                 // Turn all LEDs off and the red one on again
                 leds_off();
                 led_red_on();
-
-                flags.b.read_impedance = 1;
             }
 
             SREG = temp_sreg;
