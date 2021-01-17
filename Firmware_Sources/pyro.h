@@ -33,6 +33,10 @@
 // Maximum Array Size for communication (UART + radio)
 #define MAX_COM_ARRAYSIZE     40
 
+// Number of payload bytes for short/long Rx timeout
+#define RFM_SHORT_LENGTH      16
+#define RFM_LONG_LENGTH       48
+
 // Threshold to clear LCD (Number of counter overflows)
 #define DEL_THRES             251
 

@@ -82,8 +82,8 @@
         uint16_t status = 0;
         ACTIVATE_RFM;
         rfm_spi ( 0x27 );
-        status  |= rfm_spi( 0x00 ) << 8;
-        status  |= rfm_spi( 0x00 );
+        status |= rfm_spi( 0x00 ) << 8;
+        status |= rfm_spi( 0x00 );
         DEACTIVATE_RFM;
         return status;
     }
@@ -236,7 +236,7 @@
         bw = ( ( ( mant - 16 ) / 4 ) << 3 ) | logemu;
 
         // AFC-Bandwidth
-        uint32_t xtalTol = (1ULL * myfreq + 25000UL) / 50000ULL;
+        uint32_t xtalTol = ( 1ULL * myfreq + 25000UL ) / 50000ULL;
 
         // Start with minimum bandwidth setting
         mant = 24;
@@ -308,57 +308,60 @@
 
         for ( uint8_t i = 3; i; i-- ) {
             _delay_ms( 4 );
-            rfm_cmd( 0x0202, 1 );                                                                                     // FSK, Packet mode, BT=.5
+            rfm_cmd( 0x0202, 1 );                                                                                        // FSK, Packet mode, BT=.5
             // Bitrate + corresponding settings (Receiver bandwidth, frequency deviation)
             rfm_setbit( BR );
             // DIO-Mapping
-            rfm_cmd( 0x2540, 1 );                                                                                     // Clkout, FifoFull, FifoNotEmpty,
-                                                                                                                      // FifoLevel, PacketSent/CrcOk
-            rfm_cmd( 0x26A7, 1 );                                                                                     // Clock-Out off
+            rfm_cmd( 0x2540, 1 );                                                                                        // Clkout, FifoFull, FifoNotEmpty,
+                                                                                                                         // FifoLevel, PacketSent/CrcOk
+            rfm_cmd( 0x26A7, 1 );                                                                                        // Clock-Out off
             // Carrier frequency
             rfm_cmd( 0x0700 | FRF_MSB, 1 );
             rfm_cmd( 0x0800 | FRF_MID, 1 );
             rfm_cmd( 0x0900 | FRF_LSB, 1 );
             // Packet config
-            rfm_cmd( 0x3790, 1 );                                                                                     // Variable length, No DC-free
-                                                                                                                      // encoding/decoding, CRC-Check, No
-                                                                                                                      // Address filter
-            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                 // Max. Payload-Length
-            rfm_cmd( 0x3C80, 1 );                                                                                     // Tx-Start-Condition: FIFO not empty
-            rfm_cmd( 0x3DA0, 1 );                                                                                     // Packet-Config2
+            rfm_cmd( 0x3790, 1 );                                                                                        // Variable length, No DC-free
+                                                                                                                         // encoding/decoding, CRC-Check, No
+                                                                                                                         // Address filter
+            rfm_cmd( 0x3800 + MAX_COM_ARRAYSIZE, 1 );                                                                    // Max. Payload-Length
+            rfm_cmd( 0x3C80, 1 );                                                                                        // Tx-Start-Condition: FIFO not empty
+            rfm_cmd( 0x3DA0, 1 );                                                                                        // Packet-Config2
             // Preamble length 4 bytes
             rfm_cmd( 0x2C00, 1 );
             rfm_cmd( 0x2D04, 1 );
             // Sync-Mode
-            rfm_cmd( 0x2E88, 1 );                                                                                     // set FIFO mode
-            rfm_cmd( 0x2F2D, 1 );                                                                                     // sync word MSB to 0x2D
-            rfm_cmd( 0x30D4, 1 );                                                                                     // sync word LSB to 0xD4
+            rfm_cmd( 0x2E88, 1 );                                                                                        // set FIFO mode
+            rfm_cmd( 0x2F2D, 1 );                                                                                        // sync word MSB to 0x2D
+            rfm_cmd( 0x30D4, 1 );                                                                                        // sync word LSB to 0xD4
             // Receiver config
-            rfm_cmd( 0x1800, 1 );                                                                                     // LNA: 50 Ohm Input Impedance, Automatic
-                                                                                                                      // Gain Control
-            rfm_cmd( 0x582D, 1 );                                                                                     // High sensitivity mode
-            rfm_cmd( 0x6F30, 1 );                                                                                     // Improved DAGC (for normal beta, beta = 2 -> beta >= 2
-            rfm_cmd( 0x29CF, 1 );                                                                                     // RSSI mind. -103.5 dBm
-            rfm_cmd( 0x1E2D, 1 );                                                                                     // AFC auto on and clear
-            rfm_cmd( 0x2A00, 1 );                                                                                     // No Timeout after Rx-Start if no
-                                                                                                                      // RSSI-Interrupt occurs
+            rfm_cmd( 0x1800, 1 );                                                                                        // LNA: 50 Ohm Input Impedance,
+                                                                                                                         // Automatic
+                                                                                                                         // Gain Control
+            rfm_cmd( 0x582D, 1 );                                                                                        // High sensitivity mode
+            rfm_cmd( 0x6F30, 1 );                                                                                        // Improved DAGC (for normal beta, beta
+                                                                                                                         // = 2 -> beta >= 2
+            rfm_cmd( 0x29CF, 1 );                                                                                        // RSSI mind. -103.5 dBm
+            rfm_cmd( 0x1E2D, 1 );                                                                                        // AFC auto on and clear
+            rfm_cmd( 0x2A00, 1 );                                                                                        // No Timeout after Rx-Start if no
+                                                                                                                         // RSSI-Interrupt occurs
 
             uint8_t ramp_index = 15;
-            while ( ramp_index && ( rfm_ramp_up_table[ ramp_index ] < RFM_RAMP_UP ) ) {
+            while ( ramp_index && ( rfm_ramp_up_table[ ramp_index ] < RFM_RAMP_UP ) )
                 ramp_index--;
-            }
-            rfm_cmd( 0x1200 | (ramp_index & 0x0F), 1 );                                                                                     // No Timeout after Rx-Start if no
+            rfm_cmd( 0x1200 | ( ramp_index & 0x0F ), 1 );                                                                // No Timeout after Rx-Start if no RSSI
+                                                                                                                         // interrupt occurs
 
-            timeoutval = MAX_COM_ARRAYSIZE + rfm_cmd( 0x2DFF, 0 ) + ( ( ( rfm_cmd( 0x2EFF, 0 ) & 0x38 ) >> 3 ) + 1 ) + 4; // Max. Arraysize + Preamble length + Sync
-                                                                                                                      // Word length + CRC + Length + 1 Byte
-                                                                                                                      // Spare
+            timeoutval = RFM_SHORT_LENGTH + rfm_cmd( 0x2DFF, 0 ) + ( ( ( rfm_cmd( 0x2EFF, 0 ) & 0x38 ) >> 3 ) + 1 ) + 4; // Max. Arraysize + Preamble length +
+                                                                                                                         // Sync Word length + CRC + Length + 1
+                                                                                                                         // Byte Spare
 
-            rfm_cmd( 0x2B00 | ( timeoutval >> 1 ), 1 );                                                               // Timeout after RSSI-Interrupt if no
-                                                                                                                      // Payload-Ready-Interrupt occurs
+            rfm_cmd( 0x2B00 | ( timeoutval >> 1 ), 1 );                                                                  // Timeout after RSSI-Interrupt if no
+                                                                                                                         // Payload-Ready-Interrupt occurs
 
-            rfm_cmd( 0x131B, 1 );                                                                                     // OCP to 100 mA (changes with High Power)
+            rfm_cmd( 0x131B, 1 );                                                                                        // OCP to 100 mA (changes with High
+                                                                                                                         // Power)
 
-            rfm_cmd( 0x1100 | P_OUT, 1 );                                                                             // Set Output Power
+            rfm_cmd( 0x1100 | P_OUT, 1 );                                                                                // Set Output Power
         }
 
         rfm_cmd( 0x0A80, 1 );                                          // Start RC-Oscillator
@@ -372,7 +375,7 @@
     }
 
     void rfm_highpower( uint8_t enable ) {
-        if ( enable && P_OUT_DBM > 5 && HPVERSION) {
+        if ( enable && ( P_OUT_DBM > 5 ) && HPVERSION ) {
             rfm_cmd( 0x130F, 1 );
             rfm_cmd( 0x5A5D, 1 );
             rfm_cmd( 0x5C7C, 1 );
@@ -386,7 +389,7 @@
 
 // Transmit data stream
     uint8_t rfm_transmit( char *data, uint8_t length ) {
-        char     fifoarray[MAX_COM_ARRAYSIZE + 1];
+        char fifoarray[MAX_COM_ARRAYSIZE + 1];
 
         // Turn off receiver, switch to Standby
         rfm_rxoff();
@@ -399,13 +402,13 @@
         }
 
         // Write data to FIFO-array
-        fifoarray[0] = length;                                         // Number of data bytes
+        fifoarray[0] = length; // Number of data bytes
 
         for ( uint8_t i = 0; i < length; i++ ) { // Data bytes
             fifoarray[1 + i] = data[i];
         }
 
-        fifoarray[length + 1] = '\0';                                       // Terminate string
+        fifoarray[length + 1] = '\0';              // Terminate string
         // Write data to FIFO
         rfm_fifo_wnr( fifoarray, 1 );
         // Turn on transmitter (Transmitting starts automatically if FIFO not empty)
@@ -413,14 +416,13 @@
 
         // Wait for Package Sent (150 Byte-Times)
         uint32_t utimer = ( ( 75ULL * F_CPU + BR * 8 ) / ( 16 * BR ) );
-        uint8_t regval = 0;
+        uint8_t  regval = 0;
 
-        while ( utimer-- &&  !regval ) {
-            regval = rfm_cmd( 0x2800, 0 ) & 0x09; // Check for package sent and module plugged in
-        }
+        while ( utimer-- && !regval )
+            regval = rfm_cmd( 0x2800, 0 ) & 0x09;  // Check for package sent and module plugged in
 
         rfm_txoff();
-        return (!utimer || (regval & 0x01));                  // 0 : successful, 1 : error
+        return ( !utimer || ( regval & 0x01 ) );   // 0 : successful, 1 : error
     }
 
 // Receive data stream
@@ -435,7 +437,7 @@
         rfm_fifo_wnr( fifoarray, 0 );
 
         // Read data from FIFO-array
-        length_local = fifoarray[0];                                        // Number of data bytes
+        length_local = fifoarray[0];               // Number of data bytes
 
         if ( length_local > MAX_COM_ARRAYSIZE - 1 ) {
             length_local = MAX_COM_ARRAYSIZE - 1; // Limit length
@@ -443,7 +445,7 @@
         }
 
         for ( uint8_t i = 0; i < length_local; i++ ) {
-            data[i] = fifoarray[i + 1];       // Data bytes
+            data[i] = fifoarray[i + 1];           // Data bytes
         }
 
         data[length_local] = '\0'; // Terminate string
