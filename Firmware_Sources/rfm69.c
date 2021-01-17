@@ -282,6 +282,10 @@
     uint8_t rfm_init( void ) {
         uint32_t utimer;
         uint8_t  timeoutval;
+
+        // Ramp-up look up table
+        static const uint16_t rfm_ramp_up_table[ 16 ] = { 3400, 2000, 1000, 500, 250, 125, 100, 62, 50, 40, 31, 25, 20, 15, 12, 10 };
+
         // Configure SPI inputs and outputs
         NSEL_PORT |= ( 1 << NSEL );
         SDO_PORT  |= ( 1 << SDO );
@@ -302,15 +306,15 @@
 
         uint8_t rfm_fail = ( rfm_cmd( 0x10FF, 0 ) != 0x24 ) && 1;
 
-        for ( uint8_t i = 10; i; i-- ) {
+        for ( uint8_t i = 3; i; i-- ) {
             _delay_ms( 4 );
             rfm_cmd( 0x0202, 1 );                                                                                     // FSK, Packet mode, BT=.5
             // Bitrate + corresponding settings (Receiver bandwidth, frequency deviation)
             rfm_setbit( BR );
             // DIO-Mapping
-            rfm_cmd( 0x2500, 1 );                                                                                     // Clkout, FifoFull, FifoNotEmpty,
+            rfm_cmd( 0x2540, 1 );                                                                                     // Clkout, FifoFull, FifoNotEmpty,
                                                                                                                       // FifoLevel, PacketSent/CrcOk
-            rfm_cmd( 0x2607, 1 );                                                                                     // Clock-Out off
+            rfm_cmd( 0x26A7, 1 );                                                                                     // Clock-Out off
             // Carrier frequency
             rfm_cmd( 0x0700 | FRF_MSB, 1 );
             rfm_cmd( 0x0800 | FRF_MID, 1 );
@@ -338,6 +342,12 @@
             rfm_cmd( 0x1E2D, 1 );                                                                                     // AFC auto on and clear
             rfm_cmd( 0x2A00, 1 );                                                                                     // No Timeout after Rx-Start if no
                                                                                                                       // RSSI-Interrupt occurs
+
+            uint8_t ramp_index = 15;
+            while ( ramp_index && ( rfm_ramp_up_table[ ramp_index ] < RFM_RAMP_UP ) ) {
+                ramp_index--;
+            }
+            rfm_cmd( 0x1200 | (ramp_index & 0x0F), 1 );                                                                                     // No Timeout after Rx-Start if no
 
             timeoutval = MAX_COM_ARRAYSIZE + rfm_cmd( 0x2DFF, 0 ) + ( ( ( rfm_cmd( 0x2EFF, 0 ) & 0x38 ) >> 3 ) + 1 ) + 4; // Max. Arraysize + Preamble length + Sync
                                                                                                                       // Word length + CRC + Length + 1 Byte

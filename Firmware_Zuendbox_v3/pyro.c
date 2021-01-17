@@ -980,7 +980,8 @@ int main( void ) {
             // Take action after proper command
             if ( tmp ) {
                 transmission_type = tx_field[0];
-                flags.b.transmit  = 1;
+                flags.b.transmit     = 1;
+                transmission_allowed = 1;
 
                 if ( ( tx_field[0] == FIRE ) && ( slave_id == tx_field[1] ) ) {
                     rx_field[2]  = tx_field[2];

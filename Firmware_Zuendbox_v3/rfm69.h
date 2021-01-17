@@ -16,6 +16,10 @@
 #define BITRATE                9600L
 #define RFM12COMP              1
 
+/* Minimum PA ramp up time in microseconds to set in register 0x12.
+ * If value is not defined in table, next higher value will be chosen */
+#define RFM_RAMP_UP            40
+
 /* Output power in dBm (-18...13) */
 #ifndef P_OUT_DBM
     #define P_OUT_DBM          8 // Output power in dBm
@@ -124,4 +128,5 @@ uint8_t rfm_transmit( char *data, uint8_t length ); // Transmit data
 uint8_t rfm_receive( char *data, uint8_t *length ); // Get received data
 
 uint8_t rfm_get_rssi_dbm( void );                   // Return RSSI-Value. Real RSSI = -1dBm * returned value
+
 #endif

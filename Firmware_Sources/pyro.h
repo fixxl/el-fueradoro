@@ -8,11 +8,6 @@
 #ifndef PYRO_H_
 #define PYRO_H_
 
-// Main clock frequency
-#ifndef F_CPU
-    #define F_CPU             9830400UL
-#endif
-
 // Key switch location
 #define KEYPORT               C
 #define KEYNUM                4
@@ -25,13 +20,17 @@
 #define EMATCH_TIME           2
 #define TALON_TIME            245
 
-// Maximum ID
+// Main clock frequency
+#ifndef F_CPU
+    #define F_CPU             9830400UL
+#endif
+
 // Maximum ID
 #ifndef MAX_ID
     #define MAX_ID            30
 #endif
 
-// Maximum Array Size
+// Maximum Array Size for communication (UART + radio)
 #define MAX_COM_ARRAYSIZE     40
 
 // Threshold to clear LCD (Number of counter overflows)
@@ -56,10 +55,10 @@
 #define   BYTE_DURATION_US    ( 8 * ( 1000000UL + BITRATE ) / BITRATE )
 
 #define   setTxCase( XX ) case XX: { loopcount = XX ## _REPEATS; tmp = XX ## _LENGTH - 1; break; }
-#define   waitRx( XX )    for ( uint8_t i = rx_field[XX ## _LENGTH - 1] - 1; i; i-- ) _delay_us ( ( ADDITIONAL_LENGTH + XX ## _LENGTH ) * BYTE_DURATION_US )
+#define   waitRx( XX )    for ( uint8_t i = rx_field[XX ## _LENGTH - 1] - 1; i; i-- ) _delay_us ( ( ADDITIONAL_LENGTH + ((XX ## _LENGTH)/16 + 1 * (((XX ## _LENGTH)%16) && 1))*16 ) * BYTE_DURATION_US + (500000/BITRATE) + 5 + (5*RFM_RAMP_UP/4))
 
 // Radio message lengths
-#define   ADDITIONAL_LENGTH    13    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
+#define   ADDITIONAL_LENGTH    10    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
 #define   FIRE_LENGTH          4
 #define   IDENT_LENGTH         4
 #define   MEASURE_LENGTH       4
@@ -70,7 +69,7 @@
 #define   IMPEDANCES_LENGTH    (4+SR_CHANNELS)
 
 // Number of repetitions for radio messages
-#define   FIRE_REPEATS          5
+#define   FIRE_REPEATS          3
 #define   RSSITHRESHOLD_REPEATS 5
 #define   IDENT_REPEATS         3
 #define   CHANGE_REPEATS        3
