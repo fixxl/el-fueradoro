@@ -726,31 +726,43 @@ int main( void ) {
             flags.b.read_impedance = 0;
             timer1_flags          &= ~TIMER_MEASURE_FLAG;
 
+            uint8_t forced_measure = flags.b.transmit && ( transmission_type == IMPEDANCES );
+            uint8_t stop_measure   = 0;
+
             // Make sure that ignition voltage is disconnected
             MOSSWITCHPORT &= ~( 1 << MOSSWITCH );
 
             // Loop through all channels and measure impedance
             uint32_t mask = 0x00000001;
             statusleds = 0;
-            for ( uint8_t i = 0; i < SR_CHANNELS; i++ ) {
-                sr_shiftout( mask );
-                _delay_ms( 2 );
-                impedances[i] = imp_calc( 4 );
-                sr_shiftout( 0 );
+            for ( uint8_t i = 0; (i < SR_CHANNELS) && !stop_measure; i++ ) {
+                // To avoid missing an incoming packet or colliding with other boxes
+                // because of cyclic impedance measurement, check for packet on every channel
+                flags.b.receive = rfm_receiving();
+                stop_measure    = !forced_measure && flags.b.receive;
 
-                if ( impedances[i] < 50 ) {
-                    statusleds |= mask;
+                if (!stop_measure) {
+                    sr_shiftout( mask );
+                    _delay_ms( 2 );
+                    impedances[i] = imp_calc( 4 );
+                    sr_shiftout( 0 );
+
+                    if ( impedances[i] < 50 ) {
+                        statusleds |= mask;
+                    }
+
+                    mask <<= 1;
                 }
-
-                mask <<= 1;
             }
 
-            // Turn on status LEDs
-            if ( !armed ) {
-                dm_shiftout( statusleds );
-            }
-            else {
-                dm_shiftout( 0 );
+            // Update status LEDs if valid
+            if (!stop_measure) {
+                if ( !armed ) {
+                    dm_shiftout( statusleds );
+                }
+                else {
+                    dm_shiftout( 0 );
+                }
             }
 
             if ( flags.b.transmit && ( transmission_type == IMPEDANCES ) ) {
