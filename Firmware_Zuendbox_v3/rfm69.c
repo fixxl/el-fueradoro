@@ -418,8 +418,9 @@
         uint32_t utimer = ( ( 75ULL * F_CPU + BR * 8 ) / ( 16 * BR ) );
         uint8_t  regval = 0;
 
-        while ( utimer-- && !regval )
+        while ( utimer-- && !regval ) {
             regval = rfm_cmd( 0x2800, 0 ) & 0x09; // Check for package sent and module plugged in
+		}
 
         rfm_txoff();
         return ( !utimer || ( regval & 0x01 ) ); // 0 : successful, 1 : error

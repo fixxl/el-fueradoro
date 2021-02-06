@@ -111,7 +111,7 @@
 
 
 #define HARDWARE_SPI_69        (   RFM69_USE_HARDWARE_SPI && HASHARDSPI69 && ( SDO_NUMERIC == SDI_NUMERIC ) \
-                               && ( SDO_NUMERIC == SCK_NUMERIC ) && ( SDO_NUMERIC == 1 ) && ( SDI == 3 ) && ( SDO == 4 ) && ( SCK == 5 ) )
+                               && ( SDO_NUMERIC == SCK_NUMERIC ) && ( SDO_NUMERIC == BPORT ) && ( SDI == 3 ) && ( SDO == 4 ) && ( SCK == 5 ) )
 
 uint8_t rfm_cmd( uint16_t command, uint8_t wnr );   // Immediate access to register
 uint8_t rfm_receiving( void );                      // Valid data received?
@@ -122,7 +122,7 @@ uint8_t rfm_rxoff( void );                          // Turn off Receiver
 uint8_t rfm_txon( void );                           // Turn on Transmitter
 uint8_t rfm_txoff( void );                          // Turn off Transmitter
 
-uint8_t rfm_init( void );                              // Initialisation
+uint8_t rfm_init( void );                           // Initialisation
 void rfm_highpower( uint8_t enable );               // High Power Settings
 uint8_t rfm_transmit( char *data, uint8_t length ); // Transmit data
 uint8_t rfm_receive( char *data, uint8_t *length ); // Get received data

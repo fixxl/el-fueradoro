@@ -39,7 +39,7 @@ void w1_command( uint8_t command, uint8_t *id );
 uint8_t w1_rom_search( uint8_t diff, uint8_t *id );
 uint8_t w1_get_sensor_ids( uint8_t id_field[][8] );
 
-// Speziell f�r 1-Wire-Temperatursensoren
+// Speziell für 1-Wire-Temperatursensoren
 void w1_temp_conf( int8_t th, int8_t tl, uint8_t res );
 uint16_t w1_read_temp( uint8_t *id );
 int16_t w1_tempread_to_celsius( uint16_t temp, uint8_t digit );

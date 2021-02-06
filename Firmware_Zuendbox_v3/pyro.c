@@ -23,20 +23,13 @@ void wdt_init( void ) {
 
 // Initialise Key-Switch
 void key_init( void ) {
-    KEY_PORT |= ( 1 << KEY );
+    KEY_PORT |=  ( 1 << KEY );
     KEY_DDR  &= ~( 1 << KEY );
 
     // Activate Pin-Change Interrupt
-    #if ( KEY_NUMERIC == BPORT )
-        PCICR  |= ( 1 << PCIE0 );
-        PCMSK0 |= ( 1 << KEY );
-    #elif ( KEY_NUMERIC == DPORT )
-        PCICR  |= ( 1 << PCIE2 );
-        PCMSK2 |= ( 1 << KEY );
-    #else
-        PCICR  |= ( 1 << PCIE1 );
-        PCMSK1 |= ( 1 << KEY );
-    #endif
+    PCICR     |= ( 1 << KEY_NUMERIC);
+    KEY_PCMSK |= ( 1 << KEY );
+
     // Keep low-impedance path between ignition voltage and clamps closed
     MOSSWITCHPORT &= ~( 1 << MOSSWITCH );
     MOSSWITCHDDR  |= ( 1 << MOSSWITCH );
@@ -48,50 +41,10 @@ void key_deinit( void ) {
     KEY_DDR  &= ~( 1 << KEY );
 
     // Deactivate Pin-Change Interrupt
-    #if ( KEY_NUMERIC == BPORT )
-        PCICR  &= ~( 1 << PCIE0 );
-        PCMSK0 &= ~( 1 << KEY );
-    #elif ( KEY_NUMERIC == DPORT )
-        PCICR  &= ~( 1 << PCIE2 );
-        PCMSK2 &= ~( 1 << KEY );
-    #else
-        PCICR  &= ~( 1 << PCIE1 );
-        PCMSK1 &= ~( 1 << KEY );
-    #endif
+    PCICR     &= ~( 1 << KEY_NUMERIC );
+    KEY_PCMSK &= ~( 1 << KEY );
 }
 
-// Switch debouncing
-uint8_t debounce( volatile uint8_t *port, uint8_t pin ) {
-    uint8_t keystate = 0x55, ctr = 0, timer0_regb = TCCR0B;
-
-    // Reset Timer 0
-    TCNT0  = 0;
-    TIFR0  = ( 1 << TOV0 );
-    TCNT0  = 160;
-    TCCR0B = ( 1 << CS02 | 1 << CS00 );
-
-    // Query switch state every 10 ms until 8 identical states in a row are received
-    while ( ( ( keystate != 0x00 ) && ( keystate != 0xFF ) ) || ( ctr < 8 ) ) {
-        keystate <<= 1;                                // Shift left
-        keystate  |= ( ( *port & ( 1 << pin ) ) > 0 ); // Write 0 or 1 to LSB
-
-        while ( !( TIFR0 & ( 1 << TOV0 ) ) ) // Wait for timer overflow
-            ;
-
-        TIFR0 = ( 1 << TOV0 ); // Clear interrupt flag
-        TCNT0 = 160;           // Preload timer
-
-        if ( ctr < 8 ) {
-            ctr++; // Make sure at least 8 queries are executed
-
-        }
-    }
-
-    TCCR0B = timer0_regb;
-
-    // return 1 for active switch, 0 for inactive
-    return keystate == 0;
-}
 
 void sr_dm_init( void ) {
     #if ( DAI_NUMERIC == SER_IN_NUMERIC ) && ( DCK_NUMERIC == SCLOCK_NUMERIC ) && ( OE_NUMERIC == EN_NUMERIC ) && ( DAI == SER_IN ) && ( DCK == SCLOCK ) \
@@ -223,8 +176,8 @@ int8_t tempmeas( uint8_t type ) {
         return -128;
     }
     else {
-        uint16_t temp_hex;
         int16_t  temperature;
+        uint16_t temp_hex;
 
         w1_temp_conf( 125, -40, 9 );
         w1_command( CONVERT_T, NULL );
@@ -246,7 +199,7 @@ int8_t tempmeas( uint8_t type ) {
 
 // Check if received uart-data are a valid ignition command
 uint8_t fire_command_uart_valid( const char *field ) {
-    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] <= MAX_ID ) && ( field[2] > 0 ) && ( field[2] < SR_CHANNELS + 1 )
+    return ( field[0] == 0xFF ) && ( field[1] > 0 ) && ( field[1] <= MAX_ID ) && ( field[2] > 0 ) && ( field[2] < (FIRE_CHANNELS+1) )
            && ( field[3] == crc8( crc8( 0, field[1] ), field[2] ) );
 }
 
@@ -259,17 +212,20 @@ int main( void ) {
     MOSSWITCHDDR  |= ( 1 << MOSSWITCH );
 
     // Local Variables
-    uint32_t scheme = 0, anti_scheme = 0, controlvar = 0, statusleds = 0;
+    uint32_t scheme = 0, anti_scheme = 0, controlvar = 0;
     uint8_t  iii, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
+    uint8_t  debounce_key_ctr     = 0;
+    uint16_t debounce_key_state   = 0xAAAA;
+    uint8_t  debounce_active = (1 << DEBOUNCE_DEVS) - 1, debounce_mask = 0;
     uint8_t  temp_sreg;
     uint8_t  slave_id = MAX_ID, unique_id = MAX_ID, rem_sid = MAX_ID, rem_uid = MAX_ID;
     uint8_t  loopcount = 5, transmission_allowed = 1;
     uint8_t  armed       = 0;
     uint8_t  changes     = 0;
     uint8_t  iderrors    = 0;
-    uint8_t  rssi        = 0;
+    uint8_t  rssi        = -128;
     uint8_t  ledscheme   = 0;
     int8_t   temperature = -128;
     uint8_t  ignition_time;
@@ -277,16 +233,26 @@ int main( void ) {
 
     bitfeld_t flags;
     flags.complete = 0;
+	
+	// v3-Specific
+	uint32_t statusleds = 0;
 
     char        uart_field[MAX_COM_ARRAYSIZE + 2] = { 0 };
     char        rx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
     char        tx_field[MAX_COM_ARRAYSIZE + 1]   = { 0 };
     char        quantity[MAX_ID + 1]              = { 0 };
     fireslave_t slaves[MAX_ID + 1];
-    uint8_t     impedances[SR_CHANNELS]      = { 0 };
-    uint8_t     channel_timeout[SR_CHANNELS] = { 0 };
+    uint8_t     impedances[FIRE_CHANNELS]         = { 0 };
+    uint8_t     channel_timeout[FIRE_CHANNELS]    = { 0 };
 
     char transmission_type;
+
+    uint8_t          *debounce_ctr[ DEBOUNCE_DEVS ]       = {  &debounce_key_ctr  };
+    uint16_t         *debounce_state[ DEBOUNCE_DEVS ]     = { &debounce_key_state };
+    volatile uint8_t *debounce_pin[ DEBOUNCE_DEVS ]       = {      &KEY_PIN       };
+    const uint8_t     debounce_num[ DEBOUNCE_DEVS ]       = {      1 << KEY       };
+    const uint8_t     debounce_minCycles[ DEBOUNCE_DEVS ] = {         30          };
+    uint8_t          *debounce_results[ DEBOUNCE_DEVS ]   = {       &armed        };
 
     // Make PB2 an high output to guarantee flawless
     // SPI-master-operation
@@ -372,9 +338,29 @@ int main( void ) {
         slaves[warten].battery_voltage = 0;
         slaves[warten].sharpness       = 0;
         slaves[warten].temperature     = -128;
-        slaves[warten].rssi            = 0;
+        slaves[warten].rssi            = -128;
     }
 
+    // Initialise devices
+    key_init();
+    leds_off();
+
+    // Initialise UART
+    uart_init( BAUD );
+
+    // Detect temperature sensor and measure temperature if possible
+    const uint8_t tempsenstype = tempident();
+    temperature = tempmeas( tempsenstype );
+
+    // Initialise radio
+    const uint8_t rfm_fail = rfm_init();
+
+    // Set encryption active, read and transfer AES-Key
+    rfm_cmd( 0x3DA1, 1 );
+    for ( uint8_t i = 0; i < 16; i++ ) {
+        rfm_cmd( ( 0x3E00 + i * ( 0x0100 ) ) | eeread( START_ADDRESS_AESKEY_STORAGE + i ), 1 );
+    }
+    
     // Display slave ID and check channel LEDs
     leds_off();
     _delay_ms( 150 );
@@ -446,27 +432,7 @@ int main( void ) {
     leds_off();
     _delay_ms( 200 );
 
-    // Initialise devices
-    key_init();
-    leds_off();
-
-    // Initialise UART
-    uart_init( BAUD );
-
-    // Detect temperature sensor and measure temperature if possible
-    const uint8_t tempsenstype = tempident();
-    temperature = tempmeas( tempsenstype );
-
-    // Initialise radio
-    const uint8_t rfm_fail = rfm_init();
-
-    // Set encryption active, read and transfer AES-Key
-    rfm_cmd( 0x3DA1, 1 );
-    for ( uint8_t i = 0; i < 16; i++ ) {
-        rfm_cmd( ( 0x3E00 + i * ( 0x0100 ) ) | eeread( START_ADDRESS_AESKEY_STORAGE + i ), 1 );
-    }
-
-    armed = debounce( &KEY_PIN, KEY );
+    armed = !((KEY_PIN & (1 << KEY )) && 1);
 
     if ( armed ) {
         led_red_on();
@@ -482,7 +448,8 @@ int main( void ) {
     tx_field[3]        = bat_calc( 5 );
     tx_field[4]        = armed;
     tx_field[5]        = temperature;
-    tx_field[6]        = SR_CHANNELS;
+    tx_field[6]        = FIRE_CHANNELS;
+    tx_field[7]        = rssi;
 
     flags.b.transmit       = 1;
     flags.b.read_impedance = 1;
@@ -507,23 +474,64 @@ int main( void ) {
         if ( key_flag ) {
             temp_sreg = SREG;
             cli();
-            key_flag = 0;
 
-            // Box armed: armed = 1, Box not armed: armed = 0
-            armed = debounce( &KEY_PIN, KEY );
+            switch ( key_flag ) {
+                case 1: {
+                    // Prepare for debouncing by setting
+                    for ( uint8_t i = 0; i < DEBOUNCE_DEVS; i++ ) {
+                        *( debounce_ctr[ i ] )   = 0;
+                        *( debounce_state[ i ] ) = 0xAAAA;
+                    }
+                    debounce_active = (1 << DEBOUNCE_DEVS) - 1;
+                    key_flag        = 2;
+                    break;
+                }
+                case 2: {
+                    if ( timer1_flags & TIMER_DEBOUNCE_FLAG ) {
+                        timer1_flags &= ~TIMER_DEBOUNCE_FLAG;
+                        debounce_mask = 1;
+                        for ( uint8_t i = 0; i < DEBOUNCE_DEVS; i++ ) {
 
-            if ( armed ) {
-                led_red_on();
+                            if ( debounce_active & debounce_mask ) {
+                                ( *( debounce_ctr[ i ] ) )++;
+                                ( *( debounce_state[ i ] ) ) <<= 1;
+                                ( *( debounce_state[ i ] ) )  |= ( *( debounce_pin[ i ] ) & ( debounce_num[ i ] ) ) && 1;
 
-                // Turn off channel leds
-                dm_shiftout( 0 );
+                                // If an all-0 or all-1 state is reached after the minimum number of cycles
+                                if (   ( ( *( debounce_ctr[ i ] ) ) > debounce_minCycles[ i ] )
+                                   && ( ( ( *( debounce_state[ i ] ) ) == 0 ) || ( ( *( debounce_state[ i ] ) ) == 0xFFFF ) ) ) {
+                                    debounce_active             &= ~debounce_mask;                          // Declare this device finished
+                                    ( *( debounce_results[i] ) ) = !( ( *( debounce_state[ i ] ) ) && 1 );  // Result = 1 if all-0, 0 if all-1 (active low)
+                                }
+                            }
+
+                            debounce_mask <<= 1;
+                        }
+
+                        // Evaluate after debouncing
+                        if ( !debounce_active ) {
+                            key_flag = 0;
+                            if ( armed ) {
+                                led_red_on();
+
+                                // Turn off channel leds
+                                dm_shiftout( 0 );
+                            }
+                            else {
+                                MOSSWITCHPORT &= ~( 1 << MOSSWITCH );
+                                led_red_off();
+                            }
+
+                            flags.b.read_impedance = 1;
+                        }
+                    }
+                    break;
+                }
+                default: {
+                    key_flag = 0;
+                    break;
+                }
             }
-            else {
-                MOSSWITCHPORT &= ~( 1 << MOSSWITCH );
-                led_red_off();
-            }
-
-            flags.b.read_impedance = 1;
 
             SREG = temp_sreg;
         }
@@ -735,10 +743,10 @@ int main( void ) {
             // Loop through all channels and measure impedance
             uint32_t mask = 0x00000001;
             statusleds = 0;
-            for ( uint8_t i = 0; (i < SR_CHANNELS) && !stop_measure; i++ ) {
+            for ( uint8_t i = 0; (i < FIRE_CHANNELS) && !stop_measure; i++ ) {
                 // To avoid missing an incoming packet or colliding with other boxes
                 // because of cyclic impedance measurement, check for packet on every channel
-                flags.b.receive = rfm_receiving();
+                flags.b.receive = flags.b.receive || rfm_receiving();
                 stop_measure    = !forced_measure && flags.b.receive;
 
                 if (!stop_measure) {
@@ -768,9 +776,9 @@ int main( void ) {
             if ( flags.b.transmit && ( transmission_type == IMPEDANCES ) ) {
                 tx_field[0] = IMPEDANCES;
                 tx_field[1] = unique_id;
-                tx_field[2] = SR_CHANNELS;
+                tx_field[2] = FIRE_CHANNELS;
 
-                for ( uint8_t i = 0; i < SR_CHANNELS; i++ ) {
+                for ( uint8_t i = 0; i < FIRE_CHANNELS; i++ ) {
                     tx_field[3 + i] = impedances[i];
                 }
             }
@@ -787,7 +795,7 @@ int main( void ) {
 
             uart_puts_P( PSTR( "\n\n\rGemessene Kanalwiderstände\n\r" ) );
             uart_puts_P( PSTR( "==========================\n\rKanal Widerstand\r\n" ) );
-            for ( uint8_t i = 0; i < SR_CHANNELS; i++ ) {
+            for ( uint8_t i = 0; i < FIRE_CHANNELS; i++ ) {
                 if ( i < 9 ) {
                     uart_puts_P( PSTR( " " ) );
                 }
@@ -938,8 +946,8 @@ int main( void ) {
 
                             uart_puts_P( PSTR( " = " ) );
 
-                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? ( MAX_ID + 1 ) : ( SR_CHANNELS + 1 ) ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel
-                                                                                                                     // 1-SR_CHANNELS
+                            if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? ( MAX_ID + 1 ) : ( FIRE_CHANNELS + 1 ) ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel
+                                                                                                                     // 1-FIRE_CHANNELS
                                 uart_shownum( nr, 'd' );
                                 tx_field[round] = nr;
                             }
@@ -1056,7 +1064,7 @@ int main( void ) {
                 slaves[iii].battery_voltage = 0;
                 slaves[iii].sharpness       = 0;
                 slaves[iii].temperature     = -128;
-                slaves[iii].rssi            = 0;
+                slaves[iii].rssi            = -128;
             }
 
             // Ignition devices have to write themselves in the list
@@ -1135,7 +1143,7 @@ int main( void ) {
             cli();
             flags.b.fire = 0;
 
-            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < SR_CHANNELS + 1 ) ) { // If channel number is valid
+            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < (FIRE_CHANNELS+1) ) ) { // If channel number is valid
                 tmp = rx_field[2];                                                     // Save channel number to variable
 
                 flags.b.is_fire_active = 1;                                            // Signalize that we're currently firing
@@ -1145,7 +1153,7 @@ int main( void ) {
 
                 scheme = 0;                                                            // Set mask-variable to zero
 
-                for ( uint8_t i = SR_CHANNELS; i; i-- ) {
+                for ( uint8_t i = FIRE_CHANNELS; i; i-- ) {
                     scheme <<= 1; // Left-shift mask-variable
 
                     if ( i == tmp ) {
@@ -1178,7 +1186,7 @@ int main( void ) {
             anti_scheme     = 0;                           // Reset the delete scheme
 
             controlvar = 1;
-            for ( uint8_t i = 0; i < SR_CHANNELS; i++ ) {
+            for ( uint8_t i = 0; i < FIRE_CHANNELS; i++ ) {
                 if ( active_channels & controlvar ) { // If a given channel is currently active
                     channel_timeout[i]++;             // Increment the timeout-value for that channel
 
@@ -1285,7 +1293,7 @@ int main( void ) {
                         tx_field[3] = bat_calc( 5 );
                         tx_field[4] = armed;
                         tx_field[5] = temperature;
-                        tx_field[6] = SR_CHANNELS;
+                        tx_field[6] = FIRE_CHANNELS;
                         tx_field[7] = rssi;
 
                         transmission_allowed = 0;
@@ -1412,8 +1420,14 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
     if ( active_channels ) {
         channel_monitor = 1; // Set a reminder to monitor the channels
     }
+
+    if ( key_flag ) {
+        timer1_flags |= TIMER_DEBOUNCE_FLAG;
+    }
 }
 
-ISR( KEYINT ) {
-    key_flag = 1;
+ISR( KEY_PCINTVECT ) {
+    if ( !key_flag ) {
+        key_flag = 1;
+    }
 }

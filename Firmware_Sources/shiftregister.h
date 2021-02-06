@@ -19,7 +19,9 @@
 // How many channels? (8 or 16)
 // For 16 the SER_IN of the 74HC595 for channels 9-16
 // has to be connected to Q7S of the 74HC595 for channels 1-8
-#define SR_CHANNELS         16
+#ifndef SR_CHANNELS
+    #define SR_CHANNELS         16
+#endif
 
 /* Use Hardware-SPI if available? */
 #define SR_USE_HARDWARE_SPI 0
@@ -63,6 +65,6 @@ void sr_shiftout( uint32_t scheme );
 #endif
 
 #define HARDWARE_SPI_SR                                                                                        \
-    (   SR_USE_HARDWARE_SPI && HASHARDSPISR && ( SER_IN_NUMERIC == SCLOCK_NUMERIC ) && ( SCLOCK_NUMERIC == 1 ) \
+    (   SR_USE_HARDWARE_SPI && HASHARDSPISR && ( SER_IN_NUMERIC == SCLOCK_NUMERIC ) && ( SCLOCK_NUMERIC == BPORT ) \
     && ( SER_IN == 3 ) && ( SCLOCK == 5 ) )
 #endif

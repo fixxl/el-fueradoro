@@ -19,6 +19,12 @@
 #define STRINGIZE( x )          # x
 #define STRINGIZE_VALUE_OF( x ) STRINGIZE( x )
 
+#ifndef FIRE_CHANNELS
+    #define FIRE_CHANNELS 16
+#endif
+
+#define SR_CHANNELS ((FIRE_CHANNELS + 7) / 8) * 8   // Round up FIRE_CHANNELS to the next multiple of 8
+
 // Includes und Defines
 #include <avr/io.h>
 #include <avr/eeprom.h>

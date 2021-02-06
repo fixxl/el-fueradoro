@@ -8,7 +8,7 @@
 #ifndef PYRO_H_
 #define PYRO_H_
 
-// Key switch location
+// Switches' location
 #define KEYPORT               D
 #define KEYNUM                2
 
@@ -22,13 +22,16 @@
 
 // Main clock frequency
 #ifndef F_CPU
-    #define F_CPU             9830400UL
+    #define F_CPU             9830400ULL
 #endif
 
 // Maximum ID
 #ifndef MAX_ID
     #define MAX_ID            30
 #endif
+
+#define DEBOUNCE_DEVS         1
+#define T0_PRELOAD_VALUE      (256ULL - ((10ULL * F_CPU + 512000ULL) / 1024000ULL))
 
 // Maximum Array Size for communication (UART + radio)
 #define MAX_COM_ARRAYSIZE     40
@@ -118,13 +121,8 @@ typedef struct {
 #define KEY_PORT                     PORT( KEYPORT )
 #define KEY_NUMERIC                  NUMPORT( KEYPORT )
 #define KEY                          KEYNUM
-#if ( KEY_NUMERIC == 2 )
-    #define KEYINT                   PCINT1_vect
-#elif ( KEY_NUMERIC == 1 )
-    #define KEYINT                   PCINT0_vect
-#else
-    #define KEYINT                   PCINT2_vect
-#endif
+#define KEY_PCMSK                    PCMSK( KEY_NUMERIC )
+#define KEY_PCINTVECT                PCINTVECT( KEY_NUMERIC )
 
 #define MOSSWITCHDDR                 DDR( MOSSWITCH_PORT )
 #define MOSSWITCHPIN                 PIN( MOSSWITCH_PORT )
@@ -142,21 +140,12 @@ typedef struct {
     && ( eeread( START_ADDRESS_ID_STORAGE + 1 ) == eeread( START_ADDRESS_ID_STORAGE + 1 + STEP_ID_STORAGE ) ) \
     && ( eeread( START_ADDRESS_ID_STORAGE + 1 ) == eeread( START_ADDRESS_ID_STORAGE + 1 + 2 * STEP_ID_STORAGE ) )
 
-// Temperatursensoren
+// Temperature Sensors
 #define DS18B20                      'o'
-
-#if ( RFM == 69 )
-    #define RFM_PWR_ADDRESS          5
-#endif
 
 #define START_ADDRESS_AESKEY_STORAGE 32
 
-// Funktionsprototypen
-void    wdt_init( void ) __attribute__( ( naked ) ) __attribute__( ( section( ".init1" ) ) );
-void    sr_dm_init( void );
+// Externally used fuctions
 uint8_t asciihex( char inp );
-void    key_init( void );
-void    key_deinit( void );
-uint8_t debounce( volatile uint8_t *port, uint8_t pin );
-uint8_t fire_command_uart_valid( const char *field );
+
 #endif /* PYRO_H_ */

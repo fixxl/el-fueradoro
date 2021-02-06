@@ -65,6 +65,6 @@ void sr_shiftout( uint32_t scheme );
 #endif
 
 #define HARDWARE_SPI_SR                                                                                        \
-    (   SR_USE_HARDWARE_SPI && HASHARDSPISR && ( SER_IN_NUMERIC == SCLOCK_NUMERIC ) && ( SCLOCK_NUMERIC == 1 ) \
+    (   SR_USE_HARDWARE_SPI && HASHARDSPISR && ( SER_IN_NUMERIC == SCLOCK_NUMERIC ) && ( SCLOCK_NUMERIC == BPORT ) \
     && ( SER_IN == 3 ) && ( SCLOCK == 5 ) )
 #endif

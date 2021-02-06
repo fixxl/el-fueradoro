@@ -408,7 +408,7 @@
             fifoarray[1 + i] = data[i];
         }
 
-        fifoarray[length + 1] = '\0';              // Terminate string
+        fifoarray[length + 1] = '\0'; // Terminate string
         // Write data to FIFO
         rfm_fifo_wnr( fifoarray, 1 );
         // Turn on transmitter (Transmitting starts automatically if FIFO not empty)
@@ -418,11 +418,12 @@
         uint32_t utimer = ( ( 75ULL * F_CPU + BR * 8 ) / ( 16 * BR ) );
         uint8_t  regval = 0;
 
-        while ( utimer-- && !regval )
-            regval = rfm_cmd( 0x2800, 0 ) & 0x09;  // Check for package sent and module plugged in
+        while ( utimer-- && !regval ) {
+            regval = rfm_cmd( 0x2800, 0 ) & 0x09; // Check for package sent and module plugged in
+		}
 
         rfm_txoff();
-        return ( !utimer || ( regval & 0x01 ) );   // 0 : successful, 1 : error
+        return ( !utimer || ( regval & 0x01 ) ); // 0 : successful, 1 : error
     }
 
 // Receive data stream
@@ -437,7 +438,7 @@
         rfm_fifo_wnr( fifoarray, 0 );
 
         // Read data from FIFO-array
-        length_local = fifoarray[0];               // Number of data bytes
+        length_local = fifoarray[0];             // Number of data bytes
 
         if ( length_local > MAX_COM_ARRAYSIZE - 1 ) {
             length_local = MAX_COM_ARRAYSIZE - 1; // Limit length

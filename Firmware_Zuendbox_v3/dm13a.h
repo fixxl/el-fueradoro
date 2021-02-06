@@ -65,6 +65,6 @@ void dm_shiftout( uint32_t scheme );
 #endif
 
 #define HARDWARE_SPI_DM                                                                               \
-    (   DM_USE_HARDWARE_SPI && HASHARDSPIDM && ( DAI_NUMERIC == DCK_NUMERIC ) && ( DCK_NUMERIC == 1 ) \
+    (   DM_USE_HARDWARE_SPI && HASHARDSPIDM && ( DAI_NUMERIC == DCK_NUMERIC ) && ( DCK_NUMERIC == BPORT ) \
     && ( DAI == 3 ) && ( DCK == 5 ) )
 #endif

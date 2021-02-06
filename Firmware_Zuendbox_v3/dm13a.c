@@ -67,9 +67,9 @@ void dm_shiftout( uint32_t scheme ) {
     uint32_t mask;
 
     #if HARDWARE_SPI_DM
-        mask = 255UL << (DM_CHANNELS - 8);
-        for(uint8_t i = DM_CHANNELS / 8; i; i--) {
-            SPDR = (scheme & mask) >> (DM_CHANNELS - 8);
+        mask = 255UL << ((( DM_CHANNELS-1*(DM_CHANNELS>0) ) / 8 ) * 8);                // Shift 0xFF to the 0th, 8th, 16th or 24th bit, depending on number of channels
+        for(uint8_t i = ((DM_CHANNELS + 7) / 8); i; i--) {                             // Run the loop at least once or up to four times depending on number of channels
+            SPDR = (scheme & mask) >> ((( DM_CHANNELS-1*(DM_CHANNELS>0) ) / 8 ) * 8);  // Shift current 8 bit word to bits 7:0 and write to SPI-Data register
             scheme <<= 8;
             while ( !( SPSR & ( 1 << SPIF ) ) );
         }

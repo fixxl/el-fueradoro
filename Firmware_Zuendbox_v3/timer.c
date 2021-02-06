@@ -14,7 +14,7 @@ void timer1_on( void ) {
 
 // Initialise timer 1
 void timer1_init( void ) {
-    OCR1A   = 12287;
+    OCR1A   = (T1_INTERRUPT_INTERVAL_MS * F_CPU + 4000)/8000 - 1;       // Calculation relies on prescaler setting 8.
     TCCR1B |= ( 1 << WGM12 ); // CTC-Modus mit Prescaler 8 => f_C1 = 750 kHZ, T = 0,01 s = 10 ms
     TIMSK1 |= ( 1 << OCIE1A );
 }
