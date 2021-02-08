@@ -217,7 +217,8 @@ int main( void ) {
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
     uint8_t  debounce_key_ctr     = 0;
-    uint16_t debounce_key_state   = 0xAAAA;
+    uint8_t  debounce_current_state = 0;
+    uint8_t  debounce_old_state     = 0;
     uint8_t  debounce_active = (1 << DEBOUNCE_DEVS) - 1, debounce_mask = 0;
     uint8_t  temp_sreg;
     uint8_t  slave_id = MAX_ID, unique_id = MAX_ID, rem_sid = MAX_ID, rem_uid = MAX_ID;
@@ -248,7 +249,6 @@ int main( void ) {
     char transmission_type;
 
     uint8_t          *debounce_ctr[ DEBOUNCE_DEVS ]       = {  &debounce_key_ctr  };
-    uint16_t         *debounce_state[ DEBOUNCE_DEVS ]     = { &debounce_key_state };
     volatile uint8_t *debounce_pin[ DEBOUNCE_DEVS ]       = {      &KEY_PIN       };
     const uint8_t     debounce_num[ DEBOUNCE_DEVS ]       = {      1 << KEY       };
     const uint8_t     debounce_minCycles[ DEBOUNCE_DEVS ] = {         30          };
@@ -477,10 +477,9 @@ int main( void ) {
 
             switch ( key_flag ) {
                 case 1: {
-                    // Prepare for debouncing by setting
+                    // Prepare for debouncing by setting all counters to 0 and all debounce devices to active
                     for ( uint8_t i = 0; i < DEBOUNCE_DEVS; i++ ) {
                         *( debounce_ctr[ i ] )   = 0;
-                        *( debounce_state[ i ] ) = 0xAAAA;
                     }
                     debounce_active = (1 << DEBOUNCE_DEVS) - 1;
                     key_flag        = 2;
@@ -489,26 +488,34 @@ int main( void ) {
                 case 2: {
                     if ( timer1_flags & TIMER_DEBOUNCE_FLAG ) {
                         timer1_flags &= ~TIMER_DEBOUNCE_FLAG;
-                        debounce_mask = 1;
+                        debounce_mask  = 1;
+                        debounce_current_state = 0;
                         for ( uint8_t i = 0; i < DEBOUNCE_DEVS; i++ ) {
 
                             if ( debounce_active & debounce_mask ) {
-                                ( *( debounce_ctr[ i ] ) )++;
-                                ( *( debounce_state[ i ] ) ) <<= 1;
-                                ( *( debounce_state[ i ] ) )  |= ( *( debounce_pin[ i ] ) & ( debounce_num[ i ] ) ) && 1;
+                                // Get current state and save it at the correct bit position (debounce_mask)
+                                debounce_current_state |= (( *( debounce_pin[ i ] ) & ( debounce_num[ i ] ) ) && 1) * debounce_mask;
 
-                                // If an all-0 or all-1 state is reached after the minimum number of cycles
-                                if (   ( ( *( debounce_ctr[ i ] ) ) > debounce_minCycles[ i ] )
-                                   && ( ( ( *( debounce_state[ i ] ) ) == 0 ) || ( ( *( debounce_state[ i ] ) ) == 0xFFFF ) ) ) {
-                                    debounce_active             &= ~debounce_mask;                          // Declare this device finished
-                                    ( *( debounce_results[i] ) ) = !( ( *( debounce_state[ i ] ) ) && 1 );  // Result = 1 if all-0, 0 if all-1 (active low)
+                                // Step counter if there was no change from previous readout, otherwise reset counter
+                                if ((debounce_current_state & debounce_mask) ^ (debounce_old_state & debounce_mask)) {
+                                    *( debounce_ctr[ i ] ) = 0;
+                                }
+                                else {
+                                    (*( debounce_ctr[ i ] ))++;
+                                }
+
+                                // If the predefined number of consecutive equal states is reached, set the result
+                                if ( ( *( debounce_ctr[ i ] ) ) > debounce_minCycles[ i ] )  {
+                                    debounce_active             &= ~debounce_mask;                                        // Declare this device finished
+                                    ( *( debounce_results[i] ) ) = !( ( debounce_current_state & debounce_mask ) && 1 );  // Result = 1 if all-0, 0 if all-1 (active low)
                                 }
                             }
 
                             debounce_mask <<= 1;
                         }
+                        debounce_old_state = debounce_current_state;
 
-                        // Evaluate after debouncing
+                        // Evaluate after all debouncing devices are finished
                         if ( !debounce_active ) {
                             key_flag = 0;
                             if ( armed ) {
