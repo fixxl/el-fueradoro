@@ -442,7 +442,6 @@
 
         if ( length_local > MAX_COM_ARRAYSIZE - 1 ) {
             length_local = MAX_COM_ARRAYSIZE - 1; // Limit length
-
         }
 
         for ( uint8_t i = 0; i < length_local; i++ ) {

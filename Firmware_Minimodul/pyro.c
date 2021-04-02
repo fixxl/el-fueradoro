@@ -35,8 +35,8 @@ void hall_init( void ) {
     REED_DDR  &= ~( 1 << REED );
 
     // Activate Pin-Change Interrupt
-    PCICR  |= ( 1 << ARM_NUMERIC | 1 << TEST_NUMERIC | 1 << REED_NUMERIC );
-    ARM_PCMSK  |= ( 1 << ARM ); 
+    PCICR      |= ( 1 << ARM_NUMERIC | 1 << TEST_NUMERIC | 1 << REED_NUMERIC );
+    ARM_PCMSK  |= ( 1 << ARM );
     TEST_PCMSK |= ( 1 << TEST );
     REED_PCMSK |= ( 1 << REED );
 
@@ -57,8 +57,8 @@ void key_deinit( void ) {
     TEST_DDR  &= ~( 1 << TEST );
 
     // Deactivate Pin-Change Interrupt
-    PCICR      &= ~( 1 << ARM_NUMERIC );
-    ARM_PCMSK  &= ~( 1 << ARM );
+    PCICR     &= ~( 1 << ARM_NUMERIC );
+    ARM_PCMSK &= ~( 1 << ARM );
 
     PCICR      &= ~( 1 << TEST_NUMERIC );
     TEST_PCMSK &= ~( 1 << TEST );
@@ -185,14 +185,14 @@ int main( void ) {
     MOSSWITCHDDR  |= ( 1 << MOSSWITCH );
 
     // Local Variables
-    uint32_t scheme = 0, anti_scheme = 0, controlvar = 0;
+    uint32_t scheme = 0, anti_scheme = 0, controlvar = 0, chPattern = 0, chIdentifier[FIRE_CHANNELS] = { 0 };
     uint8_t  iii, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
     uint8_t  debounce_reed_ctr = 0, debounce_arm_ctr = 0, debounce_test_ctr = 0;
     uint8_t  debounce_current_state = 0;
-    uint8_t  debounce_old_state     = 0;
-    uint8_t  debounce_active = (1 << DEBOUNCE_DEVS) - 1, debounce_mask = 0;
+    uint8_t  debounce_old_state = 0;
+    uint8_t  debounce_active = ( 1 << DEBOUNCE_DEVS ) - 1, debounce_mask = 0;
     uint8_t  temp_sreg;
     uint8_t  slave_id = MAX_ID, unique_id = MAX_ID, rem_sid = MAX_ID, rem_uid = MAX_ID;
     uint8_t  loopcount = 5, transmission_allowed = 1;
@@ -205,7 +205,7 @@ int main( void ) {
     uint8_t  ignition_time;
     uint8_t  ign_time_backup;
 
-    uint8_t  hall_arm = 0, reed_deb = 0, test_deb = 0;
+    uint8_t hall_arm = 0, reed_deb = 0, test_deb = 0;
 
     bitfeld_t flags;
     flags.complete = 0;
@@ -307,6 +307,14 @@ int main( void ) {
         slaves[warten].rssi            = -128;
     }
 
+    // Populate channel pattern array:
+    // chIdentifier[ i ] = 1 << i
+    uint32_t chMsk = 1UL << ( FIRE_CHANNELS - 1 );
+    for ( uint8_t i = FIRE_CHANNELS; i; i-- ) {
+        chIdentifier[ i - 1 ] = chMsk;
+        chMsk               >>= 1;
+    }
+
     // Initialise devices
     hall_init();
     leds_off();
@@ -326,7 +334,7 @@ int main( void ) {
     for ( uint8_t i = 0; i < 16; i++ ) {
         rfm_cmd( ( 0x3E00 + i * ( 0x0100 ) ) | eeread( START_ADDRESS_AESKEY_STORAGE + i ), 1 );
     }
-    
+
     // Display slave ID
     leds_off();
     _delay_ms( 150 );
@@ -442,35 +450,36 @@ int main( void ) {
                 case 1: {
                     // Prepare for debouncing by setting
                     for ( uint8_t i = 0; i < DEBOUNCE_DEVS; i++ ) {
-                        *( debounce_ctr[ i ] )   = 0;
+                        *( debounce_ctr[ i ] ) = 0;
                     }
-                    debounce_active = (1 << DEBOUNCE_DEVS) - 1;
+                    debounce_active = ( 1 << DEBOUNCE_DEVS ) - 1;
                     key_flag        = 2;
                     break;
                 }
                 case 2: {
                     if ( timer1_flags & TIMER_DEBOUNCE_FLAG ) {
-                        timer1_flags &= ~TIMER_DEBOUNCE_FLAG;
-                        debounce_mask = 1;
+                        timer1_flags          &= ~TIMER_DEBOUNCE_FLAG;
+                        debounce_mask          = 1;
                         debounce_current_state = 0;
                         for ( uint8_t i = 0; i < DEBOUNCE_DEVS; i++ ) {
 
                             if ( debounce_active & debounce_mask ) {
                                 // Get current state and save it at the correct bit position (debounce_mask)
-                                debounce_current_state |= (( *( debounce_pin[ i ] ) & ( debounce_num[ i ] ) ) && 1) * debounce_mask;
+                                debounce_current_state |= ( ( *( debounce_pin[ i ] ) & ( debounce_num[ i ] ) ) && 1 ) * debounce_mask;
 
                                 // Step counter if there was no change from previous readout, otherwise reset counter
-                                if ((debounce_current_state & debounce_mask) ^ (debounce_old_state & debounce_mask)) {
+                                if ( ( debounce_current_state & debounce_mask ) ^ ( debounce_old_state & debounce_mask ) ) {
                                     *( debounce_ctr[ i ] ) = 0;
                                 }
                                 else {
-                                    (*( debounce_ctr[ i ] ))++;
+                                    ( *( debounce_ctr[ i ] ) )++;
                                 }
 
                                 // If the predefined number of consecutive equal states is reached, set the result
-                                if ( ( *( debounce_ctr[ i ] ) ) > debounce_minCycles[ i ] )  {
-                                    debounce_active             &= ~debounce_mask;                                        // Declare this device finished
-                                    ( *( debounce_results[i] ) ) = !( ( debounce_current_state & debounce_mask ) && 1 );  // Result = 1 if all-0, 0 if all-1 (active low)
+                                if ( ( *( debounce_ctr[ i ] ) ) > debounce_minCycles[ i ] ) {
+                                    debounce_active             &= ~debounce_mask;                                       // Declare this device finished
+                                    ( *( debounce_results[i] ) ) = !( ( debounce_current_state & debounce_mask ) && 1 ); // Result = 1 if all-0, 0 if all-1
+                                                                                                                         // (active low)
                                 }
                             }
 
@@ -920,8 +929,9 @@ int main( void ) {
                             nr = 0;
                             uart_puts_P( round < 2 ? PSTR( "Slave-ID:\t" ) : PSTR( "\n\rKanal:  \t" ) ); // First for slave-id, then for channel
 
-                            for ( iii = 0; iii < 2; iii++ ) {                                                        // Get the user to assign the numbers with
-                                                                                                                     // 2 digits
+                            for ( iii = 0; iii < 2; iii++ ) {                                                          // Get the user to assign the numbers
+                                                                                                                       // with
+                                                                                                                       // 2 digits
                                 inp = 0;
 
                                 while ( !inp ) inp = uart_getc();
@@ -934,13 +944,13 @@ int main( void ) {
                             uart_puts_P( PSTR( " = " ) );
 
                             if ( ( nr > 0 ) && ( nr < ( ( round < 2 ) ? ( MAX_ID + 1 ) : ( FIRE_CHANNELS + 1 ) ) ) ) { // Slave-ID has to be 1-MAX_ID, Channel
-                                                                                                                     // 1-FIRE_CHANNELS
+                                                                                                                       // 1-FIRE_CHANNELS
                                 uart_shownum( nr, 'd' );
                                 tx_field[round] = nr;
                             }
-                            else {                                                                                   // Otherwise the input's invalid
+                            else {                                                                                     // Otherwise the input's invalid
                                 uart_puts_P( PSTR( "Ungültige Eingabe" ) );
-                                tmp   = 0;                                                                           // Sending gets disallowed
+                                tmp   = 0;                                                                             // Sending gets disallowed
                                 round = 3;
                             }
                         }
@@ -1034,7 +1044,7 @@ int main( void ) {
             while ( 1 );
         }
 
-		// -------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------
 
         // Shutdown Device
         if ( flags.b.shutdown ) {
@@ -1142,30 +1152,17 @@ int main( void ) {
             cli();
             flags.b.fire = 0;
 
-            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < ( FIRE_CHANNELS + 1 ) ) ) { // If channel number is valid
-                tmp = rx_field[2];                                                         // Save channel number to variable
-
-                flags.b.is_fire_active = 1;                                                // Signalize that we're currently firing
+            if ( armed && chPattern ) {     // If channel number is valid
+                flags.b.is_fire_active = 1; // Signalize that we're currently firing
 
                 // Turn all leds on
                 leds_on();
 
-                scheme = 0;                                                                // Set mask-variable to zero
-
-                for ( uint8_t i = FIRE_CHANNELS; i; i-- ) {
-                    scheme <<= 1; // Left-shift mask-variable
-
-                    if ( i == tmp ) {
-                        scheme |= 1; // Set LSB if loop variable equals channel number
-
-                    }
-                }
-
-                scheme |= active_channels;
-                scheme |= scheme << 4; // FET-LEDs
+                scheme  = chPattern | active_channels;
+                scheme |= scheme << 4;      // FET-LEDs
 
                 MOSSWITCHPORT |= ( 1 << MOSSWITCH );
-                sr_shiftout( scheme ); // Write pattern to shift-register
+                sr_shiftout( scheme );      // Write pattern to shift-register
                 active_channels = scheme;
             }
 
@@ -1260,12 +1257,15 @@ int main( void ) {
                     case FIRE: {
                         // Wait for all repetitions to be over
                         waitRx( FIRE );
+                        chPattern = 0;
+                        for ( uint8_t i = 0; i < ( rx_length - 2 ) / 2; i++ ) {
+                            if (  armed && ( rx_field[1 + 2 * i] == slave_id ) && rx_field[2 + 2 * i] && ( rx_field[2 + 2 * i] <= FIRE_CHANNELS ) ) {
+                                tmp        = rx_field[2 + 2 * i] - 1; // Get channel number and transpose to 0-based counting
+                                chPattern |= chIdentifier[ tmp ];     // Update channel pattern
 
-                        if ( armed && ( rx_field[1] == slave_id ) ) {
-                            tmp = rx_field[2] - 1;
-
-                            if ( !flags.b.fire ) {
-                                flags.b.fire = 1;
+                                if ( !flags.b.fire ) {
+                                    flags.b.fire = 1;
+                                }
                             }
                         }
 

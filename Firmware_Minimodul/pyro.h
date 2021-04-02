@@ -71,7 +71,7 @@
 #define   BYTE_DURATION_US    ( 8 * ( 1000000UL + BITRATE ) / BITRATE )
 
 #define   setTxCase( XX ) case XX: { loopcount = XX ## _REPEATS; tmp = XX ## _LENGTH - 1; break; }
-#define   waitRx( XX )    for ( uint8_t i = rx_field[XX ## _LENGTH - 1] - 1; i; i-- ) _delay_us ( ( ADDITIONAL_LENGTH + ((XX ## _LENGTH)/16 + 1 * (((XX ## _LENGTH)%16) && 1))*16 ) * BYTE_DURATION_US + (500000/BITRATE) + 5 + (5*RFM_RAMP_UP/4))
+#define   waitRx( XX )    for ( uint8_t i = rx_field[rx_length - 1] - 1; i; i-- ) _delay_us ( ( ADDITIONAL_LENGTH + ((XX ## _LENGTH)/16 + 1 * (((XX ## _LENGTH)%16) && 1))*16 ) * BYTE_DURATION_US + (500000/BITRATE) + 5 + (5*RFM_RAMP_UP/4))
 
 // Radio message lengths
 #define   ADDITIONAL_LENGTH    10    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
@@ -82,7 +82,7 @@
 #define   TEMPERATURE_LENGTH   5
 #define   CHANGE_LENGTH        6
 #define   RSSITHRESHOLD_LENGTH 2
-#define   IMPEDANCES_LENGTH   (4+SR_CHANNELS)
+#define   IMPEDANCES_LENGTH   (4+FIRE_CHANNELS)
 
 // Number of repetitions for radio messages
 #define   FIRE_REPEATS          3

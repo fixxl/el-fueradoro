@@ -241,7 +241,7 @@ int main( void ) {
     MOSSWITCHDDR  |= ( 1 << MOSSWITCH );
 
     // Local Variables
-    uint32_t scheme = 0, anti_scheme = 0, controlvar = 0;
+    uint32_t scheme = 0, anti_scheme = 0, controlvar = 0, chPattern = 0, chIdentifier[FIRE_CHANNELS] = { 0 };
     uint8_t  iii, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
@@ -368,6 +368,14 @@ int main( void ) {
         slaves[warten].sharpness       = 0;
         slaves[warten].temperature     = -128;
         slaves[warten].rssi            = 0;
+    }
+
+    // Populate channel pattern array:
+    // chIdentifier[ i ] = 1 << i
+    uint32_t chMsk = 1UL << (FIRE_CHANNELS-1);
+    for ( uint8_t i = FIRE_CHANNELS; i; i-- ) {
+        chIdentifier[ i - 1 ] = chMsk;
+        chMsk >>= 1;
     }
 
     // Initialise devices
@@ -1107,26 +1115,14 @@ int main( void ) {
             cli();
             flags.b.fire = 0;
 
-            if ( armed && ( rx_field[2] > 0 ) && ( rx_field[2] < ( FIRE_CHANNELS + 1 ) ) ) { // If channel number is valid
-                tmp = rx_field[2];                                                           // Save channel number to variable
+            if ( armed && chPattern ) { // If channel number is valid
 
                 flags.b.is_fire_active = 1;                                                  // Signalize that we're currently firing
 
                 // Turn all leds on
                 leds_on();
 
-                scheme = 0;                                                                  // Set mask-variable to zero
-
-                for ( uint8_t i = FIRE_CHANNELS; i; i-- ) {
-                    scheme <<= 1; // Left-shift mask-variable
-
-                    if ( i == tmp ) {
-                        scheme |= 1; // Set LSB if loop variable equals channel number
-
-                    }
-                }
-
-                scheme |= active_channels;
+                scheme = chPattern | active_channels;
 
                 MOSSWITCHPORT |= ( 1 << MOSSWITCH );
                 sr_shiftout( scheme ); // Write pattern to shift-register
@@ -1222,12 +1218,14 @@ int main( void ) {
                     case FIRE: {
                         // Wait for all repetitions to be over
                         waitRx( FIRE );
-
-                        if ( armed && ( rx_field[1] == slave_id ) && !TRANSMITTER ) {
-                            tmp = rx_field[2] - 1;
-
-                            if ( !flags.b.fire ) {
-                                flags.b.fire = 1;
+                        chPattern = 0;
+                        for ( uint8_t i = 0; i < (rx_length - 2)/2; i++ ) {
+                            if ( armed && ( rx_field[1 + 2*i] == slave_id ) && rx_field[2 + 2*i] && ( rx_field[2 + 2*i] <= FIRE_CHANNELS ) && !TRANSMITTER ) {
+                                tmp = rx_field[2 + 2*i] - 1;        // Get channel number and transpose to 0-based counting
+                                chPattern |= chIdentifier[ tmp ];   // Update channel pattern
+                                if ( !flags.b.fire ) {
+                                    flags.b.fire = 1;
+                                }
                             }
                         }
 
