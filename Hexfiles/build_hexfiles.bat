@@ -158,7 +158,7 @@ REM -------------------------------------------------------------------
 
 echo Compiling Minimodul-sources for ATMega328p and RFM69 (13dBm, 4 Channels)...
 
-for %%X in (..\Firmware_Minimodul\*.c) do avr-gcc -Wall -Wextra -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -mcall-prologues -fno-tree-loop-optimize -fno-caller-saves -DRFM=69 -DCOMPILEDATE=%dtstrng% -DCOMPILETIME=%tmstrng% -DMAX_ID=%maxId% -DFIRE_CHANNELS=4UL -DP_OUT_DBM=13 -DHPVERSION=0 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=11059200UL -MMD -MP -MF"%%~nX.d" -MT"%%~nX.d" -c -o "%%~nX.o" "../Firmware_Minimodul/%%~nX.c"
+for %%X in (..\Firmware_Minimodul\*.c) do avr-gcc -Wall -Wextra -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -mcall-prologues -fno-tree-loop-optimize -fno-caller-saves -DRFM=69 -DCOMPILEDATE=%dtstrng% -DCOMPILETIME=%tmstrng% -DMAX_ID=%maxId% -DFIRE_CHANNELS=4UL -DP_OUT_DBM=13 -DHPVERSION=0 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=11059258UL -MMD -MP -MF"%%~nX.d" -MT"%%~nX.d" -c -o "%%~nX.o" "../Firmware_Minimodul/%%~nX.c"
 
 avr-gcc -Wl,-Map,Pyro_Mini_atmega328p_RFM69CW_4ch.map -flto -Os -mrelax -mmcu=atmega328p -o "Pyro_Mini_atmega328p_RFM69CW_4ch.elf" %fooM%
 
@@ -175,7 +175,7 @@ REM -------------------------------------------------------------------
 
 echo Compiling Minimodul-sources for ATMega328p and RFM69 (20dBm, 4 Channels)...
 
-for %%X in (..\Firmware_Minimodul\*.c) do avr-gcc -Wall -Wextra -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -mcall-prologues -fno-tree-loop-optimize -fno-caller-saves -DRFM=69 -DCOMPILEDATE=%dtstrng% -DCOMPILETIME=%tmstrng% -DMAX_ID=%maxId% -DFIRE_CHANNELS=4UL -DP_OUT_DBM=20 -DHPVERSION=1 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=11059200UL -MMD -MP -MF"%%~nX.d" -MT"%%~nX.d" -c -o "%%~nX.o" "../Firmware_Minimodul/%%~nX.c"
+for %%X in (..\Firmware_Minimodul\*.c) do avr-gcc -Wall -Wextra -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -mcall-prologues -fno-tree-loop-optimize -fno-caller-saves -DRFM=69 -DCOMPILEDATE=%dtstrng% -DCOMPILETIME=%tmstrng% -DMAX_ID=%maxId% -DFIRE_CHANNELS=4UL -DP_OUT_DBM=20 -DHPVERSION=1 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=11059258UL -MMD -MP -MF"%%~nX.d" -MT"%%~nX.d" -c -o "%%~nX.o" "../Firmware_Minimodul/%%~nX.c"
 
 avr-gcc -Wl,-Map,Pyro_Mini_atmega328p_RFM69HCW_4ch.map -flto -Os -mrelax -mmcu=atmega328p -o "Pyro_Mini_atmega328p_RFM69HCW_4ch.elf" %fooM%
 

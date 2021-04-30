@@ -723,12 +723,11 @@ int main( void ) {
         // -------------------------------------------------------------------------------------------------------
 
         // Update channel impedances unless some more important event is happening right now
-        if (   ( ( !armed && ( timer1_flags & TIMER_MEASURE_FLAG ) ) || flags.b.read_impedance )
+        if (   ( flags.b.read_impedance )
            && !( flags.b.receive || ( flags.b.transmit && ( transmission_type != IMPEDANCES ) ) ) ) {
             temp_sreg = SREG;
             cli();
             flags.b.read_impedance = 0;
-            timer1_flags          &= ~TIMER_MEASURE_FLAG;
 
             uint8_t forced_measure = flags.b.transmit && ( transmission_type == IMPEDANCES );
             uint8_t stop_measure   = 0;
@@ -811,6 +810,12 @@ int main( void ) {
             uart_puts_P( PSTR( "\r\n\n\n" ) );
 
             SREG = temp_sreg;
+        }
+
+        // Clear channel LEDs after 5 s
+        if ( ( test_flag == 2 ) && !armed ) {
+            test_flag = 0;
+            sr_shiftout( 0 );
         }
 
         // -------------------------------------------------------------------------------------------------------
@@ -1400,12 +1405,14 @@ int main( void ) {
 // Interrupt vectors
 ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
     // Trigger impedance measurement every 1.25s
-    static uint8_t meascycles = 0;
-    meascycles++;
+    static uint16_t meascycles = 0;
 
-    if ( meascycles > 124 ) {
-        timer1_flags |= TIMER_MEASURE_FLAG;
-        meascycles    = 0;
+    if( test_flag == 1 ) {
+        meascycles++;
+        if ( meascycles > 500 ) {
+            meascycles    = 0;
+            test_flag     = 2;
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------

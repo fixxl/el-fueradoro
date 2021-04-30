@@ -1286,7 +1286,7 @@ int main( void ) {
                             slaves[tmp].sharpness       = ( rx_field[4] ? 'j' : 'n' );
                             slaves[tmp].temperature     = rx_field[5];
                             slaves[tmp].channels        = rx_field[6];
-                            slaves[tmp].rssi            = rssi;
+                            slaves[tmp].rssi            = rx_field[7];
                         }
 
                         break;
