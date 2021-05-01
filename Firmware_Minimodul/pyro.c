@@ -424,6 +424,7 @@ int main( void ) {
 
     flags.b.transmit       = 1;
     flags.b.read_impedance = 1;
+    test_flag              = 1;
     transmission_type      = PARAMETERS;
     key_flag               = 1;
 
