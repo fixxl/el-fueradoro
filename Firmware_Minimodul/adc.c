@@ -68,7 +68,7 @@ uint8_t bat_calc( const uint8_t channel ) {
     uint16_t voltage_raw = adc_read( channel );
 
     // voltage_raw * 11 / 64 = voltage_in
-    result = ( 11 * voltage_raw + 32 ) >> 6;
+    result = ( 11 * voltage_raw + 128 ) >> 8;
 
     return result;
 }
