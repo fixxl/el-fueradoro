@@ -749,7 +749,7 @@
 			\begin{description}
 				\item[raspEasyFire.conf] Die Konfigurationsdatei mit grundlegenden Programmeinstellungen. Mit einer Raute (\#) beginnende Zeilen stellen dabei Kommentare dar, welche die Bedeutung der nachfolgenden Einstellungen demonstrieren, Einstellungen selbst werden in der Form \enquote{Variable: Wert} angegeben. Typischerweise sollte es nicht notwendig sein, hier Einstellungen zu ändern, der derzeit ausgewählte Zündplan wird beispielsweise immer automatisch durch das eigentliche Programm aktualisiert, andere Einstellungen können in der {\REF}-Oberfläche geändert werden.
 				\item[aesvalues\_default.txt] Diese Datei enthält den Standard-AES-Schlüssel, der zur Kommunikation mit den Zündboxen verwendet wird. Die Werte heißen \enquote{value\_01, \dots, value\_16} und müssen im Hexadezimalformat, d.h. mit vorangestelltem \enquote{0x} angegeben werden, der Wertebereich für jeden einzelnen \enquote{value} geht von \enquote{0x00} bis \enquote{0xFF}.
-				\item[aesvalues.txt] Diese Datei wird enthält den derzeit im Programm verwendeten AES-Schlüssel. Im Auslieferungszustand ist sie mit \emph{aesvalues\_default.txt} identisch.
+				\item[aesvalues.txt] Diese Datei enthält den derzeit im Programm verwendeten AES-Schlüssel. Im Auslieferungszustand ist sie mit \emph{aesvalues\_default.txt} identisch.
 			\end{description}
 
 			Um einen eigenen AES-Schlüssel, welcher beispielsweise den Namen \enquote{mykey} tragen könnte, anzulegen, empfiehlt es sich, die Datei \emph{aesvalues\_default.txt} zunächst mit dem Kopierbefehl \emph{cp} zu duplizieren:
@@ -863,6 +863,8 @@
 				\end{figure}
 
 			\subsection{Weitere Optionen}
+				Über diesen Menüpunkt erhält man Zugang zu weiteren Untermenüs und Funktionen.
+				
 				\subsubsection{Einstellungen anpassen}
 					Unter diesem Punkt können einige Grundeinstellungen des Programms verändert werden:
 					\begin{description}
@@ -875,13 +877,13 @@
 						\item [Herunterfahren beim Beenden]
 						      Soll nach dem Beenden von {\REF} das System komplett heruntergefahren oder in den Commandprompt gesprungen werden?
 						\item [Fehlende Slaves ignorieren]
-						      Soll beim Überprüfen der automatischen oder semiautomatischen Show darauf bestanden werden, dass alle im Zündplan genannten Slaves (außer Slave 99) auch tatsächlich mindestens einmal vorhanden und alle Slaves scharf geschaltet sind oder nicht? Für den manuellen Modus hat diese Einstellung keine Bedeutung.
+						      Soll beim Überprüfen der automatischen oder semiautomatischen Show darauf bestanden werden, dass jede im Zündplan genannten Slave-ID (außer Slave 999) auch tatsächlich mindestens einmal vorhanden, die verfügbare Kanalzahl größer oder gleich der maximal bei dieser Slave-ID adressierten Kanalnummer ist und alle Slaves scharf geschaltet sind oder nicht? Für den manuellen Modus hat diese Einstellung keine Bedeutung.
 						\item [Soundcheck mit Showmusik]
-							  Soll die aktuell ausgewählte Musik für den Soundcheck verwendet werden? Bei \enquote{Nein} wird das Standard-Teststück verwendet.
+							  Soll die aktuell ausgewählte Musik für den Soundcheck verwendet werden? Bei \enquote{Nein} wird das Standard-Teststück (showfiles/mp3/test.mp3) verwendet.
 						\item [Lautstärke]
 						      Lautstärkeeinstellung der Soundkarte für die Wiedergabe der Musik in Prozent.
 						\item [Maximale Anzahl Slaves]
-						      Wie viele Slaves sind zulässig? Dieser Wert ist gleichzeitig auch der Maximalwert für Unique-ID und Slave-ID einer einzelnen Box. Je größer dieser Wert gewählt wird, umso länger dauert auch die Slavesuche, weil das Programm jeder Unique-ID einen Zeitschlitz fester länge zuweist, um auf eine Identifizierungsanfrage zu antworten.
+						      Wie viele Slaves sind zulässig? Dieser Wert ist gleichzeitig auch der Maximalwert für Unique-ID und Slave-ID einer einzelnen Box. Je größer dieser Wert gewählt wird, umso länger dauert auch die Slavesuche, weil das Programm jeder Unique-ID einen Zeitschlitz fester Länge zuweist, um auf eine Identifizierungsanfrage zu antworten.
 					\end{description}
 
 					Diese Einstellungen können durch \enquote{Bestätigen} dauerhaft übernommen oder durch \enquote{Abbrechen} wieder verworfen werden.
@@ -898,7 +900,7 @@
 					Wird eine eingeschaltete Zündbox über USB-Kabel (v3) bzw. einen RS232-USB-Konverter (v1/v2) an den Raspberry Pi angeschlossen, kann unter diesem Punkt ihr AES-Schlüssel ausgelesen werden. Unterscheidet er sich vom aktuell in {\REF} eingestellten Schlüssel, kann der Nutzer entscheiden, wessen Schlüssel auf das andere Device übertragen werden soll.				
 				
 				\subsubsection{El Fueradoro flashen}
-					In diesem Untermenü ist es möglich, die aktuellen Bootloader- und Firmwaredateien für \anlage{} herunterzuladen sowie über einen geeigneten Programmer den Bootloader auf ein El-Fueradoro-Device zu schreiben und bei vorhandenem Bootloader die Firmware zu übertragen. Zu diesem Zweck muss das Device von {\anlage} per Programmer (Bootloader) oder USB-Kabel (Firmware v3) bzw. USB-RS232-Adapter (Firmware früherer Generationen) mit \emph{raspEasyFire} verbunden werden.
+					In diesem Untermenü ist es möglich, die aktuellen Bootloader- und Firmwaredateien für \anlage{} herunterzuladen sowie über einen geeigneten Programmer den Bootloader auf ein El-Fueradoro-Device zu schreiben und bei vorhandenem Bootloader die Firmware zu übertragen. Zu diesem Zweck muss das Device von {\anlage} per Programmer (Bootloader) oder USB-Kabel (Firmware v3) bzw. USB-RS232-Adapter (Firmware früherer Generationen) mit \emph{raspEasyFire} verbunden werden. Standardmäßig sind im Image keine Firmwaredateien enthalten, vor dem ersten Flashen müssen diese also zwingend heruntergeladen werden. Den korrekten Bootloader und die korrekte Firmware für das angeschlossene Device (Generation/Funkmodul/Kanalzahl) auszuwählen, ist Aufgabe des Benutzers.
 
 				\subsubsection{Slave ID ändern}
 					Zündboxen können neue IDs zugewiesen werden, den Bildschirm dazu zeigt Abbildung~\ref{fig:REFids}. Hierzu müssen per \enquote{+} und \enquote{-} die alten und neuen IDs eingestellt werden, durch Druck auf \enquote{Bestätigen} wird der Befehl zur Änderung der IDs dann abgeschickt. Es ist zu beachten, dass diese Änderung nur wirksam werden kann, wenn die entsprechende Zündbox nicht scharf geschaltet ist.
@@ -934,7 +936,7 @@
 			
 				Frühere Generationen der Zündboxen (vor v3) können keine Widerstandsmessung durchführen, sie geben daher für alle Kanäle den Wert \enquote{n.a.} (not available) zurück.
 			
-			\subsection{Schlüsselwörter in Zündplänen}
+			\subsection{Besonderheiten in Zündplänen}
 			
 				Um die Funktionalität der zpl-Dateien zu erweitern, die Kompatibilität mit \pic{} aber zu erhalten, existieren einige Schlüsselwörter und -zahlen, die für \pic{} keine Bedeutung haben, in \REF{} aber entsprechend interpretiert werden:
 				\begin{description}
@@ -945,6 +947,8 @@
 					\item [Slave 999]
 					Durch Verwendung der Slave-ID 999 wird \REF{} mitgeteilt, dass es sich hierbei nicht um einen tatsächlich zu schießenden Cue handelt, sondern nur um etwas, was auf dem Bildschirm angezeigt werden soll, beispielsweise durch einen zeitgesteuerten Stepper gezündete Cues oder Erinnerungen an eine bestimmte Aktion.
 				\end{description}
+			
+				Seit April 2021 ist es mit \REF{} möglich, mehrere Slave-Kanal-Kombinationen (maximal 7 verschiedene) gleichzeitig zu zünden. Hierbei ist bei der Erstellung des Zündplans darauf zu achten, dass die Werte in der Spalte \enquote{Zündzeitpunkt} bzw. \enquote{Ignition Time} für die gleichzeitig zu feuernden Kombinationen identisch sind. Nur dann fasst \REF{} sie zu einem gemeinsamen Zündbefehl zusammen. Die Einschränkung, dass zwischen zwei Zündbefehlen mit nicht identischem Zündzeitpunkt mindestens \SI{100}{\milli\second} liegen müssen, bleibt weiterhin bestehen.
 
 			\subsection{Showstart}
 
