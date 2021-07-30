@@ -1372,6 +1372,7 @@ int main( void ) {
                             timer1_reset();
                             timer1_flags |= TIMER_TRANSMITCOUNTER_FLAG;
                             transmit_flag = 10 * unique_id; // Preload for 100ms delay
+                            test_flag     = 1;
                         }
 
                         break;
