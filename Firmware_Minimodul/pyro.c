@@ -494,7 +494,6 @@ int main( void ) {
 
                             if ( test_deb ) {
                                 flags.b.read_impedance = 1;
-                                test_flag              = 1;
                             }
 
                             if ( hall_arm ) {
@@ -763,6 +762,7 @@ int main( void ) {
             if ( !stop_measure ) {
                 if ( !armed ) {
                     sr_shiftout( ( statusleds << 0x04 ) & mask_led );
+                    test_flag     = 1;
                 }
                 else {
                     sr_shiftout( 0 );
@@ -1372,7 +1372,6 @@ int main( void ) {
                             timer1_reset();
                             timer1_flags |= TIMER_TRANSMITCOUNTER_FLAG;
                             transmit_flag = 10 * unique_id; // Preload for 100ms delay
-                            test_flag     = 1;
                         }
 
                         break;
