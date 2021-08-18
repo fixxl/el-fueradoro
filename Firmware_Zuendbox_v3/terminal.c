@@ -351,8 +351,8 @@ uint8_t igniter_setup( uint8_t ignition_setting ) {
 
     uart_puts_P( PSTR( "\r\nDerzeit eingestelltes Anzündmittel\r\n==================================\r\n\n" ) );
 
-    if ( ignition_setting == 200 ) {
-        uart_puts_P( PSTR( "TALON (2 s)" ) );
+    if ( ignition_setting == TALON_TIME ) {
+        uart_puts_P( PSTR( "TALON (2.45 s)" ) );
     }
     else {
         uart_puts_P( PSTR( "E-ANZÜNDER (20 ms)" ) );
@@ -367,10 +367,10 @@ uint8_t igniter_setup( uint8_t ignition_setting ) {
 
     switch ( valid | 0x20 ) {
         case 'e': {
-            return 2;
+            return EMATCH_TIME;
         }
         case 't': {
-            return 200;
+            return TALON_TIME;
         }
         default: {
             return ignition_setting;
