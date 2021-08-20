@@ -354,11 +354,14 @@ uint8_t igniter_setup( uint8_t ignition_setting ) {
     if ( ignition_setting == TALON_TIME ) {
         uart_puts_P( PSTR( "TALON (2.45 s)" ) );
     }
+    else if ( ignition_setting == FLAMER_TIME ) {
+        uart_puts_P( PSTR( "FLAMER (350 ms)" ) );
+    }
     else {
         uart_puts_P( PSTR( "E-ANZÜNDER (20 ms)" ) );
     }
 
-    uart_puts_P( PSTR( "\r\nAuswahl: (E)-Anzünder, (T)alon, Abbruch mit anderer Taste: " ) );
+    uart_puts_P( PSTR( "\r\nAuswahl: (E)-Anzünder, (F)lamer, (T)alon, Abbruch mit anderer Taste: " ) );
     while ( !valid )
         valid = uart_getc();
 
@@ -371,6 +374,9 @@ uint8_t igniter_setup( uint8_t ignition_setting ) {
         }
         case 't': {
             return TALON_TIME;
+        }
+        case 'f': {
+            return FLAMER_TIME;
         }
         default: {
             return ignition_setting;

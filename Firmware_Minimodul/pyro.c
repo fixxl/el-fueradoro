@@ -286,11 +286,11 @@ int main( void ) {
     }
 
     // Make sure, ignition time is properly defined and set ignition time
-    if ( ( eeread( 365 ) != TALON_TIME ) && ( eeread( 365 ) != EMATCH_TIME ) ) {
-        eewrite( EMATCH_TIME, 365 );
+    ignition_time = eeread( FIRE_DURATION_ADDRESS );
+    if ( ( ignition_time != TALON_TIME ) && ( ignition_time != FLAMER_TIME ) && ( ignition_time != EMATCH_TIME ) ) {
+        eewrite( EMATCH_TIME, FIRE_DURATION_ADDRESS );
+        ignition_time = EMATCH_TIME;
     }
-
-    ignition_time = ( eeread( 365 ) == TALON_TIME ) ? TALON_TIME : EMATCH_TIME;
 
     // Initialise arrays
     for ( uint8_t warten = 0; warten < MAX_COM_ARRAYSIZE; warten++ ) {
@@ -649,7 +649,7 @@ int main( void ) {
                 ignition_time   = igniter_setup( ignition_time );
 
                 if ( ignition_time != ign_time_backup ) {
-                    eewrite( ignition_time, 365 );
+                    eewrite( ignition_time, FIRE_DURATION_ADDRESS );
                 }
             }
 

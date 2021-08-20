@@ -18,6 +18,7 @@
 
 // Ignition time * 10ms
 #define EMATCH_TIME           2
+#define FLAMER_TIME           35
 #define TALON_TIME            245
 
 // Main clock frequency
@@ -148,6 +149,7 @@ typedef struct {
 #define DS18B20                      'o'
 
 #define START_ADDRESS_AESKEY_STORAGE 32
+#define FIRE_DURATION_ADDRESS        365
 
 // Funktionsprototypen
 uint8_t asciihex( char inp );
