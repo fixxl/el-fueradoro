@@ -1221,11 +1221,10 @@ int main( void ) {
                         chPattern = 0;
                         for ( uint8_t i = 0; i < (rx_length - 2)/2; i++ ) {
                             if ( armed && ( rx_field[1 + 2*i] == slave_id ) && rx_field[2 + 2*i] && ( rx_field[2 + 2*i] <= FIRE_CHANNELS ) && !TRANSMITTER ) {
-                                tmp = rx_field[2 + 2*i] - 1;        // Get channel number and transpose to 0-based counting
-                                chPattern |= chIdentifier[ tmp ];   // Update channel pattern
-                                if ( !flags.b.fire ) {
-                                    flags.b.fire = 1;
-                                }
+                                tmp                    = rx_field[2 + 2*i] - 1;        // Get channel number and transpose to 0-based counting
+                                chPattern             |= chIdentifier[ tmp ];   // Update channel pattern
+                                channel_timeout[ tmp ] = 0;
+                                flags.b.fire           = 1;
                             }
                         }
 
