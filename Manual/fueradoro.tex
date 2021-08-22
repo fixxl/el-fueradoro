@@ -364,6 +364,7 @@
 							\hyperref[sec:manuellessenden]{temp}  & Gibt über die serielle Schnittstelle die Temperatur aus und fordert alle anderen Devices ebenfalls zur Temperaturmessung auf. Zum Auslesen der neu gemessenen Temperaturen muss dann eine Identifizierungsanfrage geschickt werden \\ \hline
 							\hyperref[sec:rfmzugriff]{rfm}        & Erlaubt unmittelbaren Zugriff auf das Funkmodul durch Eingabe einer 16-Bit-Hexadezimalzahl, um Registerwerte auszulesen oder neu zu setzen                                                                                         \\
 							\hyperref[sec:encryption]{aeskey}     & Schlüssel für die Funkübertragung auslesen und neu setzen                                                                                                                                                                          \\ \hline
+							\hyperref[sec:igniter]{igniter}    & Verwendeten Anzündertyp und somit Öffnungszeit der Zündkanäle setzen                                                                                                                                                                          \\ \hline
 							orders                                & Gibt letztes gesendetes und empfangenes Pattern auf LCD aus                                                                                                                                                                        \\ \hline
 							cls                                   & Löscht den Terminal-Bildschirm                                                                                                                                                                                                     \\
 							kill                                  & Löst einen Neustart des Device aus                                                                                                                                                                                                 \\ \hline\hline
@@ -553,7 +554,20 @@
 					\caption{Auslesen und Neusetzen des AES-Schlüssels}
 					\label{fig:aeskey}
 				\end{figure}
-				\clearpage
+			
+			\subsection{Anzündertyp}
+			\label{sec:igniter}
+			
+			Um {\anlage} auch mit anderen Anzündertypen als den Standard E-Anzündern wie Talon-Anzündern nutzen zu können oder einen Zündkanal als Trigger für Geräte wie Flamer nutzen zu können, kann die Zünddauer angepasst werden. Es stehen dabei die Optionen:
+			\begin{itemize}
+				\item E-Anzünder: \SI{20}{\milli\second}
+				\item Flamer: \SI{350}{\milli\second}
+				\item Talon: \SI{2450}{\milli\second}
+			\end{itemize}
+			zur Auswahl.
+			
+			Nach Eingabe von \enquote{igniter} im Terminalfenster kann die aktuelle Einstellung eingesehen werden, durch Eingabe eines Buchstabens, der den entsprechenden Optionen zugeordnet ist, kann diese Einstellung geändert werden. Eine nicht zugeordnete Taste beendet das Einstellungsmenü ohne Änderung. Die Einstellung bezieht sich dabei immer auf alle Kanäle der Zündbox und bleibt auch nach Neustart und Firmware-Update erhalten. 
+			\clearpage
 
 		\section{GUI}
 
