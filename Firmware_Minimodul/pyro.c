@@ -12,9 +12,11 @@
 
 // Global Variables
 static volatile uint8_t  key_flag = 0, timer1_flags = 0, test_flag = 0;
+static volatile int8_t   rssi_flag = 0;
 static volatile uint8_t  channel_monitor = 0;
 static volatile uint16_t transmit_flag   = 0;
 static volatile uint32_t active_channels = 0;
+static volatile uint16_t rx_timeout_ctr  = 0;
 
 
 void wdt_init( void ) {
@@ -1403,13 +1405,34 @@ int main( void ) {
 
 // Interrupt vectors
 ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
-    // Trigger impedance measurement every 1.25s
-    static uint16_t meascycles = 0;
+    static uint8_t rxTimeoutMeascycles = 0;
+    static uint16_t channelLedMeascycles = 0;
+
+    // -------------------------------------------------------------------------------------------------------
+
+    rxTimeoutMeascycles++;
+
+    if ( rxTimeoutMeascycles > 124 ) {
+        rxTimeoutMeascycles    = 0;
+
+        // Check number of Rx timeouts in last 1.25s
+        // Reduce more (2 dB) or less (0.5 dB) depending on number of timeouts
+        // or increase (0.5 dB) in case of no timeouts. Then reset counter for new cycle.
+        if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD ) {
+            rssi_flag = (rx_timeout_ctr > (10 * RX_TIMEOUT_CTR_THRESHOLD)) ? 4 : 1;
+        }
+        if ( rx_timeout_ctr == 0 ) {
+            rssi_flag = -1;
+        }
+        rx_timeout_ctr = 0;
+    }
+
+    // -------------------------------------------------------------------------------------------------------
 
     if( test_flag == 1 ) {
-        meascycles++;
-        if ( meascycles > 500 ) {
-            meascycles    = 0;
+        channelLedMeascycles++;
+        if ( channelLedMeascycles > 500 ) {
+            channelLedMeascycles    = 0;
             test_flag     = 2;
         }
     }

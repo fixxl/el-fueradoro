@@ -29,6 +29,13 @@
     #define HPVERSION          0
 #endif
 
+#ifndef SQUELCH_THRESHOLD
+    #define SQUELCH_UPPER_LIMIT  -82
+#endif
+
+#ifndef RX_TIMEOUT_CTR_THRESHOLD
+    #define RX_TIMEOUT_CTR_THRESHOLD 5
+#endif
 /* Pin assignment */
 #define NSELPORT               C
 #define NSEL                   3

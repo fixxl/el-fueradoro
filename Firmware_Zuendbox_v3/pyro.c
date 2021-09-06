@@ -11,9 +11,11 @@
 
 // Global Variables
 static volatile uint8_t  key_flag = 0, timer1_flags = 0;
+static volatile int8_t   rssi_flag = 0;
 static volatile uint8_t  channel_monitor = 0;
 static volatile uint16_t transmit_flag   = 0;
 static volatile uint32_t active_channels = 0;
+static volatile uint16_t rx_timeout_ctr  = 0;
 
 void wdt_init( void ) {
     MCUSR = 0;
@@ -216,6 +218,7 @@ int main( void ) {
     uint8_t  iii, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
+    uint8_t  rxState = 0, squelch_setting;
     uint8_t  debounce_key_ctr = 0;
     uint8_t  debounce_current_state = 0;
     uint8_t  debounce_old_state = 0;
@@ -339,6 +342,7 @@ int main( void ) {
         slaves[warten].sharpness       = 0;
         slaves[warten].temperature     = -128;
         slaves[warten].rssi            = -128;
+        slaves[warten].squelch         = 0;
     }
 
     // Populate channel pattern array:
@@ -458,6 +462,7 @@ int main( void ) {
     tx_field[5]        = temperature;
     tx_field[6]        = FIRE_CHANNELS;
     tx_field[7]        = rssi;
+    tx_field[8]        = rfm_cmd( 0x2900, 0 ) >> 1;
 
     flags.b.transmit       = 1;
     flags.b.read_impedance = 1;
@@ -739,7 +744,11 @@ int main( void ) {
         // Check receive flag
         temp_sreg = SREG;
         cli();
-        flags.b.receive = rfm_receiving();
+        rxState = rfm_receiving();
+        flags.b.receive = flags.b.receive || (rxState == 1);
+        if ( rxState == 2 ) {
+            rx_timeout_ctr++;
+        }
         SREG            = temp_sreg;
 
         // -------------------------------------------------------------------------------------------------------
@@ -764,7 +773,7 @@ int main( void ) {
             for ( uint8_t i = 0; ( i < FIRE_CHANNELS ) && !stop_measure; i++ ) {
                 // To avoid missing an incoming packet or colliding with other boxes
                 // because of cyclic impedance measurement, check for packet on every channel
-                flags.b.receive = flags.b.receive || rfm_receiving();
+                flags.b.receive = flags.b.receive || (rfm_receiving() == 1);
                 stop_measure    = !forced_measure && flags.b.receive;
 
                 if ( !stop_measure ) {
@@ -1084,6 +1093,7 @@ int main( void ) {
                 slaves[iii].sharpness       = 0;
                 slaves[iii].temperature     = -128;
                 slaves[iii].rssi            = -128;
+                slaves[iii].squelch         = 0;
             }
 
             // Ignition devices have to write themselves in the list
@@ -1093,6 +1103,7 @@ int main( void ) {
             slaves[unique_id - 1].sharpness       = ( armed ? 'j' : 'n' );
             slaves[unique_id - 1].temperature     = temperature;
             slaves[unique_id - 1].rssi            = 0;
+            slaves[unique_id - 1].squelch         = rfm_cmd( 0x2900, 0 ) >> 1;
 
             SREG = temp_sreg;
         }
@@ -1240,7 +1251,11 @@ int main( void ) {
         // Check receive flag
         temp_sreg = SREG;
         cli();
-        flags.b.receive = flags.b.receive || rfm_receiving();
+        rxState = rfm_receiving();
+        flags.b.receive = flags.b.receive || (rxState == 1);
+        if ( rxState == 2 ) {
+            rx_timeout_ctr++;
+        }
         SREG            = temp_sreg;
 
         // -------------------------------------------------------------------------------------------------------
@@ -1302,6 +1317,7 @@ int main( void ) {
                         tx_field[5] = temperature;
                         tx_field[6] = FIRE_CHANNELS;
                         tx_field[7] = rssi;
+                        tx_field[8] = rfm_cmd( 0x2900, 0 ) >> 1;
 
                         transmission_allowed = 0;
 
@@ -1334,7 +1350,8 @@ int main( void ) {
                             slaves[tmp].sharpness       = ( rx_field[4] ? 'j' : 'n' );
                             slaves[tmp].temperature     = rx_field[5];
                             slaves[tmp].channels        = rx_field[6];
-                            slaves[tmp].rssi            = rssi;
+                            slaves[tmp].rssi            = rx_field[7];
+                            slaves[tmp].squelch         = rx_field[8];
                         }
 
                         break;
@@ -1398,6 +1415,25 @@ int main( void ) {
 
         // -------------------------------------------------------------------------------------------------------
 
+        if ( rssi_flag != 0 ) {
+            temp_sreg = SREG;
+            cli();
+
+            squelch_setting = rfm_cmd( 0x2900, 0 );
+
+            // Less sensitive squelch value in case of too many timeouts
+            if( rssi_flag > 0 && squelch_setting > (-2*SQUELCH_UPPER_LIMIT) ) {
+                squelch_setting -= rssi_flag;
+            }
+            // More sensitive squelch value in case of no timeouts
+            else if( rssi_flag == -1 && squelch_setting != 255 ) {
+                squelch_setting++;
+            }
+            rfm_cmd( 0x2900 | squelch_setting, 1 );
+            rssi_flag = 0;
+            SREG = temp_sreg;
+        }
+
     }
 
     // -------------------------------------------------------------------------------------------------------
@@ -1414,6 +1450,17 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
     if ( meascycles > 124 ) {
         timer1_flags |= TIMER_MEASURE_FLAG;
         meascycles    = 0;
+
+        // Check number of Rx timeouts in last 1.25s
+        // Reduce more (2 dB) or less (0.5 dB) depending on number of timeouts
+        // or increase (0.5 dB) in case of no timeouts. Then reset counter for new cycle.
+        if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD ) {
+            rssi_flag = (rx_timeout_ctr > (10 * RX_TIMEOUT_CTR_THRESHOLD)) ? 4 : 1;
+        }
+        if ( rx_timeout_ctr == 0 ) {
+            rssi_flag = -1;
+        }
+        rx_timeout_ctr = 0;
     }
 
     // -------------------------------------------------------------------------------------------------------

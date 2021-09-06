@@ -66,16 +66,29 @@
     }
 
     uint8_t rfm_receiving( void ) {
+        /* This function returns
+         * 0 if nothing was received
+         * 1 if a packet has been received successfully
+         * 2 if a timeout has occurred (no package detected after trigger)
+         * 4 in case of a FIFO overflow
+         */
         uint16_t status;
         status = rfm_status();
 
         // No Payload and RSSI-Rx-Timeout -> Rx-Restart
         if ( ( !( status & ( 1 << 2 ) ) ) && ( status & ( 1 << 10 ) ) ) {
             rfm_cmd( ( rfm_cmd( 0x3DFF, 0 ) | 0x3D04 ), 1 );
+            return 2;
         }
-
+        // FIFO overflow
+        else if ( ( status & ( 1 << 4 ) ) && !( status && ( 1 << 0 ) ) ) {
+            rfm_cmd( 0x2810, 1 );
+            return 4;
+        }
         // Check if PayloadReady is set AND unused bit is not set (if bit 0 is set, module is not plugged in)
-        return ( status & ( 1 << 2 ) ) && !( status & ( 1 << 0 ) );
+        else {
+            return ( status & ( 1 << 2 ) ) && !( status & ( 1 << 0 ) );
+        }
     }
 
     uint16_t rfm_status( void ) {

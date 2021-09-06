@@ -79,11 +79,11 @@
 #define   FIRE_LENGTH          4
 #define   IDENT_LENGTH         4
 #define   MEASURE_LENGTH       4
-#define   PARAMETERS_LENGTH    9
+#define   PARAMETERS_LENGTH    10
 #define   TEMPERATURE_LENGTH   5
 #define   CHANGE_LENGTH        6
 #define   RSSITHRESHOLD_LENGTH 2
-#define   IMPEDANCES_LENGTH   (4+FIRE_CHANNELS)
+#define   IMPEDANCES_LENGTH    (4+FIRE_CHANNELS)
 
 // Number of repetitions for radio messages
 #define   FIRE_REPEATS          3
@@ -125,6 +125,7 @@ typedef struct {
     int8_t  temperature;
     uint8_t channels;
     uint8_t rssi;
+    uint8_t squelch;
 } fireslave_t;
 
 #define ARM_DDR                      DDR( ARMPORT )
@@ -174,7 +175,7 @@ typedef struct {
     && ( eeread( START_ADDRESS_ID_STORAGE + 1 ) == eeread( START_ADDRESS_ID_STORAGE + 1 + STEP_ID_STORAGE ) ) \
     && ( eeread( START_ADDRESS_ID_STORAGE + 1 ) == eeread( START_ADDRESS_ID_STORAGE + 1 + 2 * STEP_ID_STORAGE ) )
 
-// Temperatursensoren
+// Temperature Sensors
 #define DS18B20                      'o'
 
 #define START_ADDRESS_AESKEY_STORAGE 32

@@ -70,7 +70,7 @@
 #define   FIRE_LENGTH          4
 #define   IDENT_LENGTH         4
 #define   MEASURE_LENGTH       4
-#define   PARAMETERS_LENGTH    9
+#define   PARAMETERS_LENGTH    10
 #define   TEMPERATURE_LENGTH   5
 #define   CHANGE_LENGTH        6
 #define   RSSITHRESHOLD_LENGTH 2
@@ -117,6 +117,7 @@ typedef struct {
     int8_t  temperature;
     uint8_t channels;
     uint8_t rssi;
+    uint8_t squelch;
 } fireslave_t;
 
 #define TRANSMITTER                  ( !ig_or_notrans )
