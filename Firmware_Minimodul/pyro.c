@@ -191,6 +191,7 @@ int main( void ) {
     uint8_t  iii, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
+    uint8_t  rxState = 0, squelch_setting;
     uint8_t  debounce_reed_ctr = 0, debounce_arm_ctr = 0, debounce_test_ctr = 0;
     uint8_t  debounce_current_state = 0;
     uint8_t  debounce_old_state = 0;
@@ -719,7 +720,11 @@ int main( void ) {
         // Check receive flag
         temp_sreg = SREG;
         cli();
-        flags.b.receive = rfm_receiving();
+        rxState = rfm_receiving();
+        flags.b.receive = flags.b.receive || (rxState == 1);
+        if ( rxState == 2 ) {
+            rx_timeout_ctr++;
+        }
         SREG            = temp_sreg;
 
         // -------------------------------------------------------------------------------------------------------
@@ -1238,7 +1243,11 @@ int main( void ) {
         // Check receive flag
         temp_sreg = SREG;
         cli();
-        flags.b.receive = flags.b.receive || rfm_receiving();
+        rxState = rfm_receiving();
+        flags.b.receive = flags.b.receive || (rxState == 1);
+        if ( rxState == 2 ) {
+            rx_timeout_ctr++;
+        }
         SREG            = temp_sreg;
 
         // -------------------------------------------------------------------------------------------------------
@@ -1396,6 +1405,25 @@ int main( void ) {
 
         // -------------------------------------------------------------------------------------------------------
 
+        if ( rssi_flag != 0 ) {
+            temp_sreg = SREG;
+            cli();
+
+            squelch_setting = rfm_cmd( 0x2900, 0 );
+
+            // Less sensitive squelch value in case of too many timeouts
+            if( rssi_flag > 0 && squelch_setting > (-2*SQUELCH_UPPER_LIMIT) ) {
+                squelch_setting -= rssi_flag;
+            }
+            // More sensitive squelch value in case of no timeouts
+            else if( rssi_flag == -1 && squelch_setting != 255 ) {
+                squelch_setting++;
+            }
+            rfm_cmd( 0x2900 | squelch_setting, 1 );
+            rssi_flag = 0;
+            SREG = temp_sreg;
+        }
+
     }
 
     // -------------------------------------------------------------------------------------------------------
@@ -1405,7 +1433,7 @@ int main( void ) {
 
 // Interrupt vectors
 ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
-    static uint8_t rxTimeoutMeascycles = 0;
+    static uint8_t rxTimeoutMeascycles = 0, rxTimeoutZeroCounter = 0;
     static uint16_t channelLedMeascycles = 0;
 
     // -------------------------------------------------------------------------------------------------------
@@ -1421,9 +1449,21 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
         if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD ) {
             rssi_flag = (rx_timeout_ctr > (10 * RX_TIMEOUT_CTR_THRESHOLD)) ? 4 : 1;
         }
+
+        // Check if there were no timeouts (possibility to increase sensitivity)
         if ( rx_timeout_ctr == 0 ) {
-            rssi_flag = -1;
+            rxTimeoutZeroCounter++;
         }
+        else {
+            rxTimeoutZeroCounter = 0;
+        }
+
+        // After 9 consecutive zeros, we go down one step
+        if (rxTimeoutZeroCounter > 8) {
+            rssi_flag            = -1;
+            rxTimeoutZeroCounter =  0;
+        }
+
         rx_timeout_ctr = 0;
     }
 

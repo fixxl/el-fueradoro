@@ -1701,7 +1701,7 @@ int main( void ) {
 // Interrupt vectors
 ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
     // Trigger Rx timeout calculations every 1.25s
-    static uint8_t meascycles = 0;
+    static uint8_t meascycles = 0, rxTimeoutZeroCounter = 0;
     meascycles++;
 
     if ( meascycles > 124 ) {
@@ -1713,9 +1713,21 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
         if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD ) {
             rssi_flag = (rx_timeout_ctr > (10 * RX_TIMEOUT_CTR_THRESHOLD)) ? 4 : 1;
         }
+
+        // Check if there were no timeouts (possibility to increase sensitivity)
         if ( rx_timeout_ctr == 0 ) {
-            rssi_flag = -1;
+            rxTimeoutZeroCounter++;
         }
+        else {
+            rxTimeoutZeroCounter = 0;
+        }
+
+        // After 9 consecutive zeros, we go down one step
+        if (rxTimeoutZeroCounter > 8) {
+            rssi_flag            = -1;
+            rxTimeoutZeroCounter =  0;
+        }
+
         rx_timeout_ctr = 0;
     }
 
