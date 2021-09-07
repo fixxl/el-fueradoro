@@ -308,6 +308,7 @@ int main( void ) {
         slaves[warten].sharpness       = 0;
         slaves[warten].temperature     = -128;
         slaves[warten].rssi            = -128;
+        slaves[warten].squelch         = 0;
     }
 
     // Populate channel pattern array:
@@ -424,6 +425,7 @@ int main( void ) {
     tx_field[5]        = temperature;
     tx_field[6]        = FIRE_CHANNELS;
     tx_field[7]        = rssi;
+    tx_field[8]        = rfm_cmd( 0x2900, 0 ) >> 1;
 
     flags.b.transmit       = 1;
     flags.b.read_impedance = 1;
@@ -1087,6 +1089,7 @@ int main( void ) {
                 slaves[iii].sharpness       = 0;
                 slaves[iii].temperature     = -128;
                 slaves[iii].rssi            = -128;
+                slaves[iii].squelch         = 0;
             }
 
             // Ignition devices have to write themselves in the list
@@ -1096,6 +1099,7 @@ int main( void ) {
             slaves[unique_id - 1].sharpness       = ( armed ? 'j' : 'n' );
             slaves[unique_id - 1].temperature     = temperature;
             slaves[unique_id - 1].rssi            = 0;
+            slaves[unique_id - 1].squelch         = rfm_cmd( 0x2900, 0 ) >> 1;
 
             SREG = temp_sreg;
         }
@@ -1309,6 +1313,7 @@ int main( void ) {
                         tx_field[5] = temperature;
                         tx_field[6] = FIRE_CHANNELS;
                         tx_field[7] = rssi;
+                        tx_field[8] = rfm_cmd( 0x2900, 0 ) >> 1;
 
                         transmission_allowed = 0;
 
@@ -1341,7 +1346,8 @@ int main( void ) {
                             slaves[tmp].sharpness       = ( rx_field[4] ? 'j' : 'n' );
                             slaves[tmp].temperature     = rx_field[5];
                             slaves[tmp].channels        = rx_field[6];
-                            slaves[tmp].rssi            = rssi;
+                            slaves[tmp].rssi            = rx_field[7];
+                            slaves[tmp].squelch         = rx_field[8];
                         }
 
                         break;
