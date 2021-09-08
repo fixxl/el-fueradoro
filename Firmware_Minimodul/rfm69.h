@@ -34,7 +34,7 @@
 #endif
 
 #ifndef RX_TIMEOUT_CTR_THRESHOLD
-    #define RX_TIMEOUT_CTR_THRESHOLD 5
+    #define RX_TIMEOUT_CTR_THRESHOLD 40
 #endif
 /* Pin assignment */
 #define NSELPORT               C

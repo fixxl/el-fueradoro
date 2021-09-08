@@ -1454,8 +1454,8 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
         // Check number of Rx timeouts in last 1.25s
         // Reduce more (2 dB) or less (0.5 dB) depending on number of timeouts
         // or increase (0.5 dB) in case of no timeouts. Then reset counter for new cycle.
-        if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD ) {
-            rssi_flag = (rx_timeout_ctr > (10 * RX_TIMEOUT_CTR_THRESHOLD)) ? 4 : 1;
+        if ( rx_timeout_ctr > 0 ) {
+            rssi_flag = (rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD) ? 4 : 2;
         }
 
         // Check if there were no timeouts (possibility to increase sensitivity)
