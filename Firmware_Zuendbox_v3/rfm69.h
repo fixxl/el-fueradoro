@@ -33,8 +33,12 @@
     #define SQUELCH_UPPER_LIMIT  -82
 #endif
 
-#ifndef RX_TIMEOUT_CTR_THRESHOLD
-    #define RX_TIMEOUT_CTR_THRESHOLD 40
+#ifndef RX_TIMEOUT_CTR_THRESHOLD_HIGH
+    #define RX_TIMEOUT_CTR_THRESHOLD_HIGH 20
+#endif
+
+#ifndef RX_TIMEOUT_CTR_THRESHOLD_LOW
+    #define RX_TIMEOUT_CTR_THRESHOLD_LOW 2
 #endif
 
 /* Pin assignment */
