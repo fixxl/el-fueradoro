@@ -853,11 +853,19 @@ int main( void ) {
             flags.b.hw = 0;
 
             uart_puts_P( PSTR( "\n\r" ) );
-            uart_puts( "Zündbox v3" );
+            uart_puts( "Zündbox v3 - " );
+            uart_shownum( FIRE_CHANNELS, 'd');
+            uart_puts( " Kanäle" );
             uart_puts_P( PSTR( "\n\r" ) );
             uart_puts_P( PSTR( STRINGIZE_VALUE_OF( MCU ) ) );
             uart_puts_P( PSTR( "\n\rRFM" ) );
             uart_shownum( RFM, 'd' );
+            if(HPVERSION) {
+                uart_puts_P( PSTR( "HCW" ) );
+            }
+            else {
+                uart_puts_P( PSTR( "CW" ) );
+            }
             #if defined COMPILEDATE && defined COMPILETIME
                 uart_puts_P( PSTR( "\n\r" ) );
                 uart_puts_P( PSTR( "Datecode " ) );

@@ -792,11 +792,24 @@ int main( void ) {
             flags.b.hw = 0;
 
             uart_puts_P( PSTR( "\n\r" ) );
-            uart_puts( ig_or_notrans ? "Zündbox v1/v2" : "Transmitter" );
+            if( ig_or_notrans ) {
+                uart_puts( "Zündbox v1/v2 - " );
+                uart_shownum( FIRE_CHANNELS, 'd');
+                uart_puts( " Kanäle" );
+            }
+            else {
+                uart_puts( "Transmitter" );
+            }
             uart_puts_P( PSTR( "\n\r" ) );
             uart_puts_P( PSTR( STRINGIZE_VALUE_OF( MCU ) ) );
             uart_puts_P( PSTR( "\n\rRFM" ) );
             uart_shownum( RFM, 'd' );
+            if(HPVERSION) {
+                uart_puts_P( PSTR( "HCW" ) );
+            }
+            else {
+                uart_puts_P( PSTR( "CW" ) );
+            }
             #if defined COMPILEDATE && defined COMPILETIME
                 uart_puts_P( PSTR( "\n\r" ) );
                 uart_puts_P( PSTR( "Datecode " ) );
