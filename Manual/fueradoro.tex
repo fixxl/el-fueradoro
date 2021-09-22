@@ -45,8 +45,7 @@
 \pagestyle{scrheadings}
 \renewcommand*{\partmarkformat}{}
 \automark[part]{part}
-\clearscrheadings
-\clearscrplain
+\clearpairofpagestyles
 \ohead[\pagemark]{\pagemark}
 \lohead[]{\textnormal\headmark}
 \rehead[]{\anlage}
@@ -62,7 +61,6 @@
 		Keywords={}}
 }
 
-\usepackage{remreset}
 \makeatletter
 \@removefromreset{footnote}{part}
 \@removefromreset{footnote}{chapter}
@@ -102,7 +100,7 @@
 	}
 
 	Trotz aller Sorgfalt bei der Entwicklung von Hard- und Software sowie ausgiebigen Tests seitens der Entwickler kann~-- auch aufgrund nicht vorhandener Kontrollmöglichkeiten über die Qualität der letztlich verbauten Komponenten und der handwerklichen Durchführung~-- keinerlei Garantie für Sicherheit und Funktionalität von {\anlage} und {\REF} sowie keine Haftung für Sach- und Personenschäden, welche sich direkt oder indirekt aus dem Einsatz von {\anlage} und {\REF} ergeben, übernommen werden.
-	
+
 	Es werden mit {\anlage} dem Anwender lediglich Schaltpläne, Layouts und Programmcode sowie Hinweise zu Aufbau und Verwendung einer elektronischen Funkzündanlage, welche er frei weiter verbreiten und~-- selbstverständlich auf eigene Gefahr~-- verändern darf, zur Verfügung gestellt. {\anlage} und {\REF} sind und bleiben Hobby-Bastelprojekte, keine geprüften oder in irgendeiner Form zertifizierten Produkte!
 
 	Der Umgang mit Feuerwerkskörpern und explosivem Material unterliegt in Deutschland und der EU harmonisierten wie auch nationalen gesetzlichen Restriktionen, deren Einhaltung im Verantwortungsbereich des Anwenders liegt. Insbesondere auf Sicherheitsabstände und persönliche Schutzausrüstung ist zu achten. {\anlage} und {\REF} dürfen nicht von Personen unter 18 Jahren bedient werden.
@@ -117,7 +115,7 @@
 		\anlage{} ist eine Eigenentwicklung zur automatisierten Zündung von Feuer\-werks\-choreo\-gra\-phien per Computer und Funk, der Name {\anlage} leitet sich als Kofferwort aus den spanischen Wörtern \emph{fuego}, \emph{radio} und \emph{oro} her und bedeutet frei übersetzt daher so etwas wie \enquote{Goldenes Funkfeuer}. Sie wurde zur Verwendung mit der frei verfügbaren Software {\pic} von Yannic Wilkening (Version 1.4.5 und später) geplant.
 
 		Das ursprüngliche System bestand aus einer mit einem PC verbundenen Transmitterbox, welche die von {\pic} generierten Zündbefehle per Funk an die Zündboxen weitergibt, und einer oder mehreren Zündboxen mit je 16 oder 32 Kanälen zur elektrischen Zündung. Dieser klassische Aufbau des Systems ist schematisch in Abbildung~\ref{fig:system} gezeigt. Die reine Transmitterbox wird nicht zwingend benötigt; es kann alternativ auch eine Zündbox per Kabel mit dem PC verbunden werden und neben ihrer originären Aufgabe auch die Transmitteraufgaben bewältigen.
-		
+
 		Mittlerweile hat sich als Standalone-Lösung, also als Ersatz für Transmitterbox und PC, der Raspberry-Pi-Transmitter \emph{raspEasyFire} etabliert, welcher einen deutlich größeren Funktionsumfang bietet als die ursprüngliche Variante.
 
 		\begin{figure}
@@ -130,7 +128,7 @@
 		Um möglichst große Flexibilität bei der Gestaltung eines Feuerwerks mit {\anlage} zu gewährleisten, was z.\,B. die Anzahl der verwendeten Zündboxen oder auch die Tatsache angeht, dass man identische Effekte gerne zeitgleich an zwei weiter voneinander entfernten Orten zünden möchte, können den Boxen per Software zwei Kennnummern (Unique-ID und Slave-ID) zugewiesen werden. Genaueres dazu findet sich im Abschnitt~\ref{ch:kommunikationpc}.
 
 		Transmitterbox und Zündbox sind in Abbildung~\ref{fig:transmitter} bzw.~\ref{fig:zuendbox} mit ihren wesentlichen Bestandteilen gezeigt. Sie werden im weiteren Text unter dem Begriff \enquote{Devices} zusammengefasst, falls sich Aussagen auf beide Teile beziehen, und in den folgenden Kapiteln näher beschrieben.
-		
+
 		Um den Raspberry-Pi-basierten Transmitter \emph{raspEasyFire} geht es in Abschnitt~\ref{ch:raspeasyfire} ab Seite~\pageref{ch:raspeasyfire}.
 
 		\section{Aufbau}
@@ -173,7 +171,7 @@
 			Dies ist der Tatsache geschuldet, dass bei der ersten Generation der Zündboxen, wenn eine Seite des Zündkanals fest mit der Zündspannung, d.\,h. einer roten Klemme verbunden ist, ein frei baumelndes zweites Kabel durch Berührung eines Bauteils auf Massepotential, z.\,B. der Antennenbuchse oder der Überwurfmutter des gewinkelten SMA-Steckers, einen Kurzschluss und somit eine Zündung auslösen würde~-- selbst dann, wenn die Box nicht scharf geschaltet ist! Ab der zweiten Generation der Zündboxen ist dieses Manko behoben.
 
 			Bei den Zündboxen der ersten und zweiten Generation ist parallel zur üblicherweise sperrenden Drain-Source-Strecke jedes MOSFETs ist eine grüne LED mit Vorwiderstand geschaltet, welcher den Strom durch den LED-Zweig auf unter \SI{5}{\milli\ampere} begrenzt, so dass ein Zünden über die LED ausgeschlossen ist. Sobald die zugehörige schwarze Klemme mit einer roten Klemme~-- die Zuordnung kann beliebig erfolgen, obwohl zwecks Übersichtlichkeit natürlich ratsam ist, die nebeneinander liegenden Klemmen zu nutzen~-- verbunden ist, also ein geschlossener Strompfad von $\SI{22,5}{\volt}$ zur Schaltungsmasse besteht, wird dies durch Leuchten der zur schwarzen Klemme gehörigen grünen LED signalisiert. Ein Leuchten der grünen LED ist dabei lediglich ein Indikator, dass \enquote{etwas} am jeweiligen Kanal angeschlossen ist, eine Aussage, ob der Widerstand des angeschlossenen Anzündernetzwerks gering genug ist, um eine Zündung auszulösen, wird durch die LED ausdrücklich nicht getroffen.
-			
+
 			Anders verhält sich dies bei den Zündboxen der dritten Generation: Hier werden die Widerstände der einzelnen Kanäle periodisch bestimmt und die zugehörige grüne LED nur dann aktiviert, wenn der Kanalwiderstand ausreichend gering ist.
 
 		\section{Energieversorgung}
@@ -193,24 +191,24 @@
 					to .8\textwidth [c]{lXl}
 					\hline\hline
 					\textbf{Farbe} & \textbf{Funktion}                           & \textbf{Startup-Faktor} \\ \hline
-					orange         & Funkmodul empfängt                          & 4 \\
-					grün           & Funkmodul sendet                            & 2 \\
-					gelb           & Daten kommen über serielle Schnittstelle an & 1 \\
-					rot            & Device ist scharf geschaltet                & 8 \\ \hline\hline
+					orange         & Funkmodul empfängt                          & 4                       \\
+					grün           & Funkmodul sendet                            & 2                       \\
+					gelb           & Daten kommen über serielle Schnittstelle an & 1                       \\
+					rot            & Device ist scharf geschaltet                & 8                       \\ \hline\hline
 				\end{tabu}
 				\caption{Farben und Funktionen der Status-LEDs}
 				\label{tab:statusleds}
 			\end{table}
 
 			Während des Bootvorgangs wird durch die Status-LEDs dem Benutzer die aktuell eingestellte Slave-ID der Box in Binärdarstellung visualisiert. Hierzu gehen zunächst nacheinander schnell die gelbe, grüne, orange und rote LED an, ehe zwei Sekunden lang eine Kombination der Status-LEDs aufleuchtet. Anschließend gehen nacheinander schnell die rote, orange, grüne und gelbe LED an, bevor erneut zwei Sekunden lang eine weitere Kombination der Status-LEDs leuchtet. Der Zahlenwert, welcher durch eine Status-LED repräsentiert wird, ist in Tabelle~\ref{tab:statusleds} aufgeführt. Die eingestellte Slave-ID entspricht der Summe aus dem Wert der ersten Kombination multipliziert mit 16 und der zweiten Kombination.
-			
-			Beispiel: Leuchtet nach dem ersten Lauflicht zunächst zwei Sekunden lang nur die gelbe LED und nach der zweiten Lauflichtsequenz leuchten zwei Sekunden die orange und grüne LED zusammen, ergibt sich die Slave-ID zu $16 {\cdot} 1 + 4 + 2 = 22$. 
-			
+
+			Beispiel: Leuchtet nach dem ersten Lauflicht zunächst zwei Sekunden lang nur die gelbe LED und nach der zweiten Lauflichtsequenz leuchten zwei Sekunden die orange und grüne LED zusammen, ergibt sich die Slave-ID zu $16 {\cdot} 1 + 4 + 2 = 22$.
+
 			Ab der dritten Generation werden während dieser Sequenz auch alle Kanal-LEDs eingeschaltet, um defekte LEDs erkennen zu können.
-			
+
 			Das nach kurzer Pause folgende Blinken der grünen LED signalisiert dann die Statusmeldung per Funk an allen anderen Devices.
 
-			Bei einem Zündvorgang leuchten an der Zündbox für die Dauer der Zündung (\SI{11}{\milli\second}) alle vier LEDs, bei Zündboxen ab der dritten Generation zusätzlich auch die zum gezündeten Kanal zugehörige Kanal-LED.
+			Bei einem Zündvorgang leuchten an der Zündbox für die einstellbare Dauer der Zündung~-- näheres hierzu im Abschnitt~\ref{sec:igniter}~-- alle vier LEDs, bei Zündboxen ab der dritten Generation zusätzlich auch die zum gezündeten Kanal zugehörige Kanal-LED.
 
 		\section{Das LCD des Transmitters}
 
@@ -364,7 +362,7 @@
 							\hyperref[sec:manuellessenden]{temp}  & Gibt über die serielle Schnittstelle die Temperatur aus und fordert alle anderen Devices ebenfalls zur Temperaturmessung auf. Zum Auslesen der neu gemessenen Temperaturen muss dann eine Identifizierungsanfrage geschickt werden \\ \hline
 							\hyperref[sec:rfmzugriff]{rfm}        & Erlaubt unmittelbaren Zugriff auf das Funkmodul durch Eingabe einer 16-Bit-Hexadezimalzahl, um Registerwerte auszulesen oder neu zu setzen                                                                                         \\
 							\hyperref[sec:encryption]{aeskey}     & Schlüssel für die Funkübertragung auslesen und neu setzen                                                                                                                                                                          \\ \hline
-							\hyperref[sec:igniter]{igniter}    & Verwendeten Anzündertyp und somit Öffnungszeit der Zündkanäle setzen                                                                                                                                                                          \\ \hline
+							\hyperref[sec:igniter]{igniter}       & Verwendeten Anzündertyp und somit Öffnungszeit der Zündkanäle setzen                                                                                                                                                               \\ \hline
 							orders                                & Gibt letztes gesendetes und empfangenes Pattern auf LCD aus                                                                                                                                                                        \\ \hline
 							cls                                   & Löscht den Terminal-Bildschirm                                                                                                                                                                                                     \\
 							kill                                  & Löst einen Neustart des Device aus                                                                                                                                                                                                 \\ \hline\hline
@@ -554,20 +552,20 @@
 					\caption{Auslesen und Neusetzen des AES-Schlüssels}
 					\label{fig:aeskey}
 				\end{figure}
-			
+
 			\subsection{Anzündertyp}
-			\label{sec:igniter}
-			
-			Um {\anlage} auch mit anderen Anzündertypen als den Standard E-Anzündern wie Talon-Anzündern nutzen zu können oder einen Zündkanal als Trigger für Geräte wie Flamer nutzen zu können, kann die Zünddauer angepasst werden. Es stehen dabei die Optionen:
-			\begin{itemize}
-				\item E-Anzünder: \SI{20}{\milli\second}
-				\item Flamer: \SI{350}{\milli\second}
-				\item Talon: \SI{2450}{\milli\second}
-			\end{itemize}
-			zur Auswahl.
-			
-			Nach Eingabe von \enquote{igniter} im Terminalfenster kann die aktuelle Einstellung eingesehen werden, durch Eingabe eines Buchstabens, der den entsprechenden Optionen zugeordnet ist, kann diese Einstellung geändert werden. Eine nicht zugeordnete Taste beendet das Einstellungsmenü ohne Änderung. Die Einstellung bezieht sich dabei immer auf alle Kanäle der Zündbox und bleibt auch nach Neustart und Firmware-Update erhalten. 
-			\clearpage
+				\label{sec:igniter}
+
+				Um {\anlage} auch mit anderen Anzündertypen als den Standard E-Anzündern wie Talon-Anzündern nutzen zu können oder einen Zündkanal als Trigger für Geräte wie Flamer nutzen zu können, kann die Zünddauer angepasst werden. Es stehen dabei die Optionen:
+				\begin{itemize}
+					\item E-Anzünder: \SI{20}{\milli\second}
+					\item Flamer: \SI{350}{\milli\second}
+					\item Talon: \SI{2450}{\milli\second}
+				\end{itemize}
+				zur Auswahl.
+
+				Nach Eingabe von \enquote{igniter} im Terminalfenster kann die aktuelle Einstellung eingesehen werden, durch Eingabe eines Buchstabens, der den entsprechenden Optionen zugeordnet ist, kann diese Einstellung geändert werden. Eine nicht zugeordnete Taste beendet das Einstellungsmenü ohne Änderung. Die Einstellung bezieht sich dabei immer auf alle Kanäle der Zündbox und bleibt auch nach Neustart und Firmware-Update erhalten.
+				\clearpage
 
 		\section{GUI}
 
@@ -661,22 +659,24 @@
 
 			\subsection{Aktualisierung}
 
-				{\anlage} bietet die Möglichkeit, die Firmware via serielle Schnittstelle vom PC aus zu aktualisieren. Hierfür stehen das Kommandozeilentool \emph{fwupdate.exe} oder eine Windows-Oberfläche namens \texttt{UpdateLoader}, welche beide zunächst einen Reset auslösen, um den Bootloader des Devices zu aktivieren, und anschließend die im iHex-Format vorliegende Firmware überträgen.
+					{\anlage} bietet die Möglichkeit, die Firmware via serielle Schnittstelle vom PC aus zu aktualisieren. Hierfür stehen das Kommandozeilentool \emph{fwupdate.exe} oder eine Windows-Oberfläche namens \texttt{UpdateLoader}, welche beide zunächst einen Reset auslösen, um den Bootloader des Devices zu aktivieren, und anschließend die im iHex-Format vorliegende Firmware überträgen.
 
-				Es existieren für jede Kombination von Platinenversion (v1/v2, v3 mit 16 Kanälen und v3 mit 32 Kanälen) und Funkmodul (RFM69CW und RFM69HCW) Firmwareversionen. Tabelle~\ref{tab:firmwareversions} gibt einen Überblick über die Versionen, welche sich im gleichen Ordner wie \emph{fwupdate.exe} und \emph{UpdateLoader.exe} befinden.
+				Es existieren für jede Kombination von Platinenversion (v1/v2, v3 mit 16 Kanälen und v3 mit 32 Kanälen sowie das Minimodul mit 4 Kanälen) und Funkmodul (RFM69CW und RFM69HCW) Firmwareversionen. Tabelle~\ref{tab:firmwareversions} gibt einen Überblick über die Versionen, welche sich im gleichen Ordner wie \emph{fwupdate.exe} und \emph{UpdateLoader.exe} befinden.
 
 				\begin{table}
 					\centering
 					\begin{tabu}
 						to \textwidth {lccX[c]}
 						\hline\hline
-						Firmware                                 & Platine & Kanäle & Funkmodul (Sendeleistung)   \\ \hline				
-						Pyro\_atmega328p\_RFM69CW\_16ch.hex      & v1/v2   & 16     & RFM69CW   $(\SI{13}{\dBm})$  \\
-						Pyro\_atmega328p\_RFM69HCW\_16ch.hex     & v1/v2   & 16     & RFM69HCW  $(\SI{20}{\dBm})$ \\
-						Pyro\_v3\_atmega328p\_RFM69CW\_16ch.hex  & v3      & 16     & RFM69CW   $(\SI{13}{\dBm})$  \\
-						Pyro\_v3\_atmega328p\_RFM69CW\_32ch.hex  & v3      & 32     & RFM69CW   $(\SI{13}{\dBm})$  \\
-						Pyro\_v3\_atmega328p\_RFM69HCW\_16ch.hex & v3      & 16     & RFM69HCW  $(\SI{20}{\dBm})$  \\
-						Pyro\_v3\_atmega328p\_RFM69HCW\_32ch.hex & v3      & 32     & RFM69HCW  $(\SI{20}{\dBm})$  \\
+						Firmware                                     & Platine & Kanäle & Funkmodul (Sendeleistung)   \\ \hline
+						Pyro\_atmega328p\_RFM69CW\_16ch.hex          & v1/v2   & 16     & RFM69CW   $(\SI{13}{\dBm})$ \\
+						Pyro\_atmega328p\_RFM69HCW\_16ch.hex         & v1/v2   & 16     & RFM69HCW  $(\SI{20}{\dBm})$ \\
+						Pyro\_v3\_atmega328p\_RFM69CW\_16ch.hex      & v3      & 16     & RFM69CW   $(\SI{13}{\dBm})$ \\
+						Pyro\_v3\_atmega328p\_RFM69CW\_32ch.hex      & v3      & 32     & RFM69CW   $(\SI{13}{\dBm})$ \\
+						Pyro\_v3\_atmega328p\_RFM69HCW\_16ch.hex     & v3      & 16     & RFM69HCW  $(\SI{20}{\dBm})$ \\
+						Pyro\_v3\_atmega328p\_RFM69HCW\_32ch.hex     & v3      & 32     & RFM69HCW  $(\SI{20}{\dBm})$ \\
+						Pyro\_Mini\_atmega328p\_RFM69CW\_4ch.hex     & Mini    & 4      & RFM69CW   $(\SI{13}{\dBm})$ \\
+						Pyro\_Mini\_atmega328p\_RFM69HCW\_4ch.hex    & Mini    & 4      & RFM69HCW  $(\SI{20}{\dBm})$ \\
 					\end{tabu}
 					\caption{Verfügbare Firmware-Versionen}
 					\label{tab:firmwareversions}
@@ -718,7 +718,7 @@
 					\end{figure}
 
 	\chapter{raspEasyFire}
-	\label{ch:raspeasyfire}
+		\label{ch:raspeasyfire}
 
 		Als Alternative zur Kombination aus Laptop/PC und dem in den vorangegangenen Abschnitten beschriebenen Transmitter wurde in Zusammenarbeit mit einem Softwareentwickler ein Audio-Funksystem auf Basis des bekannten Einplatinencomputers \enquote{Raspberry Pi} entwickelt. Dieser übernimmt die Kontrolle der Show inklusive der Musikwiedergabe.
 
@@ -735,7 +735,7 @@
 		\section{Erster Start}
 
 			Beim ersten Hochfahren passt sich das System an die tatsächlichen lokalen Gegebenheiten an, insbesondere wird die komplette Größe der verwendeten Speicherkarte nutzbar gemacht. Zusätzlich muss der Anwender mitteilen, welche Auflösung das von ihm verwendete Display besitzt: Der FIRE-Taster setzt die Auflösung auf 800x480 Pixel, der ON-OFF-Taster auf 1024x600 Pixel. Ebenso wird die Art des verbauten Funkmoduls abgefragt: Der FIRE-Taster setzt das RFM69HCW, der ON-OFF-Taster das RFM69CW.
-			
+
 			Anschließend erfolgt ein automatischer Neustart des Systems, der im Auswahlbildschirm mündet, ob man das Programm starten (FIRE-Button) oder das System herunterfahren (ON-OFF-Button) möchte. Ein gleichzeitiges Drücken beider Taster beendet das Startup-Skript und bringt den Nutzer zur \enquote{Bash}, wie die Kommandozeile unter Linux genannt wird.
 
 		\section{Konfiguration und Zugriff}
@@ -787,6 +787,8 @@
 				\emph{sudo cp aesvalues\_mykey.txt aesvalues.txt}
 			\end{center}
 			zur neuen Standardeinstellung machen.
+			
+			Ebenso ist es möglich, eine Textdatei im passenden Format nach dem Vorbild der \emph{aesvalues\_default.txt} mit einem Namen, der mit \emph{aesvalues\_} beginnen und auf \emph{.txt} enden muss~-- beispielsweise \emph{aesvalues\_customized.txt}, ins Hauptverzeichnis eines USB-Sticks zu kopieren und diesen beim Starten in den Raspberry Pi zu stecken. Genau wie bei Zündplänen und Musikdateien~(siehe hierzu Abschnitt~\ref{sec:zplusbstick}) werden diese Dateien dann automatisch ins korrekte Verzeichnis kopiert und ersetzen eventuell bereits vorhandene Dateien mit gleichem Namen.
 
 		\section{Passwort ändern}
 			Um den Zugriff für unbefugte Personen auf den Raspberry Pi zu verhindern, sollte unbedingt das Passwort des Users \enquote{pi} geändert werden. Möglich ist dies über ein Menü, welches man aus der Bash über
@@ -799,6 +801,7 @@
 			\REF{} verarbeitet unmittelbar in {\pic} erzeugte zpl-Dateien, so dass die Shows bequem am eigenen Rechner konzipiert werden können. Für die Übertragung der Dateien existieren grundsätzlich zwei Möglichkeiten, entweder über einen USB-Stick oder via Netzwerk über das SFTP-Protokoll. Bei Musikdateien muss es sich um mp3-Dateien handeln, welche auch die Endung \enquote{.mp3} besitzen, Zündpläne müssen auf \enquote{.zpl} enden und Dateien, die zusammen gehören, müssen denselben Namen tragen: Eine Show \enquote{Feuerwerk.zpl} verlangt demnach nach einer Musikdatei \enquote{Feuerwerk.mp3}.
 
 			\subsection{USB-Stick}
+			\label{sec:zplusbstick}
 
 				Um Zündpläne und Musikdateien via USB-Stick zu übertragen, müssen die Dateien im Hauptverzeichnis eines USB-Sticks abgelegt werden und dieser Stick vor dem Hochfahren des Systems mit dem Raspberry Pi verbunden werden. Der Stick wird dann automatisch erkannt und die zpl- bzw. mp3-Dateien in die Verzeichnisse \url{/home/pi/raspEasyFire3/showfiles/zpl} bzw. \url{/home/pi/raspEasyFire3/showfiles/mp3} kopiert. Bereits dort existierende Dateien gleichen Namens werden ohne Nachfrage überschrieben.
 
@@ -839,6 +842,8 @@
 				\item
 				      Soundcheck
 			\end{enumerate}
+		
+			Zusätzlich wird das Datum der Erstellung der aktuell verwendeten Software angezeigt, bei aktiver Internetverbindung kommt dazu der Hinweis, ob die Software dem aktuellen Stand auf dem Server entspricht oder älter ist. Updates können über in dem in Abschnitt~\ref{sec:onlineupdate} beschriebenen Bereich durchgeführt werden.
 
 			\subsection{Zündplanauswahl}
 
@@ -856,9 +861,22 @@
 
 			\subsection{Slavesuche}
 
-				Mit einem Druck auf die Schaltfläche \enquote{Slaves suchen} wird eine Suche nach verfügbaren Zündboxen gestartet. Diese dauert etwa sieben Sekunden, anschließend werden die Parameter der in Reichweite befindlichen Boxen wie in Abbildung~\ref{fig:REFslavesfound} zu sehen auf dem Startbildschirm angezeigt.
-				
+				Mit einem Druck auf die Schaltfläche \enquote{Slaves suchen} wird eine Suche nach verfügbaren Zündboxen gestartet. Deren Dauer ist von der maximalen Slaveanzahl abhängig, anschließend werden die Parameter der in Reichweite befindlichen Boxen wie in Abbildung~\ref{fig:REFslavesfound} zu sehen auf dem Startbildschirm angezeigt.
+
 				Die Anzeige der gefundenen Boxen erfolgt farblich kodiert. Wird eine Box gefunden, deren Slave-ID im aktuell ausgewählten Zündplan Verwendung findet, so werden ihre Daten in weißer Schrift ausgegeben, Boxen mit nicht verwendeter Slave-ID werden in einem Goldton gelistet. Dies dient als Hinweis an den User.
+				
+				Die gezeigten Parameter jeder einzelnen Box sind:
+				\begin{itemize}
+					\item Unique-ID
+					\item Slave-ID
+					\item Batteriespannung
+					\item Scharfschaltungsstatus
+					\item Temperatur
+					\item Kanalanzahl
+					\item Empfangsleistung beim Empfang der Identifizierungsaufforderung
+					\item Aktueller Squelch-Wert des Funkmoduls
+					\item Farbliche Markierung für die Größe der Differenz zwischen Empfangsleistung und Squelch als Indikator für die Ausfallwahrscheinlichkeit
+				\end{itemize}
 
 				In Klammern hinter \enquote{Gefundene Slaves} taucht zudem die Gesamtanzahl gefundener Zündboxen auf. Werden weniger Boxen als erwartet gefunden, sollten~--sofern mehrmaliges erneutes Suchen keinen Erfolg gebracht hat~-- folgende Ursachen und Lösungsversuche in Erwägung gezogen werden:
 				\begin{enumerate}
@@ -872,6 +890,8 @@
 					      Datenkollision durch gleiche Unique-IDs $\Rightarrow$ Zuteilung einer anderen Unique-ID
 				\end{enumerate}
 
+				Erscheint unter dem Punkt \enquote{Letzte Suche} 
+
 				\begin{figure}
 					\centering\includegraphics[width=150mm]{Bilder/REFslavesfound}
 					\caption{Anzeige der gefundenen Boxen}
@@ -880,7 +900,7 @@
 
 			\subsection{Weitere Optionen}
 				Über diesen Menüpunkt erhält man Zugang zu weiteren Untermenüs und Funktionen.
-				
+
 				\subsubsection{Einstellungen anpassen}
 					Unter diesem Punkt können einige Grundeinstellungen des Programms verändert werden:
 					\begin{description}
@@ -889,34 +909,39 @@
 						\item [Ton standardmäßig aus?]
 						      Soll die Standardeinstellung \enquote{Musik an} oder \enquote{Musik aus} lauten? Auch diese Einstellung wird erst nach Neustart von {\REF} aktiv und hat keine Auswirkung auf die aktuelle Einstellung im Programm.
 						\item [Eingebautes Funkmodul]
-							  Wird mit dem Funkmodul RFM69CW gearbeitet oder mit der Variante RFM69HCW mit höherer Sendeleistung? Eine nicht zur tatsächlich verbauten Hardware passende Einstellung führt dazu, dass die Funkverbindung mit den Zündboxen schon bei geringen Distanzen nicht aufgebaut werden kann.
+						      Wird mit dem Funkmodul RFM69CW gearbeitet oder mit der Variante RFM69HCW mit höherer Sendeleistung? Eine nicht zur tatsächlich verbauten Hardware passende Einstellung führt dazu, dass die Funkverbindung mit den Zündboxen schon bei geringen Distanzen nicht aufgebaut werden kann.
 						\item [Herunterfahren beim Beenden]
 						      Soll nach dem Beenden von {\REF} das System komplett heruntergefahren oder in den Commandprompt gesprungen werden?
 						\item [Fehlende Slaves ignorieren]
 						      Soll beim Überprüfen der automatischen oder semiautomatischen Show darauf bestanden werden, dass jede im Zündplan genannten Slave-ID (außer Slave 999) auch tatsächlich mindestens einmal vorhanden, die verfügbare Kanalzahl größer oder gleich der maximal bei dieser Slave-ID adressierten Kanalnummer ist und alle Slaves scharf geschaltet sind oder nicht? Für den manuellen Modus hat diese Einstellung keine Bedeutung.
 						\item [Soundcheck mit Showmusik]
-							  Soll die aktuell ausgewählte Musik für den Soundcheck verwendet werden? Bei \enquote{Nein} wird das Standard-Teststück (showfiles/mp3/test.mp3) verwendet.
+						      Soll die aktuell ausgewählte Musik für den Soundcheck verwendet werden? Bei \enquote{Nein} wird das Standard-Teststück (showfiles/mp3/test.mp3) verwendet.
 						\item [Lautstärke]
 						      Lautstärkeeinstellung der Soundkarte für die Wiedergabe der Musik in Prozent.
 						\item [Maximale Anzahl Slaves]
 						      Wie viele Slaves sind zulässig? Dieser Wert ist gleichzeitig auch der Maximalwert für Unique-ID und Slave-ID einer einzelnen Box. Je größer dieser Wert gewählt wird, umso länger dauert auch die Slavesuche, weil das Programm jeder Unique-ID einen Zeitschlitz fester Länge zuweist, um auf eine Identifizierungsanfrage zu antworten.
+						\item [RSSI-Schwellwert (dBm) -- Sender]
+							  Minimale Empfangsleistung (Squelch-Wert) für {\REF}. Ab welcher Leistung soll das Funkmodul versuchen, ein ankommendes Signal zu detektieren. Diese Einstellung ist wichtig für korrekt funktionierenden Funkverkehr. Ein zu hoher Wert verringert die Funkreichweite, ein zu geringer Wert führt zu Fehltriggerungen durch Rauschen und blockiert die Empfangseinheit für tatsächliche Nachrichten. Der Wert kann manuell eingestellt werden oder durch einen Druck auf \enquote{Cal.} durch einen Suchalgorithmus ermittelt werden. Bei erfolgreicher Kalibrierung wechselt der Buttontext auf \enquote{Cal. ok} und schlägt einen Wert vor, der jedoch noch zu bestätigen ist.
+						\item [RSSI-Schwellwert (dBm) -- Boxen]
+						      Squelch-Wert für Zündboxen; durch einen Druck auf \enquote{Send} kann ein gemeinsamer Squelch-Wert für alle Zündboxen in Reichweite eingestellt werden. Ausgehend von diesem Wert führen die Zündboxen jedoch individuell und kontinuierlich eine weitere Squelch-Anpassung durch, um ihren minimalen Empfangspegel möglichst optimal an die bestehenden örtlichen Gegebenheiten anzupassen. 
 					\end{description}
 
-					Diese Einstellungen können durch \enquote{Bestätigen} dauerhaft übernommen oder durch \enquote{Abbrechen} wieder verworfen werden.
+					Diese Einstellungen können durch \enquote{Bestätigen} dauerhaft übernommen oder durch \enquote{Abbrechen} wieder verworfen werden. Squelch-Einstellungen für die Zündboxen werden nicht automatisch gesendet, sondern nur per Druck auf den \enquote{Send}-Button.
 
-			    \subsubsection{Updates durchführen}
-					Bei bestehender Internetverbindung kann hier die Software von \REF{} auf den letzten Stand gebracht werden. Ein Neustart ist nötig, um die Änderungen wirksam zu machen, der ausgewählte Zündplan wird auf die Standardeinstellung zurückgesetzt, AES-Key und Funkmoduleinstellung bleiben nach einem Update erhalten.
-				
+				\subsubsection{Updates durchführen}
+				\label{sec:onlineupdate}
+					Bei bestehender Internetverbindung kann hier die Software von \REF{} auf den letzten Stand gebracht werden. Ein Neustart ist nötig, um die Änderungen wirksam zu machen, der ausgewählte Zündplan wird auf die Standardeinstellung zurückgesetzt, AES-Key und Funkmoduleinstellung bleiben nach einem Update erhalten. Zudem werden die Veröffentlichungszeiten der lokalen und auf dem Server liegenden Software angezeigt.
+
 				\subsubsection{Verwendeten AES-Key wählen}
 					In diesem Fenster kann gewählt werden, mit welcher der im Unterverzeichnis \emph{config} vorhandenen AES-Schlüssel-Dateien, welche einen Dateinamen der Form \emph{aesvalues\_NAME.txt} tragen müssen, gearbeitet werden soll. Die jeweils aktuell gewählte Datei ist blau markiert.
-					
+
 					Sofern keins der Auswahlfelder markiert ist, entspricht der Inhalt der \emph{aesvalues.txt} keiner der vorhandenen Dateien des Namensschemas \emph{aesvalues\_NAME.txt}. Dies sollte man durch Auswahl eines Feldes und anschließendes Bestätigen beheben, um wieder einen definierten Zustand zu erreichen.
-				
+
 				\subsubsection{AES-Key mit Box abgleichen}
-					Wird eine eingeschaltete Zündbox über USB-Kabel (v3) bzw. einen RS232-USB-Konverter (v1/v2) an den Raspberry Pi angeschlossen, kann unter diesem Punkt ihr AES-Schlüssel ausgelesen werden. Unterscheidet er sich vom aktuell in {\REF} eingestellten Schlüssel, kann der Nutzer entscheiden, wessen Schlüssel auf das andere Device übertragen werden soll.				
-				
+					Wird eine eingeschaltete Zündbox über USB-Kabel (v3) bzw. einen RS232-USB-Konverter (v1/v2) an den Raspberry Pi angeschlossen, kann unter diesem Punkt ihr AES-Schlüssel ausgelesen werden. Unterscheidet er sich vom aktuell in {\REF} eingestellten Schlüssel, kann der Nutzer entscheiden, wessen Schlüssel auf das andere Device übertragen werden soll.
+
 				\subsubsection{El Fueradoro flashen}
-					In diesem Untermenü ist es möglich, die aktuellen Bootloader- und Firmwaredateien für \anlage{} herunterzuladen sowie über einen geeigneten Programmer den Bootloader auf ein El-Fueradoro-Device zu schreiben und bei vorhandenem Bootloader die Firmware zu übertragen. Zu diesem Zweck muss das Device von {\anlage} per Programmer (Bootloader) oder USB-Kabel (Firmware v3) bzw. USB-RS232-Adapter (Firmware früherer Generationen) mit \emph{raspEasyFire} verbunden werden. Standardmäßig sind im Image keine Firmwaredateien enthalten, vor dem ersten Flashen müssen diese also zwingend heruntergeladen werden. Den korrekten Bootloader und die korrekte Firmware für das angeschlossene Device (Generation/Funkmodul/Kanalzahl) auszuwählen, ist Aufgabe des Benutzers.
+					In diesem Untermenü ist es möglich, die aktuellen Bootloader- und Firmwaredateien für \anlage{} herunterzuladen sowie über einen geeigneten Programmer den Bootloader auf ein El-Fueradoro-Device zu schreiben und bei vorhandenem Bootloader die Firmware zu übertragen. Zu diesem Zweck muss das Device von {\anlage} per Programmer (Bootloader) oder USB-Kabel (Firmware v3) bzw. USB-RS232-Adapter (Firmware früherer Generationen) mit \emph{raspEasyFire} verbunden werden. Standardmäßig sind im Image keine Firmwaredateien enthalten, vor dem ersten Flashen müssen diese also zwingend heruntergeladen werden. Den korrekten Bootloader und die korrekte Firmware für das angeschlossene Device (Generation/Funkmodul/Kanalzahl) auszuwählen, ist zunächst Aufgabe des Benutzers, mit Firmwareversionen ab September 2021 ist es jedoch auch möglich, das angeschlossene Device zu identifizieren, woraufhin direkt die passende Firmware zum Flashen ausgewählt wird.
 
 				\subsubsection{Slave ID ändern}
 					Zündboxen können neue IDs zugewiesen werden, den Bildschirm dazu zeigt Abbildung~\ref{fig:REFids}. Hierzu müssen per \enquote{+} und \enquote{-} die alten und neuen IDs eingestellt werden, durch Druck auf \enquote{Bestätigen} wird der Befehl zur Änderung der IDs dann abgeschickt. Es ist zu beachten, dass diese Änderung nur wirksam werden kann, wenn die entsprechende Zündbox nicht scharf geschaltet ist.
@@ -926,15 +951,15 @@
 						\caption{Ändern der IDs}
 						\label{fig:REFids}
 					\end{figure}
-				
+
 				\subsubsection{Fuoco Step flashen}
 					In diesem Untermenü ist es möglich, die aktuellen Bootloader- und Firmwaredateien für den Stepper \emph{Fuoco Step} herunterzuladen sowie über einen geeigneten Programmer den Bootloader auf den \emph{Fuoco Step} zu schreiben und bei vorhandenem Bootloader die Firmware zu übertragen. Zu diesem Zweck muss der Stepper per Programmer (Bootloader) oder USB-Kabel (Firmware) mit \emph{raspEasyFire} verbunden werden.
 
 				\subsubsection{Fuoco Step konfigurieren}
 					Über diesen Menüpunkt können Stepsequenzen im \emph{Fuoco Step} programmiert werden. Auch hierfür ist eine Kabelverbindung nötig, da \emph{Fuoco Step} nicht in der Lage ist, Funksignale zu senden oder zu empfangen.
-					
-			    \subsection{Dateien löschen}
-			        Hier können zpl- und mp3-Dateien gelöscht werden. Nicht löschbar sind Dateien, welche aktuell für die Show oder den Soundcheck ausgewählt sind.
+
+			\subsection{Dateien löschen}
+				Hier können zpl- und mp3-Dateien gelöscht werden. Nicht löschbar sind Dateien, welche aktuell für die Show oder den Soundcheck ausgewählt sind.
 
 			\subsection{Soundcheck}
 
@@ -942,31 +967,36 @@
 
 			\subsection{Widerstandsmessung}
 
-				Durch Anklicken der entsprechenden Zeile in Abbildung~\ref{fig:REFslavesfound} fordert man eine {\anlage}-Zündbox dazu auf, die Widerstände ihrer 16 bzw. 32 Kanäle zu messen und an {\REF} zu senden. Diese werden dann in tabellarischer Form angezeigt wie in Abbildung~\ref{fig:REFimpedances} gezeigt. Am unteren Rand des Bildschirms kann zur jeweils nächsten und vorherigen Box oder zurück zum Startbildschirm gesprungen werden.
+				Durch Anklicken der entsprechenden Zeile in Abbildung~\ref{fig:REFslavesfound} fordert man eine {\anlage}-Zündbox dazu auf, die Widerstände ihrer 4, 16 oder 32 Kanäle zu messen und an {\REF} zu senden. Diese werden dann in tabellarischer Form angezeigt wie in Abbildung~\ref{fig:REFimpedances} gezeigt. Am unteren Rand des Bildschirms kann zur jeweils nächsten und vorherigen Box oder zurück zum Startbildschirm gesprungen werden.
 
 				\begin{figure}
 					\centering\includegraphics[width=150mm]{Bilder/REFimpedances}
 					\caption{Widerstandsmessung}
 					\label{fig:REFimpedances}
 				\end{figure}
-			
+
 				Frühere Generationen der Zündboxen (vor v3) können keine Widerstandsmessung durchführen, sie geben daher für alle Kanäle den Wert \enquote{n.a.} (not available) zurück.
-			
+
 			\subsection{Besonderheiten in Zündplänen}
-			
+
 				Um die Funktionalität der zpl-Dateien zu erweitern, die Kompatibilität mit \pic{} aber zu erhalten, existieren einige Schlüsselwörter und -zahlen, die für \pic{} keine Bedeutung haben, in \REF{} aber entsprechend interpretiert werden:
 				\begin{description}
 					\item [STEPPER]
-					Findet sich die Zeichenfolge \enquote{STEPPER} in einer Effektbeschreibung, so signalisiert dies \REF{}, dass der entsprechende Slave an diesem Kanal einen Stepper angeschlossen hat und der Kanal deshalb unter Umständen mehrfach gezündet werden darf, um den nächsten Effekt am Stepper zu triggern.
+					      Findet sich die Zeichenfolge \enquote{STEPPER} in einer Effektbeschreibung, so signalisiert dies \REF{}, dass der entsprechende Slave an diesem Kanal einen Stepper angeschlossen hat und der Kanal deshalb unter Umständen mehrfach gezündet werden darf, um den nächsten Effekt am Stepper zu triggern.
+					\item [NOBUTTON]
+					      Diese Zeichenfolge in der Effektbeschreibung verhindert, dass für den jeweiligen Effekt in der Liste der Showcues, siehe hierzu Abschnitt~\ref{sec:REFshowstart}, ein Button erstellt wird.
+					\item [EXTEND]
+						  Vereint die beiden Optionen STEPPER und NOBUTTON. Dies kann dazu dienen, Zündkanäle für eine bestimmte Zeit offenzuhalten, beispielsweise für den Betrieb eines Flamers.
 					\item [BACKUP]
-					Findet sich die Zeichenfolge \enquote{BACKUP} in einer Effektbeschreibung, wird der Effekt nicht in die automatische Zündliste eingefügt, sondern als Schaltfläche auf dem Touchscreen hinterlegt, von wo aus der dann manuell während der Show durch Drücken des FIRE-Buttons und anschließendes Betätigen der Schaltfläche ausgelöst werden kann. Es spielt dabei keine Rolle, ob die Slave-Kanal-Kombination woanders im Feuerwerk verwendet wird oder nicht, man kann also sowohl zur händischen \enquote{Nachzündung} als auch für zusätzliche Pausen- oder Lückenfüller Backups hinterlegen.
+					      Findet sich die Zeichenfolge \enquote{BACKUP} in einer Effektbeschreibung, wird der Effekt nicht in die automatische Zündliste eingefügt, sondern als Schaltfläche auf dem Touchscreen hinterlegt, von wo aus er dann manuell während der Show ausgelöst werden kann. Es spielt dabei keine Rolle, ob die Slave-Kanal-Kombination woanders im Feuerwerk verwendet wird oder nicht, man kann also sowohl zur händischen \enquote{Nachzündung} als auch für zusätzliche Pausen- oder Lückenfüller Backups hinterlegen. Die Option BACKUP sticht die ihr teils widersprechenden Optionen STEPPER, NOBUTTON und EXTEND aus.
 					\item [Slave 999]
-					Durch Verwendung der Slave-ID 999 wird \REF{} mitgeteilt, dass es sich hierbei nicht um einen tatsächlich zu schießenden Cue handelt, sondern nur um etwas, was auf dem Bildschirm angezeigt werden soll, beispielsweise durch einen zeitgesteuerten Stepper gezündete Cues oder Erinnerungen an eine bestimmte Aktion.
+					      Durch Verwendung der Slave-ID 999 wird \REF{} mitgeteilt, dass es sich hierbei nicht um einen tatsächlich zu schießenden Cue handelt, sondern nur um etwas, was auf dem Bildschirm angezeigt werden soll, beispielsweise durch einen zeitgesteuerten Stepper gezündete Cues oder Erinnerungen an eine bestimmte Aktion.
 				\end{description}
-			
-				Seit April 2021 ist es mit \REF{} möglich, mehrere Slave-Kanal-Kombinationen (maximal 7 verschiedene) gleichzeitig zu zünden. Hierbei ist bei der Erstellung des Zündplans darauf zu achten, dass die Werte in der Spalte \enquote{Zündzeitpunkt} bzw. \enquote{Ignition Time} für die gleichzeitig zu feuernden Kombinationen identisch sind. Nur dann fasst \REF{} sie zu einem gemeinsamen Zündbefehl zusammen. Die Einschränkung, dass zwischen zwei Zündbefehlen mit nicht identischem Zündzeitpunkt mindestens \SI{100}{\milli\second} liegen müssen, bleibt weiterhin bestehen.
+
+				Seit April 2021 ist es mit \REF{} möglich, mehrere Slave-Kanal-Kombinationen (maximal 7 verschiedene) gleichzeitig zu zünden. Hierbei ist bei der Erstellung des Zündplans darauf zu achten, dass die Werte in der Spalte \enquote{Zündzeitpunkt} bzw. \enquote{Ignition Time} für die gleichzeitig zu feuernden Kombinationen identisch sind. Nur dann fasst \REF{} sie zu einem gemeinsamen Zündbefehl zusammen. Die Einschränkung, dass zwischen zwei Zündbefehlen mit nicht identischem Zündzeitpunkt mindestens \SI{100}{\milli\second} liegen müssen, bleibt weiterhin bestehen. In gleicher Weise wie Showcues können auch Backupcues zu Multicues zusammengefasst werden.
 
 			\subsection{Showstart}
+			\label{sec:REFshowstart}
 
 				Gestartet wird die Show im aktuell eingestellten Modus durch Drücken des FIRE-Buttons, es müssen allerdings bestimmte Voraussetzungen erfüllt sein, damit es wirklich losgehen kann.
 
@@ -995,8 +1025,8 @@
 				Wird der FIRE-Button gedrückt, ohne dass die nötigen Voraussetzungen erfüllt sind, erscheint ein Info-Popup, welches die zu behebenden Probleme auflistet. Es empfiehlt sich, mit großem Zeitpuffer vor Beginn der Show einen Trockenlauf zu machen, um auf Fehler, die vor Ort nicht mehr allzu leicht zu beheben sind, aufmerksam zu werden. Sind alle Bedingungen erfüllt, beginnt die FIRE-Button-LED nach dem Drehen des Schlüsselschalters in die \enquote{scharfe} Position zu blinken und ein Druck auf den FIRE-Button startet die Show.
 
 				Beispiele für die Ansicht im automatischen (mit Backup-Cues) und manuellen Modus sind in Abbildung~\ref{fig:REFauto} bzw. Abbildung~\ref{fig:REFmanual} gezeigt.
-				
-				Im automatischen Modus befinden sich in der unteren Bildschirmhälfte zwei Listen: Einerseits die horizontal scrollbare Liste (das automatische Scrollen zum aktuellen Showzeitpunkt kann durch Drücken auf die angezeigte Einstellung deaktiviert oder aktiviert werden) der automatischen Zündungen, darunter die Liste der explizit festgelegten Backup-Cues. Durch Drücken des FIRE-Buttons und anschließendes Betätigen der entsprechenden Schaltfläche kann ein Backup-Cue oder ein Show-Cue erneut ausgelöst werden.
+
+				Im automatischen Modus befinden sich in der unteren Bildschirmhälfte zwei Listen: Einerseits die horizontal scrollbare Liste (das automatische Scrollen zum aktuellen Showzeitpunkt kann durch Drücken auf die angezeigte Einstellung deaktiviert oder aktiviert werden) der automatischen Zündungen, darunter die Liste der explizit festgelegten Backup-Cues. Durch Drücken des FIRE-Buttons und anschließendes Betätigen der entsprechenden Schaltfläche bei noch gedrücktem FIRE-Button können ein Backup-Cue oder ein Show-Cue erneut bzw. auch vorzeitig ausgelöst werden.
 
 				\begin{figure}
 					\begin{subfigure}{\textwidth}
@@ -1208,7 +1238,7 @@
 			\caption{Schaltplan der Zündbox (3. Generation)}
 			\label{fig:zuendbox3schematic}
 		\end{figure}
-	
+
 		\begin{figure}
 			\centering
 			\includegraphics[width=.95\textwidth,keepaspectratio]{Bilder/Zuendboxschaltplan332}
@@ -1254,7 +1284,7 @@
 			\includegraphics[angle=90, height=.97\textheight,keepaspectratio]{Bilder/Zuendboxlayout332}
 			\caption{Layout der Zündbox (3. Generation mit 32 Kanälen, keine Originalgröße!)}
 			\label{fig:zuendbox332layout}
-		\end{figure}	
+		\end{figure}
 		\begin{figure}
 			\centering
 			\includegraphics[angle=-90,width=.95\textwidth,keepaspectratio]{Bilder/Piadapterlayout}
@@ -1458,57 +1488,57 @@
 			{\footnotesize
 				\begin{longtabu}
 					{p{3cm}cX[l]ll}
-					\multicolumn{5}{c}{\textbf{Materialliste Raspberry-Pi-Transmitter}}                                                                                                                                                                                         \\
+					\multicolumn{5}{c}{\textbf{Materialliste Raspberry-Pi-Transmitter}}                                                                                                                                                                           \\
 					\\ \hline
-					Bauteil           & Anz. & Beschreibung                                          & Händler    & Artikelnr.                                                                                                                                                  \\
+					Bauteil           & Anz. & Beschreibung                                          & Händler    & Artikelnr.                                                                                                                                    \\
 					\hline\endfirsthead\hline
-					Bauteil           & Anz. & Beschreibung                                          & Händler    & Artikelnr.                                                                                                                                                  \\
+					Bauteil           & Anz. & Beschreibung                                          & Händler    & Artikelnr.                                                                                                                                    \\
 					\hline\endhead
-					\multicolumn{5}{c}{Kondensatoren}                                                                                                                                                                                                                           \\
-					C1, C3            & 2    & Elektrolyt\-kon\-den\-sa\-tor, 10uF                   & Reichelt   & RAD 10/100                                                                                                                                                  \\
-					C2, C4, C5, C6    & 4    & Keramik\-kon\-den\-sator, 100nF                       & Reichelt   & X7R-2,5 100N                                                                                                                                                \\ [8pt]
+					\multicolumn{5}{c}{Kondensatoren}                                                                                                                                                                                                             \\
+					C1, C3            & 2    & Elektrolyt\-kon\-den\-sa\-tor, 10uF                   & Reichelt   & RAD 10/100                                                                                                                                    \\
+					C2, C4, C5, C6    & 4    & Keramik\-kon\-den\-sator, 100nF                       & Reichelt   & X7R-2,5 100N                                                                                                                                  \\ [8pt]
 					\hline
-					\multicolumn{5}{c}{Integrierte Schaltungen}                                                                                                                                                                                                                 \\
-					IC1               & 1    & LM3940-3,3                                            & Reichelt   & LM 3940 IT3,3                                                                                                                                               \\
-					IC2               & 1    & ULN2003A                                              & Reichelt   & ULN 2003A                                                                                                                                                   \\
-					IC3               & 1    & MCP3202-CI/P                                          & eBay       & \href{http://www.ebay.com/itm/250878853097}{250878853097}                                                                                                   \\
-					                  & 1    & RFM69CW                                               & Pollin     & 810 303                                                                                                                                                     \\ [8pt]
+					\multicolumn{5}{c}{Integrierte Schaltungen}                                                                                                                                                                                                   \\
+					IC1               & 1    & LM3940-3,3                                            & Reichelt   & LM 3940 IT3,3                                                                                                                                 \\
+					IC2               & 1    & ULN2003A                                              & Reichelt   & ULN 2003A                                                                                                                                     \\
+					IC3               & 1    & MCP3202-CI/P                                          & eBay       & \href{http://www.ebay.com/itm/250878853097}{250878853097}                                                                                     \\
+					                  & 1    & RFM69CW                                               & Pollin     & 810 303                                                                                                                                       \\ [8pt]
 					\hline
-					\multicolumn{5}{c}{Einplatinenrechner und Zubehör}                                                                                                                                                                                                          \\
-					                  & 1    & Raspberry Pi 3                                        & Reichelt   & RASPBERRY PI 3                                                                                                                                              \\
-					                  & 1    & Micro-SD-Speicherkarte, 16\,GB                        & Reichelt   & INTENSO 3433470                                                                                                                                             \\
-					                  & 1    & USB-Soundkarte                                        & Amazon     & \href{https://www.amazon.de/gp/product/B00C7LXUDY}{B00C7LXUDY}                                                                                              \\
-					                  & 1    & Powerbank                                             & Amazon     & \href{https://www.amazon.de/B01KPFC4B2}{B01KPFC4B2}                                                                                                         \\
-					                  & 1    & Waveshare 7 inch 1024*600 Capacitive Touch Screen LCD & Amazon     & \href{http://www.amazon.de/gp/product/B015E8EDYQ}{B015E8EDYQ}                                                                                               \\ [8pt]
+					\multicolumn{5}{c}{Einplatinenrechner und Zubehör}                                                                                                                                                                                            \\
+					                  & 1    & Raspberry Pi 3                                        & Reichelt   & RASPBERRY PI 3                                                                                                                                \\
+					                  & 1    & Micro-SD-Speicherkarte, 16\,GB                        & Reichelt   & INTENSO 3433470                                                                                                                               \\
+					                  & 1    & USB-Soundkarte                                        & Amazon     & \href{https://www.amazon.de/gp/product/B00C7LXUDY}{B00C7LXUDY}                                                                                \\
+					                  & 1    & Powerbank                                             & Amazon     & \href{https://www.amazon.de/B01KPFC4B2}{B01KPFC4B2}                                                                                           \\
+					                  & 1    & Waveshare 7 inch 1024*600 Capacitive Touch Screen LCD & Amazon     & \href{http://www.amazon.de/gp/product/B015E8EDYQ}{B015E8EDYQ}                                                                                 \\ [8pt]
 					\hline
-					\multicolumn{5}{c}{LEDs}                                                                                                                                                                                                                                    \\
-					LED\_O            & 1    & LED, 5mm, orange                                      & Reichelt   & LED 5MM R OR                                                                                                                                                \\
-					LED\_G            & 1    & LED, 5mm, grün                                        & Reichelt   & LED 5MM GN                                                                                                                                                  \\ [8pt] \hline
-					\multicolumn{5}{c}{Taster/Schalter}                                                                                                                                                                                                                                  \\
-					Schlüsselschalter & 1    & Miniatur-Schlüsselschalter                & Pollin     & 420 664                                                              \\
-					Taster            & 1    & LED, 12mm, 3V, blau                                     & AliExpress & \href{https://www.aliexpress.com/item/32967227173.html}{Link} \\
-					Taster            & 1    & LED, 12mm, 3V, rot                                      & AliExpress & \href{https://www.aliexpress.com/item/32967227173.html}{Link} \\ [8pt]
+					\multicolumn{5}{c}{LEDs}                                                                                                                                                                                                                      \\
+					LED\_O            & 1    & LED, 5mm, orange                                      & Reichelt   & LED 5MM R OR                                                                                                                                  \\
+					LED\_G            & 1    & LED, 5mm, grün                                        & Reichelt   & LED 5MM GN                                                                                                                                    \\ [8pt] \hline
+					\multicolumn{5}{c}{Taster/Schalter}                                                                                                                                                                                                           \\
+					Schlüsselschalter & 1    & Miniatur-Schlüsselschalter                            & Pollin     & 420 664                                                                                                                                       \\
+					Taster            & 1    & LED, 12mm, 3V, blau                                   & AliExpress & \href{https://www.aliexpress.com/item/32967227173.html}{Link}                                                                                 \\
+					Taster            & 1    & LED, 12mm, 3V, rot                                    & AliExpress & \href{https://www.aliexpress.com/item/32967227173.html}{Link}                                                                                 \\ [8pt]
 					\hline
-					\multicolumn{5}{c}{Widerstände}                                                                                                                                                                                                                             \\
-					R\_10             & 1    & 100R                                                  & Reichelt   & METALL 100                                                                                                                                                  \\
-					R\_12             & 1    & 150R                                                  & Reichelt   & METALL 150                                                                                                                                                  \\
-					R1, R8, R9, R10   & 4    & 10k                                                   & Reichelt   & METALL 10,0K                                                                                                                                                \\
-					R11               & 1    & 2k2                                                   & Reichelt   & METALL 2,20K                                                                                                                                                \\
-					R\_7, R\_8, R\_11 & 3    & 1k0                                                   & Reichelt   & METALL 1,00K                                                                                                                                                \\ [8pt]
+					\multicolumn{5}{c}{Widerstände}                                                                                                                                                                                                               \\
+					R\_10             & 1    & 100R                                                  & Reichelt   & METALL 100                                                                                                                                    \\
+					R\_12             & 1    & 150R                                                  & Reichelt   & METALL 150                                                                                                                                    \\
+					R1, R8, R9, R10   & 4    & 10k                                                   & Reichelt   & METALL 10,0K                                                                                                                                  \\
+					R11               & 1    & 2k2                                                   & Reichelt   & METALL 2,20K                                                                                                                                  \\
+					R\_7, R\_8, R\_11 & 3    & 1k0                                                   & Reichelt   & METALL 1,00K                                                                                                                                  \\ [8pt]
 					\hline
-					\multicolumn{5}{c}{Mechanische Bauteile}                                                                                                                                                                                                                    \\
-					                  & 4    & Schraubklemme, 6-pol                                  & Reichelt   & AKL 059-06                                                                                                                                                  \\
-					                  & 1    & Buchsenleiste, 2x20-pol                               & Pollin     & 451 358                                                                                                                                                     \\
-					                  & 1    & Buchsenleiste mit 6 Plätzen                           & Reichelt   & MPE 094-1-006                                                                                                                                               \\
-					                  & 1    & Buchsenleiste mit 7 Plätzen                           & Reichelt   & MPE 094-1-007                                                                                                                                               \\
-					                  & 1    & Micro-USB-Kabel Powerbank-Pi                          & Reichelt   & DELOCK 83897                                                                                                                                                \\
-					                  & 1    & Micro-USB-Kabel Pi-Touchscreen                        & AliExpress & \href{http://www.aliexpress.com/item/Up-Angled-90-Degree-Micro-USB-Male-to-USB-Data-Charge-Cable-for-I9500-9300-N7100/32266663376.html}{Link}               \\
-					                  & 1    & HDMI-Kabel Pi-Touchscreen                             & eBay       & \href{http://www.ebay.de/itm/361031629625}{361031629625}                                                                                                    \\ [8pt]
+					\multicolumn{5}{c}{Mechanische Bauteile}                                                                                                                                                                                                      \\
+					                  & 4    & Schraubklemme, 6-pol                                  & Reichelt   & AKL 059-06                                                                                                                                    \\
+					                  & 1    & Buchsenleiste, 2x20-pol                               & Pollin     & 451 358                                                                                                                                       \\
+					                  & 1    & Buchsenleiste mit 6 Plätzen                           & Reichelt   & MPE 094-1-006                                                                                                                                 \\
+					                  & 1    & Buchsenleiste mit 7 Plätzen                           & Reichelt   & MPE 094-1-007                                                                                                                                 \\
+					                  & 1    & Micro-USB-Kabel Powerbank-Pi                          & Reichelt   & DELOCK 83897                                                                                                                                  \\
+					                  & 1    & Micro-USB-Kabel Pi-Touchscreen                        & AliExpress & \href{http://www.aliexpress.com/item/Up-Angled-90-Degree-Micro-USB-Male-to-USB-Data-Charge-Cable-for-I9500-9300-N7100/32266663376.html}{Link} \\
+					                  & 1    & HDMI-Kabel Pi-Touchscreen                             & eBay       & \href{http://www.ebay.de/itm/361031629625}{361031629625}                                                                                      \\ [8pt]
 					\hline
-					\multicolumn{5}{c}{HF-Komponenten}                                                                                                                                                                                                                          \\
-					                  & 1    & SMA-Kabel Funkmodul-Gehäuse                           & eBay       & \href{http://www.ebay.com/itm/161134814025}{161134814025}                                                                                                   \\
-					                  & 1    & Antenne 868 MHz                                       & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}                                                                                                    \\
-					                  & 1    & SMA-Platinenbuchse, 1,6mm                             & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                                                                                                   \\ \hline
+					\multicolumn{5}{c}{HF-Komponenten}                                                                                                                                                                                                            \\
+					                  & 1    & SMA-Kabel Funkmodul-Gehäuse                           & eBay       & \href{http://www.ebay.com/itm/161134814025}{161134814025}                                                                                     \\
+					                  & 1    & Antenne 868 MHz                                       & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}                                                                                      \\
+					                  & 1    & SMA-Platinenbuchse, 1,6mm                             & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                                                                                     \\ \hline
 					\caption{\normalsize Materialliste für den Raspberry-Pi-Transmitter}
 					\label{tab:raspibom}
 				\end{longtabu}
@@ -1808,12 +1838,12 @@
 					\label{tab:zuendbox3bom}
 				\end{longtabu}
 			}
-\newpage
-			
+		\newpage
+
 			{\footnotesize
 				\begin{longtabu}
 					{p{2.5cm}cX[l]ll}
-					\multicolumn{5}{c}{\textbf{Materialliste Zündbox v3 mit 32 Kanälen}}                                                                                                                                 \\
+					\multicolumn{5}{c}{\textbf{Materialliste Zündbox v3 mit 32 Kanälen}}                                                                                                                  \\
 					\\ \hline
 					Bauteil                                        & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           \\
 					\hline \endfirsthead\hline
@@ -1875,34 +1905,34 @@
 					RN1, RN2, RN3, RN4                             & 4    & Network, 9Pin, 10k                        & Reichelt   & SIL 9-8 10K                                                          \\ [8pt]
 					\hline
 					\multicolumn{5}{c}{HF-Komponenten}                                                                                                                                                    \\
-					& 1    & SMA-Kabel Funkmodul-Gehäuse               & eBay       & \href{http://www.ebay.com/itm/291548738413}{291548738413}            \\
-					& 1    & SMA-Kabel Gehäuse-Antenne                 & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}            \\
-					& 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}             \\
-					& 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}            \\ [8pt]
+					                                               & 1    & SMA-Kabel Funkmodul-Gehäuse               & eBay       & \href{http://www.ebay.com/itm/291548738413}{291548738413}            \\
+					                                               & 1    & SMA-Kabel Gehäuse-Antenne                 & eBay       & \href{http://www.ebay.com/itm/151505370986}{151505370986}            \\
+					                                               & 1    & Antenne 868 MHz                           & eBay       & \href{http://www.ebay.de/itm/380436601891}{380436601891}             \\
+					                                               & 1    & SMA-Platinenbuchse, 1,6mm                 & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}            \\ [8pt]
 					\hline
 					\multicolumn{5}{c}{Mechanische Bauteile}                                                                                                                                              \\
 					J1                                             & 1    & USB-Buchse Typ B                          & Reichelt   & USB BW                                                               \\
 					J2                                             & 1    & Wannenstecker, 10-pol                     & Reichelt   & WSL 10G                                                              \\
-					& 1    & Wippschalter                              & Pollin     & 420 697                                                              \\
-					& 1    & Miniatur-Schlüsselschalter                & Pollin     & 420 664                                                              \\
-					& 16   & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                               \\
-					& 1    & Koffer                                    & Amazon     & Bilora 545                                                           \\
-					& 1    & Akku                                      & Reichelt   & WP 1,2-12                                                            \\
-					& 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                         \\
-					& 32   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                         \\
-					& 32   & Muttern M3                                & Reichelt   & SK-E M3-100                                                          \\
-					& 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                          \\
-					& 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                        \\
-					& 1    & Buchsenleiste mit 6 Plätzen               & Reichelt   & MPE 094-1-006                                                        \\
-					& 1    & Buchsenleiste mit 7 Plätzen               & Reichelt   & MPE 094-1-007                                                        \\
-					& 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                              \\
+					                                               & 1    & Wippschalter                              & Pollin     & 420 697                                                              \\
+					                                               & 1    & Miniatur-Schlüsselschalter                & Pollin     & 420 664                                                              \\
+					                                               & 16   & Laut\-sprech\-er\-klem\-men               & Reichelt   & PT 932                                                               \\
+					                                               & 1    & Koffer                                    & Amazon     & Bilora 545                                                           \\
+					                                               & 1    & Akku                                      & Reichelt   & WP 1,2-12                                                            \\
+					                                               & 4    & Schrauben M3x6                            & Reichelt   & SZK M3X6-200                                                         \\
+					                                               & 32   & Schrauben M3x10                           & Reichelt   & SKL M3X10-50                                                         \\
+					                                               & 32   & Muttern M3                                & Reichelt   & SK-E M3-100                                                          \\
+					                                               & 2    & Akku-Flachstecker                         & Reichelt   & FSH-M1 4,75                                                          \\
+					                                               & 1    & Stiftleiste                               & Reichelt   & SL 1X36G 2,54                                                        \\
+					                                               & 1    & Buchsenleiste mit 6 Plätzen               & Reichelt   & MPE 094-1-006                                                        \\
+					                                               & 1    & Buchsenleiste mit 7 Plätzen               & Reichelt   & MPE 094-1-007                                                        \\
+					                                               & 1    & Deans-T-Plugs-Paar                        & Pollin     & 820 129                                                              \\
 					\\ [8pt]
 					\hline
 					\multicolumn{5}{c}{Kabel}                                                                                                                                                             \\ \nopagebreak
-					& 1    & Flachbandkabel für LED+Schlüsselsch.      & Reichelt   & AWG 28-10F 3M                                                        \\
-					& 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                              \\
-					& 1    & Schrumpf\-schläu\-che 1,6mm               & Reichelt   & SDH 1,6 SW                                                           \\
-					& 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           \\ \hline
+					                                               & 1    & Flachbandkabel für LED+Schlüsselsch.      & Reichelt   & AWG 28-10F 3M                                                        \\
+					                                               & 1    & Litzen-Sortiment, 0,5 mm$^2$, 5x 5 m      & Pollin     & 800 024                                                              \\
+					                                               & 1    & Schrumpf\-schläu\-che 1,6mm               & Reichelt   & SDH 1,6 SW                                                           \\
+					                                               & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (3. Generation) mit 32 Kanälen}
 					\label{tab:zuendbox332bom}
 				\end{longtabu}
@@ -2257,14 +2287,14 @@
 		\section{Verwendung des AVRISP mkII}
 
 			Zum Brennen des Bootloaders gibt es ein Kommandozeilentool namens \emph{btldflsh.exe} für den \emph{AVRISP mkII}, welches auf \emph{AVRDUDE} basiert. Um einen mit kompatiblen USB-Treiber für den Programmieradapter zu installieren, gibt es unter Windows das Programm Zadig\footnote{Zadig-Download: \url{https://zadig.akeo.ie/}}, in dem vor dem Klick auf \enquote{Install Driver} die Einstellungen gemäß Abbildung~\ref{fig:zadig} zu treffen sind.
-			
+
 			\begin{figure}
 				\centering
 				\includegraphics[width=.7\textwidth]{Bilder/zadig}
 				\caption{Einstellungen in Zadig zur Erzeugung und Installation eines USB-Treibers für den Programmer}
 				\label{fig:zadig}
 			\end{figure}
-			
+
 			Dem Tool muss als Parameter die iHex-Datei des controllertyp- und frequenzspezifischen Bootloaders übergeben werden.
 
 			Für einen \texttt{ATmega328P} mit einer Taktfrequenz von \SI{9,8304}{\mega\hertz} lautet das Kommando:
@@ -2299,13 +2329,12 @@
 			\footnotetext{Bei der Extended Fuse werden nur die unteren drei Bit verwendet, die oberen fünf sind nicht in Gebrauch und können daher beliebig jeweils mit 1 oder 0 beschrieben und gelesen werden. Werden die nicht-relevanten Bits mit 0 beschrieben, ergibt sich der Wert 0x05, bei Beschreibung mit 1 der Wert 0xFD. AVRDUDE ist leider nicht imstande, die oberen fünf Bits zu ignorieren und meldet daher einen Verifizierungsfehler, falls die Bits mit 0 geschrieben und mit 1 gelesen bzw. mit 1 geschrieben und mit 0 gelesen werden.}
 
 			Wird beim Flashen des Bootloaders das Standard-EEPROM-Image nicht mitübertragen, die herstellerseitige Voreinstellung des EEPROMs also nicht verändert, werden Zündboxen~-- nach dem Programmieren der \enquote{echten} Firmware~-- zunächst \enquote{E} bzw. \enquote{e} für \enquote{Error} als Unique- bzw. Slave-ID melden, da an den Speicherstellen für IDs und Prüfsummen nicht zueinander passende Werte stehen. Die Zündbox muss dann einmalig kabelgebunden über die lokale Konfiguration auf gültige Werte eingestellt werden.
-			
+
 			Wird das Tool \emph{AVRDUDE} verwendet, müssen der Programmername als Parameter hinter \enquote{-c} und die Verbindung zum Computer~-- mögliche Werte sind unter anderem usb oder comXY, wobei XY eine Zahl bezeichnet~-- hinter \enquote{-P} angegeben und an der entsprechenden Stelle in folgenden Befehl eingefügt werden:
-			
+
 			\begin{center}
 				\emph{avrdude -p m328p -c \textbf{PROGRAMMER} -P \textbf{VERBINDUNG} -u -Uflash:w:bootload\_m328p\_9830400.hex:a -U eeprom:w:std\_eep.eep:a -Ulfuse:w:0xf7:m -Uhfuse:w:0xd6:m -Uefuse:w:0xfd:m -v}
 			\end{center}
-
 
 	\chapter{Micro-SD-Karte für raspEasyFire vorbereiten}
 		\label{ch:raspisd}
@@ -2317,7 +2346,7 @@
 			\end{center}
 
 			Um diese Datei nun so auf eine Micro-SD-Karte (Mindestkapazität \SI{8}{\giga\byte}) übertragen zu können, dass sie von {\REF} genutzt werden kann, bietet sich unter Windows das kostenlose Tool \texttt{Win32 Disk Imager}\footnote{Setupdatei zur Installation herunterzuladen unter: \url{https://sourceforge.net/projects/win32diskimager/files/latest/download}} an. Hier muss nun einfach die soeben heruntergeladene Imagedatei geladen, der korrekte Laufwerksbuchstaber der Mirco-SD-Karte ausgewählt und anschließend der Schreibvorgang gestartet werden, der einige Minuten in Anspruch nimmt. Unter Linux kann mit dem Kommandozeilentool DiskDump (dd) gearbeitet werden.
-			
+
 			\textbf{Wichtig:} Soll unter Windows eine bereits mit einem Image beschriebene SD-Karte neu beschrieben werden, sind zunächst folgende Schritte mit dem Windows-Boardtool DISKPART notwendig, um die Karte erneut nutzen zu können:
 			\begin{enumerate}
 				\item Einlegen der SD-Karte in den Windows-Rechner
@@ -2334,9 +2363,9 @@
 				\item Durch \enquote{assign} bestätigen.
 				\item Diskpart durch \enquote{exit} beenden.
 			\end{enumerate}
-		
+
 			Erst jetzt kann mit dem \texttt{Win32 Disk Imager} ein neues Image korrekt geschrieben werden.
-			
+
 			Hintergrund ist, dass das Image zwei Partitionen (Boot- und Datenpartition) enthält, wobei für Windows selbst nur die Bootpartition verarbeitbar ist, da es sich bei der Datenpartition um eine Linux-Partition im ext4-Format handelt, die Windows nicht erkennen kann. Sämtliche Aktionen aus dem Windows-Explorer würden sich ohne die DISKPART-Schritte daher nur auf die Bootpartition beziehen und die Datenpartition unangetastet lassen.
 
 		\section{WLAN-Daten einstellen}
@@ -2403,7 +2432,7 @@
 			Der Aufbau der Antenne erfolgt folgendermaßen:
 			\begin{enumerate}
 				\item
-				      Von der Rolle RG316 ein Stück der Länge abschneiden, welche später der Gesamtlänge von Antennenspitze bis zum Anschluss an das Funkmodul bzw. einen Adapterstecker entspricht			 
+				      Von der Rolle RG316 ein Stück der Länge abschneiden, welche später der Gesamtlänge von Antennenspitze bis zum Anschluss an das Funkmodul bzw. einen Adapterstecker entspricht
 				\item
 				      Entfernung des Kunststoffmantels auf einer Länge von \SI{88}{\milli\metre}
 				\item
