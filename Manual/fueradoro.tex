@@ -843,7 +843,7 @@
 				      Soundcheck
 			\end{enumerate}
 		
-			Zusätzlich wird das Datum der Erstellung der aktuell verwendeten Software angezeigt, bei aktiver Internetverbindung kommt dazu der Hinweis, ob die Software dem aktuellen Stand auf dem Server entspricht oder älter ist. Updates können über in dem in Abschnitt~\ref{sec:onlineupdate} beschriebenen Bereich durchgeführt werden.
+			Zusätzlich wird das Datum der Erstellung der aktuell verwendeten Software angezeigt, bei aktiver Internetverbindung kommt dazu der Hinweis, ob die Software dem aktuellen Stand auf dem Server entspricht oder älter ist. Updates können über den in Abschnitt~\ref{sec:onlineupdate} beschriebenen Bereich durchgeführt werden.
 
 			\subsection{Zündplanauswahl}
 
@@ -869,10 +869,10 @@
 				\begin{itemize}
 					\item Unique-ID
 					\item Slave-ID
+					\item Kanalanzahl
 					\item Batteriespannung
 					\item Scharfschaltungsstatus
 					\item Temperatur
-					\item Kanalanzahl
 					\item Empfangsleistung beim Empfang der Identifizierungsaufforderung
 					\item Aktueller Squelch-Wert des Funkmoduls
 					\item Farbliche Markierung für die Größe der Differenz zwischen Empfangsleistung und Squelch als Indikator für die Ausfallwahrscheinlichkeit
@@ -890,7 +890,7 @@
 					      Datenkollision durch gleiche Unique-IDs $\Rightarrow$ Zuteilung einer anderen Unique-ID
 				\end{enumerate}
 
-				Erscheint unter dem Punkt \enquote{Letzte Suche} 
+				Erscheint unter dem Punkt \enquote{Letzte Suche} der Hinweis \enquote{SQUELCH-WARNUNG}, so bedeutet dies, dass das Funkmodul während der Suche häufig durch Signale, welche nicht von einer Zündbox kamen, abgelenkt wurde. In einem solchen Fall sollte die RSSI-Schwelle des Senders neu kalibriert werden, weil sie zu sensibel eingestellt ist, siehe hierzu Abschnitt~\ref{sec:weitereoptionen}. Dasselbe gilt, wenn keine \enquote{SQUELCH-WARNUNG} ausgegeben wurde, aber möglicherweise nicht alle Zündboxen gefunden wurden. Dann liegt die eingestellte Schwelle möglicherweise zu hoch.
 
 				\begin{figure}
 					\centering\includegraphics[width=150mm]{Bilder/REFslavesfound}
@@ -899,6 +899,7 @@
 				\end{figure}
 
 			\subsection{Weitere Optionen}
+			\label{sec:weitereoptionen}
 				Über diesen Menüpunkt erhält man Zugang zu weiteren Untermenüs und Funktionen.
 
 				\subsubsection{Einstellungen anpassen}
@@ -936,6 +937,8 @@
 					In diesem Fenster kann gewählt werden, mit welcher der im Unterverzeichnis \emph{config} vorhandenen AES-Schlüssel-Dateien, welche einen Dateinamen der Form \emph{aesvalues\_NAME.txt} tragen müssen, gearbeitet werden soll. Die jeweils aktuell gewählte Datei ist blau markiert.
 
 					Sofern keins der Auswahlfelder markiert ist, entspricht der Inhalt der \emph{aesvalues.txt} keiner der vorhandenen Dateien des Namensschemas \emph{aesvalues\_NAME.txt}. Dies sollte man durch Auswahl eines Feldes und anschließendes Bestätigen beheben, um wieder einen definierten Zustand zu erreichen.
+					
+					Es besteht in diesem Feld auch die Möglichkeit, einen eigenen \enquote{Custom}-Key zu erzeugen. Dies geschieht auf Basis der Seriennummer des verwendeten Raspberry Pi sowie weiterer Zufallszahlen. Wurde dieser Key bereits erzeugt und seitdem nicht gelöscht, kann kein neuer erzeugt werden.
 
 				\subsubsection{AES-Key mit Box abgleichen}
 					Wird eine eingeschaltete Zündbox über USB-Kabel (v3) bzw. einen RS232-USB-Konverter (v1/v2) an den Raspberry Pi angeschlossen, kann unter diesem Punkt ihr AES-Schlüssel ausgelesen werden. Unterscheidet er sich vom aktuell in {\REF} eingestellten Schlüssel, kann der Nutzer entscheiden, wessen Schlüssel auf das andere Device übertragen werden soll.
@@ -959,7 +962,7 @@
 					Über diesen Menüpunkt können Stepsequenzen im \emph{Fuoco Step} programmiert werden. Auch hierfür ist eine Kabelverbindung nötig, da \emph{Fuoco Step} nicht in der Lage ist, Funksignale zu senden oder zu empfangen.
 
 			\subsection{Dateien löschen}
-				Hier können zpl- und mp3-Dateien gelöscht werden. Nicht löschbar sind Dateien, welche aktuell für die Show oder den Soundcheck ausgewählt sind.
+				Hier können zpl- und mp3-Dateien sowie AES-Schlüssel und Logs gelöscht werden. Nicht löschbar sind Dateien, welche aktuell für die Show oder den Soundcheck ausgewählt sind, der Standard-AES-Schlüssel, der derzeit aktive AES-Schlüssel sowie der Log der aktiven Sitzung.
 
 			\subsection{Soundcheck}
 
@@ -1022,21 +1025,23 @@
 					      {\REF} muss durch den Schlüsselschalter scharf geschaltet sein.
 				\end{itemize}
 
-				Wird der FIRE-Button gedrückt, ohne dass die nötigen Voraussetzungen erfüllt sind, erscheint ein Info-Popup, welches die zu behebenden Probleme auflistet. Es empfiehlt sich, mit großem Zeitpuffer vor Beginn der Show einen Trockenlauf zu machen, um auf Fehler, die vor Ort nicht mehr allzu leicht zu beheben sind, aufmerksam zu werden. Sind alle Bedingungen erfüllt, beginnt die FIRE-Button-LED nach dem Drehen des Schlüsselschalters in die \enquote{scharfe} Position zu blinken und ein Druck auf den FIRE-Button startet die Show.
+				Wird der FIRE-Button gedrückt, ohne dass die nötigen Voraussetzungen erfüllt sind, erscheint ein Info-Popup, welches die zu behebenden Probleme auflistet. Es empfiehlt sich, mit großem Zeitpuffer vor Beginn der Show einen Trockenlauf zu machen, um auf Fehler, die vor Ort nicht mehr allzu leicht zu beheben sind, aufmerksam zu werden.
+				
+				Sind alle Bedingungen erfüllt, beginnt die FIRE-Button-LED nach dem Drehen des Schlüsselschalters in die \enquote{scharfe} Position zu blinken und ein Druck auf den FIRE-Button startet die Show.
 
 				Beispiele für die Ansicht im automatischen (mit Backup-Cues) und manuellen Modus sind in Abbildung~\ref{fig:REFauto} bzw. Abbildung~\ref{fig:REFmanual} gezeigt.
 
 				Im automatischen Modus befinden sich in der unteren Bildschirmhälfte zwei Listen: Einerseits die horizontal scrollbare Liste (das automatische Scrollen zum aktuellen Showzeitpunkt kann durch Drücken auf die angezeigte Einstellung deaktiviert oder aktiviert werden) der automatischen Zündungen, darunter die Liste der explizit festgelegten Backup-Cues. Durch Drücken des FIRE-Buttons und anschließendes Betätigen der entsprechenden Schaltfläche bei noch gedrücktem FIRE-Button können ein Backup-Cue oder ein Show-Cue erneut bzw. auch vorzeitig ausgelöst werden.
 
-				\begin{figure}
+				\begin{figure}[b]
 					\begin{subfigure}{\textwidth}
-						\includegraphics{Bilder/REFautoshow}
+						\centering\includegraphics[width=.8\textwidth]{Bilder/REFautoshow}
 						\caption{Automatischer Modus}
 						\label{fig:REFauto}
 					\end{subfigure}
 					\newline
 					\begin{subfigure}{\textwidth}
-						\includegraphics{Bilder/REFmanualshow}
+						\centering\includegraphics[width=.8\textwidth]{Bilder/REFmanualshow}
 						\caption{Manueller Modus}
 						\label{fig:REFmanual}
 					\end{subfigure}
