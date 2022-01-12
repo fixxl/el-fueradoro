@@ -1389,18 +1389,21 @@ int main( void ) {
             temp_sreg = SREG;
             cli();
 
-            squelch_setting = rfm_cmd( 0x2900, 0 );
+            if( !(rfm_status() & 0x0144) ) {    // Don't adjust in case of sync match, fifo not empty or payload ready
+                squelch_setting = rfm_cmd( 0x2900, 0 );
 
-            // Less sensitive squelch value in case of too many timeouts
-            if( rssi_flag > 0 && squelch_setting > (-2*SQUELCH_UPPER_LIMIT) ) {
-                squelch_setting -= rssi_flag;
+                // Less sensitive squelch value in case of too many timeouts
+                if( rssi_flag > 0 && squelch_setting > (-2*SQUELCH_UPPER_LIMIT) ) {
+                    squelch_setting -= rssi_flag;
+                }
+                // More sensitive squelch value in case of no timeouts
+                else if( rssi_flag == -1 && squelch_setting != 255 ) {
+                    squelch_setting++;
+                }
+                rfm_cmd( 0x2900 | squelch_setting, 1 );
+                rssi_flag = 0;
             }
-            // More sensitive squelch value in case of no timeouts
-            else if( rssi_flag == -1 && squelch_setting != 255 ) {
-                squelch_setting++;
-            }
-            rfm_cmd( 0x2900 | squelch_setting, 1 );
-            rssi_flag = 0;
+
             SREG = temp_sreg;
         }
 
@@ -1720,28 +1723,30 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
     if ( meascycles > 124 ) {
         meascycles    = 0;
 
-        // Check number of Rx timeouts in last 1.25s
-        // Reduce more (2 dB) or less (0.5 dB) depending on number of timeouts
-        // or increase (0.5 dB) in case of no timeouts. Then reset counter for new cycle.
-        if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_LOW ) {
-            rssi_flag = (rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_HIGH) ? 4 : 2;
-        }
+        if(rssi_flag == 0) {
+            // Check number of Rx timeouts in last 1.25s
+            // Reduce more (2 dB) or less (0.5 dB) depending on number of timeouts
+            // or increase (0.5 dB) in case of no timeouts. Then reset counter for new cycle.
+            if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_LOW ) {
+                rssi_flag = (rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_HIGH) ? 4 : 2;
+            }
 
-        // Check if there were no timeouts (possibility to increase sensitivity)
-        if ( rx_timeout_ctr == 0 ) {
-            rxTimeoutZeroCounter++;
-        }
-        else {
-            rxTimeoutZeroCounter = 0;
-        }
+            // Check if there were no timeouts (possibility to increase sensitivity)
+            if ( rx_timeout_ctr == 0 ) {
+                rxTimeoutZeroCounter++;
+            }
+            else {
+                rxTimeoutZeroCounter = 0;
+            }
 
-        // After 9 consecutive zeros, we go down one step
-        if (rxTimeoutZeroCounter > 8) {
-            rssi_flag            = -1;
-            rxTimeoutZeroCounter =  0;
-        }
+            // After 9 consecutive zeros, we go down one step
+            if (rxTimeoutZeroCounter > 8) {
+                rssi_flag            = -1;
+                rxTimeoutZeroCounter =  0;
+            }
 
-        rx_timeout_ctr = 0;
+            rx_timeout_ctr = 0;
+        }
     }
 
     if ( timer1_flags & TIMER_TRANSMITCOUNTER_FLAG ) {

@@ -66,7 +66,7 @@
 #define   waitRx( XX )    for ( uint8_t i = rx_field[rx_length - 1] - 1; i; i-- ) _delay_us ( ( ADDITIONAL_LENGTH + ((XX ## _LENGTH)/16 + 1 * (((XX ## _LENGTH)%16) && 1))*16 ) * BYTE_DURATION_US + (500000/BITRATE) + 5 + (5*RFM_RAMP_UP/4))
 
 // Radio message lengths
-#define   ADDITIONAL_LENGTH    10    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
+#define   ADDITIONAL_LENGTH    12    // Preamble (4) + Passwort (2) + Length Byte (1) + CRC (2) + Spare
 #define   FIRE_LENGTH          4
 #define   IDENT_LENGTH         4
 #define   MEASURE_LENGTH       4
