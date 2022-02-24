@@ -1211,7 +1211,7 @@ int main( void ) {
                 if ( active_channels & controlvar ) { // If a given channel is currently active
                     channel_timeout[i]++;             // Increment the timeout-value for that channel
 
-                    if ( channel_timeout[i] >= ignition_time ) { // If the channel was active for at least the ignition time
+                    if ( channel_timeout[i] > ignition_time ) { // If the channel was active for at least the ignition time
                         anti_scheme          |= controlvar;      // Set delete-bit for this channel
                         channel_timeout[i]    = 0;               // Reset channel-timeout value
                         flags.b.finish_firing = 1;               // Leave a note that a change in the list of active channels is due
