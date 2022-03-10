@@ -1154,6 +1154,10 @@ int main( void ) {
                     rfm_tx_error = rfm_transmit( tx_field, tx_length ); // Transmit message
                     tx_field[tmp]--;
 
+                    if (tx_field[tmp]) {
+                        _delay_ms(5);
+                    }
+
                     if ( !rfm_tx_error ) {
                         led_green_off();
                     }
