@@ -9,7 +9,9 @@
 #define RFM69_H_
 
 /* Carrierfrequenz in Hz */
-#define FREQUENCY              869500000LL
+#ifndef FREQUENCY
+    #define FREQUENCY              869500000LL
+#endif
 
 /* Bitrate in bps (1200 ... 300000) and shall it be calculated as for RFM12
  * in order to get equal bitrate for RFM12 and RFM69 if used together? */
@@ -22,7 +24,7 @@
 
 /* Output power in dBm (-18...13) */
 #ifndef P_OUT_DBM
-    #define P_OUT_DBM          8 // Output power in dBm
+    #define P_OUT_DBM          10 // Output power in dBm
 #endif
 
 #ifndef HPVERSION
@@ -35,6 +37,10 @@
 
 #ifndef RX_TIMEOUT_CTR_THRESHOLD_HIGH
     #define RX_TIMEOUT_CTR_THRESHOLD_HIGH 20
+#endif
+
+#ifndef RX_TIMEOUT_CTR_THRESHOLD_TP
+    #define RX_TIMEOUT_CTR_THRESHOLD_TP 6
 #endif
 
 #ifndef RX_TIMEOUT_CTR_THRESHOLD_LOW

@@ -189,4 +189,77 @@ echo Done
 echo.
 
 
+REM 433 MHz hexfiles
+REM -------------------------------------------------------------------
+
+echo Compiling v3-sources for ATMega328p and RFM69CW at 433 MHz (10 dBm, 16 Channels)...
+
+for %%X in (..\Firmware_Zuendbox_v3\*.c) do avr-gcc -Wall -Wextra -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -mcall-prologues -fno-tree-loop-optimize -fno-caller-saves -DRFM=69 -DCOMPILEDATE=%dtstrng% -DCOMPILETIME=%tmstrng% -DMAX_ID=%maxId% -DFIRE_CHANNELS=16UL -DP_OUT_DBM=10 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -DFREQUENCY=434500000LL -MMD -MP -MF"%%~nX.d" -MT"%%~nX.d" -c -o "%%~nX.o" "../Firmware_Zuendbox_v3/%%~nX.c"
+
+avr-gcc -Wl,-Map,Pyro_v3_atmega328p_RFM69CW_16ch_433.map -flto -Os -mrelax -mmcu=atmega328p -o "Pyro_v3_atmega328p_RFM69CW_16ch_433.elf" %foo3%
+
+avr-size --format=avr --mcu=atmega328p Pyro_v3_atmega328p_RFM69CW_16ch_433.elf
+
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_v3_atmega328p_RFM69CW_16ch_433.elf "Pyro_v3_atmega328p_RFM69CW_16ch_433.hex"
+
+copy "Pyro_v3_atmega328p_RFM69CW_16ch_433.hex" .\Updater > NUL
+for %%a in (*) do if /I not %%~na==%~n0 del /q "%%a"
+echo Done
+echo.
+
+REM -------------------------------------------------------------------
+
+echo Compiling v3-sources for ATMega328p and RFM69CW at 433 MHz (10 dBm, 32 Channels)...
+
+for %%X in (..\Firmware_Zuendbox_v3\*.c) do avr-gcc -Wall -Wextra -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -mcall-prologues -fno-tree-loop-optimize -fno-caller-saves -DRFM=69 -DCOMPILEDATE=%dtstrng% -DCOMPILETIME=%tmstrng% -DMAX_ID=%maxId% -DFIRE_CHANNELS=32UL -DP_OUT_DBM=10 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -DFREQUENCY=434500000LL -MMD -MP -MF"%%~nX.d" -MT"%%~nX.d" -c -o "%%~nX.o" "../Firmware_Zuendbox_v3/%%~nX.c"
+
+avr-gcc -Wl,-Map,Pyro_v3_atmega328p_RFM69CW_32ch_433.map -flto -Os -mrelax -mmcu=atmega328p -o "Pyro_v3_atmega328p_RFM69CW_32ch_433.elf" %foo3%
+
+avr-size --format=avr --mcu=atmega328p Pyro_v3_atmega328p_RFM69CW_32ch_433.elf
+
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_v3_atmega328p_RFM69CW_32ch_433.elf "Pyro_v3_atmega328p_RFM69CW_32ch_433.hex"
+
+copy "Pyro_v3_atmega328p_RFM69CW_32ch_433.hex" .\Updater > NUL
+for %%a in (*) do if /I not %%~na==%~n0 del /q "%%a"
+echo Done
+echo.
+
+REM -------------------------------------------------------------------
+
+echo Compiling v3-sources for ATMega328p and RFM69 at 433 MHz (10dBm, 16 Channels)...
+
+for %%X in (..\Firmware_Zuendbox_v3\*.c) do avr-gcc -Wall -Wextra -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -mcall-prologues -fno-tree-loop-optimize -fno-caller-saves -DRFM=69 -DCOMPILEDATE=%dtstrng% -DCOMPILETIME=%tmstrng% -DMAX_ID=%maxId% -DFIRE_CHANNELS=16UL -DP_OUT_DBM=10 -DHPVERSION=1 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -DFREQUENCY=434500000LL -MMD -MP -MF"%%~nX.d" -MT"%%~nX.d" -c -o "%%~nX.o" "../Firmware_Zuendbox_v3/%%~nX.c"
+
+avr-gcc -Wl,-Map,Pyro_v3_atmega328p_RFM69HCW_16ch_433.map -flto -Os -mrelax -mmcu=atmega328p -o "Pyro_v3_atmega328p_RFM69HCW_16ch_433.elf" %foo3%
+
+avr-size --format=avr --mcu=atmega328p Pyro_v3_atmega328p_RFM69HCW_16ch_433.elf
+
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_v3_atmega328p_RFM69HCW_16ch_433.elf "Pyro_v3_atmega328p_RFM69HCW_16ch_433.hex"
+
+copy "Pyro_v3_atmega328p_RFM69HCW_16ch_433.hex" .\Updater > NUL
+for %%a in (*) do if /I not %%~na==%~n0 del /q "%%a"
+echo Done
+echo.
+
+REM -------------------------------------------------------------------
+
+echo Compiling v3-sources for ATMega328p and RFM69 at 433 MHz (10dBm, 32 Channels)...
+
+for %%X in (..\Firmware_Zuendbox_v3\*.c) do avr-gcc -Wall -Wextra -Os -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -flto -mcall-prologues -fno-tree-loop-optimize -fno-caller-saves -DRFM=69 -DCOMPILEDATE=%dtstrng% -DCOMPILETIME=%tmstrng% -DMAX_ID=%maxId% -DFIRE_CHANNELS=32UL -DP_OUT_DBM=10 -DHPVERSION=1 -mmcu=atmega328p -DMCU=atmega328p -DF_CPU=9830400UL -DFREQUENCY=434500000LL -MMD -MP -MF"%%~nX.d" -MT"%%~nX.d" -c -o "%%~nX.o" "../Firmware_Zuendbox_v3/%%~nX.c"
+
+avr-gcc -Wl,-Map,Pyro_v3_atmega328p_RFM69HCW_32ch_433.map -flto -Os -mrelax -mmcu=atmega328p -o "Pyro_v3_atmega328p_RFM69HCW_32ch_433.elf" %foo3%
+
+avr-size --format=avr --mcu=atmega328p Pyro_v3_atmega328p_RFM69HCW_32ch_433.elf
+
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Pyro_v3_atmega328p_RFM69HCW_32ch_433.elf "Pyro_v3_atmega328p_RFM69HCW_32ch_433.hex"
+
+copy "Pyro_v3_atmega328p_RFM69HCW_32ch_433.hex" .\Updater > NUL
+for %%a in (*) do if /I not %%~na==%~n0 del /q "%%a"
+echo Done
+echo.
+
+
+
+
+
 timeout /T 10  > nul

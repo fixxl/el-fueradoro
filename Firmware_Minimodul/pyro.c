@@ -1432,7 +1432,7 @@ int main( void ) {
 
                 // Less sensitive squelch value in case of too many timeouts
                 if( rssi_flag > 0 && squelch_setting > (-2*SQUELCH_UPPER_LIMIT) ) {
-                    squelch_setting -= rssi_flag;
+                    squelch_setting = squelch_setting - rssi_flag > (-2*SQUELCH_UPPER_LIMIT) ? squelch_setting - rssi_flag : (-2*SQUELCH_UPPER_LIMIT);
                 }
                 // More sensitive squelch value in case of no timeouts
                 else if( rssi_flag == -1 && squelch_setting != 255 ) {
@@ -1453,22 +1453,32 @@ int main( void ) {
 
 // Interrupt vectors
 ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
-    static uint8_t rxTimeoutMeascycles = 0, rxTimeoutZeroCounter = 0;
+    static uint8_t rxTimeoutMeascycles = 0, rxTimeoutZeroCounter = 0, rxTimeoutLastVal = 0;
     static uint16_t channelLedMeascycles = 0;
 
     // -------------------------------------------------------------------------------------------------------
 
     rxTimeoutMeascycles++;
 
+    // Squelch
     if ( rxTimeoutMeascycles > 124 ) {
         rxTimeoutMeascycles    = 0;
 
         if (rssi_flag == 0) {
             // Check number of Rx timeouts in last 1.25s
-            // Reduce more (2 dB) or less (0.5 dB) depending on number of timeouts
+            // Reduce more (2 dB) or less (1 dB) depending on number of timeouts
             // or increase (0.5 dB) in case of no timeouts. Then reset counter for new cycle.
             if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_LOW ) {
-                rssi_flag = (rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_HIGH) ? 4 : 2;
+                if (rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_HIGH) {
+                    rssi_flag = 4;
+                } else if (rx_timeout_ctr >= RX_TIMEOUT_CTR_THRESHOLD_TP ) {
+                    rssi_flag = 2;
+                } else if (rx_timeout_ctr < RX_TIMEOUT_CTR_THRESHOLD_TP) {
+                    // Don't reduce sensitivity if number of
+                    // timeouts stays on same level or less
+                    rssi_flag = rx_timeout_ctr > rxTimeoutLastVal ? 2 : 0;
+                }
+                rxTimeoutLastVal = rx_timeout_ctr > 255 ? 255 : rx_timeout_ctr;
             }
 
             // Check if there were no timeouts (possibility to increase sensitivity)
@@ -1483,6 +1493,7 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
             if (rxTimeoutZeroCounter > 8) {
                 rssi_flag            = -1;
                 rxTimeoutZeroCounter =  0;
+                rxTimeoutLastVal     =  0;
             }
 
             rx_timeout_ctr = 0;

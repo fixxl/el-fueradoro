@@ -214,7 +214,7 @@
         uint8_t  bw, afc_bw, logemu;
         uint16_t freqdev;
 
-        uint32_t mant, expo, myfreq = 867595000LL;
+        uint32_t mant, expo, myfreq = FREQUENCY;
 
         // freqdev = bitrate => beta = 2
         freqdev = ( 512ULL * bitrate + 15625 ) / 31250;
@@ -225,11 +225,11 @@
         expo = 1 << 7;
 
         // Increase bandwidth until it's at least twice the bitrate
-        while ( !( 3 * bitrate < ( 32000000 / ( mant * 4 * expo ) ) ) ) {
+        while ( ( 3 * bitrate / 2 > ( 32000000 / ( mant * 4 * expo ) ) ) && ( mant + expo > 17) ) {
             mant -= 4;
 
             if ( mant < 16 ) {
-                if ( expo ) {
+                if ( expo > 1 ) {
                     expo >>= 1;
                     mant   = 24;
                 }
@@ -241,6 +241,7 @@
 
         // Loop-implementation of log2
         logemu = 0;
+        expo >>= 1;
         while ( expo ) {
             expo >>= 1;
             logemu++;
@@ -249,18 +250,18 @@
         bw = ( ( ( mant - 16 ) / 4 ) << 3 ) | logemu;
 
         // AFC-Bandwidth
-        uint32_t xtalTol = ( 1ULL * myfreq + 25000UL ) / 50000ULL;
+        uint32_t xtalTol = ( 1ULL * myfreq + 50000UL ) / 100000ULL; // 10 ppm of RF frequency
 
         // Start with minimum bandwidth setting
         mant = 24;
         expo = 1 << 7;
 
         // Increase bandwidth until it's at least twice the bitrate
-        while ( !( 3 * bitrate + xtalTol < ( 32000000 / ( mant * 4 * expo ) ) ) ) {
+        while ( ( 3 * bitrate / 2 + xtalTol > ( 32000000 / ( mant * 4 * expo ) ) ) && ( mant + expo > 17) ) {
             mant -= 4;
 
             if ( mant < 16 ) {
-                if ( expo ) {
+                if ( expo > 1 ) {
                     expo >>= 1;
                     mant   = 24;
                 }
@@ -272,6 +273,7 @@
 
         // Loop-implementation of log2
         logemu = 0;
+        expo >>= 1;
         while ( expo ) {
             expo >>= 1;
             logemu++;
