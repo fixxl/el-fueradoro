@@ -248,6 +248,7 @@ int main( void ) {
     fireslave_t slaves[MAX_ID + 1];
     uint8_t     impedances[FIRE_CHANNELS]      = { 0 };
     uint8_t     channel_timeout[FIRE_CHANNELS] = { 0 };
+    uint8_t     rf_frequency[ 3 ] = { 0, 0, 0 };
 
     char transmission_type;
 
@@ -366,6 +367,10 @@ int main( void ) {
 
     // Initialise radio
     const uint8_t rfm_fail = rfm_init();
+
+    for(uint8_t ct = 0; ct < 3; ct++ ) {
+        rf_frequency[ ct ] = rfm_cmd(0x0700 + 256 * ct, 0);
+    }
 
     // Set encryption active, read and transfer AES-Key
     rfm_cmd( 0x3DA1, 1 );
@@ -1139,6 +1144,7 @@ int main( void ) {
                 setTxCase( PARAMETERS );
                 setTxCase( MEASURE );
                 setTxCase( IMPEDANCES );
+                setTxCase( NEWFREQ );
 
                 default: {
                     loopcount = 0;
@@ -1414,6 +1420,36 @@ int main( void ) {
                         break;
                     }
 
+                    case FREQCHANGE: {
+                        waitRx( FREQCHANGE );
+                        uint8_t valid = ( unique_id == rx_field[1] || 0xFF == rx_field[1] );
+                        if ( valid ) {
+                            for(uint8_t cc = 0; cc < 3; cc++) {
+                                valid = valid && ( ( rf_frequency[cc] == rx_field[2+cc] ) || ( 0xAA == rx_field[2+cc] ) );
+                            }
+                        }
+
+                        if ( valid ) {
+                            rfm_setFrequency( &(rx_field[5]) );
+                            for(uint8_t cc = 0; cc < 3; cc++) {
+                                rf_frequency[cc] = rx_field[5+cc];
+                            }
+
+                            flags.b.transmit     = 1;
+                            transmission_type    = NEWFREQ;
+                            tx_field[0]          = NEWFREQ;
+                            tx_field[1]          = unique_id;
+                            tx_field[2]          = rx_field[5];
+                            tx_field[3]          = rx_field[6];
+                            tx_field[4]          = rx_field[7];
+                            transmission_allowed = 0;
+                            timer1_reset();
+                            timer1_flags |= TIMER_TRANSMITCOUNTER_FLAG;
+                            transmit_flag = 0xFF == rx_field[1] ? 0 : 10 * unique_id; // Preload for 100ms delay for single use
+                        }
+                        break;
+                    }
+
                     // Default action (do nothing)
                     default: {
                         break;
@@ -1439,7 +1475,6 @@ int main( void ) {
                     squelch_setting = squelch_setting - rssi_flag > (-2*SQUELCH_UPPER_LIMIT) ? squelch_setting - rssi_flag : (-2*SQUELCH_UPPER_LIMIT);
                 }
                 // More sensitive squelch value in case of no timeouts
-                // else if( rssi_flag == -1 && squelch_setting != 255 ) {
                 else if( rssi_flag == -1 && squelch_setting != 255 ) {
                     squelch_setting++;
                 }

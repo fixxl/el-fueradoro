@@ -475,4 +475,15 @@
         // It's always 0 because PayloadReady only occurs after successful hardware CRC
         return 0;                  // 0 : successful, 1 : error
     }
+
+    void rfm_setFrequency( char *farray ) {
+        rfm_rxoff();
+
+        // Carrier frequency
+        rfm_cmd( 0x0700 | farray[0], 1 );
+        rfm_cmd( 0x0800 | farray[1], 1 );
+        rfm_cmd( 0x0900 | farray[2], 1 );
+
+        rfm_rxon();
+    }
 #endif

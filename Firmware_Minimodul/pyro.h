@@ -57,15 +57,17 @@
 #define TIMEOUTVAL            ( F_CPU >> 4 )
 
 // Radio message types
-#define   FIRE                'f'
-#define   IDENT               'i'
+#define   CHANGE              'c'
 #define   ERROR               'e'
+#define   FIRE                'f'
+#define   FREQCHANGE          'h'
+#define   IDENT               'i'
+#define   MEASURE             'm'
+#define   NEWFREQ             'n'
 #define   PARAMETERS          'p'
 #define   TEMPERATURE         't'
-#define   CHANGE              'c'
-#define   MEASURE             'm'
-#define   IMPEDANCES          'z'
 #define   RSSITHRESHOLD       'r'
+#define   IMPEDANCES          'z'
 #define   IDLE                0
 
 // Ceiled duration of byte transmission in microseconds
@@ -83,6 +85,8 @@
 #define   TEMPERATURE_LENGTH   5
 #define   CHANGE_LENGTH        6
 #define   RSSITHRESHOLD_LENGTH 2
+#define   FREQCHANGE_LENGTH    8
+#define   NEWFREQ_LENGTH       5
 #define   IMPEDANCES_LENGTH    (4+FIRE_CHANNELS)
 
 // Number of repetitions for radio messages
@@ -94,6 +98,8 @@
 #define   TEMPERATURE_REPEATS   2
 #define   MEASURE_REPEATS       2
 #define   IMPEDANCES_REPEATS    2
+#define   NEWFREQ_REPEATS       2
+#define   FREQCHANGE_REPEATS    2
 
 // Bitflags
 typedef union {

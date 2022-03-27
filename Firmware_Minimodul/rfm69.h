@@ -109,7 +109,7 @@
 #define DATARATE_MSB           ( DATARATE >> 8 )
 #define DATARATE_LSB           ( DATARATE & 0xFF )
 
-#define P_OUT                  ( ( P_OUT_DBM + 18 + 0x80 ) * ( P_OUT_DBM > -19 ) * ( P_OUT_DBM < 14 ) + ( P_OUT_DBM + 11 + 0x60 ) * ( P_OUT_DBM > 13 ) * ( P_OUT_DBM < 21 ) )
+#define P_OUT                  ((!HPVERSION && 1) * ( ( P_OUT_DBM + 18 + 0x80 ) * ( P_OUT_DBM > -19 ) * ( P_OUT_DBM < 14 )) + (HPVERSION && 1) * (( P_OUT_DBM + 11 + 0x60 ) * ( P_OUT_DBM > -12 ) * ( P_OUT_DBM < 21 ) ))
 
 #ifndef MAX_COM_ARRAYSIZE
     #define MAX_COM_ARRAYSIZE      30
@@ -143,6 +143,7 @@ uint8_t rfm_init( void );                           // Initialisation
 void rfm_highpower( uint8_t enable );               // High Power Settings
 uint8_t rfm_transmit( char *data, uint8_t length ); // Transmit data
 uint8_t rfm_receive( char *data, uint8_t *length ); // Get received data
+void rfm_setFrequency( char *farray );
 
 uint8_t rfm_get_rssi_dbm( void );                   // Return RSSI-Value. Real RSSI = -1dBm * returned value
 
