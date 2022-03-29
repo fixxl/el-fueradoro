@@ -85,8 +85,8 @@
 #define   TEMPERATURE_LENGTH   5
 #define   CHANGE_LENGTH        6
 #define   RSSITHRESHOLD_LENGTH 2
-#define   FREQCHANGE_LENGTH    8
-#define   NEWFREQ_LENGTH       5
+#define   FREQCHANGE_LENGTH    9
+#define   NEWFREQ_LENGTH       6
 #define   IMPEDANCES_LENGTH    (4+FIRE_CHANNELS)
 
 // Number of repetitions for radio messages
