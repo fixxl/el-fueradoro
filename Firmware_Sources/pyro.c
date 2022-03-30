@@ -814,6 +814,12 @@ int main( void ) {
             else {
                 uart_puts_P( PSTR( "CW" ) );
             }
+            if(FREQUENCY > 600) {
+                uart_puts_P( PSTR( " - 868 MHz" ) );
+            }
+            else {
+                uart_puts_P( PSTR( " - 433 MHz" ) );
+            }
             #if defined COMPILEDATE && defined COMPILETIME
                 uart_puts_P( PSTR( "\n\r" ) );
                 uart_puts_P( PSTR( "Datecode " ) );
