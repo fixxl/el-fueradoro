@@ -401,7 +401,7 @@ int main( void ) {
         rf_frequency[ ct ] = rfm_cmd(0x0700 + 256 * ct, 0);
     }
     // Set encryption active, read and transfer AES-Key
-    rfm_cmd( 0x3DA1, 1 );
+    rfm_cmd( 0x3D00 | rfm_cmd( 0x3DFF, 0 ) | 0x01, 1 );
     for ( uint8_t i = 0; i < 16; i++ ) {
         rfm_cmd( ( 0x3E00 + i * ( 0x0100 ) ) | eeread( START_ADDRESS_AESKEY_STORAGE + i ), 1 );
     }

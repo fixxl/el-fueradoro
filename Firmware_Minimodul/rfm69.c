@@ -75,20 +75,27 @@
         uint16_t status;
         status = rfm_status();
 
-        // No Payload and RSSI-Rx-Timeout -> Rx-Restart
-        if ( ( !( status & ( 1 << 2 ) ) ) && ( status & ( 1 << 10 ) ) ) {
-            rfm_cmd( ( rfm_cmd( 0x3DFF, 0 ) | 0x3D04 ), 1 );
-            return 2;
+        // LSB of status must be 0 if module is plugged in
+        if( !( status & ( 1 << 0 ) ) ) {
+            // If payload not ready
+            if( !( status & ( 1 << 2 ) ) ) {
+                // No Payload and RSSI-Rx-Timeout -> Rx-Restart
+                if ( status & ( 1 << 10 ) ) {
+                    rfm_cmd( ( rfm_cmd( 0x3DFF, 0 ) | 0x3D04 ), 1 );
+                    return 2;
+                }
+                // FIFO overflow
+                else if ( status & ( 1 << 4 ) ) {
+                    rfm_cmd( 0x2810, 1 );
+                    return 4;
+                }
+            }
+            // Payload is ready
+            else {
+                return 1;
+            }
         }
-        // FIFO overflow
-        else if ( ( status & ( 1 << 4 ) ) && !( status && ( 1 << 0 ) ) ) {
-            rfm_cmd( 0x2810, 1 );
-            return 4;
-        }
-        // Check if PayloadReady is set AND unused bit is not set (if bit 0 is set, module is not plugged in)
-        else {
-            return ( status & ( 1 << 2 ) ) && !( status & ( 1 << 0 ) );
-        }
+        return 0;
     }
 
     uint16_t rfm_status( void ) {
@@ -224,7 +231,7 @@
         mant = 24;
         expo = 1 << 7;
 
-        // Increase bandwidth until it's at least twice the bitrate
+        // Increase bandwidth until it's at least FDEV + Bitrate/2 with FDEV = Bitrate
         while ( ( 3 * bitrate / 2 > ( 32000000 / ( mant * 4 * expo ) ) ) && ( mant + expo > 17) ) {
             mant -= 4;
 
@@ -256,7 +263,7 @@
         mant = 24;
         expo = 1 << 7;
 
-        // Increase bandwidth until it's at least twice the bitrate
+        // Increase bandwidth until it's at least FDEV + Bitrate/2 + Tolerance with FDEV = Bitrate
         while ( ( 3 * bitrate / 2 + xtalTol > ( 32000000 / ( mant * 4 * expo ) ) ) && ( mant + expo > 17) ) {
             mant -= 4;
 
