@@ -824,7 +824,7 @@ int main( void ) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        if ( impedance_reset_ctr > 15 ) {
+        if ( impedance_reset_ctr > 150 ) {
             temp_sreg = SREG;
             cli();
 
@@ -1440,6 +1440,7 @@ int main( void ) {
                             // when other boxes send impedance list
                             rfm_cmd( 0x2B00 | rfm_timeoutlength_long, 1 );
                             timer1_flags |= TIMER_IMPEDANCE_CTR_FLAG;
+                            impedance_reset_ctr = 0;
                         }
 
                         break;

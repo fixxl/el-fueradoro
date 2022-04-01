@@ -1026,6 +1026,21 @@ int main( void ) {
             SREG = temp_sreg;
         }
 
+        // ------------------------------------------------------------------------------------------------------
+
+        if ( impedance_reset_ctr > 150 ) {
+            temp_sreg = SREG;
+            cli();
+
+            timer1_flags        &= ~TIMER_IMPEDANCE_CTR_FLAG;
+            impedance_reset_ctr  = 0;
+
+            // Set timeout window back to short
+            rfm_cmd( 0x2B00 | rfm_timeoutlength_short, 1 );
+
+            SREG = temp_sreg;
+        }
+
         // -------------------------------------------------------------------------------------------------------
 
         // Software-Reset via Watchdog
@@ -1383,6 +1398,7 @@ int main( void ) {
                             // when other boxes send impedance list
                             rfm_cmd( 0x2B00 | rfm_timeoutlength_long, 1 );
                             timer1_flags |= TIMER_IMPEDANCE_CTR_FLAG;
+                            impedance_reset_ctr = 0;
                         }
 
                         break;
