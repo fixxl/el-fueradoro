@@ -10,7 +10,7 @@
 #include "global.h"
 
 // Global Variables
-static volatile uint8_t  key_flag = 0, timer1_flags = 0;
+static volatile uint8_t  key_flag = 0, timer1_flags = 0, impedance_reset_ctr = 0;
 static volatile int8_t   rssi_flag = 0;
 static volatile uint8_t  channel_monitor = 0;
 static volatile uint16_t transmit_flag   = 0;
@@ -234,6 +234,7 @@ int main( void ) {
     int8_t   temperature = -128;
     uint8_t  ignition_time;
     uint8_t  ign_time_backup;
+    uint8_t  rfm_timeoutlength_short, rfm_timeoutlength_long;
 
     bitfeld_t flags;
     flags.complete = 0;
@@ -377,6 +378,9 @@ int main( void ) {
     for ( uint8_t i = 0; i < 16; i++ ) {
         rfm_cmd( ( 0x3E00 + i * ( 0x0100 ) ) | eeread( START_ADDRESS_AESKEY_STORAGE + i ), 1 );
     }
+
+    rfm_timeoutlength_short = ( RFM_SHORT_LENGTH + rfm_cmd( 0x2DFF, 0 ) + ( ( ( rfm_cmd( 0x2EFF, 0 ) & 0x38 ) >> 3 ) + 1 ) + 4 ) >> 1;
+    rfm_timeoutlength_long  = ( RFM_LONG_LENGTH + rfm_cmd( 0x2DFF, 0 ) + ( ( ( rfm_cmd( 0x2EFF, 0 ) & 0x38 ) >> 3 ) + 1 ) + 4 ) >> 1;
 
     // Display slave ID and check channel LEDs
     leds_off();
@@ -814,6 +818,21 @@ int main( void ) {
                     tx_field[3 + i] = impedances[i];
                 }
             }
+
+            SREG = temp_sreg;
+        }
+
+        // -------------------------------------------------------------------------------------------------------
+
+        if ( impedance_reset_ctr > 15 ) {
+            temp_sreg = SREG;
+            cli();
+
+            timer1_flags        &= ~TIMER_IMPEDANCE_CTR_FLAG;
+            impedance_reset_ctr  = 0;
+
+            // Set timeout window back to short
+            rfm_cmd( 0x2B00 | rfm_timeoutlength_short, 1 );
 
             SREG = temp_sreg;
         }
@@ -1416,6 +1435,12 @@ int main( void ) {
                             timer1_flags |= TIMER_TRANSMITCOUNTER_FLAG;
                             transmit_flag = 10 * unique_id; // Preload for 100ms delay
                         }
+                        else {
+                            // Set timeout window to long to avoid timeout
+                            // when other boxes send impedance list
+                            rfm_cmd( 0x2B00 | rfm_timeoutlength_long, 1 );
+                            timer1_flags |= TIMER_IMPEDANCE_CTR_FLAG;
+                        }
 
                         break;
                     }
@@ -1453,6 +1478,19 @@ int main( void ) {
                             timer1_flags |= TIMER_TRANSMITCOUNTER_FLAG;
                             transmit_flag = 0xFF == rx_field[1] ? 0 : 10 * unique_id; // Preload for 100ms delay for single use
                         }
+                        break;
+                    }
+
+                    case IMPEDANCES: {
+                        timer1_flags        &= ~TIMER_IMPEDANCE_CTR_FLAG;
+                        impedance_reset_ctr  = 0;
+
+                        for ( uint8_t i = rx_field[rx_length - 1] - 1; i; i-- ) {
+                            _delay_ms(65);
+                        }
+
+                        // Set timeout window back to short
+                        rfm_cmd( 0x2B00 | rfm_timeoutlength_short, 1 );
                         break;
                     }
 
@@ -1546,6 +1584,10 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
 
     if ( timer1_flags & TIMER_TRANSMITCOUNTER_FLAG ) {
         transmit_flag++;
+    }
+
+    if ( timer1_flags & TIMER_IMPEDANCE_CTR_FLAG ) {
+        impedance_reset_ctr++;
     }
 
     // -------------------------------------------------------------------------------------------------------
