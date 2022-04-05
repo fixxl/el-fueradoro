@@ -81,6 +81,7 @@
             if( !( status & ( 1 << 2 ) ) ) {
                 // No Payload and RSSI-Rx-Timeout -> Rx-Restart
                 if ( status & ( 1 << 10 ) ) {
+                    rfm_cmd( 0x2810, 1 );
                     rfm_cmd( ( rfm_cmd( 0x3DFF, 0 ) | 0x3D04 ), 1 );
                     return 2;
                 }

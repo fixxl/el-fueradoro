@@ -247,7 +247,7 @@ int main( void ) {
     uint8_t  iii, nr, inp, tmp;
     uint8_t  tx_length = 2, rx_length = 0;
     uint8_t  rfm_rx_error = 0, rfm_tx_error = 0;
-    uint8_t  rxState = 0, squelch_setting;
+    uint8_t  rxState = 0, rxStateOld = 0, squelch_setting;
     uint8_t  debounce_key_ctr = 0;
     uint8_t  debounce_current_state = 0;
     uint8_t  debounce_old_state     = 0;
@@ -1248,9 +1248,10 @@ int main( void ) {
         cli();
         rxState = rfm_receiving();
         flags.b.receive = flags.b.receive || (rxState == 1);
-        if ( rxState == 2 ) {
+        if ( rxState == 2 && rxStateOld != rxState ) {
             rx_timeout_ctr++;
         }
+        rxStateOld = rxState;
         SREG            = temp_sreg;
 
         // Receive
