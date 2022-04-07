@@ -55,7 +55,7 @@
 \setuptoc{toc}{totoc}
 
 \hypersetup{pdfinfo={
-		Title=\anlage,
+		Title=\anlage + \REF,
 		Author=Felix Pflaum,
 		Subject={User manual for remotely controlled firework ignition system},
 		Keywords={}}
@@ -72,8 +72,10 @@
 \begin{titlepage}
 	\thispagestyle{empty}
 	{\sffamily\LARGE Benutzerhandbuch{\hfill}Dokumentation{\hfill}Aufbauanleitung}\\ \hrule \vspace*{\fill}
-	\begin{center}{\fontsize{64pt}{64pt} \includegraphics[width=15cm]{Bilder/ElFueradoroLogo}} \\ \vspace{2em}
-			{\LARGE \sffamily Funkgesteuertes Zündsystem für Feuerwerke}
+    \begin{center}
+    	\includegraphics[height=7cm]{Bilder/ElFueradoroLogo} \\ \vspace*{\fill}
+		\includegraphics[height=7cm]{Bilder/ref-logo-bw}   \\ \vspace*{\fill}
+		{\LARGE \sffamily Funkgesteuertes Zündsystem für Feuerwerke}
 	\end{center}
 	\vspace*{\fill}
 	\hrule
@@ -2285,13 +2287,23 @@
 			\label{fig:isp}
 		\end{figure}
 
-		Um den Bootloader auf den Controller zu brennen und einige Grundeinstellungen des Controllers, die so genannten Fuses, welche neben den Einstellungen, welche die Verwendung eines Bootloaders ermöglichen, auch Funktionen wie die Brown-Out-Detektion oder die Taktquelle regeln, wird ein spezielles Programmiergerät zur In-System-Programmierung (ISP) benötigt, welches den Controller in den Resetzustand versetzt und anschließend den Bootloader über die SPI-Schnittstelle an eine festgelegte Stelle im Flash-Speicher des Controllers schreibt.
+		Um den Bootloader auf den Controller zu brennen und einige Grundeinstellungen des Controllers, die so genannten Fuses, welche neben den Einstellungen, welche die Verwendung eines Bootloaders ermöglichen, auch Funktionen wie die Brown-Out-Detektion oder die Taktquelle regeln, wird ein spezielles Programmiergerät zur In-System-Programmierung (ISP) benötigt, welches den Controller in den Resetzustand versetzt und anschließend den Bootloader über die SPI-Schnittstelle an eine festgelegte Stelle im Flash-Speicher des Controllers schreibt -- dieses Programmiergerät wird als Programmer bezeichnet. Auf der Platine jedes Devices ist für ISP ein zehnpoliger zweireihiger Wannenstecker vorgesehen, an den gängige Programmiergeräte wie der weit verbreitete \emph{AVRISP mkII} angeschlossen werden. Seine Pinbelegung ist in Abbildung~\ref{fig:isp} gezeigt.
+		
+		Der Markt an Programmiergeräten ist unübersichtlich, sie existieren in unzähligen Varianten und für die verschiedensten Programmierverfahren. Beim Kauf sollte darauf geachtet werden, dass der gewählte Programmer das ISP-Verfahren beherrscht und beim System-Logik-Spannungspegel von \SI{3{,}3}{\volt} arbeiten kann. Zusätzlich sollte darauf geachtet werden, dass die VCC-Leitung vom Programmer nicht aktiv mit Spannung versorgt wird.
+		
+		Nach einmaligem Flashen des Bootloaders und EEPROMs wird die ISP-Schnittstelle nicht wieder benötigt, alle weiteren Änderungen können über die serielle Schnittstelle und den Bootloader vorgenommen werden.
+		
+		\section{Über raspEasyFire}
+			
+			Über den Abschnitt \enquote{El Fueradoro flashen} in der {\REF}-Oberfläche ist es relativ einfach möglich, den Bootloader mittels eines geeigneten Programmers auf den Mikrocontroller zu schreiben. Hierzu müssen zunächst die aktuellsten Dateien heruntergeladen werden, anschließend ist über ein Dropdownmenü der verwendete Programmer~-- einige der am weitesten verbreiteten Programmer sind wählbar, weitere Geräte fügt der Autor auf Anfrage gerne hinzu~-- sowie die zu schreibende Bootloadervariante auszuwählen.
+			
+			Ist mit dem Programmer eine Verbindung zwischen zu flashendem Device und {\REF} hergestellt, kann der Bootloader-Schreibvorgang mit der Schaltfläche \enquote{Bootloader flashen} gestartet werden. Bei diesem Vorgang werden auch die Standardkonfiguration des EEPROM sowie die passenden Fuseeinstellungen geschrieben.
+		
+		\section{Über den PC}
 
-		Auf der Platine jedes Devices ist für ISP ein zehnpoliger zweireihiger Wannenstecker vorgesehen, an den gängige Programmiergeräte wie der weit verbreitete \emph{AVRISP mkII} angeschlossen werden. Seine Pinbelegung ist in Abbildung~\ref{fig:isp} gezeigt. Nach einmaligem Flashen des Bootloaders und EEPROMs wird die ISP-Schnittstelle nicht wieder benötigt, alle weiteren Änderungen können über die serielle Schnittstelle und den Bootloader vorgenommen werden.
+		\subsection{Verwendung des AVRISP mkII}
 
-		\section{Verwendung des AVRISP mkII}
-
-			Zum Brennen des Bootloaders gibt es ein Kommandozeilentool namens \emph{btldflsh.exe} für den \emph{AVRISP mkII}, welches auf \emph{AVRDUDE} basiert. Um einen mit kompatiblen USB-Treiber für den Programmieradapter zu installieren, gibt es unter Windows das Programm Zadig\footnote{Zadig-Download: \url{https://zadig.akeo.ie/}}, in dem vor dem Klick auf \enquote{Install Driver} die Einstellungen gemäß Abbildung~\ref{fig:zadig} zu treffen sind.
+			Zum Brennen des Bootloaders gibt es ein Kommandozeilentool namens \emph{btldflsh.exe} für den \emph{AVRISP mkII}, welches auf \emph{AVRDUDE} basiert. Um einen mit \emph{AVRDUDE} kompatiblen USB-Treiber für den Programmieradapter zu installieren, gibt es unter Windows das Programm Zadig\footnote{Zadig-Download: \url{https://zadig.akeo.ie/}}, in dem vor dem Klick auf \enquote{Install Driver} die Einstellungen gemäß Abbildung~\ref{fig:zadig} zu treffen sind.
 
 			\begin{figure}
 				\centering
@@ -2310,7 +2322,7 @@
 
 			Die für {\anlage} benötigten Einstellungen für Fuses und die Datenübertragung werden auf diese Weise automatisch angepasst. Ebenfalls übertragen wird beim Flashen des Bootloaders eine Standardversion des EEPROMS, so dass die Devices standardmäßig 1 als Unique- und Slave-ID zugewiesen bekommen (Transmitter rekonfigurieren sich dann automatisch beim ersten Start der Firmware).
 
-		\section{Verwendung eines anderen Programmieradapters}
+		\subsection{Verwendung eines anderen Programmieradapters}
 
 			Selbstverständlich ist das Aufspielen des Bootloaders auch mit anderen Programmern möglich.
 
