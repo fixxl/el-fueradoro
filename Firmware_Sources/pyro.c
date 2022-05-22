@@ -1474,21 +1474,21 @@ int main( void ) {
             temp_sreg = SREG;
             cli();
 
-            if( !(rfm_status() & 0x0144) ) {    // Don't adjust in case of sync match, fifo not empty or payload ready
+            if( !(rfm_status() & 0x0145) ) {    // Don't adjust in case of sync match, fifo not empty or payload ready
                 squelch_setting = rfm_cmd( 0x2900, 0 );
 
                 // Less sensitive squelch value in case of too many timeouts
                 if( rssi_flag > 0 && squelch_setting > (-2*SQUELCH_UPPER_LIMIT) ) {
                     squelch_setting = squelch_setting - rssi_flag > (-2*SQUELCH_UPPER_LIMIT) ? squelch_setting - rssi_flag : (-2*SQUELCH_UPPER_LIMIT);
+                    rfm_cmd( 0x2900 | squelch_setting, 1 );
                 }
                 // More sensitive squelch value in case of no timeouts
-                else if( rssi_flag == -1 && squelch_setting != 255 ) {
+                else if( rssi_flag == -1 && squelch_setting != 255 && ( !armed || ( squelch_setting < 205 ) ) ) {
                     squelch_setting++;
+                    rfm_cmd( 0x2900 | squelch_setting, 1 );
                 }
-                rfm_cmd( 0x2900 | squelch_setting, 1 );
                 rssi_flag = 0;
             }
-
             SREG = temp_sreg;
         }
 
@@ -1814,15 +1814,21 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
             // or increase (0.5 dB) in case of no timeouts. Then reset counter for new cycle.
             if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_LOW ) {
                 if (rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_HIGH) {
-                    rssi_flag = 4;
+                    rssi_flag        = 4;
+                    rxTimeoutLastVal = 0;
                 } else if (rx_timeout_ctr >= RX_TIMEOUT_CTR_THRESHOLD_TP ) {
-                    rssi_flag = 2;
+                    rssi_flag        = 2;
+                    rxTimeoutLastVal = 0;
                 } else if (rx_timeout_ctr < RX_TIMEOUT_CTR_THRESHOLD_TP) {
                     // Don't reduce sensitivity if number of
                     // timeouts stays on same level or less
-                    rssi_flag = rx_timeout_ctr > rxTimeoutLastVal ? 2 : 0;
+                    if( rx_timeout_ctr > rxTimeoutLastVal ) {
+                        rssi_flag        = 2;
+                        rxTimeoutLastVal = rx_timeout_ctr > 255 ? 255 : rx_timeout_ctr;
+                    } else {
+                        rssi_flag = 0;
+                    }
                 }
-                rxTimeoutLastVal = rx_timeout_ctr > 255 ? 255 : rx_timeout_ctr;
             }
 
             // Check if there were no timeouts (possibility to increase sensitivity)
