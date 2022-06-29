@@ -24,6 +24,7 @@
 #endif
 
 #define SR_CHANNELS ((FIRE_CHANNELS + 7) / 8) * 8   // Round up FIRE_CHANNELS to the next multiple of 8
+#define DM_CHANNELS ((FIRE_CHANNELS + 15) / 16) * 16   // Round up FIRE_CHANNELS to the next multiple of 16
 
 // Includes und Defines
 #include <avr/io.h>
