@@ -3,7 +3,7 @@
 \usepackage[hang]{caption}
 \usepackage{subcaption}
 \usepackage{microtype, textcomp}
-\usepackage{longtable, tabu}
+\usepackage{longtable, xltabular}
 \usepackage[intlimits]{mathtools}
 \usepackage{amsfonts, amssymb, array, scrlayer-scrpage, multirow}
 \usepackage{fontspec}
@@ -24,7 +24,7 @@
 \renewcommand{\ttfamily}{\origttfamily \hyphenchar\font=`\-}
 \defaultfontfeatures{Ligatures=TeX}
 \renewcommand{\dateseparator}{.}
-
+\newcolumntype{C}{>{\centering\arraybackslash}X}
 
 \setmainfont{Tex Gyre Termes}
 \setmathfont{Tex Gyre Termes Math}
@@ -189,15 +189,14 @@
 
 			\begin{table}
 				\centering
-				\begin{tabu}
-					to .8\textwidth [c]{lXl}
+				\begin{xltabular}{.8\textwidth}[c]{lXl}
 					\hline\hline
 					\textbf{Farbe} & \textbf{Funktion}                           & \textbf{Startup-Faktor} \\ \hline
 					orange         & Funkmodul empfängt                          & 4                       \\
 					grün           & Funkmodul sendet                            & 2                       \\
 					gelb           & Daten kommen über serielle Schnittstelle an & 1                       \\
 					rot            & Device ist scharf geschaltet                & 8                       \\ \hline\hline
-				\end{tabu}
+				\end{xltabular}
 				\caption{Farben und Funktionen der Status-LEDs}
 				\label{tab:statusleds}
 			\end{table}
@@ -268,15 +267,15 @@
 
 			\begin{table}[b]
 				\begin{center}
-					\begin{tabu}
-						to 7cm [c]{Xl}
+					\begin{xltabular}
+						{7cm}[c]{Xl}
 						\hline\hline
 						Bits pro Sekunde & 9600  \\
 						Datenbits        & 8     \\
 						Parität          & keine \\
 						Stoppbits        & 1     \\
 						Flusssteuerung   & keine \\ \hline\hline
-					\end{tabu}
+					\end{xltabular}
 					\caption{Konfiguration der seriellen Schnittstelle}
 					\label{tab:seriell}
 				\end{center}
@@ -349,8 +348,8 @@
 
 				\begin{table}[bt]
 					\begin{center}
-						\begin{tabu}
-							to .9\textwidth {lX}
+						\begin{xltabular}
+							{.9\textwidth}{lX}
 							\hline\hline
 							\textbf{Befehl}                       & \textbf{Wirkung}                                                                                                                                                                                                                   \\ \hline
 							arm                                   & Schaltet den Transmitter scharf, um Zündbefehle senden zu können                                                                                                                                                                   \\
@@ -368,7 +367,7 @@
 							orders                                & Gibt letztes gesendetes und empfangenes Pattern auf LCD aus                                                                                                                                                                        \\ \hline
 							cls                                   & Löscht den Terminal-Bildschirm                                                                                                                                                                                                     \\
 							kill                                  & Löst einen Neustart des Device aus                                                                                                                                                                                                 \\ \hline\hline
-						\end{tabu}
+						\end{xltabular}
 						\caption{Kommandos zur Konfiguration über die serielle Schnittstelle}
 						\label{tab:commands}
 					\end{center}
@@ -469,8 +468,8 @@
 
 				\begin{table}
 					\begin{center}
-						\begin{tabu}
-							to .8\textwidth {X*{16}c}
+						\begin{xltabular}
+							{.8\textwidth}{X*{16}c}
 							\hline\hline
 							Hexadezimal & 0    & 1    & 2    & 3    & 4    & 5    & 6    & 7    \\
 							Dezimal     & 0    & 1    & 2    & 3    & 4    & 5    & 6    & 7    \\
@@ -479,7 +478,7 @@
 							Hexadezimal & 8    & 9    & A    & B    & C    & D    & E    & F    \\
 							Dezimal     & 8    & 9    & 10   & 11   & 12   & 13   & 14   & 15   \\
 							Binär       & 1000 & 1001 & 1010 & 1011 & 1100 & 1101 & 1110 & 1111 \\ \hline\hline
-						\end{tabu}
+						\end{xltabular}
 					\end{center}
 					\caption{Umrechnung Hexadezimal-, Dezimal- und Binärwerte}
 					\label{tab:zahlensysteme}
@@ -491,20 +490,20 @@
 
 				\begin{table}
 					\begin{center}
-						\begin{tabu}
-							to .95\textwidth {Xc|*{7}c|*{8}c}
+						\begin{xltabular}
+							{.95\textwidth}{Xc|*{7}c|*{8}c}
 							\hline\hline
 							Bit     & w/$\overline{\mbox{r}}$ & r6 & r5 & r4                      & r3 & r2 & r1 & r0                      & d7 & d6 & d5 & d4                      & d3 & d2 & d1 & d0                    \\
 							Wert    & 8                       & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c||}{1} & 8  & 4  & 2  & \multicolumn{1}{c}{1} \\
 							Zeichen & \multicolumn{4}{c||}{Zeichen 1}                             & \multicolumn{4}{c||}{Zeichen 2}        & \multicolumn{4}{c||}{Zeichen 3}        & \multicolumn{4}{c}{Zeichen 4}        \\ ~ \\ \hline
-						\end{tabu}
-						\begin{tabu}
-							to .95\textwidth {p{2cm}cXp{2cm}}
+						\end{xltabular}
+						\begin{xltabular}
+							{.95\textwidth}{p{2cm}cXp{2cm}}
 							~                                                                                                      \\
 							 & w/$\overline{\mbox{r}}$ & Schreib- oder Lesezugriff (0 = lesen, 1 = schreiben)                      \\
 							 & r6 {\dots} r0           & Registeradresse                                                           \\
 							 & d7 {\dots} d0           & Zu schreibender Registerwert (beliebig falls w/$\overline{\mbox{r}} = 0$) \\ \hline\hline
-						\end{tabu}
+						\end{xltabular}
 					\end{center}
 					\caption{Struktur des \texttt{RFM69}-Befehls}
 					\label{tab:rfmcommand}
@@ -667,8 +666,8 @@
 
 				\begin{table}
 					\centering
-					\begin{tabu}
-						to \textwidth {lccX[c]}
+					\begin{xltabular}
+						{\textwidth}{lccC}
 						\hline\hline
 						Firmware                                     & Platine & Kanäle & Funkmodul (Sendeleistung)   \\ \hline
 						Pyro\_atmega328p\_RFM69CW\_16ch.hex          & v1/v2   & 16     & RFM69CW   $(\SI{13}{\dBm})$ \\
@@ -679,7 +678,7 @@
 						Pyro\_v3\_atmega328p\_RFM69HCW\_32ch.hex     & v3      & 32     & RFM69HCW  $(\SI{20}{\dBm})$ \\
 						Pyro\_Mini\_atmega328p\_RFM69CW\_4ch.hex     & Mini    & 4      & RFM69CW   $(\SI{13}{\dBm})$ \\
 						Pyro\_Mini\_atmega328p\_RFM69HCW\_4ch.hex    & Mini    & 4      & RFM69HCW  $(\SI{20}{\dBm})$ \\
-					\end{tabu}
+					\end{xltabular}
 					\caption{Verfügbare Firmware-Versionen}
 					\label{tab:firmwareversions}
 				\end{table}
@@ -1335,8 +1334,8 @@
 
 			\begin{figure}
 				\centering
-				\begin{tabu}
-					to \textwidth {Xc|cc|cX}
+				\begin{xltabular}
+					{\textwidth}{Xc|cc|cX}
 					\cline{3-4}
 					Supply            & 3V3  & 1  & 2  & 5V  & Supply             \\
 					In 1 (FIRE-Bt.)   & R1   & 3  & 4  & 5V  & Supply             \\
@@ -1358,7 +1357,7 @@
 					~                 &      & 35 & 36 &     &                    \\
 					~                 &      & 37 & 38 &     &                    \\
 					Supply            & GND  & 39 & 40 &     &                    \\ \cline{3-4}
-				\end{tabu}
+				\end{xltabular}
 				\caption{Belegung Verbindungsstiftleiste Pi-Aufsteckplatine}
 				\label{fig:piheader}
 			\end{figure}
@@ -1369,16 +1368,16 @@
 
 			\begin{figure}
 				\centering
-				\begin{tabu}
-					to .85\textwidth {|*{20}{@{}>{\centering\arraybackslash}X@{}}|}
+				\begin{xltabular}
+					{.85\textwidth}{|*{20}{@{}>{\centering\arraybackslash}X@{}}|}
 					\hline
 					2 & 4 & 6 & 8 & 10 & 12 & 14 & 16 & 18 & 20 & 22 & 24 & 26 & 28 & 30 & 32 & 34 & 36 & 38 & 40 \\
 					1 & 3 & 5 & 7 & 9  & 11 & 13 & 15 & 17 & 19 & 21 & 23 & 25 & 27 & 29 & 31 & 33 & 35 & 37 & 39 \\ \hline
-				\end{tabu}
+				\end{xltabular}
 				\vspace{1cm}
 				\centering
-				\begin{tabu}
-					to \textwidth {|r|clXrc|l|}
+				\begin{xltabular}
+					{\textwidth}{|r|clXrc|l|}
 					\cline{1-1}\cline{7-7}
 					1  & U+  & \multirow{2}{*}{U\textsubscript{Force}} &  & \multirow{2}{*}{U\textsubscript{Sense}} & U+     & 1  \\
 					2  & GND &                                         &  &                                         & GND    & 2  \\
@@ -1392,7 +1391,7 @@
 					10 & +   &                                         &  &                                         & GND    & 10 \\
 					11 & -   & \multirow{2}{*}{L1 (Pin 12) FIRE-LED}   &  & \multirow{2}{*}{FIRE-Bt. R1}            & Pin 3  & 11 \\
 					12 & +   &                                         &  &                                         & GND    & 12 \\ \cline{1-1}\cline{7-7}
-				\end{tabu}
+				\end{xltabular}
 				\caption{Pinbelegung der Aufsteckplatine von oben gesehen}
 				\label{fig:piclamps}
 			\end{figure}
@@ -1436,8 +1435,7 @@
 		Leider ist es~-- schon alleine aufgrund der Währungsschwankungen, denen besonders die eBay-Artikel unterworfen sind~-- ein Ding der Unmöglichkeit, die Liste permanent tagesaktuell zu halten. Tote Links dürfen gerne gemeldet werden.
 
 			{\footnotesize
-				\begin{longtabu}
-					{p{3cm}cX[l]ll}
+				\begin{xltabular}{\textwidth}{p{3cm}cXll}
 					\multicolumn{5}{c}{\textbf{Materialliste Transmitter}}                                                                                              \\
 					\\ \hline
 					Bauteil                        & Anz. & Beschreibung                         & Händler  & Artikelnr.                                                \\
@@ -1487,14 +1485,14 @@
 					                               & 1    & SMA-Platinenbuchse, 1,6mm            & eBay     & \href{http://www.ebay.com/itm/220952712009}{220952712009} \\ \hline
 					\caption{\normalsize Materialliste für den Transmitter}
 					\label{tab:transmitterbom}
-				\end{longtabu}
+				\end{xltabular}
 			}
 
 		\newpage
 
 			{\footnotesize
-				\begin{longtabu}
-					{p{3cm}cX[l]ll}
+				\begin{xltabular}{\textwidth}
+					{p{3cm}cXll}
 					\multicolumn{5}{c}{\textbf{Materialliste Raspberry-Pi-Transmitter}}                                                                                                                                                                           \\
 					\\ \hline
 					Bauteil           & Anz. & Beschreibung                                          & Händler    & Artikelnr.                                                                                                                                    \\
@@ -1548,14 +1546,14 @@
 					                  & 1    & SMA-Platinenbuchse, 1,6mm                             & eBay       & \href{http://www.ebay.com/itm/220952712009}{220952712009}                                                                                     \\ \hline
 					\caption{\normalsize Materialliste für den Raspberry-Pi-Transmitter}
 					\label{tab:raspibom}
-				\end{longtabu}
+				\end{xltabular}
 			}
 
 		\newpage
 
 			{\footnotesize
-				\begin{longtabu}
-					{p{3cm}cX[l]ll}
+				\begin{xltabular}{\textwidth}
+					{p{3cm}cXll}
 					\multicolumn{5}{c}{\textbf{Materialliste Zündbox v1}}                                                                                                                          \\
 					\\ \hline
 					Bauteil                                 & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           \\
@@ -1644,14 +1642,14 @@
 					                                        & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (1. Generation)}
 					\label{tab:zuendbox1bom}
-				\end{longtabu}
+				\end{xltabular}
 			}
 
 		\newpage
 
 			{\footnotesize
-				\begin{longtabu}
-					{p{3cm}cX[l]ll}
+				\begin{xltabular}{\textwidth}
+					{p{3cm}cXll}
 					\multicolumn{5}{c}{\textbf{Materialliste Zündbox v2}}                                                                                                                     \\
 					\\ \hline
 					Bauteil                            & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           \\
@@ -1740,7 +1738,7 @@
 					                                   & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (2. Generation)}
 					\label{tab:zuendbox2bom}
-				\end{longtabu}
+				\end{xltabular}
 			}
 
 		\normalsize
@@ -1748,8 +1746,8 @@
 		\newpage
 
 			{\footnotesize
-				\begin{longtabu}
-					{p{2.5cm}cX[l]ll}
+				\begin{xltabular}{\textwidth}
+					{p{2.5cm}cXll}
 					\multicolumn{5}{c}{\textbf{Materialliste Zündbox v3}}                                                                                                                                 \\
 					\\ \hline
 					Bauteil                                        & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           \\
@@ -1843,13 +1841,13 @@
 					                                               & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (3. Generation)}
 					\label{tab:zuendbox3bom}
-				\end{longtabu}
+				\end{xltabular}
 			}
 		\newpage
 
 			{\footnotesize
-				\begin{longtabu}
-					{p{2.5cm}cX[l]ll}
+				\begin{xltabular}{\textwidth}
+					{p{2.5cm}cXll}
 					\multicolumn{5}{c}{\textbf{Materialliste Zündbox v3 mit 32 Kanälen}}                                                                                                                  \\
 					\\ \hline
 					Bauteil                                        & Anz. & Beschreibung                              & Händler    & Artikelnr.                                                           \\
@@ -1942,7 +1940,7 @@
 					                                               & 1    & Schrumpf\-schläu\-che 3,2mm               & Reichelt   & SDH 3,2 SW                                                           \\ \hline
 					\caption{\normalsize Materialliste für die Zündbox (3. Generation) mit 32 Kanälen}
 					\label{tab:zuendbox332bom}
-				\end{longtabu}
+				\end{xltabular}
 			}
 		\normalsize
 
@@ -2003,8 +2001,8 @@
 
 				\begin{table}
 					\centering
-					\begin{tabu}
-						to \textwidth {cccccX}
+					\begin{xltabular}
+						{\textwidth}{cccccX}
 						\hline\hline
 						Device (T/Z) & Art       & Adern & Länge  & Anzahl & Verwendungszweck              \\
 						Z            & Litze     & ~--   & 210 mm & 4      & Rote Klemmen (spaltenweise)   \\
@@ -2017,7 +2015,7 @@
 						T            & Litze     & ~--   & 100 mm & 2      & LCD-Hintergrundbeleuchtung    \\
 						T            & Flachband & 2     & 100 mm & 4      & Status-LEDs                   \\
 						T            & Flachband & 10    & 100 mm & 1      & LCD                           \\ \hline\hline
-					\end{tabu}
+					\end{xltabular}
 					\caption{Übersicht über benötigte Kabelverbindungen}
 					\label{tab:kabel}
 				\end{table}
@@ -2332,14 +2330,14 @@
 
 			\begin{table}
 				\centering
-				\begin{tabu}
-					to .9\textwidth {lX[1,l]X[-7,l]}
+				\begin{xltabular}
+					{.9\textwidth}{llX}
 					\hline\hline
 					\textbf{Fuse} & \textbf{Wert}           & \textbf{Bedeutung}                                                                                                                                                                             \\ \hline
 					Low Fuse      & 0xF7                    & Kein Taktteiler, kein Clock-Output, Ext. Full Swing Crystal als Taktquelle                                                                                                                     \\
 					High Fuse     & 0xD6                    & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
 					Extended Fuse & 0x05/ 0xFD\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{\volt}$                                                                                                                                      \\ \hline\hline
-				\end{tabu}
+				\end{xltabular}
 				\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
 				\label{tab:fuses}
 			\end{table}
@@ -2511,11 +2509,11 @@
 			Die Umrechnung zwischen den Einheiten Watt (linear) und dBm (logarithmisch) erfolgt nach folgenden Formeln:
 
 			\begin{center}
-				\begin{tabu}
-					to .6\textwidth {c@{ $\rightarrow$ }c@{ :\hspace*{1cm}}c@{ = }X}
+				\begin{xltabular}
+					{.6\textwidth}{c@{ $\rightarrow$ }c@{ :\hspace*{1cm}}c@{ = }X}
 					$\si{\dBm}$  & $\si{W}$    & $P_\text{W}$   & $10^{\left(\frac{P_\text{dBm}}{10}-3\right)}$                                      \\[12pt]
 					$\si{\watt}$ & $\si{\dBm}$ & $P_\text{dBm}$ & $10 {\cdot} \log_{10}\left( \frac{1000 {\cdot} P_\text{W}}{\SI{1}{\watt}} \right)$ \\
-				\end{tabu}
+				\end{xltabular}
 			\end{center}
 
 			Anhand der Formeln wird klar, dass die maximale Sendeleistung des \texttt{RFM69CW} 1250-mal höher als die Minimalleistung liegt: $\SI{-18}{\dBm}$ entsprechen $\SI{16}{\micro\watt}$, $\SI{13}{\dBm}$ hingegen $\SI{20}{\milli\watt}$.

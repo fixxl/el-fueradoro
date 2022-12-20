@@ -256,6 +256,7 @@ int main( void ) {
      *
      */
     sr_init();
+    _delay_ms( 10 );
 
     // Disable unused controller parts (2-wire-Interface, Timer 2, Analogue Comparator)
     PRR  |= ( 1 << PRTWI ) | ( 1 << PRTIM2 );
