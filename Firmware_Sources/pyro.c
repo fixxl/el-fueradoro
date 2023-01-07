@@ -17,7 +17,7 @@ static volatile uint16_t transmit_flag = 0;
 static volatile uint32_t active_channels = 0;
 static volatile uint16_t hist_del_flag = 0;
 static volatile uint8_t  clear_lcd_tx_flag = 0, clear_lcd_rx_flag = 0;
-static volatile uint16_t rx_timeout_ctr  = 0;
+static volatile uint16_t rx_timeout_ctr = 0;
 
 void wdt_init( void ) {
     MCUSR = 0;
@@ -250,7 +250,7 @@ int main( void ) {
     uint8_t  rxState = 0, rxStateOld = 0, squelch_setting;
     uint8_t  debounce_key_ctr = 0;
     uint8_t  debounce_current_state = 0;
-    uint8_t  debounce_old_state     = 0;
+    uint8_t  debounce_old_state = 0;
     uint8_t  debounce_active = ( 1 << DEBOUNCE_DEVS ) - 1, debounce_mask = 0;
     uint8_t  temp_sreg;
     uint8_t  slave_id = MAX_ID, unique_id = MAX_ID, rem_sid = MAX_ID, rem_uid = MAX_ID;
@@ -264,6 +264,7 @@ int main( void ) {
     uint8_t  ignition_time;
     uint8_t  ign_time_backup;
     uint8_t  rfm_timeoutlength_short, rfm_timeoutlength_long;
+    uint8_t  squelchadjust = 1;
 
     bitfeld_t flags;
     flags.complete = 0;
@@ -278,7 +279,7 @@ int main( void ) {
     fireslave_t slaves[MAX_ID + 1];
     char        lcd_array[MAX_COM_ARRAYSIZE + 1] = { 0 };
     uint8_t     channel_timeout[FIRE_CHANNELS]   = { 0 };
-    uint8_t     rf_frequency[ 3 ] = { 0, 0, 0 };
+    uint8_t     rf_frequency[ 3 ]                = { 0, 0, 0 };
 
     uint8_t          *debounce_ctr[ DEBOUNCE_DEVS ]       = { &debounce_key_ctr };
     volatile uint8_t *debounce_pin[ DEBOUNCE_DEVS ]       = { &KEY_PIN };
@@ -356,6 +357,7 @@ int main( void ) {
 
     // Make sure, ignition time is properly defined and set ignition time
     ignition_time = eeread( FIRE_DURATION_ADDRESS );
+
     if ( ( ignition_time != TALON_TIME ) && ( ignition_time != FLAMER_TIME ) && ( ignition_time != EMATCH_TIME ) ) {
         eewrite( EMATCH_TIME, FIRE_DURATION_ADDRESS );
         ignition_time = EMATCH_TIME;
@@ -379,10 +381,10 @@ int main( void ) {
 
     // Populate channel pattern array:
     // chIdentifier[ i ] = 1 << i
-    uint32_t chMsk = 1UL << (FIRE_CHANNELS-1);
+    uint32_t chMsk = 1UL << ( FIRE_CHANNELS - 1 );
     for ( uint8_t i = FIRE_CHANNELS; i; i-- ) {
         chIdentifier[ i - 1 ] = chMsk;
-        chMsk >>= 1;
+        chMsk               >>= 1;
     }
 
     // Initialise devices
@@ -399,8 +401,8 @@ int main( void ) {
     // Initialise radio
     const uint8_t rfm_fail = rfm_init();
 
-    for(uint8_t ct = 0; ct < 3; ct++ ) {
-        rf_frequency[ ct ] = rfm_cmd(0x0700 + 256 * ct, 0);
+    for ( uint8_t ct = 0; ct < 3; ct++ ) {
+        rf_frequency[ ct ] = rfm_cmd( 0x0700 + 256 * ct, 0 );
     }
     // Set encryption active, read and transfer AES-Key
     rfm_cmd( 0x3D00 | rfm_cmd( 0x3DFF, 0 ) | 0x01, 1 );
@@ -540,7 +542,7 @@ int main( void ) {
                 case 1: {
                     // Prepare for debouncing by setting
                     for ( uint8_t i = 0; i < DEBOUNCE_DEVS; i++ ) {
-                        *( debounce_ctr[ i ] )   = 0;
+                        *( debounce_ctr[ i ] ) = 0;
                     }
                     debounce_active = ( 1 << DEBOUNCE_DEVS ) - 1;
                     key_flag        = 2;
@@ -548,24 +550,26 @@ int main( void ) {
                 }
                 case 2: {
                     if ( timer1_flags & TIMER_DEBOUNCE_FLAG ) {
-                        timer1_flags &= ~TIMER_DEBOUNCE_FLAG;
-                        debounce_mask = 1;
+                        timer1_flags          &= ~TIMER_DEBOUNCE_FLAG;
+                        debounce_mask          = 1;
                         debounce_current_state = 0;
                         for ( uint8_t i = 0; i < DEBOUNCE_DEVS; i++ ) {
 
                             if ( debounce_active & debounce_mask ) {
-                                debounce_current_state |= (( *( debounce_pin[ i ] ) & ( debounce_num[ i ] ) ) && 1) * debounce_mask;
-                                if ((debounce_current_state & debounce_mask) ^ (debounce_old_state & debounce_mask)) {
+                                debounce_current_state |= ( ( *( debounce_pin[ i ] ) & ( debounce_num[ i ] ) ) && 1 ) * debounce_mask;
+
+                                if ( ( debounce_current_state & debounce_mask ) ^ ( debounce_old_state & debounce_mask ) ) {
                                     *( debounce_ctr[ i ] ) = 0;
                                 }
                                 else {
-                                ( *( debounce_ctr[ i ] ) )++;
+                                    ( *( debounce_ctr[ i ] ) )++;
                                 }
 
                                 // If an all-0 or all-1 state is reached after the minimum number of cycles
-                                if ( ( *( debounce_ctr[ i ] ) ) > debounce_minCycles[ i ] )  {
-                                    debounce_active             &= ~debounce_mask;                         // Declare this device finished
-                                    ( *( debounce_results[i] ) ) = !( ( debounce_current_state & debounce_mask ) && 1 );  // Result = 1 if all-0, 0 if all-1 (active low)
+                                if ( ( *( debounce_ctr[ i ] ) ) > debounce_minCycles[ i ] ) {
+                                    debounce_active             &= ~debounce_mask;                                       // Declare this device finished
+                                    ( *( debounce_results[i] ) ) = !( ( debounce_current_state & debounce_mask ) && 1 ); // Result = 1 if all-0, 0 if all-1
+                                                                                                                         // (active low)
                                 }
                             }
 
@@ -801,30 +805,35 @@ int main( void ) {
             flags.b.hw = 0;
 
             uart_puts_P( PSTR( "\n\r" ) );
-            if( ig_or_notrans ) {
+
+            if ( ig_or_notrans ) {
                 uart_puts( "Zündbox v1/v2 - " );
-                uart_shownum( FIRE_CHANNELS, 'd');
+                uart_shownum( FIRE_CHANNELS, 'd' );
                 uart_puts( " Kanäle" );
             }
             else {
                 uart_puts( "Transmitter" );
             }
+
             uart_puts_P( PSTR( "\n\r" ) );
             uart_puts_P( PSTR( STRINGIZE_VALUE_OF( MCU ) ) );
             uart_puts_P( PSTR( "\n\rRFM" ) );
             uart_shownum( RFM, 'd' );
-            if(HPVERSION) {
+
+            if ( HPVERSION ) {
                 uart_puts_P( PSTR( "HCW" ) );
             }
             else {
                 uart_puts_P( PSTR( "CW" ) );
             }
-            if(FREQUENCY > 600) {
+
+            if ( FREQUENCY > 600 ) {
                 uart_puts_P( PSTR( " - 868 MHz" ) );
             }
             else {
                 uart_puts_P( PSTR( " - 433 MHz" ) );
             }
+
             #if defined COMPILEDATE && defined COMPILETIME
                 uart_puts_P( PSTR( "\n\r" ) );
                 uart_puts_P( PSTR( "Datecode " ) );
@@ -1033,8 +1042,8 @@ int main( void ) {
             temp_sreg = SREG;
             cli();
 
-            timer1_flags        &= ~TIMER_IMPEDANCE_CTR_FLAG;
-            impedance_reset_ctr  = 0;
+            timer1_flags       &= ~TIMER_IMPEDANCE_CTR_FLAG;
+            impedance_reset_ctr = 0;
 
             // Set timeout window back to short
             rfm_cmd( 0x2B00 | rfm_timeoutlength_short, 1 );
@@ -1140,8 +1149,8 @@ int main( void ) {
                     rfm_tx_error = rfm_transmit( tx_field, tx_length ); // Transmit message
                     tx_field[tmp]--;
 
-                    if (tx_field[tmp]) {
-                        _delay_ms(5);
+                    if ( tx_field[tmp] ) {
+                        _delay_ms( 5 );
                     }
 
                     if ( !rfm_tx_error ) {
@@ -1170,9 +1179,9 @@ int main( void ) {
             cli();
             flags.b.fire = 0;
 
-            if ( armed && chPattern ) { // If channel number is valid
+            if ( armed && chPattern ) {     // If channel number is valid
 
-                flags.b.is_fire_active = 1;                                                  // Signalize that we're currently firing
+                flags.b.is_fire_active = 1; // Signalize that we're currently firing
 
                 // Turn all leds on
                 leds_on();
@@ -1180,7 +1189,7 @@ int main( void ) {
                 scheme = chPattern | active_channels;
 
                 MOSSWITCHPORT |= ( 1 << MOSSWITCH );
-                sr_shiftout( scheme ); // Write pattern to shift-register
+                sr_shiftout( scheme );      // Write pattern to shift-register
                 active_channels = scheme;
             }
 
@@ -1205,9 +1214,9 @@ int main( void ) {
                     channel_timeout[i]++;             // Increment the timeout-value for that channel
 
                     if ( channel_timeout[i] > ignition_time ) { // If the channel was active for at least the ignition time
-                        anti_scheme          |= controlvar;      // Set delete-bit for this channel
-                        channel_timeout[i]    = 0;               // Reset channel-timeout value
-                        flags.b.finish_firing = 1;               // Leave a note that a change in the list of active channels is due
+                        anti_scheme          |= controlvar;     // Set delete-bit for this channel
+                        channel_timeout[i]    = 0;              // Reset channel-timeout value
+                        flags.b.finish_firing = 1;              // Leave a note that a change in the list of active channels is due
                     }
                 }
 
@@ -1247,13 +1256,15 @@ int main( void ) {
         // Check receive flag
         temp_sreg = SREG;
         cli();
-        rxState = rfm_receiving();
-        flags.b.receive = flags.b.receive || (rxState == 1);
-        if ( rxState == 2 && rxStateOld != rxState ) {
+        rxState         = rfm_receiving();
+        flags.b.receive = flags.b.receive || ( rxState == 1 );
+
+        if ( ( rxState == 2 ) && ( rxStateOld != rxState ) ) {
             rx_timeout_ctr++;
         }
+
         rxStateOld = rxState;
-        SREG            = temp_sreg;
+        SREG       = temp_sreg;
 
         // Receive
         if ( flags.b.receive ) {
@@ -1279,10 +1290,11 @@ int main( void ) {
                         // Wait for all repetitions to be over
                         waitRx( FIRE );
                         chPattern = 0;
-                        for ( uint8_t i = 0; i < (rx_length - 2)/2; i++ ) {
-                            if ( armed && ( rx_field[1 + 2*i] == slave_id ) && rx_field[2 + 2*i] && ( rx_field[2 + 2*i] <= FIRE_CHANNELS ) && !TRANSMITTER ) {
-                                tmp                    = rx_field[2 + 2*i] - 1;        // Get channel number and transpose to 0-based counting
-                                chPattern             |= chIdentifier[ tmp ];   // Update channel pattern
+                        for ( uint8_t i = 0; i < ( rx_length - 2 ) / 2; i++ ) {
+                            if (  armed && ( rx_field[1 + 2 * i] == slave_id ) && rx_field[2 + 2 * i] && ( rx_field[2 + 2 * i] <= FIRE_CHANNELS )
+                               && !TRANSMITTER ) {
+                                tmp                    = rx_field[2 + 2 * i] - 1; // Get channel number and transpose to 0-based counting
+                                chPattern             |= chIdentifier[ tmp ];     // Update channel pattern
                                 channel_timeout[ tmp ] = 0;
                                 flags.b.fire           = 1;
                             }
@@ -1399,7 +1411,7 @@ int main( void ) {
                             // Set timeout window to long to avoid timeout
                             // when other boxes send impedance list
                             rfm_cmd( 0x2B00 | rfm_timeoutlength_long, 1 );
-                            timer1_flags |= TIMER_IMPEDANCE_CTR_FLAG;
+                            timer1_flags       |= TIMER_IMPEDANCE_CTR_FLAG;
                             impedance_reset_ctr = 0;
                         }
 
@@ -1412,22 +1424,29 @@ int main( void ) {
                         break;
                     }
 
+                    case SQUELCHADJUST: {
+                        waitRx( SQUELCHADJUST );
+                        squelchadjust = rx_field[ 1 ] && 1;
+                        break;
+                    }
+
                     case FREQCHANGE: {
                         waitRx( FREQCHANGE );
                         uint8_t valid = ( unique_id == rx_field[1] || 0xFF == rx_field[1] );
+
                         if ( valid ) {
-                            for(uint8_t cc = 0; cc < 3; cc++) {
-                                valid = valid && ( ( rf_frequency[cc] == rx_field[2+cc] ) || ( 0xAA == rx_field[2+cc] ) );
+                            for ( uint8_t cc = 0; cc < 3; cc++ ) {
+                                valid = valid && ( ( rf_frequency[cc] == rx_field[2 + cc] ) || ( 0xAA == rx_field[2 + cc] ) );
                             }
                         }
 
                         if ( valid ) {
-                            rfm_setFrequency( &(rx_field[5]) );
-                            for(uint8_t cc = 0; cc < 3; cc++) {
-                                rf_frequency[cc] = rx_field[5+cc];
+                            rfm_setFrequency( &( rx_field[5] ) );
+                            for ( uint8_t cc = 0; cc < 3; cc++ ) {
+                                rf_frequency[cc] = rx_field[5 + cc];
                             }
 
-                            flags.b.transmit     = 1;
+                            flags.b.transmit = 1;
                             // transmission_type    = NEWFREQ;
                             tx_field[0]          = NEWFREQ;
                             tx_field[1]          = unique_id;
@@ -1439,15 +1458,16 @@ int main( void ) {
                             timer1_flags |= TIMER_TRANSMITCOUNTER_FLAG;
                             transmit_flag = 0xFF == rx_field[1] ? 0 : 10 * unique_id; // Preload for 100ms delay for single use
                         }
+
                         break;
                     }
 
                     case IMPEDANCES: {
-                        timer1_flags        &= ~TIMER_IMPEDANCE_CTR_FLAG;
-                        impedance_reset_ctr  = 0;
+                        timer1_flags       &= ~TIMER_IMPEDANCE_CTR_FLAG;
+                        impedance_reset_ctr = 0;
 
                         for ( uint8_t i = rx_field[rx_length - 1] - 1; i; i-- ) {
-                            _delay_ms(65);
+                            _delay_ms( 65 );
                         }
 
                         // Set timeout window back to short
@@ -1471,25 +1491,27 @@ int main( void ) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        if ( rssi_flag != 0 ) {
+        if ( ( rssi_flag != 0 ) && squelchadjust ) {
             temp_sreg = SREG;
             cli();
 
-            if( !(rfm_status() & 0x0145) ) {    // Don't adjust in case of sync match, fifo not empty or payload ready
+            if ( !( rfm_status() & 0x0145 ) ) { // Don't adjust in case of sync match, fifo not empty or payload ready
                 squelch_setting = rfm_cmd( 0x2900, 0 );
 
                 // Less sensitive squelch value in case of too many timeouts
-                if( rssi_flag > 0 && squelch_setting > (-2*SQUELCH_UPPER_LIMIT) ) {
-                    squelch_setting = squelch_setting - rssi_flag > (-2*SQUELCH_UPPER_LIMIT) ? squelch_setting - rssi_flag : (-2*SQUELCH_UPPER_LIMIT);
+                if ( ( rssi_flag > 0 ) && ( squelch_setting > ( -2 * SQUELCH_UPPER_LIMIT ) ) ) {
+                    squelch_setting = squelch_setting - rssi_flag > ( -2 * SQUELCH_UPPER_LIMIT ) ? squelch_setting - rssi_flag : ( -2 * SQUELCH_UPPER_LIMIT );
                     rfm_cmd( 0x2900 | squelch_setting, 1 );
                 }
                 // More sensitive squelch value in case of no timeouts
-                else if( rssi_flag == -1 && squelch_setting != 255 && ( !armed || ( squelch_setting < 205 ) ) ) {
+                else if ( ( rssi_flag == -1 ) && ( squelch_setting != 255 ) && ( !armed || ( squelch_setting < 205 ) ) ) {
                     squelch_setting++;
                     rfm_cmd( 0x2900 | squelch_setting, 1 );
                 }
+
                 rssi_flag = 0;
             }
+
             SREG = temp_sreg;
         }
 
@@ -1807,26 +1829,29 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
     meascycles++;
 
     if ( meascycles > 124 ) {
-        meascycles    = 0;
+        meascycles = 0;
 
-        if (rssi_flag == 0) {
+        if ( rssi_flag == 0 ) {
             // Check number of Rx timeouts in last 1.25s
             // Reduce more (2 dB) or less (1 dB) depending on number of timeouts
             // or increase (0.5 dB) in case of no timeouts. Then reset counter for new cycle.
             if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_LOW ) {
-                if (rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_HIGH) {
+                if ( rx_timeout_ctr > RX_TIMEOUT_CTR_THRESHOLD_HIGH ) {
                     rssi_flag        = 4;
                     rxTimeoutLastVal = 0;
-                } else if (rx_timeout_ctr >= RX_TIMEOUT_CTR_THRESHOLD_TP ) {
+                }
+                else if ( rx_timeout_ctr >= RX_TIMEOUT_CTR_THRESHOLD_TP ) {
                     rssi_flag        = 2;
                     rxTimeoutLastVal = 0;
-                } else if (rx_timeout_ctr < RX_TIMEOUT_CTR_THRESHOLD_TP) {
+                }
+                else if ( rx_timeout_ctr < RX_TIMEOUT_CTR_THRESHOLD_TP ) {
                     // Don't reduce sensitivity if number of
                     // timeouts stays on same level or less
-                    if( rx_timeout_ctr > rxTimeoutLastVal ) {
+                    if ( rx_timeout_ctr > rxTimeoutLastVal ) {
                         rssi_flag        = 2;
                         rxTimeoutLastVal = rx_timeout_ctr > 255 ? 255 : rx_timeout_ctr;
-                    } else {
+                    }
+                    else {
                         rssi_flag = 0;
                     }
                 }
@@ -1841,10 +1866,10 @@ ISR( TIMER1_COMPA_vect ) { // Occurs every 10ms if active
             }
 
             // After 9 consecutive zeros, we go down one step
-            if (rxTimeoutZeroCounter > 8) {
+            if ( rxTimeoutZeroCounter > 8 ) {
                 rssi_flag            = -1;
-                rxTimeoutZeroCounter =  0;
-                rxTimeoutLastVal     =  0;
+                rxTimeoutZeroCounter = 0;
+                rxTimeoutLastVal     = 0;
             }
 
             rx_timeout_ctr = 0;

@@ -208,6 +208,7 @@ int main( void ) {
     uint8_t  ignition_time;
     uint8_t  ign_time_backup;
     uint8_t  rfm_timeoutlength_short, rfm_timeoutlength_long;
+    uint8_t  squelchadjust = 1;
 
     uint8_t hall_arm = 0, reed_deb = 0, test_deb = 0;
 
@@ -1451,6 +1452,12 @@ int main( void ) {
                         break;
                     }
 
+                    case SQUELCHADJUST: {
+                        waitRx( SQUELCHADJUST );
+                        squelchadjust = rx_field[ 1 ] && 1;
+                        break;
+                    }
+
                     case FREQCHANGE: {
                         waitRx( FREQCHANGE );
                         uint8_t valid = ( unique_id == rx_field[1] || 0xFF == rx_field[1] );
@@ -1507,7 +1514,7 @@ int main( void ) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        if ( rssi_flag != 0 ) {
+        if ( ( rssi_flag != 0 ) && squelchadjust ) {
             temp_sreg = SREG;
             cli();
 

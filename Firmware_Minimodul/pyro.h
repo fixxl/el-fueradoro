@@ -67,6 +67,7 @@
 #define   PARAMETERS          'p'
 #define   TEMPERATURE         't'
 #define   RSSITHRESHOLD       'r'
+#define   SQUELCHADJUST       's'
 #define   IMPEDANCES          'z'
 #define   IDLE                0
 
@@ -85,6 +86,7 @@
 #define   TEMPERATURE_LENGTH   5
 #define   CHANGE_LENGTH        6
 #define   RSSITHRESHOLD_LENGTH 2
+#define   SQUELCHADJUST_LENGTH 2
 #define   FREQCHANGE_LENGTH    9
 #define   NEWFREQ_LENGTH       6
 #define   IMPEDANCES_LENGTH    (4+FIRE_CHANNELS)
@@ -92,6 +94,7 @@
 // Number of repetitions for radio messages
 #define   FIRE_REPEATS          3
 #define   RSSITHRESHOLD_REPEATS 5
+#define   SQUELCHADJUST_REPEATS 5
 #define   IDENT_REPEATS         3
 #define   CHANGE_REPEATS        3
 #define   PARAMETERS_REPEATS    2

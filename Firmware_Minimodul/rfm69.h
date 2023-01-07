@@ -32,7 +32,7 @@
 #endif
 
 #ifndef SQUELCH_THRESHOLD
-    #define SQUELCH_UPPER_LIMIT  -75
+    #define SQUELCH_UPPER_LIMIT  -70
 #endif
 
 #ifndef RX_TIMEOUT_CTR_THRESHOLD_HIGH

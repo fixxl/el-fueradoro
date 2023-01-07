@@ -159,7 +159,7 @@
 				\caption{Die Devices von {\anlage}}
 			\end{figure}
 
-			Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das~-- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur~-- frei nutzbare Frequenzband um $\SI{868}{\mega\hertz}$ verbaut. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
+			Die in Abbildung~\ref{fig:transmitter} gezeigte Transmitterbox dient dazu, die Zündbefehle des PCs per Funk an die über das Gelände verteilt stehenden Zündboxen weiterzuleiten sowie das komplette Funksystem zu überwachen. Hierzu ist im Inneren der Transmitterbox sowie der Zündboxen ein Funkmodul für das~-- im Rahmen der Vorschriften der jeweiligen nationalen Aufsichtsbehörde, in Deutschland der Bundesnetzagentur~-- frei nutzbare Frequenzband um $\SI{868}{\mega\hertz}$ verbaut, das ISM-Band um $\SI{433}{\mega\hertz}$ kann ebenfalls genutzt werden. Die Datenübertragung vom PC geschieht über eine serielle Schnittstelle.
 
 			Die Zündboxen, in Abbildung~\ref{fig:zuendbox} dargestellt, empfangen die Anweisungen und zünden die einzelnen Kanäle. Die hier gezeigte Variante der Zündbox enthält 16 einzeln ansteuerbare Zündkanäle. Jeweils eine rote und eine schwarze Klemme bilden zusammen einen Zündkanal, die Nummerierung beginnt links unten mit Kanal 1 und endet rechts oben mit Kanal 16. Alle roten Klemmen sind nach dem Einschalten unmittelbar mit einer Gleichspannung von $\SI{22,5}{\volt}$ verbunden, die schwarzen Klemmen mit dem Drain-Anschluss eines von 16~n-Kanal-MOSFETs.
 
@@ -724,6 +724,8 @@
 		Als Alternative zur Kombination aus Laptop/PC und dem in den vorangegangenen Abschnitten beschriebenen Transmitter wurde in Zusammenarbeit mit einem Softwareentwickler ein Audio-Funksystem auf Basis des bekannten Einplatinencomputers \enquote{Raspberry Pi} entwickelt. Dieser übernimmt die Kontrolle der Show inklusive der Musikwiedergabe.
 
 		Neben einem Raspberry Pi (unterstützt werden Stand {\mmyyyydate\today} Modelle bis 3B+) werden für den Aufbau eine speziell für die Verwendung mit {\anlage} entwickelte Aufsteckplatine sowie ein Touchdisplay, eine USB-Soundkarte, zwei Taster (FIRE und ON-OFF), welche interne oder externe LEDs besitzen können, ein Schlüsselschalter und zwei weitere LEDs für die Signalisierung von Senden (TX) und Empfangen (RX) benötigt. Eine Einkaufsliste findet sich in Tabelle~\ref{tab:raspibom} ab Seite \pageref{tab:raspibom}.
+		
+		Alternativ zur Verwendung einer USB-Soundkarte kann für die Soundwiedergabe auch ein Hifiberry\footnote{Nähere Infos unter \url{https://www.hifiberry.com/}} verwendet werden. Hierzu existiert eine in diesem Handbuch noch nicht näher behandelte Platinenversion für {\REF}, welche die von Hifiberry benötigten Anschlüsse am \enquote{Raspberry Pi} nicht nutzt. Ob es sich um die Hifiberry- oder die klassische Variante handelt, muss softwareseitig festgelegt werden, als Standard wird die klassische Variante angenommen.
 
 		Ausgangspunkt für die Arbeiten mit {\REF} ist ein komplett aufgebautes System mit beschriebener SD-Karte, die notwendigen Schritte hierzu werden in den Abschnitten~\ref{sec:raspipcb}, \ref{subsec:raspicase} und \ref{ch:raspisd} dargelegt. Eine mögliche Außenansicht mit den notwendigen Funktionseinheiten ist in Abbildung~\ref{fig:raspEasyFireDescription} gezeigt.
 
@@ -734,8 +736,18 @@
 		\end{figure}
 
 		\section{Erster Start}
+		\label{sec:reffirststart}
 
-			Beim ersten Hochfahren passt sich das System an die tatsächlichen lokalen Gegebenheiten an, insbesondere wird die komplette Größe der verwendeten Speicherkarte nutzbar gemacht. Zusätzlich muss der Anwender mitteilen, welche Auflösung das von ihm verwendete Display besitzt: Der FIRE-Taster setzt die Auflösung auf 800x480 Pixel, der ON-OFF-Taster auf 1024x600 Pixel. Ebenso wird die Art des verbauten Funkmoduls abgefragt: Der FIRE-Taster setzt das RFM69HCW, der ON-OFF-Taster das RFM69CW.
+			Beim ersten Hochfahren passt sich das System an die tatsächlichen lokalen Gegebenheiten an, insbesondere wird die komplette Größe der verwendeten Speicherkarte nutzbar gemacht.
+			
+			Zusätzlich muss der Anwender mitteilen, welche Auflösung das von ihm verwendete Display besitzt: Der FIRE-Taster setzt die Auflösung auf 800x480 Pixel, der ON-OFF-Taster auf 1024x600 Pixel. Ebenso wird die Art des verbauten Funkmoduls abgefragt: Der FIRE-Taster setzt das RFM69HCW, der ON-OFF-Taster das RFM69CW.
+			
+			Die manuelle Eingabe von Auflösung und Funkmodul kann vermieden werden, indem im Hauptverzeichnis der SD-Karte eine Datei \enquote{sysinfo.txt} abgelegt wird, die für ein \enquote{klassisches} System mit HCW-Modul und großem Display im Band um \SI{868}{\mega\hertz} folgendermaßen aussehen sollte:
+			
+			\fbox{\parbox{.6\textwidth}{screen800: 0\\
+					hcw: 1\\
+					f433: 0\\
+					hifi: 0}}
 
 			Anschließend erfolgt ein automatischer Neustart des Systems, der im Auswahlbildschirm mündet, ob man das Programm starten (FIRE-Button) oder das System herunterfahren (ON-OFF-Button) möchte. Ein gleichzeitiges Drücken beider Taster beendet das Startup-Skript und bringt den Nutzer zur \enquote{Bash}, wie die Kommandozeile unter Linux genannt wird.
 
@@ -790,6 +802,8 @@
 			zur neuen Standardeinstellung machen.
 			
 			Ebenso ist es möglich, eine Textdatei im passenden Format nach dem Vorbild der \emph{aesvalues\_default.txt} mit einem Namen, der mit \emph{aesvalues\_} beginnen und auf \emph{.txt} enden muss~-- beispielsweise \emph{aesvalues\_customized.txt}, ins Hauptverzeichnis eines USB-Sticks zu kopieren und diesen beim Starten in den Raspberry Pi zu stecken. Genau wie bei Zündplänen und Musikdateien~(siehe hierzu Abschnitt~\ref{sec:zplusbstick}) werden diese Dateien dann automatisch ins korrekte Verzeichnis kopiert und ersetzen eventuell bereits vorhandene Dateien mit gleichem Namen.
+			
+			Auch die im Abschnitt~\ref{sec:reffirststart} angesprochene Datei \enquote{sysinfo.txt} kann über einen USB-Stick zum {\REF} übertragen werden. Um eine Dauerschleife zu vermeiden, wird die Datei auf dem Stick im Anschluss automatisch in \enquote{sysinfo.txt.applied} umbenannt.
 
 		\section{Passwort ändern}
 			Um den Zugriff für unbefugte Personen auf den Raspberry Pi zu verhindern, sollte unbedingt das Passwort des Users \enquote{pi} geändert werden. Möglich ist dies über ein Menü, welches man aus der Bash über
@@ -2392,6 +2406,8 @@
 			Sollte {\REF} nach dem Hochfahren nicht im Netzwerk auftauchen, liegt dies möglicherweise an vorhandenen MAC-Filtern und Zugangsbeschränkungen im Router, die zumindest bis zur ersten erfolgreichen Verbindung deaktiviert werden müssen.
 
 			Nun kann die Speicherkarte in {\REF} eingeführt und verwendet werden.
+			
+			Sollte man die Einstellung der WLAN-Daten zu einem späteren Zeitpunkt vornehmen wollen, ist es auch möglich, die \enquote{wifidata.txt} im Hauptverzeichnis eines USB-Sticks abzulegen, wie es auch mit zpl-, mp3-, AES-Schlüssel-Dateien oder der \enquote{sysinfo.txt} möglich ist. Analog zur \enquote{sysinfo.txt} wird die Datei mit den WLAN-Daten nach Anwendung im System in \enquote{wifidata.txt.applied} umbenannt.
 
 	\chapter{Tipps und Tricks}
 
